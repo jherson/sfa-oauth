@@ -51,6 +51,46 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}	
 	
 	@Override
+	public void activateQuote(String accessToken, String quoteId) {
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?action=activate&quoteId=" + quoteId;	
+				
+		PostMethod postMethod = new PostMethod(url);	
+		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
+		postMethod.setRequestHeader("Content-type", "application/json");
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(postMethod);
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}						
+	}
+	
+	@Override
+	public void calculateQuote(String accessToken, String quoteId) {
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?action=calculate&quoteId=" + quoteId;	
+				
+		PostMethod postMethod = new PostMethod(url);	
+		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
+		postMethod.setRequestHeader("Content-type", "application/json");
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(postMethod);
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}						
+	}
+	
+	@Override
 	public JSONArray read(String accessToken, String query) {
 		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/query";
 		

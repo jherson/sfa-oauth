@@ -15,5 +15,8 @@ public interface QuoteManager {
 	public void copyQuote(Quote quote);
 	public void newQuote();
 	public void editQuote(Quote quote);
-	public void saveQuote(Quote quote);
+	public void updateQuote(Quote quote);
+	public String createQuote(Quote quote);
+	public void activateQuote(Quote quote);
+	public void calculateQuote(Quote quote);
 }

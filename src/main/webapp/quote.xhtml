@@ -44,6 +44,26 @@
 		<ui:include src="editquote.xhtml" />
 
 		<h:form>		
+		
+		<a4j:status
+    id="waitStatus"
+    forceId="true"
+    onstart="javascript:Richfaces.showModalPanel('waitModalPanel');"
+    onstop="javascript:Richfaces.hideModalPanel('waitModalPanel');"/>
+<rich:popupPanel
+    modal="true"
+    id="waitModalPanel"
+    autosized="true"
+    width="200"
+    height="120"
+    moveable="false"
+    resizeable="false">
+    <f:facet name="header">
+        <h:outputText value="Processing"/>
+    </f:facet>
+    <h:outputText value="Please wait..."/>
+</rich:popupPanel>
+		
 
 			<rich:panel id="quoteListPanel">
 
@@ -62,17 +82,31 @@
 						listener="#{quoteForm.selectionListener}" render=":details" />
 
 					<rich:column>
-						<f:facet name="header">#{msgs.action}</f:facet>
+					    <f:facet name="header">#{msgs.action}</f:facet>
+						<a4j:commandLink id="calculate" value="#{msgs.calculate}"
+							action="#{quoteManager.calculateQuote(quote)}" ajaxSingle="true"
+							render="quoteList, :details" 
+							status="waitStatus" />
+
+						<h:outputText value="  " escape="false" />
+					
+						<a4j:commandLink id="activate" value="#{msgs.activate}"
+							action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
+							render="quoteList" />
+
+						<h:outputText value="  " escape="false" />
+						
 						<a4j:commandLink id="copy" value="#{msgs.copy}"
 							action="#{quoteManager.copyQuote(quote)}" ajaxSingle="true"
 							render="quoteList" />
-
+						
 						<h:outputText value="  " escape="false" />
 
 						<a4j:commandLink id="delete" value="#{msgs.delete}"
 							rendered="#{not quote.isActive}"
 							action="#{quoteManager.deleteQuote(quote)}" ajaxSingle="true"
-							render="quoteList, details" />
+							status="waitStatus"
+							render="quoteList, :details" />
 					</rich:column>
 
 					<rich:column>
@@ -119,7 +153,7 @@
 
 						<a4j:commandButton value="#{msgs.refresh}"
 							action="#{quoteManager.refresh()}" styleClass="commandButton"
-							ajaxSingle="true" render="quoteList, details" />
+							ajaxSingle="true" render="quoteList, :details" />
 				</h:panelGroup>
 
 			</rich:panel>

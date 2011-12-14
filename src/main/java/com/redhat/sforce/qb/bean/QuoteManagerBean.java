@@ -90,7 +90,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public void saveQuote(Quote quote) {
+	public void updateQuote(Quote quote) {
 		System.out.println("quote id: " + quote.getId());
 		try {
 	        sforceService.update(userBean.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.convertQuoteToJson(quote));
@@ -99,6 +99,20 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			System.out.println(e);
 		}
+	}
+	
+	@Override
+	public String createQuote(Quote quote) {
+		try {
+			return sforceService.create(userBean.getSessionId(), "Quote__c", QuoteFactory.convertQuoteToJson(quote));
+			
+		} catch (SforceServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			System.out.println(e);
+		}
+		
+		return null;
 	}
 	
 	public void saveQuoteLineItems(QuoteLineItem quoteLineItem) {
@@ -111,6 +125,18 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 //			FacesContext.getCurrentInstance().addMessage(null, message);
 //			System.out.println(e);
 //		}
+	}
+	
+	@Override 
+	public void activateQuote(Quote quote) {
+		sforceService.activateQuote(userBean.getSessionId(), quote.getId());
+		refresh();
+	}
+	
+	@Override
+	public void calculateQuote(Quote quote) {
+		sforceService.calculateQuote(userBean.getSessionId(), quote.getId());
+		refresh();
 	}
 	
 	@Override
@@ -128,15 +154,8 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void copyQuote(Quote quote) {	
 		Quote copy = QuoteFactory.copyQuote(quote);		
-		try {
-			String quoteId = sforceService.create(userBean.getSessionId(), "Quote__c", QuoteFactory.convertQuoteToJson(copy));
-			copy.setId(quoteId);
-			
-		} catch (SforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		String quoteId = createQuote(copy);
+		copy.setId(quoteId);		
 		refresh();
 	}	
 	
