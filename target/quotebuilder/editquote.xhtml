@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<rich:popupPanel id="editQuotePanel" modal="false" autosized="true"
+		resizeable="false" width="500" height="420" top="0" left="0">
+
+		<h:form>
+
+			<f:facet name="header">
+				<h:outputText value="Edit Quote" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:outputLink value="#"
+					onclick="#{rich:component('editQuotePanel')}.hide(); return false;">
+                    X
+                </h:outputLink>
+			</f:facet>
+
+			<a4j:outputPanel layout="block" id="editquoterouter">
+
+				<h:panelGrid styleClass="rf-dt" rowClasses="rf-dt-c"
+					style="width: 100%; border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; "
+					columnClasses="label-column,column-l-align,label-column,column-l-align"
+					columns="4">
+
+					<h:outputText value="#{msgs.name}" />
+					<h:inputText value="#{quoteForm.quote.name}" />
+					<h:outputText value="#{msgs.number}" />
+					<h:outputText value="#{quoteForm.quote.number}" />
+
+					<h:outputText value="#{msgs.type}" />
+					<h:outputText value="#{quoteForm.quote.type}" />
+					<h:outputText value="#{msgs.version}" />
+					<h:outputText value="#{quoteForm.quote.version}" />
+
+					<h:outputText value="#{msgs.active}" />
+					<h:outputText value="#{quoteForm.quote.isActive}" />
+					<h:outputText value="#{msgs.currency}" />
+					<h:outputText value="#{quoteForm.quote.currencyIsoCode}" />
+
+					<h:outputText value="#{msgs.payNow}" />
+					<h:outputText value="#{quoteForm.quote.payNow}" />
+					<h:outputText value="#{msgs.amount}" />
+					<h:outputText value="#{quoteForm.quote.amount}" />
+
+					<h:outputText value="#{msgs.owner}" />
+					<h:outputText value="#{quoteForm.quote.ownerName}" />
+					<h:outputText value="#{msgs.contact}" />
+					<h:outputText value="#{quoteForm.quote.contactName}" />
+
+					<h:outputText value="#{msgs.effectiveDate}" />
+					<h:outputText value="#{quoteForm.quote.effectiveDate}" />
+					<h:outputText value="#{msgs.expirationDate}" />
+					<h:outputText value="#{quoteForm.quote.expirationDate}" />
+
+					<h:outputText value="#{msgs.referenceNumber}" />
+					<h:inputText value="#{quoteForm.quote.referenceNumber}" />
+					<h:outputText value="#{msgs.endDate}" />
+					<h:outputText value="#{quoteForm.quote.endDate}" />
+
+				</h:panelGrid>
+
+				<br />
+
+				<h:panelGroup style="display: block; text-align: right">
+					<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
+						action="#{quoteManager.saveQuote(quoteForm.quote)}"
+						render="quoteList, details" ajaxSingle="true"
+						oncomplete="#{rich:component('editQuotePanel')}.hide(); return false;" />	
+						
+					<h:outputText value="  " escape="false" />				
+				
+					<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
+						oncomplete="#{rich:component('editQuotePanel')}.hide(); return false;" />
+						
+				</h:panelGroup>
+
+			</a4j:outputPanel>
+
+		</h:form>
+
+	</rich:popupPanel>
+
+</ui:composition>
