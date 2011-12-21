@@ -52,7 +52,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void activateQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?action=activate&quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/activate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -72,7 +72,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void calculateQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?action=calculate&quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/calculate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -120,7 +120,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void copyQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?action=copy&quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/copy?quoteId=" + quoteId;	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
