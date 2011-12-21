@@ -18,6 +18,7 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 import org.json.JSONTokener;
 
 import com.redhat.sforce.qb.exception.SforceServiceException;
@@ -91,11 +92,62 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
+	public String getCurrentUserId(String accessToken) {
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?getUserId";
+		GetMethod getMethod = new GetMethod(url);
+		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
+		getMethod.setRequestHeader("Content-type", "application/json");
+		
+		String userId = null;
+        try {
+			
+			HttpClient httpclient = new HttpClient();
+			httpclient.executeMethod(getMethod);
+			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {					
+				userId = getMethod.getResponseBodyAsString().trim();					
+			}
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			getMethod.releaseConnection();
+		}
+        
+        return userId;
+
+	}
+	
+	@Override
+	public void copyQuote(String accessToken, String quoteId) {
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?action=copy&quoteId=" + quoteId;	
+		
+		PostMethod postMethod = new PostMethod(url);	
+		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
+		postMethod.setRequestHeader("Content-type", "application/json");
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(postMethod);
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}						
+	}
+	
+	@Override
 	public JSONArray read(String accessToken, String query) {
 		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/query";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("q", query);
+		
+		System.out.println(query);
 		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -107,7 +159,6 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 			
 			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(getMethod );
-			System.out.println(getMethod.getStatusCode());
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				try {
 					JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));

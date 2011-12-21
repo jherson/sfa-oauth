@@ -11,6 +11,8 @@ public interface SforceService {
 	public JSONArray read(String accessToken, String query);
 	public void update(String accessToken, String sobject, String id, JSONObject jsonObject) throws SforceServiceException;
 	public void delete(String accessToken, String sobject, String id);
+	public void copyQuote(String accessToken, String quoteId);
     public void activateQuote(String accessToken, String quoteId);
     public void calculateQuote(String accessToken, String quoteId);
+    public String getCurrentUserId(String accessToken);
 }

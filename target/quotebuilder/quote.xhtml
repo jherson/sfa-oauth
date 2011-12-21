@@ -45,24 +45,7 @@
 
 		<h:form>		
 		
-		<a4j:status
-    id="waitStatus"
-    forceId="true"
-    onstart="javascript:Richfaces.showModalPanel('waitModalPanel');"
-    onstop="javascript:Richfaces.hideModalPanel('waitModalPanel');"/>
-<rich:popupPanel
-    modal="true"
-    id="waitModalPanel"
-    autosized="true"
-    width="200"
-    height="120"
-    moveable="false"
-    resizeable="false">
-    <f:facet name="header">
-        <h:outputText value="Processing"/>
-    </f:facet>
-    <h:outputText value="Please wait..."/>
-</rich:popupPanel>
+		
 		
 
 			<rich:panel id="quoteListPanel">
@@ -106,7 +89,10 @@
 							rendered="#{not quote.isActive}"
 							action="#{quoteManager.deleteQuote(quote)}" ajaxSingle="true"
 							status="waitStatus"
-							render="quoteList, :details" />
+							render="quoteList, :details" > 
+							<h:graphicImage value="./images/delete.png" styleClass="centered"
+							rendered="#{quote.isActive}" />
+						</a4j:commandLink>
 					</rich:column>
 
 					<rich:column>
@@ -135,7 +121,7 @@
 						<h:outputText value="#{quote.currencyIsoCode}" />
 						<h:outputText value="  " escape="false" />
 						<h:outputText value="#{quote.amount}">
-							<f:convertNumber locale="in" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+							<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 						</h:outputText>
 					</rich:column>
 
@@ -187,7 +173,9 @@
 						<h:outputText value="#{msgs.payNow}" />
 						<h:outputText value="#{quoteForm.selectedQuote.payNow}" />
 						<h:outputText value="#{msgs.amount}" />
-						<h:outputText value="#{quoteForm.selectedQuote.amount}" />
+						<h:outputText value="#{quoteForm.selectedQuote.amount}" > 
+						    <f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+						</h:outputText>
 
 						<h:outputText value="#{msgs.owner}" />
 						<h:outputText value="#{quoteForm.selectedQuote.ownerName}" />
@@ -195,14 +183,25 @@
 						<h:outputText value="#{quoteForm.selectedQuote.contactName}" />
 
 						<h:outputText value="#{msgs.effectiveDate}" />
-						<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}" />
+						<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}" > 
+						    <f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
+						</h:outputText>
 						<h:outputText value="#{msgs.expirationDate}" />
-						<h:outputText value="#{quoteForm.selectedQuote.expirationDate}" />
+						<h:outputText value="#{quoteForm.selectedQuote.expirationDate}" > 
+						    <f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
+						</h:outputText>
 
 						<h:outputText value="#{msgs.referenceNumber}" />
 						<h:outputText value="#{quoteForm.selectedQuote.referenceNumber}" />
 						<h:outputText value="#{msgs.endDate}" />
-						<h:outputText value="#{quoteForm.selectedQuote.endDate}" />
+						<h:outputText value="#{quoteForm.selectedQuote.endDate}" > 
+						    <f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
+						</h:outputText>
+						
+						<h:outputText value="#{msgs.createdBy}" />
+						<h:outputText value="#{quoteForm.selectedQuote.createdByName}, #{quoteForm.selectedQuote.createdDate}" />
+						<h:outputText value="#{msgs.lastModifiedBy}" />
+						<h:outputText value="#{quoteForm.selectedQuote.lastModifiedByName}, #{quoteForm.selectedQuote.lastModifiedDate}" />
 
 					</h:panelGrid>
 
@@ -240,21 +239,21 @@
 									<f:facet name="header">#{msgs.startDate}</f:facet>
 									<h:outputText value="#{lineItem.startDate}"
 										style="text-align: center">
-										<f:convertDateTime pattern="MM/dd/yyyy" type="date" />
+										<f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
 									</h:outputText>
 								</rich:column>
 								<rich:column>
 									<f:facet name="header">#{msgs.endDate}</f:facet>
 									<h:outputText value="#{lineItem.endDate}"
 										style="text-align: center">
-										<f:convertDateTime pattern="MM/dd/yyyy" type="date" />
+										<f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
 									</h:outputText>
 								</rich:column>
 
 								<rich:column>
 									<f:facet name="header">#{msgs.listPrice}</f:facet>
 									<h:outputText value="#{lineItem.listPrice}">
-										<f:convertNumber pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+										<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 									</h:outputText>
 								</rich:column>
 
@@ -266,18 +265,29 @@
 								<rich:column>
 									<f:facet name="header">#{msgs.unitPrice}</f:facet>
 									<h:outputText value="#{lineItem.unitPrice}">
-										<f:convertNumber pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+										<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 									</h:outputText>
 								</rich:column>
 
 								<rich:column>
 									<f:facet name="header">#{msgs.totalPrice}</f:facet>
 									<h:outputText value="#{lineItem.totalPrice}">
-										<f:convertNumber pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+										<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 									</h:outputText>
 								</rich:column>
 
 							</rich:dataTable>
+						</rich:tab>
+						<rich:tab header="#{msgs.invoiceSchedule}">
+						
+						
+						
+						
+						</rich:tab>
+						
+						<rich:tab header="#{msgs.discounts}">
+						
+						
 						</rich:tab>
 					</rich:tabPanel>
 				</rich:panel>

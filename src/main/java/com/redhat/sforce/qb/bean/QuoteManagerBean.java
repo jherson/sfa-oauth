@@ -17,10 +17,8 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
-import com.redhat.sforce.qb.bean.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
 
@@ -40,8 +38,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	private String opportunityId;
 					
 	@PostConstruct
-	public void init() {
-		
+	public void init() {		
 		
 	}	
 	
@@ -115,18 +112,6 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		return null;
 	}
 	
-	public void saveQuoteLineItems(QuoteLineItem quoteLineItem) {
-//		try {
-//			if (quoteLineItem.getId() != null) {
-//				//sforceService.update(userBean.getSessionId(), "QuoteLineItem__c", quoteLineItem.getId(), QuoteLineItemFactory.convertQuoteLineItemsToJson(quoteLineItemList));
-//			}
-//		} catch (SforceServiceException e) {
-//			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-//			FacesContext.getCurrentInstance().addMessage(null, message);
-//			System.out.println(e);
-//		}
-	}
-	
 	@Override 
 	public void activateQuote(Quote quote) {
 		sforceService.activateQuote(userBean.getSessionId(), quote.getId());
@@ -153,9 +138,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void copyQuote(Quote quote) {	
-		Quote copy = QuoteFactory.copyQuote(quote);		
-		String quoteId = createQuote(copy);
-		copy.setId(quoteId);		
+		sforceService.copyQuote(userBean.getSessionId(), quote.getId());
 		refresh();
 	}	
 	
@@ -178,35 +161,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	private QuoteForm getQuoteForm() {
 		return (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");
 	}
-	
-	private static final String userQuery = 
-		"Select Id, " +
-            "Username, " +
-            "LastName, " +
-            "FirstName, " +
-            "Name, " +
-            "CompanyName, " +
-            "Division, " +
-            "Department, " +
-            "Title, " +
-            "Street, " +
-            "City, " +
-            "State, " +
-            "PostalCode, " +
-            "Country, " +
-            "Email, " +
-            "Phone, " +
-            "Fax, " +
-            "MobilePhone, " +
-            "Alias, " +
-            "DefaultCurrencyIsoCode, " +
-		    "Extension, " +
-            "Region__c, " +
-            "UserRole.Name, " +
-            "Profile.Name " +
-     "From   User " +
-     "Where  Id = '#opportunityId#'";
-	
+			
 	private static final String opportunityQuery =
 	    	"Select Id, " +
 	    	       "AccountId, " +
