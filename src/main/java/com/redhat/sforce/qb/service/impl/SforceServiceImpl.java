@@ -18,7 +18,6 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 import org.json.JSONTokener;
 
 import com.redhat.sforce.qb.exception.SforceServiceException;
@@ -94,14 +93,14 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	@Override
 	public String getCurrentUserId(String accessToken) {
 		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?getUserId";
+		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
 		getMethod.setRequestHeader("Content-type", "application/json");
 		
 		String userId = null;
+		HttpClient httpclient = new HttpClient();
         try {
-			
-			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(getMethod);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {					
 				userId = getMethod.getResponseBodyAsString().trim();					
@@ -117,7 +116,6 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		}
         
         return userId;
-
 	}
 	
 	@Override
@@ -147,17 +145,14 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("q", query);
 		
-		System.out.println(query);
-		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
 		getMethod.setRequestHeader("Content-Type", "application/json");
 		getMethod.setQueryString(params);
 		
-		JSONArray queryResult = null;					
+		JSONArray queryResult = null;	
+		HttpClient httpclient = new HttpClient();
 		try {
-			
-			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(getMethod );
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				try {
@@ -257,27 +252,16 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
 		postMethod.setRequestHeader("Content-type", "application/json");
-		System.out.println(jsonObject.toString());
+
 		try {								
 			postMethod.setRequestEntity(new StringRequestEntity(jsonObject.toString(), "application/json", null));
 			
 			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(postMethod);
-			System.out.println("update status code: " + postMethod.getStatusCode());
 			
 			if (postMethod.getStatusCode() == 400) {				
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
-			} else {
-				
-				
-                //JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));
-				
-				//System.out.println("Update response: " + response.toString(2));
-
-				//if (response.getBoolean("success")) {
-				//	System.out.println("updated: " + response.getString("id"));
-				//}
-			}
+			} 
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -287,9 +271,6 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-//		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -317,25 +298,4 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 
 		return null;
 	}
-	
-	/**
-	 * if (resp.getStatusLine().getStatusCode() == 400)
-{
-	JSONArray value = (JSONArray)new JSONTokener(result).nextValue();
-	JSONObject object = (JSONObject)value.get(0);
-	String errorCode = object.getString("errorCode");
-	if (errorCode != null)
-	{
-   		errorMsg = object.getString("message");
-   		showDialog(1);
-   		return;
-	}
-}
-
-"fields" : [ "BillingState" ],
-"message" : "Billing State is required",
-"errorCode" : "FIELD_CUSTOM_VALIDATION_EXCEPTION"
-
-
-	 */
 }
