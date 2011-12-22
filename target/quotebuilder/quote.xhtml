@@ -8,9 +8,6 @@
 
 	<h:outputStylesheet>
 	
-        .width150 {
-            width: 150px;
-        }
         
         .label-column {
             font-weight: bold;
@@ -59,12 +56,13 @@
 
 				<rich:extendedDataTable id="quoteList" var="quote"
 					value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
-					selection="#{quoteForm.selection}" frozenColumns="2"
+					selection="#{quoteForm.selection}" 
 					style="height:200px; width:100%;">
+					
 					<a4j:ajax execute="@this" event="selectionchange"
 						listener="#{quoteForm.selectionListener}" render=":details" />
 
-					<rich:column>
+					<rich:column width="150px">
 					    <f:facet name="header">#{msgs.action}</f:facet>
 						<a4j:commandLink id="calculate" value="#{msgs.calculate}"
 							action="#{quoteManager.calculateQuote(quote)}" ajaxSingle="true"
@@ -85,13 +83,12 @@
 						
 						<h:outputText value="  " escape="false" />
 
-						<a4j:commandLink id="delete" value="#{msgs.delete}"
+						<a4j:commandLink id="delete" 
 							rendered="#{not quote.isActive}"
 							action="#{quoteManager.deleteQuote(quote)}" ajaxSingle="true"
 							status="waitStatus"
-							render="quoteList, :details" > 
-							<h:graphicImage value="./images/delete.png" styleClass="centered"
-							rendered="#{quote.isActive}" />
+							render="quoteList, :details" >							 
+							<h:graphicImage value="./images/delete.png" styleClass="centered" title="#{msgs.delete}"/>
 						</a4j:commandLink>
 					</rich:column>
 
@@ -100,7 +97,7 @@
 						<h:outputText value="#{quote.number}" />
 					</rich:column>
 
-					<rich:column>
+					<rich:column width="275px">
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<h:outputText value="#{quote.name}" />
 					</rich:column>
