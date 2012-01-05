@@ -10,7 +10,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<richfaces.version>4.1.0.CR2</richfaces.version>
+		<richfaces.version>4.1.0.Final</richfaces.version>
 		<seam.version>2.2.2.Final</seam.version>
 	</properties>
 

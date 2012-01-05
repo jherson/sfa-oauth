@@ -1,8 +1,6 @@
 package com.redhat.sforce.util;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,19 +56,5 @@ public class JSONObjectWrapper {
 	
 	public JSONArray getRecords(String object) throws JSONException {
 		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getJSONArray("records");
-	}
-	
-	private Date applyLocalDatePattern(Date dateValue) throws ParseException {
-		SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
-		//formatter.applyLocalizedPattern("MM/dd/yyyy");
-		System.out.println(formatter.parse(formatter.format(dateValue)));
-		return (formatter.parse(formatter.format(dateValue)));
-	}
-	
-	private Double applyLocalCurrencyPattern(Double doubleValue) throws ParseException {
-		NumberFormat numberFormat = DecimalFormat.getNumberInstance(locale);
-		numberFormat.setMinimumFractionDigits(2);
-		numberFormat.setMaximumFractionDigits(2);
-		return Double.valueOf(numberFormat.format(doubleValue));
-	}
+	}	
 }

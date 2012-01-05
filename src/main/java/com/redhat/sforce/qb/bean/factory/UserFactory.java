@@ -1,13 +1,38 @@
 package com.redhat.sforce.qb.bean.factory;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.User;
+import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class UserFactory {
+	
+	public static List<User> parseUsers(JSONArray jsonArray) throws JSONException {
+		List<User> userList = new ArrayList<User>();
+		
+		for (int i = 0; i < jsonArray.length(); i++) {	
+			JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(i).getJSONObject("User"));
+			
+			User user = new User();
+			user.setId(wrapper.getId());
+			user.setLastName(wrapper.getString("LastName"));
+			user.setFirstName(wrapper.getString("FirstName"));
+			user.setName(wrapper.getString("Name"));
+			user.setContactId(wrapper.getString("ContactId"));
+			user.setTitle(wrapper.getString("Email"));
+			user.setPhone(wrapper.getString("Phone"));
+			user.setTitle(wrapper.getString("Title"));
+			user.setDepartment(wrapper.getString("Department"));
+		}
+		
+		return userList;
+		
+	}
 
 	public static User getUser(JSONObject jsonObject)  throws JSONException {
 		User user = new User();
@@ -35,44 +60,7 @@ public class UserFactory {
 		user.setRegion(jsonObject.getString("Region__c"));
 		user.setRoleName(jsonObject.getString("UserRole.Name"));
 		user.setProfileName(jsonObject.getString("Profile.Name"));
-		
-		
+			
 		return user;
 	}
-	
-	private void getDateFormat(User user) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat();
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat();
-
-//        if (getCountry() != null && getDefaultCurrencyIsoCode() != null) {
-//            dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, new Locale(getLanguage(), getCountry(),
-//                    getDefaultCurrencyIsoCode()));
-//            dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, new Locale(
-//                    getLanguage(), getCountry(), getDefaultCurrencyIsoCode()));
-//        } else if (getCountry() != null && getDefaultCurrencyIsoCode() == null) {
-//            dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, new Locale(getLanguage(), getCountry()));
-//            dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, new Locale(
-//                    getLanguage(), getCountry()));
-//        } else {
-//            dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, new Locale(getLanguage()));
-//            dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, new Locale(
-//                    getLanguage()));
-//        }
-//
-//        String pattern = dateFormat.toPattern();
-//        int len = pattern.length();
-//        int yearBegin = pattern.lastIndexOf('y') + 1;
-//        if (yearBegin < 4)
-//            pattern = pattern.substring(0, yearBegin) + "yy" + (yearBegin < len ? pattern.substring(yearBegin, len) : "");
-//        setDateFormatPattern(pattern);
-//        setDateFormat(new SimpleDateFormat(pattern));
-//        pattern = dateTimeFormat.toPattern();
-//        
-//
-//        DateFormatSymbols symbols = dateFormat.getDateFormatSymbols();
-//        symbols.setLocalPatternChars("GyMdkHmsSEDFwWahKzZ");
-//        dateFormat.setDateFormatSymbols(symbols);
-//        setCalendarFormatPattern(dateFormat.toLocalizedPattern().toLowerCase().replaceFirst("yyyy", "%Y").replaceFirst("yy", "%Y")
-//                .replaceFirst("mm", "m").replaceFirst("dd", "d").replaceFirst("m", "%m").replaceFirst("d", "%d"));
-    }
 }

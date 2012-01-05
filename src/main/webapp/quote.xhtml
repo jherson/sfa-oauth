@@ -3,18 +3,17 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
-
+	xmlns:rich="http://richfaces.org/rich"> 	
 
 	<h:outputStylesheet>
-	
-        
+	        
         .label-column {
             font-weight: bold;
             text-align: right;
             padding-top: 3px;
             padding-right: 5px;
             padding-bottom: 3px;
+            height: 25px;
             width: 15%;
         }
         
@@ -23,275 +22,434 @@
             padding-top: 3px;
             padding-left: 5px;
             padding-bottom: 3px;
+            height: 25px;
             width: 35%;
         }
                 
-        .commandButton {
-            width: 100px; 
-            height: 20px; 
-            cursor: hand;         
+        .button {
+            width: 75px; 
+            height: 22px; 
+            cursor: hand;       
         }
-        
+                        
     </h:outputStylesheet>
+    
+    		
+    
 
-	<h:panelGrid columns="1" style="width: 100%;">
+    <ui:include src="editquote.xhtml" />
+	<ui:include src="contacts.xhtml" />
+	<ui:include src="owners.xhtml" />
 
-		<hr />
-						
-		<ui:include src="editquote.xhtml" />
+	<h:form>
+	
+	   <h:panelGroup style="display: block; text-align: right">
+			<a4j:commandLink id="new"
+				action="#{quoteManager.newQuote(quoteForm.opportunity)}"			
+				oncomplete="#{rich:component('editQuotePanel')}.show()"
+				rendered="#{not quoteForm.opportunity.isClosed}"
+				reRender="#{rich:clientId('editQuotePanel')}" ajaxSingle="true">
+				
+				<h:graphicImage value="./images/new.png" title="#{msgs.new}" />
+			</a4j:commandLink>
+		</h:panelGroup>
 
-		<h:form>		
-		
-		
-		
+		<rich:extendedDataTable id="quoteList" var="quote"
+			value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
+			selection="#{quoteForm.selection}" style="height:220px; width:100%;"
+			selectedClass="dataTableSelectedRow">
 
-			<rich:panel id="quoteListPanel">
+			<f:facet name="header">
 
+				<h:panelGroup style="display: block; text-align: right">
+					<a4j:commandButton value="#{msgs.refresh}"
+						action="#{quoteManager.refresh()}" styleClass="button"
+						ajaxSingle="true" render="quoteList, :details" />
+
+
+				</h:panelGroup>
+			</f:facet>
+
+			<a4j:ajax execute="@this" event="selectionchange"
+				listener="#{quoteForm.selectionListener}" render=":details" />
+
+			<rich:column width="80px">
+				<f:facet name="header">#{msgs.action}</f:facet>
+
+				<a4j:commandLink id="activate"
+					action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
+					render="quoteList, :details" status="waitStatus">
+					<h:graphicImage value="./images/activate.png" styleClass="centered"
+						title="#{msgs.activate}" />
+				</a4j:commandLink>
+
+				<h:outputText value="  " escape="false" />
+
+				<a4j:commandLink id="copy" action="#{quoteManager.copyQuote(quote)}"
+					ajaxSingle="true" render="quoteList" status="waitStatus">
+					<h:graphicImage value="./images/copy.png" styleClass="centered"
+						title="#{msgs.copy}" />
+				</a4j:commandLink>
+
+				<h:outputText value="  " escape="false" />
+
+				<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
+					action="#{quoteManager.deleteQuote(quote)}" ajaxSingle="true"
+					status="waitStatus" render="quoteList, :details">
+					<h:graphicImage value="./images/delete.png" styleClass="centered"
+						title="#{msgs.delete}" />
+				</a4j:commandLink>
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.number}</f:facet>
+
+				<a4j:commandLink value="#{quote.number}" />
+			</rich:column>
+
+			<rich:column width="350px">
+				<f:facet name="header">#{msgs.name}</f:facet>
+				<h:outputText value="#{quote.name}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.type}</f:facet>
+				<h:outputText value="#{quote.type}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.active}</f:facet>
+				<h:graphicImage value="./images/active.png" styleClass="centered"
+					rendered="#{quote.isActive}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.amount} </f:facet>
+				<h:outputText value="#{quote.currencyIsoCode}" />
+				<h:outputText value="  " escape="false" />
+				<h:outputText value="#{quote.amount}">
+					<f:convertNumber locale="#{userBean.locale}"
+						pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+				</h:outputText>
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.owner}</f:facet>
+				<h:outputText value="#{quote.ownerName}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.contact}</f:facet>
+				<h:outputText value="#{quote.contactName}" />
+			</rich:column>
+
+		</rich:extendedDataTable>
+
+		<br />
+
+		<a4j:outputPanel id="details">
+			<rich:panel>
 				<f:facet name="header">
-					<h:panelGroup style="display: block; text-align: left">
-						<h:outputText id="opportunityName"
-							value="#{msgs.quoteListHeader}: #{quoteForm.opportunity.name}" />
-					</h:panelGroup>
+					<h:outputText value="#{msgs.quoteDetailsHeader}" />
 				</f:facet>
 
-				<rich:extendedDataTable id="quoteList" var="quote"
-					value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
-					selection="#{quoteForm.selection}" 
-					style="height:200px; width:100%;">
-					
-					<a4j:ajax execute="@this" event="selectionchange"
-						listener="#{quoteForm.selectionListener}" render=":details" />
+				<h:panelGrid styleClass="rf-dt" rowClasses="rf-dt-c"
+					style="width: 100%; border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; "
+					columnClasses="label-column,column-l-align,label-column,column-l-align"
+					columns="4">
 
-					<rich:column width="150px">
-					    <f:facet name="header">#{msgs.action}</f:facet>
-						<a4j:commandLink id="calculate" value="#{msgs.calculate}"
-							action="#{quoteManager.calculateQuote(quote)}" ajaxSingle="true"
-							render="quoteList, :details" 
-							status="waitStatus" />
+					<h:outputText value="#{msgs.name}" />
+					<h:inputText value="#{quoteForm.selectedQuote.name}"
+						style="width:300px"
+						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}" />
+					<h:outputText value="#{quoteForm.selectedQuote.name}"
+						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
-						<h:outputText value="  " escape="false" />
-					
-						<a4j:commandLink id="activate" value="#{msgs.activate}"
-							action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
-							render="quoteList" />
+					<h:outputText value="#{msgs.number}" />
+					<h:outputText value="#{quoteForm.selectedQuote.number}" />
 
-						<h:outputText value="  " escape="false" />
-						
-						<a4j:commandLink id="copy" value="#{msgs.copy}"
-							action="#{quoteManager.copyQuote(quote)}" ajaxSingle="true"
-							render="quoteList" />
-						
-						<h:outputText value="  " escape="false" />
+					<h:outputText value="#{msgs.type}" />
+					<h:outputText value="#{quoteForm.selectedQuote.type}"
+						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote or quoteForm.selectedQuote.id != null}" />
+					<h:selectOneMenu value="#{quoteForm.selectedQuote.type}"
+						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote and quoteForm.selectedQuote.id == null}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemValue="Standard" />
+						<f:selectItem itemValue="Co-Term" />
+						<f:selectItem itemValue="Non Standard" />
+					</h:selectOneMenu>
 
-						<a4j:commandLink id="delete" 
-							rendered="#{not quote.isActive}"
-							action="#{quoteManager.deleteQuote(quote)}" ajaxSingle="true"
-							status="waitStatus"
-							render="quoteList, :details" >							 
-							<h:graphicImage value="./images/delete.png" styleClass="centered" title="#{msgs.delete}"/>
+					<h:outputText value="#{msgs.version}" />
+					<h:outputText value="#{quoteForm.selectedQuote.version}" />
+
+					<h:outputText value="#{msgs.active}" />
+					<h:panelGroup>
+						<h:graphicImage value="./images/active.png"
+							rendered="#{quoteForm.selectedQuote.isActive}" />
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.currency}" />
+					<h:outputText value="#{quoteForm.selectedQuote.currencyIsoCode}"
+						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote or quoteForm.selectedQuote.id != null}" />
+					<h:selectOneMenu value="#{quoteForm.selectedQuote.currencyIsoCode}"
+						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote and quoteForm.selectedQuote.id == null}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemValue="USD" />
+						<f:selectItem itemValue="EUR" />
+						<f:selectItem itemValue="GBP" />
+					</h:selectOneMenu>
+
+					<h:outputText value="#{msgs.payNow}" />
+					<h:selectOneMenu value="#{quoteForm.selectedQuote.payNow}"
+						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemValue="Yes" />
+						<f:selectItem itemValue="No" />
+					</h:selectOneMenu>
+					<h:outputText value="#{quoteForm.selectedQuote.payNow}"
+						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+
+					<h:outputText value="#{msgs.amount}" />
+					<h:outputText value="#{quoteForm.selectedQuote.amount}">
+						<f:convertNumber locale="#{userBean.locale}"
+							pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+					</h:outputText>
+
+					<h:outputText value="#{msgs.owner}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.selectedQuote.ownerName}" />
+
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+
+						<a4j:commandLink id="changeOwner"
+							oncomplete="#{rich:component('ownerPanel')}.show()"
+							action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
+							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+							reRender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
+
+							<h:graphicImage value="./images/search.png"
+								title="#{msgs.change}" />
+
 						</a4j:commandLink>
-					</rich:column>
 
-					<rich:column>
-						<f:facet name="header">#{msgs.number}</f:facet>
-						<h:outputText value="#{quote.number}" />
-					</rich:column>
+					</h:panelGroup>
 
-					<rich:column width="275px">
-						<f:facet name="header">#{msgs.name}</f:facet>
-						<h:outputText value="#{quote.name}" />
-					</rich:column>
+					<h:outputText value="#{msgs.contact}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.selectedQuote.contactName}" />
 
-					<rich:column>
-						<f:facet name="header">#{msgs.type}</f:facet>
-						<h:outputText value="#{quote.type}" />
-					</rich:column>
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+						<h:outputText value=" " />
 
-					<rich:column>
-						<f:facet name="header">#{msgs.active}</f:facet>
-						<h:graphicImage value="./images/active.png" styleClass="centered"
-							rendered="#{quote.isActive}" />
-					</rich:column>
+						<a4j:commandLink id="changeContact"
+							oncomplete="#{rich:component('contactPanel')}.show()"
+							action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
+							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+							reRender="#{rich:clientId('contactPanel')}" ajaxSingle="true">
 
-					<rich:column>
-						<f:facet name="header">#{msgs.amount} </f:facet>
-						<h:outputText value="#{quote.currencyIsoCode}" />
-						<h:outputText value="  " escape="false" />
-						<h:outputText value="#{quote.amount}">
-							<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+							<h:graphicImage value="./images/search.png"
+								title="#{msgs.change}" />
+
+						</a4j:commandLink>
+
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.effectiveDate}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}"
+							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+
+						<rich:calendar value="#{quoteForm.selectedQuote.effectiveDate}"
+							id="effectiveDate" locale="#{userBean.locale}" popup="true"
+							datePattern="#{userBean.dateFormatPattern}"
+							showApplyButton="false" cellWidth="24px" cellHeight="22px"
+							style="width:200px"
+							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+							disabled="false">
+						</rich:calendar>
+
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.expirationDate}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.selectedQuote.expirationDate}"
+							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+
+						<rich:calendar value="#{quoteForm.selectedQuote.expirationDate}"
+							id="expirationDate" locale="#{userBean.locale}" popup="true"
+							datePattern="#{userBean.dateFormatPattern}"
+							showApplyButton="false" cellWidth="24px" cellHeight="22px"
+							style="width:200px"
+							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+							disabled="false">
+						</rich:calendar>
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.referenceNumber}" />
+					<h:outputText value="#{quoteForm.selectedQuote.referenceNumber}"
+						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+					<h:inputText value="#{quoteForm.selectedQuote.referenceNumber}"
+						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}" />
+
+					<h:outputText value=" "
+						rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
+					<h:outputText value=" "
+						rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
+
+					<h:outputText value="#{msgs.term}"
+						rendered="#{quoteForm.selectedQuote.type == 'Standard'}" />
+					<h:panelGroup
+						rendered="#{quoteForm.selectedQuote.type == 'Standard'}">
+						<h:outputText value="#{quoteForm.selectedQuote.term}"
+							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+						<h:selectOneMenu value="#{quoteForm.selectedQuote.term}"
+							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}">
+							<f:selectItem itemLabel="" itemValue="" />
+							<f:selectItem itemLabel="1" itemValue="365" />
+							<f:selectItem itemLabel="3" itemValue="1095" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.endDate}"
+						rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}" />
+					<h:panelGroup
+						rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}">
+						<h:outputText value="#{quoteForm.selectedQuote.endDate}"
+							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+						<rich:calendar value="#{quoteForm.selectedQuote.endDate}"
+							id="endDate" locale="#{userBean.locale}" popup="true"
+							datePattern="#{userBean.dateFormatPattern}"
+							showApplyButton="false" cellWidth="24px" cellHeight="22px"
+							style="width:200px"
+							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+							disabled="false">
+						</rich:calendar>
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.createdBy}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.selectedQuote.createdByName}" />
+						<h:outputText value=", " escape="false"
+							rendered="#{not empty quoteForm.selectedQuote}" />
+						<h:outputText value="#{quoteForm.selectedQuote.createdDate}">
+							<f:convertDateTime locale="#{userBean.locale}"
+								pattern="#{userBean.dateTimeFormatPattern}" type="date" />
 						</h:outputText>
-					</rich:column>
+					</h:panelGroup>
+					<h:outputText value="#{msgs.lastModifiedBy}" />
+					<h:panelGroup>
+						<h:outputText
+							value="#{quoteForm.selectedQuote.lastModifiedByName}" />
+						<h:outputText value=", " escape="false"
+							rendered="#{not empty quoteForm.selectedQuote}" />
+						<h:outputText value="#{quoteForm.selectedQuote.lastModifiedDate}">
+							<f:convertDateTime locale="#{userBean.locale}"
+								pattern="#{userBean.dateTimeFormatPattern}" type="date" />
+						</h:outputText>
+					</h:panelGroup>
 
-				</rich:extendedDataTable>
+				</h:panelGrid>
 
 				<br />
 
 				<h:panelGroup style="display: block; text-align: right">
-					<a4j:commandButton value="#{msgs.create}"
-						styleClass="commandButton" action="#{quoteManager.newQuote()}"
-						oncomplete="#{rich:component('editQuotePanel')}.show()"
-						render="editquoterouter" ajaxSingle="true" />
+					<a4j:commandButton value="#{msgs.save}" styleClass="button"
+						rendered="#{not empty quoteForm.selectedQuote}"
+						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
+						render="quoteList, details" ajaxSingle="true" />
 
-						<h:outputText value="  " escape="false" />
+					<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
+						rendered="#{not empty quoteForm.selectedQuote}"
+						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
+						render="quoteList, details" ajaxSingle="true" />
 
-						<a4j:commandButton value="#{msgs.refresh}"
-							action="#{quoteManager.refresh()}" styleClass="commandButton"
-							ajaxSingle="true" render="quoteList, :details" />
 				</h:panelGroup>
 
+				<br />
+
+				<hr />
+				<rich:tabPanel switchType="client">
+					<rich:tab header="#{msgs.quoteLineItems}">
+						<rich:dataTable style="width: 100%" var="lineItem"
+							value="#{quoteForm.selectedQuote.quoteLineItems}">
+							<rich:column>
+								<f:facet name="header">#{msgs.productCode}</f:facet>
+								<h:outputText value="#{lineItem.productCode}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msgs.configuredSku}</f:facet>
+								<h:outputText value="#{lineItem.configuredSku}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msgs.description}</f:facet>
+								<h:outputText value="#{lineItem.productDescription}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msgs.startDate}</f:facet>
+								<h:outputText value="#{lineItem.startDate}"
+									style="text-align: center">
+									<f:convertDateTime locale="#{userBean.locale}"
+										pattern="#{userBean.dateFormatPattern}" type="date" />
+								</h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msgs.endDate}</f:facet>
+								<h:outputText value="#{lineItem.endDate}"
+									style="text-align: center">
+									<f:convertDateTime locale="#{userBean.locale}"
+										pattern="#{userBean.dateFormatPattern}" type="date" />
+								</h:outputText>
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">#{msgs.listPrice}</f:facet>
+								<h:outputText value="#{lineItem.listPrice}">
+									<f:convertNumber locale="#{userBean.locale}"
+										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+								</h:outputText>
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">#{msgs.quantity}</f:facet>
+								<h:outputText value="#{lineItem.quantity}" />
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">#{msgs.unitPrice}</f:facet>
+								<h:outputText value="#{lineItem.unitPrice}">
+									<f:convertNumber locale="#{userBean.locale}"
+										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+								</h:outputText>
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">#{msgs.totalPrice}</f:facet>
+								<h:outputText value="#{lineItem.totalPrice}">
+									<f:convertNumber locale="#{userBean.locale}"
+										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+								</h:outputText>
+							</rich:column>
+
+						</rich:dataTable>
+					</rich:tab>
+					<rich:tab header="#{msgs.invoiceSchedule}">
+
+
+
+
+					</rich:tab>
+
+					<rich:tab header="#{msgs.discounts}">
+
+
+					</rich:tab>
+				</rich:tabPanel>
 			</rich:panel>
+		</a4j:outputPanel>
 
-			<a4j:outputPanel id="details">
-				<rich:panel>
-					<f:facet name="header">
-						<h:outputText value="#{msgs.quoteDetailsHeader}" />
-					</f:facet>
-
-					<h:panelGrid styleClass="rf-dt" rowClasses="rf-dt-c"
-						style="width: 100%; border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; "
-						columnClasses="label-column,column-l-align,label-column,column-l-align"
-						columns="4">
-
-						<h:outputText value="#{msgs.name}" />
-						<h:outputText value="#{quoteForm.selectedQuote.name}" />
-						<h:outputText value="#{msgs.number}" />
-						<h:outputText value="#{quoteForm.selectedQuote.number}" />
-
-						<h:outputText value="#{msgs.type}" />
-						<h:outputText value="#{quoteForm.selectedQuote.type}" />
-						<h:outputText value="#{msgs.version}" />
-						<h:outputText value="#{quoteForm.selectedQuote.version}" />
-
-						<h:outputText value="#{msgs.active}" />
-						<h:outputText value="#{quoteForm.selectedQuote.isActive}" />
-						<h:outputText value="#{msgs.currency}" />
-						<h:outputText value="#{quoteForm.selectedQuote.currencyIsoCode}" />
-
-						<h:outputText value="#{msgs.payNow}" />
-						<h:outputText value="#{quoteForm.selectedQuote.payNow}" />
-						<h:outputText value="#{msgs.amount}" />
-						<h:outputText value="#{quoteForm.selectedQuote.amount}" > 
-						    <f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
-						</h:outputText>
-
-						<h:outputText value="#{msgs.owner}" />
-						<h:outputText value="#{quoteForm.selectedQuote.ownerName}" />
-						<h:outputText value="#{msgs.contact}" />
-						<h:outputText value="#{quoteForm.selectedQuote.contactName}" />
-
-						<h:outputText value="#{msgs.effectiveDate}" />
-						<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}" > 
-						    <f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
-						</h:outputText>
-						<h:outputText value="#{msgs.expirationDate}" />
-						<h:outputText value="#{quoteForm.selectedQuote.expirationDate}" > 
-						    <f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
-						</h:outputText>
-
-						<h:outputText value="#{msgs.referenceNumber}" />
-						<h:outputText value="#{quoteForm.selectedQuote.referenceNumber}" />
-						<h:outputText value="#{msgs.endDate}" />
-						<h:outputText value="#{quoteForm.selectedQuote.endDate}" > 
-						    <f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
-						</h:outputText>
-						
-						<h:outputText value="#{msgs.createdBy}" />
-						<h:outputText value="#{quoteForm.selectedQuote.createdByName}, #{quoteForm.selectedQuote.createdDate}" />
-						<h:outputText value="#{msgs.lastModifiedBy}" />
-						<h:outputText value="#{quoteForm.selectedQuote.lastModifiedByName}, #{quoteForm.selectedQuote.lastModifiedDate}" />
-
-					</h:panelGrid>
-
-					<br />
-
-					<h:panelGroup style="display: block; text-align: right">
-						<a4j:commandButton value="#{msgs.edit}" styleClass="commandButton"
-							rendered="#{not empty quoteForm.selectedQuote}"
-							action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
-							oncomplete="#{rich:component('editQuotePanel')}.show()"
-							render="editquoterouter" ajaxSingle="true" />						
-
-					</h:panelGroup>
-
-					<br />
-					
-					<hr />
-					<rich:tabPanel switchType="client">
-						<rich:tab header="#{msgs.quoteLineItems}">
-							<rich:dataTable style="width: 100%" var="lineItem"
-								value="#{quoteForm.selectedQuote.quoteLineItems}">
-								<rich:column>
-									<f:facet name="header">#{msgs.productCode}</f:facet>
-									<h:outputText value="#{lineItem.productCode}" />
-								</rich:column>
-								<rich:column>
-									<f:facet name="header">#{msgs.configuredSku}</f:facet>
-									<h:outputText value="#{lineItem.configuredSku}" />
-								</rich:column>
-								<rich:column>
-									<f:facet name="header">#{msgs.description}</f:facet>
-									<h:outputText value="#{lineItem.productDescription}" />
-								</rich:column>
-								<rich:column>
-									<f:facet name="header">#{msgs.startDate}</f:facet>
-									<h:outputText value="#{lineItem.startDate}"
-										style="text-align: center">
-										<f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
-									</h:outputText>
-								</rich:column>
-								<rich:column>
-									<f:facet name="header">#{msgs.endDate}</f:facet>
-									<h:outputText value="#{lineItem.endDate}"
-										style="text-align: center">
-										<f:convertDateTime locale="#{userBean.locale}" pattern="#{userBean.dateFormatPattern}" type="date" />
-									</h:outputText>
-								</rich:column>
-
-								<rich:column>
-									<f:facet name="header">#{msgs.listPrice}</f:facet>
-									<h:outputText value="#{lineItem.listPrice}">
-										<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
-									</h:outputText>
-								</rich:column>
-
-								<rich:column>
-									<f:facet name="header">#{msgs.quantity}</f:facet>
-									<h:outputText value="#{lineItem.quantity}" />
-								</rich:column>
-
-								<rich:column>
-									<f:facet name="header">#{msgs.unitPrice}</f:facet>
-									<h:outputText value="#{lineItem.unitPrice}">
-										<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
-									</h:outputText>
-								</rich:column>
-
-								<rich:column>
-									<f:facet name="header">#{msgs.totalPrice}</f:facet>
-									<h:outputText value="#{lineItem.totalPrice}">
-										<f:convertNumber locale="#{userBean.locale}" pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
-									</h:outputText>
-								</rich:column>
-
-							</rich:dataTable>
-						</rich:tab>
-						<rich:tab header="#{msgs.invoiceSchedule}">
-						
-						
-						
-						
-						</rich:tab>
-						
-						<rich:tab header="#{msgs.discounts}">
-						
-						
-						</rich:tab>
-					</rich:tabPanel>
-				</rich:panel>
-			</a4j:outputPanel>
-
-		</h:form>
-
-	</h:panelGrid>
+	</h:form>
 
 </ui:composition>

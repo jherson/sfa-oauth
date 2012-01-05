@@ -28,6 +28,7 @@ public class User {
 	private String profileName;
 	private String dateFormat;
 	private String numberFormat;
+	private String contactId;
 
     public String getId() {
 		return id;
@@ -235,5 +236,13 @@ public class User {
 
 	public void setNumberFormat(String numberFormat) {
 		this.numberFormat = numberFormat;
+	}
+
+	public String getContactId() {
+		return contactId;
+	}
+
+	public void setContactId(String contactId) {
+		this.contactId = contactId;
 	}	
 }

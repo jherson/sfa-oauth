@@ -1,0 +1,17 @@
+<style>
+ .row1 {
+ background-color: #EDEBEB;
+ font-size: 10px;
+ }
+ .row2 {
+ background-color: #ffffff;
+ font-size: 10px;
+ }
+
+.centered {
+    margin: 0px auto;
+}
+
+.width150 {width: 150px};
+
+</style>

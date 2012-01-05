@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<rich:popupPanel id="ownerPanel" modal="false" autosized="true"
+		border="1" resizeable="false" width="800" height="320" >
+
+		<f:facet name="header">
+			<h:outputText value="Users" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:outputLink value="#"
+				onclick="#{rich:component('ownerPanel')}.hide(); return false;">
+                    X
+                </h:outputLink>
+		</f:facet>
+
+		<h:form>
+
+			<a4j:outputPanel layout="block">
+
+				<rich:dataTable id="userList" var="user"
+					value="#{quoteForm.opportunity.users}"
+					noDataLabel="#{msgs.noRecords}" style="width:100%;">
+
+					<rich:column width="200px">
+						<f:facet name="header">#{msgs.name}</f:facet>
+						<a4j:commandLink value="#{user.name}"
+							action="#{quoteManager.setQuoteOwner(quoteForm.quote, user)}"
+							render="quoteList, details" ajaxSingle="true"
+							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;" />
+					</rich:column>
+
+					<rich:column width="100px">
+						<f:facet name="header">#{msgs.title}</f:facet>
+						<h:outputText value="#{user.title}" />
+					</rich:column>
+
+					<rich:column width="150px">
+						<f:facet name="header">#{msgs.email}</f:facet>
+						<h:outputText value="#{user.email}" />
+					</rich:column>
+
+					<rich:column width="100px">
+						<f:facet name="header">#{msgs.phone}</f:facet>
+						<h:outputText value="#{user.phone}" />
+					</rich:column>
+
+					<rich:column width="150px">
+						<f:facet name="header">#{msgs.department}</f:facet>
+						<h:outputText value="#{user.department}" />
+					</rich:column>
+
+				</rich:dataTable>
+
+				<br />
+
+				<h:panelGroup style="display: block; text-align: right">
+
+					<h:outputText value="  " escape="false" />
+
+					<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
+						oncomplete="#{rich:component('ownerPanel')}.hide(); return false;" />
+
+				</h:panelGroup>
+
+			</a4j:outputPanel>
+
+		</h:form>
+
+	</rich:popupPanel>
+
+</ui:composition>

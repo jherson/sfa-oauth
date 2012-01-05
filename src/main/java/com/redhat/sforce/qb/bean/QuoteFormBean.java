@@ -50,8 +50,17 @@ public class QuoteFormBean implements QuoteForm {
 	}
 
 	@Override
-	public void createQuote() {
+	public void createQuote(Opportunity opportunity) {
 		quote = new Quote();	
+		quote.setOpportunityId(opportunity.getId());
+		quote.setOwnerId(opportunity.getOwnerId());
+		quote.setOwnerName(opportunity.getOwnerName());
+		quote.setPayNow(opportunity.getPayNow());
+		quote.setType("Standard");
+		quote.setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
+		quote.setPricebookId(opportunity.getPricebookId());
+		quote.setEffectiveDate(new java.util.Date());
+		quote.setExpirationDate(quote.getEffectiveDate());
 	}
 
 	@Override

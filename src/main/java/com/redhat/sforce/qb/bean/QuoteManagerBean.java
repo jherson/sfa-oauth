@@ -18,7 +18,9 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Quote;
+import com.redhat.sforce.qb.bean.model.User;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
 
@@ -51,6 +53,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		    	return QuoteFactory.getQuotes(queryResults);
 		    } catch (JSONException e) {
 		    	//logger.error(e);
+		    	e.printStackTrace();
 		    } catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -69,11 +72,14 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		    	return OpportunityFactory.getOpportunity(queryResults);
 		    } catch (JSONException e) {
 		    	//logger.error(e);
-		    }
+		    	e.printStackTrace();
+		    } catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		return null;
-		
+		return null;		
 	}			   	
 	
 	@Override
@@ -82,13 +88,21 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public void newQuote() {
-		getQuoteForm().createQuote();
+	public void newQuote(Opportunity opportunity) {
+		getQuoteForm().createQuote(opportunity);
+	}
+	
+	@Override
+	public void saveQuote(Quote quote) {
+		if (quote.getId() != null) {
+			updateQuote(quote);
+		} else {
+			createQuote(quote);
+		}
 	}
 	
 	@Override
 	public void updateQuote(Quote quote) {
-		System.out.println("quote id: " + quote.getId());
 		try {
 	        sforceService.update(userBean.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.convertQuoteToJson(quote));
 		} catch (SforceServiceException e) {
@@ -99,17 +113,15 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public String createQuote(Quote quote) {
+	public void createQuote(Quote quote) {
 		try {
-			return sforceService.create(userBean.getSessionId(), "Quote__c", QuoteFactory.convertQuoteToJson(quote));
-			
+			sforceService.create(userBean.getSessionId(), "Quote__c", QuoteFactory.convertQuoteToJson(quote));
+			refresh();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			System.out.println(e);
 		}
-		
-		return null;
 	}
 	
 	@Override 
@@ -141,6 +153,24 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		sforceService.copyQuote(userBean.getSessionId(), quote.getId());
 		refresh();
 	}	
+	
+	@Override
+	public void setQuoteContact(Quote quote, Contact contact) {
+		quote.setContactId(contact.getId());
+		quote.setContactName(contact.getName());
+	}
+	
+	@Override
+	public void setQuoteOwner(Quote quote, User user) {
+		quote.setOwnerId(user.getId());
+		quote.setOwnerName(user.getName());
+	}
+	
+	@Override
+	public void cancel(Quote quote) {
+		quote = null;
+		getQuoteForm().setSelectedQuote(null);
+	}
 	
 	public String getOpportunityId() {
 		return opportunityId;
@@ -255,18 +285,24 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	                       "PricebookEntry.Product2.Family, " +
 	                       "PricebookEntry.Product2.ProductCode " +			           
 			        "From   OpportunityLineItems), " +
-			       "(Select User.Id, " +
+			       "(Select Id, " +
+			               "User.Id, " +
 	    	               "User.Name, " +
 	    	               "User.FirstName, " +
 	    	               "User.LastName, " +
 	                       "User.ContactId, " +
-	    	               "User.Email " +
+	    	               "User.Email, " +
+	                       "User.Phone, " +
+	    	               "User.Title, " +
+	                       "User.Department " +
 	    	        "From   OpportunityTeamMembers), " +
-	    	       "(Select Contact.Id, " +
+	    	       "(Select Id, " +
+	    	               "Contact.Id, " +
 	    	               "Contact.Name, " +
 	    	               "Contact.FirstName, " +
 	    	               "Contact.LastName, " +
 	    	               "Contact.Email, " +
+	    	               "Contact.Phone, " +
 	    	               "Contact.Department, " +
 	    	               "Contact.Title " +
 	    	        "From   OpportunityContactRoles), " +

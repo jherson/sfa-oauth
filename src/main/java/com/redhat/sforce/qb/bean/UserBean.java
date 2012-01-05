@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.redhat.sforce.qb.service.SforceService;
 
@@ -48,7 +47,7 @@ public class UserBean implements Serializable {
 		JSONArray user = sforceService.read(getSessionId(), userQuery.replace("#userId#", getUserId()));
 		System.out.println(user.toString());
 		
-		setLocale(new Locale("fr","FR"));
+		setLocale(new Locale("en","US"));
 		buildFormatPatterns();
 	}		
 	

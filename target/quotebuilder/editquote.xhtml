@@ -6,61 +6,182 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 	<rich:popupPanel id="editQuotePanel" modal="false" autosized="true"
-		resizeable="false" width="500" height="420" top="0" left="0">
+		resizeable="false" width="1200" height="280">
+
+		<f:facet name="header">
+			<h:outputText value="Edit Quote" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:outputLink value="#"
+				onclick="#{rich:component('editQuotePanel')}.hide(); return false;">
+                    X
+                </h:outputLink>
+		</f:facet>
 
 		<h:form>
 
-			<f:facet name="header">
-				<h:outputText value="Edit Quote" />
-			</f:facet>
-			<f:facet name="controls">
-				<h:outputLink value="#"
-					onclick="#{rich:component('editQuotePanel')}.hide(); return false;">
-                    X
-                </h:outputLink>
-			</f:facet>
+			<rich:panel id="panel">
 
-			<a4j:outputPanel layout="block" id="editquoterouter">
-
-				<h:panelGrid styleClass="rf-dt" rowClasses="rf-dt-c"
-					style="width: 100%; border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; "
+				<h:panelGrid style="width: 100%; "
 					columnClasses="label-column,column-l-align,label-column,column-l-align"
 					columns="4">
 
 					<h:outputText value="#{msgs.name}" />
-					<h:inputText value="#{quoteForm.quote.name}" />
+					<h:inputText value="#{quoteForm.quote.name}" style="width:300px" />
+
 					<h:outputText value="#{msgs.number}" />
 					<h:outputText value="#{quoteForm.quote.number}" />
 
 					<h:outputText value="#{msgs.type}" />
-					<h:outputText value="#{quoteForm.quote.type}" />
+					<h:selectOneMenu value="#{quoteForm.quote.type}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemValue="Standard" />
+						<f:selectItem itemValue="Co-Term" />
+						<f:selectItem itemValue="Non Standard" />
+					</h:selectOneMenu>
+
 					<h:outputText value="#{msgs.version}" />
 					<h:outputText value="#{quoteForm.quote.version}" />
 
 					<h:outputText value="#{msgs.active}" />
-					<h:outputText value="#{quoteForm.quote.isActive}" />
+					<h:panelGroup>
+						<h:graphicImage value="./images/active.png"
+							rendered="#{quoteForm.quote.isActive}" />
+					</h:panelGroup>
+
 					<h:outputText value="#{msgs.currency}" />
-					<h:outputText value="#{quoteForm.quote.currencyIsoCode}" />
+					<h:selectOneMenu value="#{quoteForm.quote.currencyIsoCode}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemValue="USD" />
+						<f:selectItem itemValue="EUR" />
+						<f:selectItem itemValue="GBP" />
+					</h:selectOneMenu>
 
 					<h:outputText value="#{msgs.payNow}" />
-					<h:outputText value="#{quoteForm.quote.payNow}" />
+					<h:selectOneMenu value="#{quoteForm.quote.payNow}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemValue="Yes" />
+						<f:selectItem itemValue="No" />
+					</h:selectOneMenu>
+
 					<h:outputText value="#{msgs.amount}" />
-					<h:outputText value="#{quoteForm.quote.amount}" />
+					<h:outputText value="#{quoteForm.quote.amount}">
+						<f:convertNumber locale="#{userBean.locale}"
+							pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+					</h:outputText>
 
 					<h:outputText value="#{msgs.owner}" />
-					<h:outputText value="#{quoteForm.quote.ownerName}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.quote.ownerName}" />
+
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+
+						<a4j:commandLink id="changeOwner"
+							oncomplete="#{rich:component('ownerPanel')}.show()"
+							action="#{quoteManager.editQuote(quoteForm.quote)}"
+							reRender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
+
+							<h:graphicImage value="./images/search.png"
+								title="#{msgs.change}" />
+
+						</a4j:commandLink>
+
+					</h:panelGroup>
+
 					<h:outputText value="#{msgs.contact}" />
-					<h:outputText value="#{quoteForm.quote.contactName}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.quote.contactName}" />
+
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+						<h:outputText value=" " />
+
+						<a4j:commandLink id="changeContact"
+							oncomplete="#{rich:component('contactPanel')}.show()"
+							action="#{quoteManager.editQuote(quoteForm.quote)}"
+							reRender="#{rich:clientId('contactPanel')}" ajaxSingle="true">
+
+							<h:graphicImage value="./images/search.png"
+								title="#{msgs.change}" />
+
+						</a4j:commandLink>
+
+					</h:panelGroup>
 
 					<h:outputText value="#{msgs.effectiveDate}" />
-					<h:outputText value="#{quoteForm.quote.effectiveDate}" />
+					<h:panelGroup>
+
+						<rich:calendar value="#{quoteForm.quote.effectiveDate}"
+							id="effectiveDate" locale="#{userBean.locale}" popup="true"
+							datePattern="#{userBean.dateFormatPattern}"
+							showApplyButton="false" cellWidth="24px" cellHeight="22px"
+							style="width:200px" disabled="false">
+						</rich:calendar>
+
+					</h:panelGroup>
+
 					<h:outputText value="#{msgs.expirationDate}" />
-					<h:outputText value="#{quoteForm.quote.expirationDate}" />
+					<h:panelGroup>
+
+						<rich:calendar value="#{quoteForm.quote.expirationDate}"
+							id="expirationDate" locale="#{userBean.locale}" popup="true"
+							datePattern="#{userBean.dateFormatPattern}"
+							showApplyButton="false" cellWidth="24px" cellHeight="22px"
+							style="width:200px" disabled="false">
+						</rich:calendar>
+					</h:panelGroup>
 
 					<h:outputText value="#{msgs.referenceNumber}" />
 					<h:inputText value="#{quoteForm.quote.referenceNumber}" />
-					<h:outputText value="#{msgs.endDate}" />
-					<h:outputText value="#{quoteForm.quote.endDate}" />
+
+					<h:outputText value=" "
+						rendered="#{quoteForm.quote.type == 'Non Standard'}" />
+					<h:outputText value=" "
+						rendered="#{quoteForm.quote.type == 'Non Standard'}" />
+
+					<h:outputText value="#{msgs.term}"
+						rendered="#{quoteForm.quote.type == 'Standard'}" />
+					<h:panelGroup rendered="#{quoteForm.quote.type == 'Standard'}">
+						<h:selectOneMenu value="#{quoteForm.quote.term}">
+							<f:selectItem itemLabel="" itemValue="" />
+							<f:selectItem itemLabel="1" itemValue="365" />
+							<f:selectItem itemLabel="3" itemValue="1095" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.endDate}"
+						rendered="#{quoteForm.quote.type == 'Co-Term'}" />
+					<h:panelGroup rendered="#{quoteForm.quote.type == 'Co-Term'}">
+						<rich:calendar value="#{quoteForm.quote.endDate}" id="endDate"
+							locale="#{userBean.locale}" popup="true"
+							datePattern="#{userBean.dateFormatPattern}"
+							showApplyButton="false" cellWidth="24px" cellHeight="22px"
+							style="width:200px" disabled="false">
+						</rich:calendar>
+					</h:panelGroup>
+
+					<h:outputText value="#{msgs.createdBy}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.quote.createdByName}" />
+						<h:outputText value=", " escape="false"
+							rendered="#{not empty quoteForm}" />
+						<h:outputText value="#{quoteForm.quote.createdDate}">
+							<f:convertDateTime locale="#{userBean.locale}"
+								pattern="#{userBean.dateTimeFormatPattern}" type="date" />
+						</h:outputText>
+					</h:panelGroup>
+					<h:outputText value="#{msgs.lastModifiedBy}" />
+					<h:panelGroup>
+						<h:outputText value="#{quoteForm.quote.lastModifiedByName}" />
+						<h:outputText value=", " escape="false"
+							rendered="#{not empty quoteForm}" />
+						<h:outputText value="#{quoteForm.quote.lastModifiedDate}">
+							<f:convertDateTime locale="#{userBean.locale}"
+								pattern="#{userBean.dateTimeFormatPattern}" type="date" />
+						</h:outputText>
+					</h:panelGroup>
 
 				</h:panelGrid>
 
@@ -70,16 +191,16 @@
 					<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
 						action="#{quoteManager.saveQuote(quoteForm.quote)}"
 						render="quoteList, details" ajaxSingle="true"
-						oncomplete="#{rich:component('editQuotePanel')}.hide(); return false;" />	
-						
-					<h:outputText value="  " escape="false" />				
-				
+						oncomplete="#{rich:component('editQuotePanel')}.hide(); return false;" />
+
+					<h:outputText value="  " escape="false" />
+
 					<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
 						oncomplete="#{rich:component('editQuotePanel')}.hide(); return false;" />
-						
+
 				</h:panelGroup>
 
-			</a4j:outputPanel>
+			</rich:panel>
 
 		</h:form>
 
