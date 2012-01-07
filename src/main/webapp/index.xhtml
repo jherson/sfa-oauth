@@ -6,35 +6,24 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
 
-	<f:view>
-		<h:head>
-			<title>#{msgs.apptitle}</title>
-			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
-			<h:outputStylesheet library="css" name="style.css" />
-		</h:head>
+    <f:view>
+	<h:head>
+		<title>#{msgs.apptitle}</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
+		<link href="./css/style.css" rel="stylesheet" type="text/css" />
+	</h:head>		
 
+    <h:body>
+    
+	    <h:panelGrid columns="2">
+		    <h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
+		</h:panelGrid>
+		<hr />
 
-		<h:body>
-			<div id="container">
-				<h:panelGrid columns="2">
-					<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
-				</h:panelGrid>
-				<hr />
-				<div id="content">
-					<div id="sidebar">
-
-						<rich:panel>
-							<hr />
-
-						</rich:panel>
-					</div>
-					<ui:include src="quote.xhtml" />
-				</div>
-				<div id="footer">Footer</div>
-			</div>
+        <ui:include src="quote.xhtml" />
+    			
 		</h:body>
-
-	</f:view>
+    </f:view>
 
 </ui:composition>
