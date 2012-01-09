@@ -2,13 +2,15 @@ package com.redhat.sforce.qb.bean.model;
 
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class Quote {	
 	
 	private String id;
 	private String opportunityId;
 	private String link;
-	private Double version;
+	private Double version;		
+	@NotNull
 	private String name;
 	private String number;
 	private String currencyIsoCode;

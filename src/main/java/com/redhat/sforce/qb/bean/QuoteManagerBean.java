@@ -43,6 +43,12 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void init() {		
 		
 	}	
+//	
+//	public List<String> queryCurrencies() {
+//		JSONArray queryResults = sforceService.read(userBean.getSessionId(), currencyQuery);
+//		
+//		return;
+//	}
 	
 	@Override
 	public List<Quote> queryQuotes() {
@@ -105,6 +111,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void updateQuote(Quote quote) {
 		try {
 	        sforceService.update(userBean.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.convertQuoteToJson(quote));
+	        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully updated!", "Succesfully updated!"));
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -168,8 +175,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void cancel(Quote quote) {
-		quote = null;
-		getQuoteForm().setSelectedQuote(null);
+		quote = getQuoteForm().getSelectedQuote();
 	}
 	
 	public String getOpportunityId() {
@@ -191,6 +197,9 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	private QuoteForm getQuoteForm() {
 		return (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");
 	}
+	
+	private static final String currencyQuery = 
+			"Select CurrencyIsoCode from CurrencyType Where IsActive = true Order By CurrencyIsoCode";
 			
 	private static final String opportunityQuery =
 	    	"Select Id, " +
@@ -236,6 +245,11 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 			       "Owner.Name, " +
 			       "Owner.FirstName, " +
 			       "Owner.LastName, " +
+			       "Owner.ContactId, " +
+			       "Owner.Email, " +
+			       "Owner.Phone, " +
+			       "Owner.Title, " +
+			       "Owner.Department, " +
 	               "Owner.UserRole.Name, " +
 	               "Owner.Profile.Name, " +
 	               "CreatedBy.Id, " +

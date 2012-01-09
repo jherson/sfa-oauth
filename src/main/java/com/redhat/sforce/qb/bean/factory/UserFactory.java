@@ -28,6 +28,8 @@ public class UserFactory {
 			user.setPhone(wrapper.getString("Phone"));
 			user.setTitle(wrapper.getString("Title"));
 			user.setDepartment(wrapper.getString("Department"));
+			
+			userList.add(user);			
 		}
 		
 		return userList;

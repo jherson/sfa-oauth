@@ -23,7 +23,7 @@
 			<a4j:outputPanel layout="block">
 
 				<rich:dataTable id="userList" var="user"
-					value="#{quoteForm.opportunity.users}"
+					value="#{quoteForm.opportunity.owners}"
 					noDataLabel="#{msgs.noRecords}" style="width:100%;">
 
 					<rich:column width="200px">
@@ -31,6 +31,7 @@
 						<a4j:commandLink value="#{user.name}"
 							action="#{quoteManager.setQuoteOwner(quoteForm.quote, user)}"
 							render="quoteList, details" ajaxSingle="true"
+							immediate="true"
 							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;" />
 					</rich:column>
 

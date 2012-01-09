@@ -21,12 +21,6 @@ public class Opportunity {
 	private Boolean hasOpportunityLineItem;
 	private String pricebookId;
 	private String pricebookName;
-	private String ownerId;
-	private String ownerName;
-	private String ownerFirstName;
-	private String ownerLastName;
-	private String ownerRoleName;
-	private String ownerProfileName;
     private Date createdDate;
     private String createdById;
     private String createdByName;
@@ -54,8 +48,10 @@ public class Opportunity {
     private String accountName;
     private String oracleAccountNumber;
     private String accountAliasName;
+    private User owner;
     private List<Contact> contacts;
-    private List<User> users;
+    private List<User> salesTeam;
+    private List<User> owners;
     
 	public String getId() {
 		return id;
@@ -184,53 +180,13 @@ public class Opportunity {
 	public void setPricebookName(String pricebookName) {
 		this.pricebookName = pricebookName;
 	}
-
-	public String getOwnerId() {
-		return ownerId;
+	
+	public User getOwner() {
+		return owner;
 	}
-
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-
-	public String getOwnerFirstName() {
-		return ownerFirstName;
-	}
-
-	public void setOwnerFirstName(String ownerFirstName) {
-		this.ownerFirstName = ownerFirstName;
-	}
-
-	public String getOwnerLastName() {
-		return ownerLastName;
-	}
-
-	public void setOwnerLastName(String ownerLastName) {
-		this.ownerLastName = ownerLastName;
-	}
-
-	public String getOwnerRoleName() {
-		return ownerRoleName;
-	}
-
-	public void setOwnerRoleName(String ownerRoleName) {
-		this.ownerRoleName = ownerRoleName;
-	}
-
-	public String getOwnerProfileName() {
-		return ownerProfileName;
-	}
-
-	public void setOwnerProfileName(String ownerProfileName) {
-		this.ownerProfileName = ownerProfileName;
+	
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public Date getCreatedDate() {
@@ -457,11 +413,19 @@ public class Opportunity {
 		this.contacts = contacts;
 	}
 
-	public List<User> getUsers() {
-		return users;
+	public List<User> getSalesTeam() {
+		return salesTeam;
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setSalesTeam(List<User> salesTeam) {
+		this.salesTeam = salesTeam;
+	}
+	
+	public void setOwners(List<User> owners) {
+		this.owners = owners;
+	}
+
+	public List<User> getOwners() {
+		return owners;
 	}	
 }

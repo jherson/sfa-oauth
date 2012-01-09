@@ -3,7 +3,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"> 	
+	xmlns:rich="http://richfaces.org/rich">
 
 	<h:outputStylesheet>
 	        
@@ -33,57 +33,48 @@
         }
                         
     </h:outputStylesheet>
-    
-    		
-    
 
-    <ui:include src="editquote.xhtml" />
+	<ui:include src="editquote.xhtml" />
 	<ui:include src="contacts.xhtml" />
 	<ui:include src="owners.xhtml" />
 
+
 	<h:form>
-	
-			<rich:toolbar height="26" itemSeparator="grid">
+
+		<rich:toolbar height="26" itemSeparator="grid">
 			<rich:toolbarGroup>
-            <h:outputText value="#{msgs.headerTitle}: #{quoteForm.opportunity.name}" />
-            </rich:toolbarGroup>
-            <rich:toolbarGroup location="right">            
+				<h:outputText
+					value="#{msgs.headerTitle}: #{quoteForm.opportunity.name}" />
+			</rich:toolbarGroup>
+			<rich:toolbarGroup location="right">
 
-				
 				<a4j:commandLink id="new"
-				action="#{quoteManager.newQuote(quoteForm.opportunity)}"			
-				oncomplete="#{rich:component('editQuotePanel')}.show()"
-				rendered="#{not quoteForm.opportunity.isClosed}"
-				reRender="#{rich:clientId('editQuotePanel')}" ajaxSingle="true">
-				
-				<h:graphicImage value="./images/new.png" title="#{msgs.new}" />
-			</a4j:commandLink>
-			
-			    <h:outputText value=" " />
-				
-					<a4j:commandButton value="#{msgs.refresh}"
-						action="#{quoteManager.refresh()}" styleClass="button"
-						ajaxSingle="true" render="quoteList, :details" />
+					action="#{quoteManager.newQuote(quoteForm.opportunity)}"
+					oncomplete="#{rich:component('editQuotePanel')}.show()"
+					rendered="#{not quoteForm.opportunity.isClosed}"
+					reRender="#{rich:clientId('editQuotePanel')}" ajaxSingle="true">
 
-				</rich:toolbarGroup>
+					<h:graphicImage value="./images/new.png" title="#{msgs.new}" />
+				</a4j:commandLink>
 
-				
-				</rich:toolbar>
+				<h:outputText value=" " />
 
-	
-			
+				<a4j:commandButton value="#{msgs.refresh}"
+					action="#{quoteManager.refresh()}" styleClass="button"
+					ajaxSingle="true" render="quoteList, :details" />
+
+			</rich:toolbarGroup>
+		</rich:toolbar>
 
 		<rich:extendedDataTable id="quoteList" var="quote"
 			value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
 			selection="#{quoteForm.selection}" style="height:220px;"
 			selectedClass="dataTableSelectedRow">
-			
-			
 
 			<a4j:ajax execute="@this" event="selectionchange"
 				listener="#{quoteForm.selectionListener}" render=":details" />
 
-			<rich:column width="77px">
+			<rich:column width="75px">
 				<f:facet name="header">#{msgs.action}</f:facet>
 
 				<a4j:commandLink id="activate"
@@ -111,9 +102,8 @@
 				</a4j:commandLink>
 			</rich:column>
 
-			<rich:column>
+			<rich:column style="text-align: right;">
 				<f:facet name="header">#{msgs.number}</f:facet>
-
 				<a4j:commandLink value="#{quote.number}" />
 			</rich:column>
 
@@ -127,7 +117,7 @@
 				<h:outputText value="#{quote.type}" />
 			</rich:column>
 
-			<rich:column width="75px">
+			<rich:column width="70px" style="text-align: center;">
 				<f:facet name="header">#{msgs.active}</f:facet>
 				<h:graphicImage value="./images/active.png" styleClass="centered"
 					rendered="#{quote.isActive}" />
@@ -155,7 +145,11 @@
 
 		</rich:extendedDataTable>
 
-        <br />
+		<br />
+
+		<a4j:outputPanel ajaxRendered="true">
+			<rich:messages />
+		</a4j:outputPanel>
 
 		<a4j:outputPanel id="details">
 			<rich:panel>
@@ -169,9 +163,13 @@
 					columns="4">
 
 					<h:outputText value="#{msgs.name}" />
-					<h:inputText value="#{quoteForm.selectedQuote.name}"
-						style="width:300px"
-						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}" />
+					<h:inputText id="name" required="true"
+						value="#{quoteForm.selectedQuote.name}" style="width:300px"
+						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+						requiredMessage="#{msgs.quoteNameRequiredMessage}">
+						<rich:validator />
+					</h:inputText>
+
 					<h:outputText value="#{quoteForm.selectedQuote.name}"
 						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
@@ -183,7 +181,6 @@
 						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote or quoteForm.selectedQuote.id != null}" />
 					<h:selectOneMenu value="#{quoteForm.selectedQuote.type}"
 						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote and quoteForm.selectedQuote.id == null}">
-						<f:selectItem itemLabel="" itemValue="" />
 						<f:selectItem itemValue="Standard" />
 						<f:selectItem itemValue="Co-Term" />
 						<f:selectItem itemValue="Non Standard" />
@@ -203,7 +200,6 @@
 						rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote or quoteForm.selectedQuote.id != null}" />
 					<h:selectOneMenu value="#{quoteForm.selectedQuote.currencyIsoCode}"
 						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote and quoteForm.selectedQuote.id == null}">
-						<f:selectItem itemLabel="" itemValue="" />
 						<f:selectItem itemValue="USD" />
 						<f:selectItem itemValue="EUR" />
 						<f:selectItem itemValue="GBP" />
@@ -212,7 +208,6 @@
 					<h:outputText value="#{msgs.payNow}" />
 					<h:selectOneMenu value="#{quoteForm.selectedQuote.payNow}"
 						rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}">
-						<f:selectItem itemLabel="" itemValue="" />
 						<f:selectItem itemValue="Yes" />
 						<f:selectItem itemValue="No" />
 					</h:selectOneMenu>
@@ -228,9 +223,8 @@
 					<h:outputText value="#{msgs.owner}" />
 					<h:panelGroup>
 						<h:outputText value="#{quoteForm.selectedQuote.ownerName}" />
+						<h:inputText value="#{quoteForm.selectedQuote.ownerName}" />
 
-						<h:outputText value=" " />
-						<h:outputText value=" " />
 						<h:outputText value=" " />
 
 						<a4j:commandLink id="changeOwner"
@@ -250,8 +244,6 @@
 					<h:panelGroup>
 						<h:outputText value="#{quoteForm.selectedQuote.contactName}" />
 
-						<h:outputText value=" " />
-						<h:outputText value=" " />
 						<h:outputText value=" " />
 
 						<a4j:commandLink id="changeContact"
@@ -366,15 +358,18 @@
 				<br />
 
 				<h:panelGroup style="display: block; text-align: right">
+					
 					<a4j:commandButton value="#{msgs.save}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}"
 						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
 						render="quoteList, details" ajaxSingle="true" />
+						
+                    <h:outputText value=" " escape="false" />						
 
 					<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
-						rendered="#{not empty quoteForm.selectedQuote}"
-						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
-						render="quoteList, details" ajaxSingle="true" />
+						rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
+						bypassUpdates="true" type="reset" render="details"
+						ajaxSingle="true" execute="@none" />
 
 				</h:panelGroup>
 

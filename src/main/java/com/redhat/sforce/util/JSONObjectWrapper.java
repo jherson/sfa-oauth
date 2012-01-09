@@ -50,8 +50,11 @@ public class JSONObjectWrapper {
 	}
 	
 	public Date getDate(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : dateFormat.parse(jsonObject.getString(key));
-		
+		return jsonObject.isNull(key) ? null : dateFormat.parse(jsonObject.getString(key));		
+	}
+	
+	public JSONObject getJSONObject(String key) throws JSONException {
+		return jsonObject.getJSONObject(key);
 	}
 	
 	public JSONArray getRecords(String object) throws JSONException {

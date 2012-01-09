@@ -53,8 +53,8 @@ public class QuoteFormBean implements QuoteForm {
 	public void createQuote(Opportunity opportunity) {
 		quote = new Quote();	
 		quote.setOpportunityId(opportunity.getId());
-		quote.setOwnerId(opportunity.getOwnerId());
-		quote.setOwnerName(opportunity.getOwnerName());
+		quote.setOwnerId(opportunity.getOwner().getId());
+		quote.setOwnerName(opportunity.getOwner().getName());
 		quote.setPayNow(opportunity.getPayNow());
 		quote.setType("Standard");
 		quote.setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
