@@ -1,5 +1,3 @@
-@CHARSET "UTF-8";
-
 <style>
  .row1 {
  background-color: #EDEBEB;
@@ -14,6 +12,16 @@
     margin: 0px auto;
 }
 
-.width150 {width: 150px};
+.width150 {width: 150px;}
+
+.button {
+            width: 100px; 
+            height: 23px; 
+            cursor: hand;       
+        }
+        
+ a.no-decor>img {
+    border: none;
+}
 
 </style>

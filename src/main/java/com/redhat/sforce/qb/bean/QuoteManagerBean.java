@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -169,8 +170,12 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void setQuoteOwner(Quote quote, User user) {
-		quote.setOwnerId(user.getId());
-		quote.setOwnerName(user.getName());
+		HtmlInputText ownerName = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:ownerName");		
+		HtmlInputText ownerId = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:ownerId");
+		ownerName.setValue(user.getName());
+		ownerId.setValue(user.getId());
+		//quote.setOwnerId(user.getId());
+		//quote.setOwnerName(user.getName());
 	}
 	
 	@Override

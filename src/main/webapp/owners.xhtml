@@ -4,6 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+	
+	<a4j:region >
 
 	<rich:popupPanel id="ownerPanel" modal="false" autosized="true"
 		border="1" resizeable="false" width="800" height="320" >
@@ -18,22 +20,22 @@
                 </h:outputLink>
 		</f:facet>
 
-		<h:form>
-
 			<a4j:outputPanel layout="block">
 
 				<rich:dataTable id="userList" var="user"
 					value="#{quoteForm.opportunity.owners}"
-					noDataLabel="#{msgs.noRecords}" style="width:100%;">
+					noDataLabel="#{msgs.noRecords}" style="width:100%;">									
 
 					<rich:column width="200px">
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<a4j:commandLink value="#{user.name}"
-							action="#{quoteManager.setQuoteOwner(quoteForm.quote, user)}"
+						    bypassUpdates="true"
+						    immedidate="true"
 							render="quoteList, details" ajaxSingle="true"
-							immediate="true"
-							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;" />
-					</rich:column>
+							action="#{quoteManager.setQuoteOwner(quoteForm.quote, user)}"
+							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;" >							
+						</a4j:commandLink>
+					</rich:column>					
 
 					<rich:column width="100px">
 						<f:facet name="header">#{msgs.title}</f:facet>
@@ -70,8 +72,9 @@
 
 			</a4j:outputPanel>
 
-		</h:form>
 
 	</rich:popupPanel>
+	
+	</a4j:region>
 
 </ui:composition>

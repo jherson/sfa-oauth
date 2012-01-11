@@ -25,21 +25,19 @@
             height: 25px;
             width: 35%;
         }
-                
-        .button {
-            width: 75px; 
-            height: 22px; 
-            cursor: hand;       
-        }
-                        
+                                                
     </h:outputStylesheet>
+    
 
 	<ui:include src="editquote.xhtml" />
 	<ui:include src="contacts.xhtml" />
-	<ui:include src="owners.xhtml" />
 
-
-	<h:form>
+	<h:form id="quoteForm">
+	
+	    <a4j:status id="ajaxStatus" forceId="true" onstart="#{rich:component('statusPane')}.show()"
+        onstop="#{rich:component('statusPane')}.hide()" />
+	
+		<ui:include src="owners.xhtml" />
 
 		<rich:toolbar height="26" itemSeparator="grid">
 			<rich:toolbarGroup>
@@ -61,7 +59,8 @@
 
 				<a4j:commandButton value="#{msgs.refresh}"
 					action="#{quoteManager.refresh()}" styleClass="button"
-					ajaxSingle="true" render="quoteList, :details" />
+					ajaxSingle="true" render="quoteList, :details" 
+					status="ajaxStatus"/>
 
 			</rich:toolbarGroup>
 		</rich:toolbar>
@@ -69,7 +68,8 @@
 		<rich:extendedDataTable id="quoteList" var="quote"
 			value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
 			selection="#{quoteForm.selection}" style="height:220px;"
-			selectedClass="dataTableSelectedRow">
+			selectedClass="dataTableSelectedRow"
+			status="ajaxStatus">
 
 			<a4j:ajax execute="@this" event="selectionchange"
 				listener="#{quoteForm.selectionListener}" render=":details" />
@@ -79,25 +79,27 @@
 
 				<a4j:commandLink id="activate"
 					action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
-					render="quoteList, :details" status="waitStatus">
-					<h:graphicImage value="./images/activate.png" styleClass="centered"
+					styleClass="no-decor"
+					status="ajaxStatus"
+					render="quoteList, :details">
+					<h:graphicImage value="./images/activate.png"
 						title="#{msgs.activate}" />
 				</a4j:commandLink>
 
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandLink id="copy" action="#{quoteManager.copyQuote(quote)}"
-					ajaxSingle="true" render="quoteList" status="waitStatus">
-					<h:graphicImage value="./images/copy.png" styleClass="centered"
+					ajaxSingle="true" render="quoteList" styleClass="no-decor" status="ajaxStatus">
+					<h:graphicImage value="./images/copy.png"
 						title="#{msgs.copy}" />
 				</a4j:commandLink>
 
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
-					action="#{quoteManager.deleteQuote(quote)}" ajaxSingle="true"
-					status="waitStatus" render="quoteList, :details">
-					<h:graphicImage value="./images/delete.png" styleClass="centered"
+					action="#{quoteManager.deleteQuote(quote)}" styleClass="no-decor" ajaxSingle="true"
+					status="ajaxStatus" render="quoteList, :details">
+					<h:graphicImage value="./images/delete.png"
 						title="#{msgs.delete}" />
 				</a4j:commandLink>
 			</rich:column>
@@ -146,6 +148,11 @@
 		</rich:extendedDataTable>
 
 		<br />
+		
+		<rich:popupPanel id="statusPane" autosized="true">
+            <h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
+            Please wait...
+        </rich:popupPanel>
 
 		<a4j:outputPanel ajaxRendered="true">
 			<rich:messages />
@@ -222,8 +229,9 @@
 
 					<h:outputText value="#{msgs.owner}" />
 					<h:panelGroup>
-						<h:outputText value="#{quoteForm.selectedQuote.ownerName}" />
-						<h:inputText value="#{quoteForm.selectedQuote.ownerName}" />
+						<h:outputText  value="#{quoteForm.selectedQuote.ownerName}" />
+						<h:inputText id="ownerName" value="#{quoteForm.selectedQuote.ownerName}" />
+						<h:inputText id="ownerId" value="#{quoteForm.selectedQuote.ownerId}" />
 
 						<h:outputText value=" " />
 
@@ -362,7 +370,7 @@
 					<a4j:commandButton value="#{msgs.save}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}"
 						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
-						render="quoteList, details" ajaxSingle="true" />
+						render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
 						
                     <h:outputText value=" " escape="false" />						
 
@@ -454,7 +462,6 @@
 				</rich:tabPanel>
 			</rich:panel>
 		</a4j:outputPanel>
-
 
 	</h:form>
 
