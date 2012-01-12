@@ -61,6 +61,7 @@ public class QuoteFormBean implements QuoteForm {
 		quote.setPricebookId(opportunity.getPricebookId());
 		quote.setEffectiveDate(new java.util.Date());
 		quote.setExpirationDate(quote.getEffectiveDate());
+		setSelectedQuote(quote);
 	}
 
 	@Override

@@ -49,6 +49,7 @@ public class Opportunity {
     private String oracleAccountNumber;
     private String accountAliasName;
     private User owner;
+    private List<OpportunityLineItem> opportunityLineItems;
     private List<Contact> contacts;
     private List<User> salesTeam;
     private List<User> owners;
@@ -404,6 +405,14 @@ public class Opportunity {
 	public void setAccountAliasName(String accountAliasName) {
 		this.accountAliasName = accountAliasName;
 	}
+	
+	public List<OpportunityLineItem> getOpportunityLineItems() {
+		return opportunityLineItems;
+	}
+
+	public void setOpportunityLineItems(List<OpportunityLineItem> opportunityLineItems) {
+		this.opportunityLineItems = opportunityLineItems;
+	}	
 
 	public List<Contact> getContacts() {
 		return contacts;

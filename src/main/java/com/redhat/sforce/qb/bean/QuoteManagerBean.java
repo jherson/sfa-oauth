@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -166,16 +165,14 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void setQuoteContact(Quote quote, Contact contact) {
 		quote.setContactId(contact.getId());
 		quote.setContactName(contact.getName());
+		saveQuote(quote);
 	}
 	
 	@Override
 	public void setQuoteOwner(Quote quote, User user) {
-		HtmlInputText ownerName = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:ownerName");		
-		HtmlInputText ownerId = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:ownerId");
-		ownerName.setValue(user.getName());
-		ownerId.setValue(user.getId());
-		//quote.setOwnerId(user.getId());
-		//quote.setOwnerName(user.getName());
+		quote.setOwnerId(user.getId());
+		quote.setOwnerName(user.getName());
+		saveQuote(quote);
 	}
 	
 	@Override
@@ -296,6 +293,14 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	                       "CurrencyIsoCode, " +
 	                       "Configured_SKU__c, " +
 	                       "Pricing_Attributes__c, " +
+	                       "CreatedBy.Id, " +
+	    			       "CreatedBy.Name, " +
+	    			       "CreatedBy.FirstName, " +
+	    			       "CreatedBy.LastName, " +
+	    			       "LastModifiedBy.Id, " +
+	    			       "LastModifiedBy.Name, " +
+	    			       "LastModifiedBy.FirstName, " +
+	    			       "LastModifiedBy.LastName, " +
 	                       "PricebookEntry.Id, " +
 	                       "PricebookEntry.CurrencyIsoCode, " +
 	                       "PricebookEntry.Product2.Id, " +

@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<rich:popupPanel id="importOpportunityProductsPanel" modal="false" autosized="true"
+		resizeable="false" width="1200" height="280">
+
+		<f:facet name="header">
+			<h:outputText value="Edit Quote" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:outputLink value="#"
+				onclick="#{rich:component('editQuotePanel')}.hide(); return false;">
+                    X
+                </h:outputLink>
+		</f:facet>
+
+		<a4j:region>
+		
+		<a4j:outputPanel layout="block">
+		
+		<rich:dataTable id="opportunityProducts" var="product"
+					value="#{quoteForm.opportunity.opportunityLineItems}"
+					noDataLabel="#{msgs.noRecords}" style="width:100%;">
+
+
+				<br />
+
+				<h:panelGroup style="display: block; text-align: right">
+
+					<h:outputText value="  " escape="false" />
+
+					<a4j:commandButton value="#{msgs.close}" 
+					    styleClass="commandButton"
+					    execute="@region"
+						oncomplete="#{rich:component('importOpportunityProductsPanel')}.hide(); return false;" />
+
+				</h:panelGroup>
+
+			</rich:dataTable>
+
+		</a4j:region>
+
+	</rich:popupPanel>
+
+</ui:composition>

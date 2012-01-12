@@ -1,27 +1,50 @@
 <style>
- .row1 {
- background-color: #EDEBEB;
- font-size: 10px;
- }
- .row2 {
- background-color: #ffffff;
- font-size: 10px;
- }
 
-.centered {
-    margin: 0px auto;
+.row1 {
+	background-color: #EDEBEB;
+	font-size: 10px;
 }
 
-.width150 {width: 150px;}
+.row2 {
+	background-color: #ffffff;
+	font-size: 10px;
+}
+
+.label-column {
+	font-weight: bold;
+	text-align: right;
+	padding-top: 3px;
+	padding-right: 5px;
+	padding-bottom: 3px;
+	height: 25px;
+	width: 15%;
+}
+
+.column-l-align {
+	text-align: left;
+	padding-top: 3px;
+	padding-left: 5px;
+	padding-bottom: 3px;
+	height: 25px;
+	width: 35%;
+}
+
+.centered {
+	margin: 0px auto;
+}
+
+.width150 {
+	width: 150px;
+}
 
 .button {
-            width: 100px; 
-            height: 23px; 
-            cursor: hand;       
-        }
-        
- a.no-decor>img {
-    border: none;
+	width: 100px;
+	height: 20px;
+	cursor: hand;
+}
+
+a.no-decor>img {
+	border: none;
 }
 
 </style>

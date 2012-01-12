@@ -4,40 +4,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
-
-	<h:outputStylesheet>
-	        
-        .label-column {
-            font-weight: bold;
-            text-align: right;
-            padding-top: 3px;
-            padding-right: 5px;
-            padding-bottom: 3px;
-            height: 25px;
-            width: 15%;
-        }
-        
-        .column-l-align {
-            text-align: left;
-            padding-top: 3px;
-            padding-left: 5px;
-            padding-bottom: 3px;
-            height: 25px;
-            width: 35%;
-        }
-                                                
-    </h:outputStylesheet>
     
-
-	<ui:include src="editquote.xhtml" />
-	<ui:include src="contacts.xhtml" />
-
-	<h:form id="quoteForm">
-	
-	    <a4j:status id="ajaxStatus" forceId="true" onstart="#{rich:component('statusPane')}.show()"
+    <a4j:status id="ajaxStatus" forceId="true" onstart="#{rich:component('statusPane')}.show()"
         onstop="#{rich:component('statusPane')}.hide()" />
 	
+	<h:form id="quoteForm">
+	
 		<ui:include src="owners.xhtml" />
+		<ui:include src="contacts.xhtml" />
 
 		<rich:toolbar height="26" itemSeparator="grid">
 			<rich:toolbarGroup>
@@ -48,9 +22,10 @@
 
 				<a4j:commandLink id="new"
 					action="#{quoteManager.newQuote(quoteForm.opportunity)}"
-					oncomplete="#{rich:component('editQuotePanel')}.show()"
 					rendered="#{not quoteForm.opportunity.isClosed}"
-					reRender="#{rich:clientId('editQuotePanel')}" ajaxSingle="true">
+					focus="#{rich:clientId('name')}"
+					render="quoteList, :details"  
+					ajaxSingle="true">
 
 					<h:graphicImage value="./images/new.png" title="#{msgs.new}" />
 				</a4j:commandLink>
@@ -151,7 +126,6 @@
 		
 		<rich:popupPanel id="statusPane" autosized="true">
             <h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
-            Please wait...
         </rich:popupPanel>
 
 		<a4j:outputPanel ajaxRendered="true">
@@ -229,9 +203,7 @@
 
 					<h:outputText value="#{msgs.owner}" />
 					<h:panelGroup>
-						<h:outputText  value="#{quoteForm.selectedQuote.ownerName}" />
-						<h:inputText id="ownerName" value="#{quoteForm.selectedQuote.ownerName}" />
-						<h:inputText id="ownerId" value="#{quoteForm.selectedQuote.ownerId}" />
+						<h:outputText id="ownerName" value="#{quoteForm.selectedQuote.ownerName}" />
 
 						<h:outputText value=" " />
 
@@ -416,7 +388,6 @@
 										pattern="#{userBean.dateFormatPattern}" type="date" />
 								</h:outputText>
 							</rich:column>
-
 							<rich:column>
 								<f:facet name="header">#{msgs.listPrice}</f:facet>
 								<h:outputText value="#{lineItem.listPrice}">

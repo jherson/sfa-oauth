@@ -3,7 +3,6 @@ package com.redhat.sforce.qb.bean.factory;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import org.json.JSONObject;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.util.JSONObjectWrapper;
-import com.redhat.sforce.util.LocaleFormatter;
 
 public class QuoteFactory {    
 
@@ -87,7 +85,6 @@ public class QuoteFactory {
 	public static JSONObject convertQuoteToJson(Quote quote) {				
 		JSONObject jsonObject = new JSONObject();
 		try {			
-			//jsonObject.put("Id", quote.getId());
 			jsonObject.put("Amount__c", quote.getAmount());
 			jsonObject.put("Comments__c", quote.getComments());
 			jsonObject.put("ContactId__c", quote.getContactId());

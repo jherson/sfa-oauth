@@ -27,21 +27,29 @@ public class OpportunityFactory {
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
 		opportunity.setPricebookId(wrapper.getString("PricebookId"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
-		opportunity.setOwner(parseOwner(wrapper.getJSONObject("Owner")));		
-				
-		JSONArray records = null;
-		
-		records = wrapper.getRecords("OpportunityContactRoles");
-		if (records != null)
-			opportunity.setContacts(ContactFactory.parseContacts(records));
-		
-		records = wrapper.getRecords("OpportunityTeamMembers");
-		if (records != null)
-			opportunity.setSalesTeam(UserFactory.parseUsers(records));
+		opportunity.setOwner(parseOwner(wrapper.getJSONObject("Owner")));
 		
 		List<User> ownerList = new ArrayList<User>();
 		ownerList.add(opportunity.getOwner());
-		ownerList.addAll(opportunity.getSalesTeam());
+				
+		JSONArray records = null;
+		
+		records = wrapper.getRecords("OpportunityLineItems");
+		if (records != null) {
+			opportunity.setOpportunityLineItems(OpportunityLineItemFactory.parseOpportunityLineItems(records));
+		}
+		
+		records = wrapper.getRecords("OpportunityContactRoles");
+		if (records != null) {
+			opportunity.setContacts(ContactFactory.parseContacts(records));
+		}
+		
+		records = wrapper.getRecords("OpportunityTeamMembers");
+		if (records != null) {
+			opportunity.setSalesTeam(UserFactory.parseUsers(records));
+			ownerList.addAll(opportunity.getSalesTeam());
+		}
+				   
 		opportunity.setOwners(ownerList);
 				
 		return opportunity;
