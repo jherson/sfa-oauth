@@ -24,7 +24,7 @@ public class SObject {
 	public void setId(String id) {
 		this.id = id;
 	}    
-	
+
 	public String getCurrencyIsoCode() {
 		return currencyIsoCode;
 	}

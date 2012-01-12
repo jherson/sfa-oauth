@@ -3,9 +3,8 @@ package com.redhat.sforce.qb.bean.model;
 import java.util.Date;
 import java.util.List;
 
-public class Opportunity {	
+public class Opportunity extends SObject {	
 	
-	private String id;
 	private String name;
 	private String accountId;
 	private String description;
@@ -21,16 +20,6 @@ public class Opportunity {
 	private Boolean hasOpportunityLineItem;
 	private String pricebookId;
 	private String pricebookName;
-    private Date createdDate;
-    private String createdById;
-    private String createdByName;
-    private String createdByFirstName;
-    private String createdByLastName;
-    private Date lastModifiedDate;
-    private String lastModifiedById;
-    private String lastModifiedByName;
-    private String lastModifiedByFirstName;
-    private String lastModifiedByLastName;
     private String fulfillmentChannel;
     private String billingAddress;
     private String billingCity;
@@ -54,22 +43,14 @@ public class Opportunity {
     private List<User> salesTeam;
     private List<User> owners;
     
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-
+    public String getName() {
+    	return name;
+    }
+    
+    public void setName(String name) {
+    	this.name = name;
+    }
+    
 	public String getAccountId() {
 		return accountId;
 	}
@@ -188,86 +169,6 @@ public class Opportunity {
 	
 	public void setOwner(User owner) {
 		this.owner = owner;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getCreatedById() {
-		return createdById;
-	}
-
-	public void setCreatedById(String createdById) {
-		this.createdById = createdById;
-	}
-
-	public String getCreatedByName() {
-		return createdByName;
-	}
-
-	public void setCreatedByName(String createdByName) {
-		this.createdByName = createdByName;
-	}
-
-	public String getCreatedByFirstName() {
-		return createdByFirstName;
-	}
-
-	public void setCreatedByFirstName(String createdByFirstName) {
-		this.createdByFirstName = createdByFirstName;
-	}
-
-	public String getCreatedByLastName() {
-		return createdByLastName;
-	}
-
-	public void setCreatedByLastName(String createdByLastName) {
-		this.createdByLastName = createdByLastName;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getLastModifiedById() {
-		return lastModifiedById;
-	}
-
-	public void setLastModifiedById(String lastModifiedById) {
-		this.lastModifiedById = lastModifiedById;
-	}
-
-	public String getLastModifiedByName() {
-		return lastModifiedByName;
-	}
-
-	public void setLastModifiedByName(String lastModifiedByName) {
-		this.lastModifiedByName = lastModifiedByName;
-	}
-
-	public String getLastModifiedByFirstName() {
-		return lastModifiedByFirstName;
-	}
-
-	public void setLastModifiedByFirstName(String lastModifiedByFirstName) {
-		this.lastModifiedByFirstName = lastModifiedByFirstName;
-	}
-
-	public String getLastModifiedByLastName() {
-		return lastModifiedByLastName;
-	}
-
-	public void setLastModifiedByLastName(String lastModifiedByLastName) {
-		this.lastModifiedByLastName = lastModifiedByLastName;
 	}
 
 	public String getFulfillmentChannel() {

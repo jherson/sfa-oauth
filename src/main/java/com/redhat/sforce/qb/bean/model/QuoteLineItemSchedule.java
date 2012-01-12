@@ -1,5 +1,5 @@
 package com.redhat.sforce.qb.bean.model;
 
-public class QuoteLineItemSchedule {
+public class QuoteLineItemSchedule extends SObject {
 
 }

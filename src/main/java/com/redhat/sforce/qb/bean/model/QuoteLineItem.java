@@ -3,7 +3,7 @@ package com.redhat.sforce.qb.bean.model;
 import java.util.Date;
 
 public class QuoteLineItem {
-	private String id;
+
 	private String quoteId;
 	private String opportunityLineItemId;
 	private String description;
@@ -31,20 +31,6 @@ public class QuoteLineItem {
     private Double basePrice;
     private String unitOfMeasure;
     private Integer sortOrder;
-	private String createdById;
-    private String createdByName;	
-	private Date createdDate;
-	private String lastModifiedById;
-	private String lastModifiedByName;
-	private Date lastModifiedDate;
-	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 	
 	public String getQuoteId() {
 		return quoteId;
@@ -259,53 +245,5 @@ public class QuoteLineItem {
 
 	public void setSortOrder(Integer sortOrder) {
 		this.sortOrder = sortOrder;
-	}
-	
-	public String getCreatedById() {
-		return createdById;
-	}
-
-	public void setCreatedById(String createdById) {
-		this.createdById = createdById;
-	}
-
-	public String getCreatedByName() {
-		return createdByName;
-	}
-
-	public void setCreatedByName(String createdByName) {
-		this.createdByName = createdByName;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getLastModifiedById() {
-		return lastModifiedById;
-	}
-
-	public void setLastModifiedById(String lastModifiedById) {
-		this.lastModifiedById = lastModifiedById;
-	}
-
-	public String getLastModifiedByName() {
-		return lastModifiedByName;
-	}
-
-	public void setLastModifiedByName(String lastModifiedByName) {
-		this.lastModifiedByName = lastModifiedByName;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
 	}
 }

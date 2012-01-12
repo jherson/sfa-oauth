@@ -1,10 +1,8 @@
 package com.redhat.sforce.qb.bean.model;
 
-public class Contact {
+public class Contact extends SObject {
 	
-	private String id;
 	private String contactId;
-	private String name;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -13,28 +11,12 @@ public class Contact {
 	private String title;
 	private Boolean selected;
 	
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getContactId() {
 		return contactId;
 	}
 
 	public void setContactId(String contactId) {
 		this.contactId = contactId;
-	}
-
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	public String getFirstName() {

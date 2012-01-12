@@ -1,8 +1,7 @@
 package com.redhat.sforce.qb.bean.model;
 
-public class User {
+public class User extends SObject {
 	
-	private String id;
     private String userName;
     private String firstName;
     private String lastName;
@@ -29,14 +28,6 @@ public class User {
 	private String dateFormat;
 	private String numberFormat;
 	private String contactId;
-
-    public String getId() {
-		return id;
-	}
-    
-	public void setId(String id) {
-		this.id = id;
-	}
 	
 	public String getUserName() {
 		return userName;

@@ -25,6 +25,12 @@
 		<rich:dataTable id="opportunityProducts" var="product"
 					value="#{quoteForm.opportunity.opportunityLineItems}"
 					noDataLabel="#{msgs.noRecords}" style="width:100%;">
+					
+					<rich:column width="100px">
+						<f:facet name="header">#{msgs.title}</f:facet>
+						<h:outputText value="#{product.productCode}" />
+					</rich:column>
+					
 
 
 				<br />

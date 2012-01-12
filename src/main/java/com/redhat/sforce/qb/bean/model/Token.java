@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.bean.model;
 
 public class Token {
+	
 	private String id;
 	private String issuedAt;
 	private String refreshToken;
