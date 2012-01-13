@@ -86,7 +86,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		}
 		
 		return null;		
-	}			   	
+	}	
 	
 	@Override
 	public void refresh() {
@@ -176,8 +176,8 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public void cancel(Quote quote) {
-		quote = getQuoteForm().getSelectedQuote();
+	public void cancel() {
+        getQuoteForm().cancel();
 	}
 	
 	public String getOpportunityId() {
@@ -283,6 +283,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	                       "NewOrRenewal__c, " +
 	                       "Quantity, " +
 	                       "UnitPrice, " +
+	                       "TotalPrice, " +
 	                       "YearlySalesPrice__c, " +
 	                       "Year1Amount__c, " +
 	                       "Year2Amount__c, " +

@@ -13,6 +13,7 @@ public class OpportunityLineItem extends SObject {
     private String newOrRenewal;
     private Integer quantity;            
     private Double unitPrice;
+    private Double totalPrice;
     private Double yearlySalesPrice;
     private Double year1Amount;
     private Double year2Amount;
@@ -24,6 +25,7 @@ public class OpportunityLineItem extends SObject {
     private String pricingAttributes;
     private String pricebookEntryId;  
     private Product product;
+    private Boolean importProduct;
     	
 	public String getOpportunityId() {
 		return opportunityId;
@@ -95,6 +97,14 @@ public class OpportunityLineItem extends SObject {
 	
 	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+	
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+	
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 	
 	public Double getYearlySalesPrice() {
@@ -184,4 +194,12 @@ public class OpportunityLineItem extends SObject {
 	public void setProduct(Product product) {
 		this.product = product;
 	} 
+	
+	public Boolean getImportProduct() {
+		return importProduct;
+	}
+	
+	public void setImportProduct(Boolean importProduct) {
+		this.importProduct = importProduct;
+	}
 }

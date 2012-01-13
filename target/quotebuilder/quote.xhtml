@@ -12,6 +12,7 @@
 	
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
+		<ui:include src="addopportunityproducts.xhtml" />
 
 		<rich:toolbar height="26" itemSeparator="grid">
 			<rich:toolbarGroup>
@@ -20,15 +21,13 @@
 			</rich:toolbarGroup>
 			<rich:toolbarGroup location="right">
 
-				<a4j:commandLink id="new"
+				<a4j:commandButton id="new" value="#{msgs.new}"
 					action="#{quoteManager.newQuote(quoteForm.opportunity)}"
+					styleClass="button"
 					rendered="#{not quoteForm.opportunity.isClosed}"
 					focus="#{rich:clientId('name')}"
-					render="quoteList, :details"  
-					ajaxSingle="true">
-
-					<h:graphicImage value="./images/new.png" title="#{msgs.new}" />
-				</a4j:commandLink>
+					render="quoteList, :details"  					
+					ajaxSingle="true" />
 
 				<h:outputText value=" " />
 
@@ -211,7 +210,7 @@
 							oncomplete="#{rich:component('ownerPanel')}.show()"
 							action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
 							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
-							reRender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
+							rerender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
 
 							<h:graphicImage value="./images/search.png"
 								title="#{msgs.change}" />
@@ -349,7 +348,8 @@
 					<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
 						bypassUpdates="true" type="reset" render="details"
-						ajaxSingle="true" execute="@none" />
+						action="#{quoteManager.cancel()}"
+						ajaxSingle="true" execute="@this" />
 
 				</h:panelGroup>
 
@@ -358,8 +358,23 @@
 				<hr />
 				<rich:tabPanel switchType="client">
 					<rich:tab header="#{msgs.quoteLineItems}">
+					
+					<h:panelGroup style="display: block; text-align: right">
+					
+					<a4j:commandButton id="importProducts" 
+					    value="#{msgs.addOpportunityProducts}"
+					    oncomplete="#{rich:component('addOpportunityProductsPanel')}.show()"
+						rendered="#{not empty quoteForm.selectedQuote}"
+						rerender="#{rich:clientId('addOpportunityProductsPanel')}" ajaxSingle="true" status="ajaxStatus" />
+																		
+                    <h:outputText value=" " escape="false" />						
+
+
+				</h:panelGroup>
+					
 						<rich:dataTable style="width: 100%" var="lineItem"
-							value="#{quoteForm.selectedQuote.quoteLineItems}">
+							value="#{quoteForm.selectedQuote.quoteLineItems}"
+							rendered="#{not empty quoteForm.selectedQuote}">
 							<rich:column>
 								<f:facet name="header">#{msgs.productCode}</f:facet>
 								<h:outputText value="#{lineItem.productCode}" />

@@ -24,5 +24,5 @@ public interface QuoteManager {
 	public void calculateQuote(Quote quote);
 	public void setQuoteContact(Quote quote, Contact contact);
 	public void setQuoteOwner(Quote quote, User user);
-	public void cancel(Quote quote);
+	public void cancel();
 }

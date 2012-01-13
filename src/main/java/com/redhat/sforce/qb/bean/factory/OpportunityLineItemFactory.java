@@ -33,6 +33,7 @@ public class OpportunityLineItemFactory {
 		    opportunityLineItem.setNewOrRenewal(wrapper.getString("NewOrRenewal__c"));
 		    opportunityLineItem.setQuantity(wrapper.getInteger("Quantity"));
 		    opportunityLineItem.setUnitPrice(wrapper.getDouble("UnitPrice"));
+		    opportunityLineItem.setTotalPrice(wrapper.getDouble("TotalPrice"));
 		    opportunityLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
 		    opportunityLineItem.setYear1Amount(wrapper.getDouble("Year1Amount__c"));
 		    opportunityLineItem.setYear2Amount(wrapper.getDouble("Year2Amount__c"));

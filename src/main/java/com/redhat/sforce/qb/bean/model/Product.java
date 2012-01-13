@@ -1,6 +1,6 @@
 package com.redhat.sforce.qb.bean.model;
 
-public class Product {
+public class Product extends SObject {
 
 	private String name;
     private String description;

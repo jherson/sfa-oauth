@@ -1,5 +1,7 @@
 <style>
 
+.body { margin: 0; padding: 0; }
+
 .row1 {
 	background-color: #EDEBEB;
 	font-size: 10px;
@@ -38,9 +40,9 @@
 }
 
 .button {
+    cursor: hand;
 	width: 100px;
-	height: 20px;
-	cursor: hand;
+	height: 20px;	
 }
 
 a.no-decor>img {

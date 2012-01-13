@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	
+	<script type="text/javascript">
+	
+	
+	</script>
+
+	<rich:popupPanel id="addOpportunityProductsPanel" modal="false"
+		autosized="true" resizeable="false" width="1200" height="500">
+
+		<f:facet name="header">
+			<h:outputText value="#{msgs.opportunityProducts}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:outputLink value="#"
+				onclick="#{rich:component('addOpportunityProductsPanel')}.hide(); return false;">
+                    X
+                </h:outputLink>
+		</f:facet>
+
+		<a4j:region>
+
+			<a4j:outputPanel layout="block">
+
+				<rich:dataTable id="opportunityProducts" var="lineItem"
+					value="#{quoteForm.opportunity.opportunityLineItems}"
+					noDataLabel="#{msgs.noRecords}" style="width:100%;">
+
+					<rich:column style="text-align: center;">
+						<f:facet name="header">
+							<h:selectBooleanCheckbox id="toggleCheckboxes" value="#{quoteForm.toggleCheckboxes}"							    
+							    status="ajaxStatus" execute="@this" 
+							    valueChangeListener="#{quoteForm.valueChangeListener}">	
+							 <a4j:ajax event="click" render="opportunityProducts" 
+							    listener="#{quoteForm.valueChangeListener}"
+							    execute="@this"/>													
+							</h:selectBooleanCheckbox>
+						</f:facet>																											
+						<h:selectBooleanCheckbox id="import" value="#{lineItem.importProduct}"/>
+					</rich:column>
+
+					<rich:column>
+						<f:facet name="header">#{msgs.productCode}</f:facet>
+						<h:outputText value="#{lineItem.product.productCode}" />
+					</rich:column>
+
+					<rich:column>
+						<f:facet name="header">#{msgs.configuredSku}</f:facet>
+						<h:outputText value="#{lineItem.configuredSku}" />
+					</rich:column>
+
+					<rich:column width="100px">
+						<f:facet name="header">#{msgs.description}</f:facet>
+						<h:outputText value="#{lineItem.product.description}" />
+					</rich:column>
+
+					<rich:column style="text-align: right;">
+						<f:facet name="header">#{msgs.quantity}</f:facet>
+						<h:outputText value="#{lineItem.quantity}" />
+					</rich:column>
+
+					<rich:column style="text-align: right;">
+						<f:facet name="header">#{msgs.unitPrice}</f:facet>
+						<h:outputText value="#{lineItem.unitPrice}">
+							<f:convertNumber locale="#{userBean.locale}"
+								pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+						</h:outputText>
+					</rich:column>
+
+					<rich:column style="text-align: right;">
+						<f:facet name="header">#{msgs.totalPrice}</f:facet>
+						<h:outputText value="#{lineItem.totalPrice}">
+							<f:convertNumber locale="#{userBean.locale}"
+								pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+						</h:outputText>
+					</rich:column>
+
+				</rich:dataTable>
+
+				<br />
+
+				<h:panelGroup style="display: block; text-align: right">
+
+					<h:outputText value="  " escape="false" />
+
+					<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
+						oncomplete="#{rich:component('addOpportunityProductsPanel')}.hide(); return false;" />
+
+				</h:panelGroup>
+
+			</a4j:outputPanel>
+
+		</a4j:region>
+
+	</rich:popupPanel>
+
+</ui:composition>

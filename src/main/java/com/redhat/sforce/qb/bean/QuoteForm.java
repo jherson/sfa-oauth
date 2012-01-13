@@ -18,4 +18,5 @@ public interface QuoteForm {
 	public void setSelectedQuote(Quote selectedQuote);
 	public void editQuote(Quote quote);
 	public void createQuote(Opportunity opportunity);
+	public void cancel();
 }

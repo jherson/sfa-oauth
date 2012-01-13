@@ -2,7 +2,7 @@ package com.redhat.sforce.qb.bean.model;
 
 import java.util.Date;
 
-public class QuoteLineItem {
+public class QuoteLineItem extends SObject {
 
 	private String quoteId;
 	private String opportunityLineItemId;

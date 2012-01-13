@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
-public class Quote {	
+public class Quote extends SObject {	
 	
 	private String opportunityId;
 	private String link;

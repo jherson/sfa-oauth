@@ -7,13 +7,16 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import org.richfaces.component.UIExtendedDataTable;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 
 @ManagedBean(name="quoteForm")
@@ -32,7 +35,9 @@ public class QuoteFormBean implements QuoteForm {
 	
 	private Quote selectedQuote;	
 	
-	private Quote quote;
+	private Boolean toggleCheckboxes = false;
+		
+	private Quote quote;	
 	
 	@PostConstruct
 	public void init() {				
@@ -51,6 +56,12 @@ public class QuoteFormBean implements QuoteForm {
 
 	@Override
 	public void createQuote(Opportunity opportunity) {
+		try {
+		    FacesContext.getCurrentInstance().getExternalContext().redirect("editquote.jsf");
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+			
 		quote = new Quote();	
 		quote.setOpportunityId(opportunity.getId());
 		quote.setOwnerId(opportunity.getOwner().getId());
@@ -61,7 +72,12 @@ public class QuoteFormBean implements QuoteForm {
 		quote.setPricebookId(opportunity.getPricebookId());
 		quote.setEffectiveDate(new java.util.Date());
 		quote.setExpirationDate(quote.getEffectiveDate());
-		setSelectedQuote(quote);
+		setSelectedQuote(quote);			
+	}
+	
+	@Override
+	public void cancel() {
+	    System.out.println("change has been cancelled");   
 	}
 
 	@Override
@@ -117,9 +133,35 @@ public class QuoteFormBean implements QuoteForm {
             if (dataTable.isRowAvailable()) {
             	setSelectedQuote((Quote) dataTable.getRowData());
             }
-        }        
+        }
     }
+	
+	public void valueChangeListener(AjaxBehaviorEvent event) {
+		//System.out.println("here: " + event.getNewValue());
+		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
 
+		System.out.println("id: " + checkBox.getId() + " " + checkBox.isSelected());
+		//if (toggleCheckboxes.getValue()) {
+		//	System.out.println("selected");
+		//} else {
+		//	System.out.println("not selected");
+		//}
+		
+		for (OpportunityLineItem opportunityLineItem : opportunity.getOpportunityLineItems()) {
+			opportunityLineItem.setImportProduct(true);
+		}
+		setToggleCheckboxes(true);
+
+	}
+	
+	public Boolean getToggleCheckboxes() {
+		return toggleCheckboxes;
+	}
+
+	public void setToggleCheckboxes(Boolean toggleCheckboxes) {
+		this.toggleCheckboxes = toggleCheckboxes;
+	}	
+	
 	public Collection<Object> getSelection() {
 		return selection;
 	}
@@ -134,5 +176,5 @@ public class QuoteFormBean implements QuoteForm {
 
 	public void setQuote(Quote quote) {
 		this.quote = quote;
-	}	
+	}
 }
