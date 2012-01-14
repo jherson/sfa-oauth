@@ -19,6 +19,7 @@ import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
+import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.User;
 import com.redhat.sforce.qb.exception.SforceServiceException;
@@ -131,6 +132,22 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		}
 	}
 	
+	@Override
+	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {
+		String[] ids = new String[opportunity.getOpportunityLineItems().size()];
+		for (int i = 0; i < opportunity.getOpportunityLineItems().size(); i++) {
+			OpportunityLineItem opportunityLineItem = opportunity.getOpportunityLineItems().get(i);
+			ids[i] = opportunityLineItem.getId();
+		}
+		
+		try {
+		    sforceService.addOpportunityLineItems(userBean.getSessionId(), quote.getId(), ids);
+		} catch (SforceServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			System.out.println(e);
+		}
+	}
 	@Override 
 	public void activateQuote(Quote quote) {
 		sforceService.activateQuote(userBean.getSessionId(), quote.getId());

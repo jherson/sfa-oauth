@@ -14,5 +14,6 @@ public interface SforceService {
 	public void copyQuote(String accessToken, String quoteId);
     public void activateQuote(String accessToken, String quoteId);
     public void calculateQuote(String accessToken, String quoteId);
+    public void addOpportunityLineItems(String accessToken, String quoteId, String[] opportunityLineItemIds) throws SforceServiceException;
     public String getCurrentUserId(String accessToken);
 }

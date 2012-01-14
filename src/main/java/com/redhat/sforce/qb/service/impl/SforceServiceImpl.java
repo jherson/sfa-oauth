@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -275,6 +276,46 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 			postMethod.releaseConnection();
 		}
 		
+	}
+	
+	@Override
+	public void addOpportunityLineItems(String accessToken, String quoteId, String[] opportunityLineItemIds) throws SforceServiceException {
+		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
+		
+		PostMethod postMethod = new PostMethod(url);	
+		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
+		postMethod.setRequestHeader("Content-type", "application/json");
+		
+		try {		
+			
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("OpportunityLineIds", opportunityLineItemIds);
+
+			postMethod.setRequestEntity(new StringRequestEntity(jsonObject.toString(), "application/json", null));
+			
+			System.out.println("add opp line item request: " + jsonObject.toString(2));
+			
+			HttpClient httpclient = new HttpClient();
+			httpclient.executeMethod(postMethod);
+			
+			if (postMethod.getStatusCode() == 400) {				
+				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
+			} 
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			postMethod.releaseConnection();
+		}
 	}
 	
 	private String parseErrorResponse(InputStream is) {
