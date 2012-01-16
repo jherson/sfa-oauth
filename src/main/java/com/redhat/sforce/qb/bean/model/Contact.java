@@ -11,6 +11,10 @@ public class Contact extends SObject {
 	private String department;
 	private String title;
 	private Boolean selected;
+
+        public Contact() {
+            super();
+        }
 	
 	public String getName() {
 		return name;

@@ -26,6 +26,10 @@ public class OpportunityLineItem extends SObject {
     private String pricebookEntryId;  
     private Product product;
     private Boolean importProduct;
+
+    public OpportunityLineItem() {
+        super();
+    }
     	
 	public String getOpportunityId() {
 		return opportunityId;

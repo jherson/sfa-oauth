@@ -31,6 +31,10 @@ public class QuoteLineItem extends SObject {
     private Double basePrice;
     private String unitOfMeasure;
     private Integer sortOrder;
+
+        public QuoteLineItem() {
+            super();
+        }
 	
 	public String getQuoteId() {
 		return quoteId;

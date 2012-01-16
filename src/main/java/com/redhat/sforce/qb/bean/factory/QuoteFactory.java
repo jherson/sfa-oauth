@@ -14,7 +14,7 @@ import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class QuoteFactory {    
 
-	public static List<Quote> getQuotes(JSONArray jsonArray) throws JSONException, ParseException {
+	public static List<Quote> fromJSON(JSONArray jsonArray) throws JSONException, ParseException {
 		List<Quote> quoteList = new ArrayList<Quote>();
 		
 		/**
@@ -82,7 +82,7 @@ public class QuoteFactory {
 		return quoteList;
 	}
 	
-	public static JSONObject convertQuoteToJson(Quote quote) {				
+	public static JSONObject toJson(Quote quote) {				
 		JSONObject jsonObject = new JSONObject();
 		try {			
 			jsonObject.put("Amount__c", quote.getAmount());

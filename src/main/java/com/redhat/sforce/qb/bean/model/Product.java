@@ -6,6 +6,10 @@ public class Product extends SObject {
     private String description;
     private String family;
     private String productCode;
+
+    public Product() {
+        super();
+    }
 	
     public String getName() {
     	return name;

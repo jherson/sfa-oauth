@@ -1,8 +1,9 @@
 package com.redhat.sforce.qb.bean.model;
 
 import java.util.Date;
+import java.io.Serializable;
 
-public class SObject {
+public class SObject implements Serializable {
 
 	private String id;
 	private String currencyIsoCode;
@@ -16,6 +17,10 @@ public class SObject {
     private String lastModifiedByName;
     private String lastModifiedByFirstName;
     private String lastModifiedByLastName;
+
+        public SObject() {
+
+        }
     
 	public String getId() {
 		return id;

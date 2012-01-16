@@ -16,7 +16,7 @@ public class OpportunityFactory {
 
 	public Opportunity opportunity;
 	
-	public static Opportunity getOpportunity(JSONArray jsonArray) throws JSONException, ParseException {
+	public static Opportunity fromJson(JSONArray jsonArray) throws JSONException, ParseException {
 		
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(0));
 				

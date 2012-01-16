@@ -142,12 +142,14 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		
 		try {
 		    sforceService.addOpportunityLineItems(userBean.getSessionId(), quote.getId(), ids);
+		    refresh();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			System.out.println(e);
-		}
+		}		
 	}
+	
 	@Override 
 	public void activateQuote(Quote quote) {
 		sforceService.activateQuote(userBean.getSessionId(), quote.getId());

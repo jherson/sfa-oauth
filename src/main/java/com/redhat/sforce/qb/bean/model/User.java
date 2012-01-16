@@ -28,6 +28,10 @@ public class User extends SObject {
 	private String dateFormat;
 	private String numberFormat;
 	private String contactId;
+
+    public User() {
+        super();
+    }
 	
 	public String getUserName() {
 		return userName;

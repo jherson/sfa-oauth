@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 .classpath
 .settings
 .project
 target
 test-output/
+=======
+target
+>>>>>>> 413745a671787b306579084360669851770ee2fe

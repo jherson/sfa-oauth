@@ -365,6 +365,7 @@
 					    value="#{msgs.addOpportunityProducts}"
                         action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}" 
 						rendered="#{not empty quoteForm.selectedQuote}"
+						render="quoteList, details"
 						rerender="#{rich:clientId('addOpportunityProductsPanel')}" ajaxSingle="true" status="ajaxStatus" />
 																		
                     <h:outputText value=" " escape="false" />						

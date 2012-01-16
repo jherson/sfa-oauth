@@ -49,6 +49,10 @@ public class Quote extends SObject {
 	//private ArrayList approvalRequests;	
 	//private ArrayList revenueSchedules;
 	//private ArrayList invoiceSchedules;
+	//
+        public Quote() {
+            super();
+        }
 	
 	public String getOpportunityId() {
 		return opportunityId;

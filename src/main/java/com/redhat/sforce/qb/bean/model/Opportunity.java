@@ -42,6 +42,10 @@ public class Opportunity extends SObject {
     private List<Contact> contacts;
     private List<User> salesTeam;
     private List<User> owners;
+
+    public Opportunity() {
+        super();
+    }
     
     public String getName() {
     	return name;
