@@ -57,7 +57,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		
 		if (queryResults != null) {		
 		    try {
-		    	return QuoteFactory.getQuotes(queryResults);
+		    	return QuoteFactory.fromJSON(queryResults);
 		    } catch (JSONException e) {
 		    	//logger.error(e);
 		    	e.printStackTrace();
@@ -76,7 +76,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 			
 		if (queryResults != null) {		
 		    try {
-		    	return OpportunityFactory.getOpportunity(queryResults);
+		    	return OpportunityFactory.fromJSON(queryResults);
 		    } catch (JSONException e) {
 		    	//logger.error(e);
 		    	e.printStackTrace();
@@ -111,7 +111,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void updateQuote(Quote quote) {
 		try {
-	        sforceService.update(userBean.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.convertQuoteToJson(quote));
+	        sforceService.update(userBean.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.toJson(quote));
 	        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully updated!", "Succesfully updated!"));
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
@@ -123,7 +123,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void createQuote(Quote quote) {
 		try {
-			sforceService.create(userBean.getSessionId(), "Quote__c", QuoteFactory.convertQuoteToJson(quote));
+			sforceService.create(userBean.getSessionId(), "Quote__c", QuoteFactory.toJson(quote));
 			refresh();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
