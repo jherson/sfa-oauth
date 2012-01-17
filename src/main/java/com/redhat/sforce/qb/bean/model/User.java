@@ -1,8 +1,11 @@
 package com.redhat.sforce.qb.bean.model;
 
+import java.util.Locale;
+
 public class User extends SObject {
 	
-    private String userName;
+	private static final long serialVersionUID = -5495949651775917498L;
+	private String userName;
     private String firstName;
     private String lastName;
 	private String name;
@@ -25,8 +28,7 @@ public class User extends SObject {
 	private String region;
 	private String roleName;
 	private String profileName;
-	private String dateFormat;
-	private String numberFormat;
+	private String localeSidKey;
 	private String contactId;
 
     public User() {
@@ -217,20 +219,12 @@ public class User extends SObject {
 		this.profileName = profileName;
 	}
 
-	public String getDateFormat() {
-		return dateFormat;
+	public String getLocaleSidKey() {
+		return localeSidKey;
 	}
 
-	public void setDateFormat(String dateFormat) {
-		this.dateFormat = dateFormat;
-	}
-
-	public String getNumberFormat() {
-		return numberFormat;
-	}
-
-	public void setNumberFormat(String numberFormat) {
-		this.numberFormat = numberFormat;
+	public void setLocaleSidKey(String localeSidKey) {
+		this.localeSidKey = localeSidKey;
 	}
 
 	public String getContactId() {

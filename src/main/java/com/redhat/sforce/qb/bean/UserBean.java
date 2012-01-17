@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -49,7 +50,17 @@ public class UserBean implements Serializable {
 		
 		setLocale(new Locale("en","US"));
 		buildFormatPatterns();
-	}		
+	}	
+	
+//	public Locale stringToLocale(String s)
+//	{
+//	    StringTokenizer tempStringTokenizer = new StringTokenizer(s,",");
+//	    if(tempStringTokenizer.hasMoreTokens())
+//	    String l = tempStringTokenizer.nextElement();
+//	    if(tempStringTokenizer.hasMoreTokens())
+//	    String c = tempStringTokenizer.nextElement();
+//	    return new Locale(l,c);
+//	}
 	
 	public String getSessionId() {
 		return sessionId;
@@ -78,12 +89,45 @@ public class UserBean implements Serializable {
 	public void buildFormatPatterns() {
 		SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
         SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, getLocale());
+        setDateFormatPattern(formatPattern(dateFormat));
+        setDateTimeFormatPattern(formatPattern(dateTimeFormat));
         
-        String pattern;
-        int length;
-        int yearBegin;
-                        
-        pattern = dateFormat.toPattern();
+//        String pattern;
+//        int length;
+//        int yearBegin;
+//                        
+//        pattern = dateFormat.toPattern();
+//        
+//        if (! pattern.contains("yyyy")) {
+//        	pattern = pattern.replace("yy", "yyyy");
+//        }
+//        
+//        if (! pattern.contains("dd")) {
+//        	pattern = pattern.replace("d", "dd");
+//        }
+//        
+//        if (! pattern.contains("MM")) {
+//        	pattern = pattern.replace("M", "MM");
+//        }
+//        
+//        System.out.println(pattern);
+//        length = pattern.length();
+//        yearBegin = pattern.
+//        yearBegin = pattern.lastIndexOf('y') + 1;
+//        if (yearBegin < 4)
+//            pattern = pattern.substring(0, yearBegin) + "yy" + (yearBegin < length ? pattern.substring(yearBegin, length) : "");
+        
+		
+//        pattern = dateTimeFormat.toPattern();
+//        length = pattern.length();
+//        yearBegin = pattern.lastIndexOf('y') + 1;
+//        if (yearBegin < 4)
+//            pattern = pattern.substring(0, yearBegin) + "yy" + (yearBegin < length ? pattern.substring(yearBegin, length) : "");
+//        setDateTimeFormatPattern(pattern);
+	}
+	
+	private String formatPattern(SimpleDateFormat format) {
+        String pattern = format.toPattern();
         
         if (! pattern.contains("yyyy")) {
         	pattern = pattern.replace("yy", "yyyy");
@@ -97,20 +141,7 @@ public class UserBean implements Serializable {
         	pattern = pattern.replace("M", "MM");
         }
         
-//        System.out.println(pattern);
-//        length = pattern.length();
-//        yearBegin = pattern.
-//        yearBegin = pattern.lastIndexOf('y') + 1;
-//        if (yearBegin < 4)
-//            pattern = pattern.substring(0, yearBegin) + "yy" + (yearBegin < length ? pattern.substring(yearBegin, length) : "");
-        setDateFormatPattern(pattern);
-		
-        pattern = dateTimeFormat.toPattern();
-        length = pattern.length();
-        yearBegin = pattern.lastIndexOf('y') + 1;
-        if (yearBegin < 4)
-            pattern = pattern.substring(0, yearBegin) + "yy" + (yearBegin < length ? pattern.substring(yearBegin, length) : "");
-        setDateTimeFormatPattern(pattern);
+        return pattern;
 	}
 	
 	public void setDateFormatPattern(String pattern) {
@@ -151,6 +182,7 @@ public class UserBean implements Serializable {
 	            "Alias, " +
 	            "DefaultCurrencyIsoCode, " +
 			    "Extension, " +
+	            "LocaleSidKey, " +
 	            "Region__c, " +
 	            "UserRole.Name, " +
 	            "Profile.Name " +

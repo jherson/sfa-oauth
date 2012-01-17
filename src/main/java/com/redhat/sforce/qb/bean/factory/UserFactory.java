@@ -28,7 +28,7 @@ public class UserFactory {
 			user.setPhone(wrapper.getString("Phone"));
 			user.setTitle(wrapper.getString("Title"));
 			user.setDepartment(wrapper.getString("Department"));
-			
+			user.setLocaleSidKey(wrapper.getString("LocaleSidKey"));
 			userList.add(user);			
 		}
 		
@@ -59,6 +59,7 @@ public class UserFactory {
 		user.setAlias(jsonObject.getString("Alias"));
 		user.setDefaultCurrencyIsoCode(jsonObject.getString("DefaultCurrencyIsoCode"));
 		user.setExtension(jsonObject.getString("Extension"));
+		user.setLocaleSidKey(jsonObject.getString("LocaleSidKey"));
 		user.setRegion(jsonObject.getString("Region__c"));
 		user.setRoleName(jsonObject.getString("UserRole.Name"));
 		user.setProfileName(jsonObject.getString("Profile.Name"));

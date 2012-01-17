@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.bean.model;
 
 public class Contact extends SObject {
 	
+	private static final long serialVersionUID = 4983057539446047017L;
 	private String name;
 	private String contactId;
 	private String firstName;
@@ -12,9 +13,9 @@ public class Contact extends SObject {
 	private String title;
 	private Boolean selected;
 
-        public Contact() {
-            super();
-        }
+    public Contact() {
+        super();
+    }
 	
 	public String getName() {
 		return name;
