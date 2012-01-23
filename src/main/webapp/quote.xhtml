@@ -121,15 +121,13 @@
 
 		</rich:extendedDataTable>
 
-		<br />
-		
-		#{sforceSession.loadData()}
+		<br />		
 		
 		<rich:popupPanel id="statusPane" autosized="true">
             <h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
         </rich:popupPanel>
 
-		<a4j:outputPanel ajaxRendered="true">
+		<a4j:outputPanel id="messages" ajaxRendered="true">
 			<rich:messages />
 		</a4j:outputPanel>
 
@@ -350,7 +348,6 @@
 					<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
 						bypassUpdates="true" type="reset" render="details"
-						action="#{quoteManager.cancel()}"
 						ajaxSingle="true" execute="@this" />
 
 				</h:panelGroup>

@@ -20,6 +20,7 @@ import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.SessionUser;
+import com.redhat.sforce.qb.service.QuoteService;
 import com.redhat.sforce.qb.service.SforceService;
 
 @ManagedBean(name="sforceSession")
@@ -33,40 +34,42 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	
 	private String opportunityId;
 	
+	private String quoteId;
+	
 	@Inject
 	private SessionUser sessionUser;
+	
+	@Inject
+	private QuoteService quoteService;
 	
 	@Inject
 	private SforceService sforceService;	
 
 	@PostConstruct
 	public void init() {	
-		
-		System.out.println("@PostConstruct SforceSessionBean");
-		
+				
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();		
 		
 		if (request.getParameter("sessionId") != null) {			
 			setSessionId(request.getParameter("sessionId"));
+			quoteService.setSessionId(request.getParameter("sessionId"));
 		}		
 		
 		if (request.getParameter("opportunityId") != null) {			
 			setOpportunityId(request.getParameter("opportunityId"));
 		}
 		
+		if (request.getParameter("quoteId") != null) {
+			setQuoteId(request.getParameter("quoteId"));
+		}
+		
 		try {
-			sessionUser = SessionUserFactory.parseSessionUser(sforceService.read(getSessionId(), userQuery.replace("#userId#", sforceService.getCurrentUserId(getSessionId()))));
+			sessionUser = SessionUserFactory.parseSessionUser(sforceService.getCurrentUserInfo(getSessionId()));
 			System.out.println("Session user name: " + sessionUser.getName());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}				
-	}
-	
-	public void loadData() {
-		QuoteForm quoteForm = (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");
-		quoteForm.setOpportunity(queryOpportunity());
-		quoteForm.setQuoteList(queryQuotes());
 	}
 	
 	public List<Quote> queryQuotes() {
@@ -123,7 +126,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	public String getSessionId() {
 		return sessionId;
 	}
-	
+		
 	@Override
 	public void setOpportunityId(String opportunityId) {
 		this.opportunityId = opportunityId;		
@@ -135,6 +138,17 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
+	public void setQuoteId(String quoteId) {
+		this.quoteId = quoteId;
+		
+	}
+
+	@Override
+	public String getQuoteId() {
+		return quoteId;
+	}	
+	
+	@Override
 	public void setSessionUser(SessionUser sessionUser) {
 	    this.sessionUser = sessionUser;
 	}
@@ -143,35 +157,6 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	public SessionUser getSessionUser() {
 		return sessionUser;
 	}
-	
-	private static final String userQuery = 
-			"Select Id, " +
-	            "Username, " +
-	            "LastName, " +
-	            "FirstName, " +
-	            "Name, " +
-	            "CompanyName, " +
-	            "Division, " +
-	            "Department, " +
-	            "Title, " +
-	            "Street, " +
-	            "City, " +
-	            "State, " +
-	            "PostalCode, " +
-	            "Country, " +
-	            "Email, " +
-	            "Phone, " +
-	            "Fax, " +
-	            "MobilePhone, " +
-	            "Alias, " +
-	            "DefaultCurrencyIsoCode, " +
-			    "Extension, " +
-	            "LocaleSidKey, " +
-	            "Region__c, " +
-	            "UserRole.Name, " +
-	            "Profile.Name " +
-	     "From   User " +
-	     "Where  Id = '#userId#'";
 	
 	private static final String opportunityQuery =
 	    	"Select Id, " +

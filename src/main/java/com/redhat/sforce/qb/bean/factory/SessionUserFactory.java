@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.bean.model.SessionUser;
@@ -13,8 +13,8 @@ import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class SessionUserFactory {
 			
-	public static SessionUser parseSessionUser(JSONArray jsonArray) throws  JSONException {
-		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(0));
+	public static SessionUser parseSessionUser(JSONObject jsonObject) throws  JSONException {
+		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 		
 		SessionUser sessionUser = new SessionUser();
 		sessionUser.setId(wrapper.getId());
@@ -40,6 +40,8 @@ public class SessionUserFactory {
 		sessionUser.setExtension(wrapper.getString("Extension"));
 		sessionUser.setDepartment(wrapper.getString("Department"));
 		sessionUser.setLocaleSidKey(wrapper.getString("LocaleSidKey"));
+		sessionUser.setFullPhotoUrl(wrapper.getString("FullPhotoUrl"));
+		sessionUser.setSmallPhotoUrl(wrapper.getString("SmallPhotoUrl"));
 		sessionUser.setRegion(wrapper.getString("Region__c"));
 		sessionUser.setRoleName(wrapper.getString("UserRole.Name"));
 		sessionUser.setProfileName(wrapper.getString("Profile.Name"));

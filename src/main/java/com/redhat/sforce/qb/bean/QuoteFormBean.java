@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
@@ -21,8 +22,8 @@ import com.redhat.sforce.qb.bean.model.Quote;
 
 public class QuoteFormBean implements QuoteForm {
 
-	//@ManagedProperty(value="#{sforceSession}")
-    //private SforceSession sforceSession;
+	@ManagedProperty(value="#{sforceSession}")
+    private SforceSession sforceSession;
 	
 	private Opportunity opportunity;
 	
@@ -38,16 +39,17 @@ public class QuoteFormBean implements QuoteForm {
 	
 	@PostConstruct
 	public void init() {				
-//		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();				
-//		if (request.getParameter("opportunityId") != null) {
-//			quoteManager.setOpportunityId(request.getParameter("opportunityId"));
-//		}					
-//		
-//		loadData();
-		
-		System.out.println("@PostConstruct QuoteFormBean");
+		loadData();
 	}		
-	
+		
+	public SforceSession getSforceSession() {
+		return sforceSession;
+	}
+
+	public void setSforceSession(SforceSession sforceSession) {
+		this.sforceSession = sforceSession;
+	}
+
 	@Override
 	public void editQuote(Quote quote) {
 		this.quote = quote;		
@@ -73,11 +75,6 @@ public class QuoteFormBean implements QuoteForm {
 		quote.setExpirationDate(quote.getEffectiveDate());
 		setSelectedQuote(quote);			
 	}
-	
-	@Override
-	public void cancel() {
-	    System.out.println("change has been cancelled");   
-	}
 
 	@Override
 	public List<Quote> getQuoteList() {
@@ -101,8 +98,8 @@ public class QuoteFormBean implements QuoteForm {
 	
 	@Override
 	public void loadData() {
-	//	opportunity = sforceSession.queryOpportunity();
-	//	quoteList = sforceSession.queryQuotes();		
+		setOpportunity(sforceSession.queryOpportunity());
+		setQuoteList(sforceSession.queryQuotes());
 	}	
 	
 	@Override

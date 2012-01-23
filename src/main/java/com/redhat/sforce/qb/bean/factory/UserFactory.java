@@ -41,6 +41,8 @@ public class UserFactory {
 			user.setExtension(wrapper.getString("Extension"));
 			user.setDepartment(wrapper.getString("Department"));
 			user.setRegion(wrapper.getString("Region__c"));
+			user.setFullPhotoUrl(wrapper.getString("FullPhotoUrl"));
+			user.setSmallPhotoUrl(wrapper.getString("SmallPhotoUrl"));
 			user.setRoleName(wrapper.getString("UserRole.Name"));
 			user.setProfileName(wrapper.getString("Profile.Name"));
 			

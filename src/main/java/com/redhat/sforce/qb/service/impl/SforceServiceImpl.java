@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -53,7 +52,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void activateQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/activate?quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/activate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -73,7 +72,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void calculateQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/calculate?quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/calculate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -92,19 +91,19 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
-	public String getCurrentUserId(String accessToken) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService?getUserId";
+	public JSONObject getCurrentUserInfo(String accessToken) {
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/currentUserInfo";
 		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
 		getMethod.setRequestHeader("Content-type", "application/json");
 		
-		String userId = null;
+		JSONObject response = null;
 		HttpClient httpclient = new HttpClient();
         try {
 			httpclient.executeMethod(getMethod);
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {					
-				userId = getMethod.getResponseBodyAsString().trim();					
+			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
+				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));			
 			}
 		} catch (HttpException e) {
 			// TODO Auto-generated catch block
@@ -112,16 +111,19 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			getMethod.releaseConnection();
 		}
         
-        return userId;
+        return response;
 	}
 	
 	@Override
 	public void copyQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/copy?quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/copy?quoteId=" + quoteId;	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);

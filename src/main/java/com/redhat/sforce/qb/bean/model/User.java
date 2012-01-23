@@ -28,6 +28,8 @@ public class User extends SObject {
 	private String profileName;
 	private String defaultCurrencyIsoCode;
 	private String localeSidKey;
+	private String fullPhotoUrl;
+	private String smallPhotoUrl;
 
     public User() {
         super();
@@ -231,5 +233,21 @@ public class User extends SObject {
 
 	public void setLocaleSidKey(String localeSidKey) {
 		this.localeSidKey = localeSidKey;
+	}
+
+	public String getFullPhotoUrl() {
+		return fullPhotoUrl;
+	}
+
+	public void setFullPhotoUrl(String fullPhotoUrl) {
+		this.fullPhotoUrl = fullPhotoUrl;
+	}
+
+	public String getSmallPhotoUrl() {
+		return smallPhotoUrl;
+	}
+
+	public void setSmallPhotoUrl(String smallPhotoUrl) {
+		this.smallPhotoUrl = smallPhotoUrl;
 	}
 }

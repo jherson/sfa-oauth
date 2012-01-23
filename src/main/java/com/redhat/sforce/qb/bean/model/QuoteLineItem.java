@@ -23,7 +23,7 @@ public class QuoteLineItem extends SObject {
 	private String opportunityId;
 	private String pricebookEntryId;
 	private String productId;
-	private Double quantity;
+	private Integer quantity;
 	private Double unitPrice;
 	private Double totalPrice;
 	private Double yearlySalesPrice;
@@ -180,11 +180,11 @@ public class QuoteLineItem extends SObject {
 		this.productFamily = productFamily;
 	}
 	
-	public Double getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 	
-	public void setQuantity(Double quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 	

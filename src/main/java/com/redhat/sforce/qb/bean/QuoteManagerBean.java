@@ -16,6 +16,7 @@ import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.User;
 import com.redhat.sforce.qb.exception.SforceServiceException;
+import com.redhat.sforce.qb.service.QuoteService;
 import com.redhat.sforce.qb.service.SforceService;
 
 @ManagedBean(name="quoteManager")
@@ -29,7 +30,10 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
     private SforceSession sforceSession;
 	
 	@Inject
-	SforceService sforceService;							
+	SforceService sforceService;	
+	
+	@Inject
+	QuoteService quoteService;
 	
 	@Override
 	public void refresh() {
@@ -53,7 +57,8 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void updateQuote(Quote quote) {
 		try {
-	        sforceService.update(sforceSession.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.toJson(quote));
+	        //sforceService.update(sforceSession.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.toJson(quote));
+	        quoteService.updateQuote(quote);
 	        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully updated!", "Succesfully updated!"));
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
@@ -134,12 +139,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		quote.setOwnerId(user.getId());
 		quote.setOwnerName(user.getName());
 		saveQuote(quote);
-	}
-	
-	@Override
-	public void cancel() {
-        getQuoteForm().cancel();
-	}		
+	}			
 			
 	private QuoteForm getQuoteForm() {
 		return (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");

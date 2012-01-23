@@ -41,7 +41,7 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setProductCode(wrapper.getString("ProductCode__c"));
 		    quoteLineItem.setProductDescription(wrapper.getString("ProductDescription__c"));
 		    quoteLineItem.setProductFamily(wrapper.getString("ProductFamily__c"));
-		    quoteLineItem.setQuantity(wrapper.getDouble("Quantity__c"));
+		    quoteLineItem.setQuantity(wrapper.getInteger("Quantity__c"));
 		    quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));
 		    quoteLineItem.setSortOrder(wrapper.getInteger("SortOrder__c"));
 		    quoteLineItem.setStartDate(wrapper.getDate("StartDate__c"));
