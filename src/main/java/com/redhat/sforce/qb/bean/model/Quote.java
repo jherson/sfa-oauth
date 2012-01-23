@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 public class Quote extends SObject {	
 	
+	private static final long serialVersionUID = 1L;
 	private String opportunityId;
 	private String link;
 	private Double version;		

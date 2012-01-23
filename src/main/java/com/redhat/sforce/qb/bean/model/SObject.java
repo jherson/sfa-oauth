@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class SObject implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String currencyIsoCode;
     private Date createdDate;
@@ -18,9 +19,9 @@ public class SObject implements Serializable {
     private String lastModifiedByFirstName;
     private String lastModifiedByLastName;
 
-        public SObject() {
+    public SObject() {
 
-        }
+    }
     
 	public String getId() {
 		return id;

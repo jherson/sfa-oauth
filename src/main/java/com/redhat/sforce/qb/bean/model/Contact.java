@@ -1,8 +1,8 @@
 package com.redhat.sforce.qb.bean.model;
 
 public class Contact extends SObject {
-	
-	private static final long serialVersionUID = 4983057539446047017L;
+
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String contactId;
 	private String firstName;

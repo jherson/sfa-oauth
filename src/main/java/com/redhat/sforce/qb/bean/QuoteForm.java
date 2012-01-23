@@ -12,8 +12,6 @@ public interface QuoteForm {
 	public void setQuoteList(List<Quote> quoteList);	
 	public Opportunity getOpportunity();
 	public void setOpportunity(Opportunity opportunity);		
-	public QuoteManager getQuoteManager();
-	public void setQuoteManager(QuoteManager quoteManager);
 	public Quote getSelectedQuote();
 	public void setSelectedQuote(Quote selectedQuote);
 	public void editQuote(Quote quote);

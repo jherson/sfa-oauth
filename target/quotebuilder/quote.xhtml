@@ -104,7 +104,7 @@
 				<h:outputText value="#{quote.currencyIsoCode}" />
 				<h:outputText value="  " escape="false" />
 				<h:outputText value="#{quote.amount}">
-					<f:convertNumber locale="#{userBean.locale}"
+					<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
 						pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 				</h:outputText>
 			</rich:column>
@@ -122,6 +122,8 @@
 		</rich:extendedDataTable>
 
 		<br />
+		
+		#{sforceSession.loadData()}
 		
 		<rich:popupPanel id="statusPane" autosized="true">
             <h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
@@ -196,7 +198,7 @@
 
 					<h:outputText value="#{msgs.amount}" />
 					<h:outputText value="#{quoteForm.selectedQuote.amount}">
-						<f:convertNumber locale="#{userBean.locale}"
+						<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
 							pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 					</h:outputText>
 
@@ -244,8 +246,8 @@
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
 						<rich:calendar value="#{quoteForm.selectedQuote.effectiveDate}"
-							id="effectiveDate" locale="#{userBean.locale}" popup="true"
-							datePattern="#{userBean.dateFormatPattern}"
+							id="effectiveDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
 							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
@@ -260,8 +262,8 @@
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
 						<rich:calendar value="#{quoteForm.selectedQuote.expirationDate}"
-							id="expirationDate" locale="#{userBean.locale}" popup="true"
-							datePattern="#{userBean.dateFormatPattern}"
+							id="expirationDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
 							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
@@ -301,8 +303,8 @@
 						<h:outputText value="#{quoteForm.selectedQuote.endDate}"
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 						<rich:calendar value="#{quoteForm.selectedQuote.endDate}"
-							id="endDate" locale="#{userBean.locale}" popup="true"
-							datePattern="#{userBean.dateFormatPattern}"
+							id="endDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
 							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
@@ -316,8 +318,8 @@
 						<h:outputText value=", " escape="false"
 							rendered="#{not empty quoteForm.selectedQuote}" />
 						<h:outputText value="#{quoteForm.selectedQuote.createdDate}">
-							<f:convertDateTime locale="#{userBean.locale}"
-								pattern="#{userBean.dateTimeFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}" type="date" />
 						</h:outputText>
 					</h:panelGroup>
 					<h:outputText value="#{msgs.lastModifiedBy}" />
@@ -327,8 +329,8 @@
 						<h:outputText value=", " escape="false"
 							rendered="#{not empty quoteForm.selectedQuote}" />
 						<h:outputText value="#{quoteForm.selectedQuote.lastModifiedDate}">
-							<f:convertDateTime locale="#{userBean.locale}"
-								pattern="#{userBean.dateTimeFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}" type="date" />
 						</h:outputText>
 					</h:panelGroup>
 
@@ -392,7 +394,7 @@
 								<f:facet name="header">#{msgs.startDate}</f:facet>
 								<h:outputText value="#{lineItem.startDate}"
 									style="text-align: center">
-									<f:convertDateTime locale="#{userBean.locale}"
+									<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#{userBean.dateFormatPattern}" type="date" />
 								</h:outputText>
 							</rich:column>
@@ -400,14 +402,14 @@
 								<f:facet name="header">#{msgs.endDate}</f:facet>
 								<h:outputText value="#{lineItem.endDate}"
 									style="text-align: center">
-									<f:convertDateTime locale="#{userBean.locale}"
+									<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#{userBean.dateFormatPattern}" type="date" />
 								</h:outputText>
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">#{msgs.listPrice}</f:facet>
 								<h:outputText value="#{lineItem.listPrice}">
-									<f:convertNumber locale="#{userBean.locale}"
+									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
@@ -420,7 +422,7 @@
 							<rich:column>
 								<f:facet name="header">#{msgs.unitPrice}</f:facet>
 								<h:outputText value="#{lineItem.unitPrice}">
-									<f:convertNumber locale="#{userBean.locale}"
+									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
@@ -428,7 +430,7 @@
 							<rich:column>
 								<f:facet name="header">#{msgs.totalPrice}</f:facet>
 								<h:outputText value="#{lineItem.totalPrice}">
-									<f:convertNumber locale="#{userBean.locale}"
+									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>

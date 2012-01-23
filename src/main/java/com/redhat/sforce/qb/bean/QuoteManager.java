@@ -1,7 +1,5 @@
 package com.redhat.sforce.qb.bean;
 
-import java.util.List;
-
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Quote;
@@ -9,9 +7,6 @@ import com.redhat.sforce.qb.bean.model.User;
 
 public interface QuoteManager {
 	
-	public void setOpportunityId(String opportunityId);
-	public List<Quote> queryQuotes();
-	public Opportunity queryOpportunity();
 	public void refresh();
 	public void deleteQuote(Quote quote);
 	public void copyQuote(Quote quote);

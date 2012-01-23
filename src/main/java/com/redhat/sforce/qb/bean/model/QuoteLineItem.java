@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class QuoteLineItem extends SObject {
 
+	private static final long serialVersionUID = 1L;
 	private String quoteId;
 	private String opportunityLineItemId;
 	private String description;
@@ -32,9 +33,9 @@ public class QuoteLineItem extends SObject {
     private String unitOfMeasure;
     private Integer sortOrder;
 
-        public QuoteLineItem() {
-            super();
-        }
+    public QuoteLineItem() {
+        super();
+    }
 	
 	public String getQuoteId() {
 		return quoteId;

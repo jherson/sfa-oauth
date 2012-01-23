@@ -5,13 +5,10 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.servlet.http.HttpServletRequest;
 
 import org.richfaces.component.UIExtendedDataTable;
 
@@ -24,8 +21,8 @@ import com.redhat.sforce.qb.bean.model.Quote;
 
 public class QuoteFormBean implements QuoteForm {
 
-	@ManagedProperty(value="#{quoteManager}")
-    private QuoteManager quoteManager;
+	//@ManagedProperty(value="#{sforceSession}")
+    //private SforceSession sforceSession;
 	
 	private Opportunity opportunity;
 	
@@ -41,12 +38,14 @@ public class QuoteFormBean implements QuoteForm {
 	
 	@PostConstruct
 	public void init() {				
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();				
-		if (request.getParameter("opportunityId") != null) {
-			quoteManager.setOpportunityId(request.getParameter("opportunityId"));
-		}					
+//		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();				
+//		if (request.getParameter("opportunityId") != null) {
+//			quoteManager.setOpportunityId(request.getParameter("opportunityId"));
+//		}					
+//		
+//		loadData();
 		
-		loadData();
+		System.out.println("@PostConstruct QuoteFormBean");
 	}		
 	
 	@Override
@@ -102,8 +101,8 @@ public class QuoteFormBean implements QuoteForm {
 	
 	@Override
 	public void loadData() {
-		opportunity = quoteManager.queryOpportunity();
-		quoteList = quoteManager.queryQuotes();		
+	//	opportunity = sforceSession.queryOpportunity();
+	//	quoteList = sforceSession.queryQuotes();		
 	}	
 	
 	@Override
@@ -114,16 +113,6 @@ public class QuoteFormBean implements QuoteForm {
 	@Override
 	public void setSelectedQuote(Quote selectedQuote) {
 		this.selectedQuote = selectedQuote;
-	}
-	
-	@Override
-	public QuoteManager getQuoteManager() {
-		return quoteManager;
-	}
-
-	@Override
-	public void setQuoteManager(QuoteManager quoteManager) {
-		this.quoteManager = quoteManager;
 	}
 	
 	public void selectionListener(AjaxBehaviorEvent event) {

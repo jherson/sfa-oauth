@@ -2,7 +2,9 @@ package com.redhat.sforce.qb.bean.model;
 
 public class QuoteLineItemSchedule extends SObject {
 
-    public QuoteLineItemSchedule() {
+	private static final long serialVersionUID = 1L;
+
+	public QuoteLineItemSchedule() {
         super();
     }
 
