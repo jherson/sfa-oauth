@@ -1,7 +1,5 @@
 package com.redhat.sforce.qb.bean.model;
 
-import java.util.Locale;
-
 public class User extends SObject {
 	
 	private static final long serialVersionUID = -5495949651775917498L;
@@ -23,13 +21,13 @@ public class User extends SObject {
 	private String fax;
 	private String mobilePhone;
 	private String alias;
-	private String defaultCurrencyIsoCode;
 	private String extension;
 	private String region;
+	private String contactId;	
 	private String roleName;
 	private String profileName;
+	private String defaultCurrencyIsoCode;
 	private String localeSidKey;
-	private String contactId;
 
     public User() {
         super();
@@ -178,7 +176,7 @@ public class User extends SObject {
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-	
+
 	public String getDefaultCurrencyIsoCode() {
 		return defaultCurrencyIsoCode;
 	}
@@ -186,7 +184,7 @@ public class User extends SObject {
 	public void setDefaultCurrencyIsoCode(String defaultCurrencyIsoCode) {
 		this.defaultCurrencyIsoCode = defaultCurrencyIsoCode;
 	}
-	
+
 	public String getExtension() {
 		return extension;
 	}
@@ -202,6 +200,14 @@ public class User extends SObject {
 	public void setRegion(String region) {
 		this.region = region;
 	}
+
+	public String getContactId() {
+		return contactId;
+	}
+
+	public void setContactId(String contactId) {
+		this.contactId = contactId;
+	}	
 	
 	public String getRoleName() {
 		return roleName;
@@ -226,12 +232,4 @@ public class User extends SObject {
 	public void setLocaleSidKey(String localeSidKey) {
 		this.localeSidKey = localeSidKey;
 	}
-
-	public String getContactId() {
-		return contactId;
-	}
-
-	public void setContactId(String contactId) {
-		this.contactId = contactId;
-	}	
 }

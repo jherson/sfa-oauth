@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -45,9 +44,10 @@ public class UserBean implements Serializable {
 		
 		System.out.println(getUserId());
 		
+		//JSONArray user = sforceService.read(getSessionId(), userQuery.replace("#userId#", getUserId()));
+		//System.out.println(user.toString());
 		JSONArray user = sforceService.read(getSessionId(), userQuery.replace("#userId#", getUserId()));
-		System.out.println(user.toString());
-		
+		System.out.println(user.toString());	
 		setLocale(new Locale("en","US"));
 		buildFormatPatterns();
 	}	

@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class OpportunityLineItem extends SObject {
 
+	private static final long serialVersionUID = 1L;
     private String opportunityId;
     private Date actualStartDate;
     private Date actualEndDate;

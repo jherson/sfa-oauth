@@ -32,8 +32,8 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 
 	private static final long serialVersionUID = 1L;
 		
-	@ManagedProperty(value="#{userBean}")
-    private UserBean userBean;
+	@ManagedProperty(value="#{sforceSession}")
+    private SforceSession userBean;
 	
 	@Inject
 	SforceService sforceService;	
@@ -205,16 +205,8 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 
 	public void setOpportunityId(String opportunityId) {
 		this.opportunityId = opportunityId;
-	}
-		
-	public UserBean getUserBean() {
-		return userBean;
-	}
-
-	public void setUserBean(UserBean userBean) {
-		this.userBean = userBean;
-	}
-	
+	}		
+			
 	private QuoteForm getQuoteForm() {
 		return (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");
 	}
