@@ -39,6 +39,7 @@ public class Opportunity extends SObject {
     private String oracleAccountNumber;
     private String accountAliasName;
     private User owner;
+    private CreditCheck approvedCreditCheck;
     private List<OpportunityLineItem> opportunityLineItems;
     private List<Contact> contacts;
     private List<User> salesTeam;
@@ -174,6 +175,14 @@ public class Opportunity extends SObject {
 	
 	public void setOwner(User owner) {
 		this.owner = owner;
+	}
+
+	public CreditCheck getApprovedCreditCheck() {
+		return approvedCreditCheck;
+	}
+
+	public void setApprovedCreditCheck(CreditCheck approvedCreditCheck) {
+		this.approvedCreditCheck = approvedCreditCheck;
 	}
 
 	public String getFulfillmentChannel() {

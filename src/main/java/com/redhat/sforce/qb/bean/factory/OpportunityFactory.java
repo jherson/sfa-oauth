@@ -27,6 +27,16 @@ public class OpportunityFactory {
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
 		opportunity.setPricebookId(wrapper.getString("PricebookId"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+		opportunity.setBillingAddress(wrapper.getString("BillingAddress__c"));
+		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));
+		opportunity.setBillingCountry(wrapper.getString("BillingCountry__c"));
+		opportunity.setBillingState(wrapper.getString("BillingState__c"));
+		opportunity.setBillingZipPostalCode(wrapper.getString("BillingZipPostalCode__c"));
+		opportunity.setShippingAddress(wrapper.getString("ShippingAddress__c"));
+		opportunity.setShippingCity(wrapper.getString("ShippingCity__c"));
+		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
+		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
+		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));		
 		opportunity.setOwner(parseOwner(wrapper.getJSONObject("Owner")));
 		
 		List<User> ownerList = new ArrayList<User>();
@@ -51,6 +61,11 @@ public class OpportunityFactory {
 		}
 				   
 		opportunity.setOwners(ownerList);
+		
+		records = wrapper.getRecords("CreditChecks__r");
+		if (records != null) {
+			opportunity.setApprovedCreditCheck(CreditCheckFactory.parseCreditCheck(records));
+		}
 				
 		return opportunity;
 	}	

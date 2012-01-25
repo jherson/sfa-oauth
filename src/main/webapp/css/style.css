@@ -1,10 +1,10 @@
 <style>
 
-body {
-   height: 100px;
-        overflow: auto;
-    }
-    
+.rf-p {
+	background-color: #E4C6A7;
+	border-color: #C27E3A;	
+}
+   
 .row1 {
 	background-color: #EDEBEB;
 	font-size: 10px;
@@ -18,19 +18,15 @@ body {
 .label-column {
 	font-weight: bold;
 	text-align: right;
-	padding-top: 3px;
 	padding-right: 5px;
-	padding-bottom: 3px;
-	height: 25px;
+	height: 20px;
 	width: 15%;
 }
 
 .column-l-align {
 	text-align: left;
-	padding-top: 3px;
 	padding-left: 5px;
-	padding-bottom: 3px;
-	height: 25px;
+	height: 20px;
 	width: 35%;
 }
 

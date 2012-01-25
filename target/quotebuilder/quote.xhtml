@@ -4,16 +4,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
-    
-    <a4j:status id="ajaxStatus" forceId="true" onstart="#{rich:component('statusPane')}.show()"
-        onstop="#{rich:component('statusPane')}.hide()" />
-        
-        <rich:panel styleClass="top">
-            
-        
-	
+
+	<a4j:status id="ajaxStatus" forceId="true"
+		onstart="#{rich:component('statusPane')}.show()"
+		onstop="#{rich:component('statusPane')}.hide()" />
+
+
+
 	<h:form id="quoteForm">
-	
+
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
 		<ui:include src="addopportunityproducts.xhtml" />
@@ -29,16 +28,14 @@
 					action="#{quoteManager.newQuote(quoteForm.opportunity)}"
 					styleClass="button"
 					rendered="#{not quoteForm.opportunity.isClosed}"
-					focus="#{rich:clientId('name')}"
-					render="quoteList, :details"  					
+					focus="#{rich:clientId('name')}" render="quoteList, :details"
 					ajaxSingle="true" />
 
 				<h:outputText value=" " />
 
 				<a4j:commandButton value="#{msgs.refresh}"
 					action="#{quoteManager.refresh()}" styleClass="button"
-					ajaxSingle="true" render="quoteList, :details" 
-					status="ajaxStatus"/>
+					ajaxSingle="true" render="quoteList, :details" status="ajaxStatus" />
 
 			</rich:toolbarGroup>
 		</rich:toolbar>
@@ -46,8 +43,7 @@
 		<rich:extendedDataTable id="quoteList" var="quote"
 			value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
 			selection="#{quoteForm.selection}" style="height:220px;"
-			selectedClass="dataTableSelectedRow"
-			status="ajaxStatus">
+			selectedClass="dataTableSelectedRow" status="ajaxStatus">
 
 			<a4j:ajax execute="@this" event="selectionchange"
 				listener="#{quoteForm.selectionListener}" render=":details" />
@@ -57,8 +53,7 @@
 
 				<a4j:commandLink id="activate"
 					action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
-					styleClass="no-decor"
-					status="ajaxStatus"
+					styleClass="no-decor" status="ajaxStatus"
 					render="quoteList, :details">
 					<h:graphicImage value="./images/activate.png"
 						title="#{msgs.activate}" />
@@ -67,18 +62,17 @@
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandLink id="copy" action="#{quoteManager.copyQuote(quote)}"
-					ajaxSingle="true" render="quoteList" styleClass="no-decor" status="ajaxStatus">
-					<h:graphicImage value="./images/copy.png"
-						title="#{msgs.copy}" />
+					ajaxSingle="true" render="quoteList" styleClass="no-decor"
+					status="ajaxStatus">
+					<h:graphicImage value="./images/copy.png" title="#{msgs.copy}" />
 				</a4j:commandLink>
 
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
-					action="#{quoteManager.deleteQuote(quote)}" styleClass="no-decor" ajaxSingle="true"
-					status="ajaxStatus" render="quoteList, :details">
-					<h:graphicImage value="./images/delete.png"
-						title="#{msgs.delete}" />
+					action="#{quoteManager.deleteQuote(quote)}" styleClass="no-decor"
+					ajaxSingle="true" status="ajaxStatus" render="quoteList, :details">
+					<h:graphicImage value="./images/delete.png" title="#{msgs.delete}" />
 				</a4j:commandLink>
 			</rich:column>
 
@@ -125,17 +119,22 @@
 
 		</rich:extendedDataTable>
 
-		<br />		
-		
+		<br />
+
 		<rich:popupPanel id="statusPane" autosized="true">
-            <h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
-        </rich:popupPanel>
+			<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
+		</rich:popupPanel>
 
 		<a4j:outputPanel id="messages" ajaxRendered="true">
 			<rich:messages />
 		</a4j:outputPanel>
 
 		<a4j:outputPanel id="details">
+
+			<ui:include src="viewquotepanel.xhtml" />
+
+			<br />
+
 			<rich:panel>
 				<f:facet name="header">
 					<h:outputText value="#{msgs.quoteDetailsHeader}" />
@@ -200,13 +199,15 @@
 
 					<h:outputText value="#{msgs.amount}" />
 					<h:outputText value="#{quoteForm.selectedQuote.amount}">
-						<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+						<f:convertNumber
+							locale="#{sforceSession.sessionUser.localeSidKey}"
 							pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 					</h:outputText>
 
 					<h:outputText value="#{msgs.owner}" />
 					<h:panelGroup>
-						<h:outputText id="ownerName" value="#{quoteForm.selectedQuote.ownerName}" />
+						<h:outputText id="ownerName"
+							value="#{quoteForm.selectedQuote.ownerName}" />
 
 						<h:outputText value=" " />
 
@@ -248,7 +249,8 @@
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
 						<rich:calendar value="#{quoteForm.selectedQuote.effectiveDate}"
-							id="effectiveDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							id="effectiveDate"
+							locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
 							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
@@ -264,7 +266,8 @@
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
 						<rich:calendar value="#{quoteForm.selectedQuote.expirationDate}"
-							id="expirationDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							id="expirationDate"
+							locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
 							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
@@ -305,7 +308,8 @@
 						<h:outputText value="#{quoteForm.selectedQuote.endDate}"
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 						<rich:calendar value="#{quoteForm.selectedQuote.endDate}"
-							id="endDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							id="endDate" locale="#{sforceSession.sessionUser.localeSidKey}"
+							popup="true"
 							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
@@ -320,8 +324,10 @@
 						<h:outputText value=", " escape="false"
 							rendered="#{not empty quoteForm.selectedQuote}" />
 						<h:outputText value="#{quoteForm.selectedQuote.createdDate}">
-							<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
-								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}" type="date" />
+							<f:convertDateTime
+								locale="#{sforceSession.sessionUser.localeSidKey}"
+								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
+								type="date" />
 						</h:outputText>
 					</h:panelGroup>
 					<h:outputText value="#{msgs.lastModifiedBy}" />
@@ -331,8 +337,10 @@
 						<h:outputText value=", " escape="false"
 							rendered="#{not empty quoteForm.selectedQuote}" />
 						<h:outputText value="#{quoteForm.selectedQuote.lastModifiedDate}">
-							<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
-								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}" type="date" />
+							<f:convertDateTime
+								locale="#{sforceSession.sessionUser.localeSidKey}"
+								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
+								type="date" />
 						</h:outputText>
 					</h:panelGroup>
 
@@ -341,13 +349,13 @@
 				<br />
 
 				<h:panelGroup style="display: block; text-align: right">
-					
+
 					<a4j:commandButton value="#{msgs.save}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}"
 						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
 						render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
-						
-                    <h:outputText value=" " escape="false" />						
+
+					<h:outputText value=" " escape="false" />
 
 					<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
@@ -361,21 +369,22 @@
 				<hr />
 				<rich:tabPanel switchType="client">
 					<rich:tab header="#{msgs.quoteLineItems}">
-					
-					<h:panelGroup style="display: block; text-align: right">
-					
-					<a4j:commandButton id="importProducts" 
-					    value="#{msgs.addOpportunityProducts}"
-                        action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}" 
-						rendered="#{not empty quoteForm.selectedQuote}"
-						render="quoteList, details"
-						rerender="#{rich:clientId('addOpportunityProductsPanel')}" ajaxSingle="true" status="ajaxStatus" />
-																		
-                    <h:outputText value=" " escape="false" />						
+
+						<h:panelGroup style="display: block; text-align: right">
+
+							<a4j:commandButton id="importProducts"
+								value="#{msgs.addOpportunityProducts}"
+								action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
+								rendered="#{not empty quoteForm.selectedQuote}"
+								render="quoteList, details"
+								rerender="#{rich:clientId('addOpportunityProductsPanel')}"
+								ajaxSingle="true" status="ajaxStatus" />
+
+							<h:outputText value=" " escape="false" />
 
 
-				</h:panelGroup>
-					
+						</h:panelGroup>
+
 						<rich:dataTable style="width: 100%" var="lineItem"
 							value="#{quoteForm.selectedQuote.quoteLineItems}"
 							rendered="#{not empty quoteForm.selectedQuote}">
@@ -394,21 +403,26 @@
 							<rich:column style="text-align: center;">
 								<f:facet name="header">#{msgs.startDate}</f:facet>
 								<h:outputText value="#{lineItem.startDate}">
-									<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
-										pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
+									<f:convertDateTime
+										locale="#{sforceSession.sessionUser.localeSidKey}"
+										pattern="#{sforceSession.sessionUser.dateFormatPattern}"
+										type="date" />
 								</h:outputText>
 							</rich:column>
 							<rich:column style="text-align: center;">
 								<f:facet name="header">#{msgs.endDate}</f:facet>
 								<h:outputText value="#{lineItem.endDate}">
-									<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
-										pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
+									<f:convertDateTime
+										locale="#{sforceSession.sessionUser.localeSidKey}"
+										pattern="#{sforceSession.sessionUser.dateFormatPattern}"
+										type="date" />
 								</h:outputText>
 							</rich:column>
 							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.listPrice}</f:facet>
 								<h:outputText value="#{lineItem.listPrice}">
-									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+									<f:convertNumber
+										locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
@@ -421,7 +435,8 @@
 							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.unitPrice}</f:facet>
 								<h:outputText value="#{lineItem.unitPrice}">
-									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+									<f:convertNumber
+										locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
@@ -429,7 +444,8 @@
 							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.totalPrice}</f:facet>
 								<h:outputText value="#{lineItem.totalPrice}">
-									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+									<f:convertNumber
+										locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
@@ -437,10 +453,10 @@
 						</rich:dataTable>
 					</rich:tab>
 					<rich:tab header="#{msgs.invoiceSchedule}">
-                            <rich:dataTable style="width: 100%" var="lineItemSchedule"
+						<rich:dataTable style="width: 100%" var="lineItemSchedule"
 							value="#{quoteForm.selectedQuote.quoteLineItemSchedules}"
 							rendered="#{not empty quoteForm.selectedQuote}">
-							
+
 							<rich:column>
 								<f:facet name="header">#{msgs.productCode}</f:facet>
 								<h:outputText value="#{lineItemSchedule.productCode}" />
@@ -449,26 +465,28 @@
 								<f:facet name="header">#{msgs.description}</f:facet>
 								<h:outputText value="#{lineItemSchedule.productDescription}" />
 							</rich:column>
-							
+
 							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.totalPrice}</f:facet>
 								<h:outputText value="#{lineItemSchedule.prorateYearUnitPrice}">
-									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+									<f:convertNumber
+										locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
-							
+
 							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.totalPrice}</f:facet>
 								<h:outputText value="#{lineItemSchedule.prorateYearTotalPrice}">
-									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+									<f:convertNumber
+										locale="#{sforceSession.sessionUser.localeSidKey}"
 										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 								</h:outputText>
 							</rich:column>
-							
 
-							
-							</rich:dataTable>
+
+
+						</rich:dataTable>
 
 					</rich:tab>
 
@@ -481,6 +499,4 @@
 		</a4j:outputPanel>
 
 	</h:form>
-
-</rich:panel>
 </ui:composition>

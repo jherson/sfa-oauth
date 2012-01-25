@@ -254,40 +254,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		                   "Unit_Of_Measure__c, " +
 		                   "Pricing_Attributes__c " +
 		            "From   QuoteLineItem__r " +
-		          "Order By SortOrder__c), " +
-		    	   "(Select Id, " +
-		    	           "Name, " +
-		    	           "CurrencyIsoCode, " +
-		    	           "RecordTypeId, " +
-		    	           "CreatedDate, " +
-		    	           "CreatedById, " +
-		    	           "LastModifiedDate, " +
-		    	           "LastModifiedById, " +
-		   		           "Opportunity__c, " +
-		   		           "Quote__c, " +
-		   		           "JustificationReason__c, " +
-		   		           "JustificationReasonNotes__c, " +
-		   		           "ApprovalStatus__c, " +
-		   		           "AssignApprovalTo__c, " +
-		   		           "PaymentTermsRequested__c, " +
-		   		           "ApprovedBy__c, " +
-		   		           "ApprovedByOther__c, " +
-		   		           "ApprovalNotes__c, " +
-		   		           "PaymentTermsApproved__c, " +
-		   		           "BillingAccountNumberApprovedOn__c, " +
-		   		           "BillingAccountNameApprovedOn__c, " +
-		   		           "DeniedReason__c, " +
-		   		           "PricingDiscountRequested__c, " +
-		   		           "PricingDiscountApproved__c, " +
-		   		           "CreatedBy.Name, " +
-		   		           "LastModifiedBy.Name, " +
-		                   "AssignApprovalTo__r.Name, " +
-		                   "AssignApprovalTo__r.Email, " +
-		                   "ApprovedBy__r.Name, " +
-		                   "ApprovedBy__r.Email, " +
-		                   "RecordType.Id, " +
-		                   "RecordType.Name " +        
-		            "From   ApprovalCustom__r), " +
+		          "Order By SortOrder__c), " +		    	   
 		           "(Select Id, " +
 		 	               "Name, " +
 		 	               "CurrencyIsoCode, " +
@@ -315,7 +282,8 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		 	               "QuoteLineItemId__r.YearlySalesPrice__c, " +
 		 	               "QuoteLineItemId__r.TotalPrice__c, " +
 		 	               "QuoteLineItemId__r.ContractNumbers__c " +
-		 	        "From   QuoteLineItemSchedule__r) " +
+		 	        "From   QuoteLineItemSchedule__r " +
+		 	        "Order By EndDate__c, QuoteLineItemId__r.ProductCode__c) " +
 		    "From   Quote__c " +
 	 	    "Where  OpportunityId__c = '#opportunityId#' " +
 		    "Order  By Number__c";
