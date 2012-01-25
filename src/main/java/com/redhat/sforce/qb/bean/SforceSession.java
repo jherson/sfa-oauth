@@ -5,17 +5,20 @@ import java.util.List;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.SessionUser;
+import com.redhat.sforce.qb.exception.SforceServiceException;
 
 public interface SforceSession {
 
-	public Opportunity queryOpportunity();
+	public Opportunity queryOpportunity() throws SforceServiceException;
 	public List<Quote> queryQuotes();
-	public void setSessionId(String sessionId);
-	public String getSessionId();
-	public void setOpportunityId(String opportunityId);
-	public String getOpportunityId();
+	public Quote queryQuote();
 	public void setSessionUser(SessionUser sessionUser);
 	public SessionUser getSessionUser();
-	public void setQuoteId(String quoteId);
-	public String getQuoteId();
+	public void createQuote(Quote quote) throws SforceServiceException;
+	public void updateQuote(Quote quote) throws SforceServiceException;
+	public void activateQuote(Quote quote);
+	public void calculateQuote(Quote quote);
+	public void deleteQuote(Quote quote);
+	public void copyQuote(Quote quote);
+	public void addOpportunityLineItems(Quote quote, String[] opportunityLineIds) throws SforceServiceException;
 }

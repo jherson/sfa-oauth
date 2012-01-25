@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -16,6 +17,7 @@ import org.richfaces.component.UIExtendedDataTable;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
+import com.redhat.sforce.qb.exception.SforceServiceException;
 
 @ManagedBean(name="quoteForm")
 @ViewScoped
@@ -38,8 +40,8 @@ public class QuoteFormBean implements QuoteForm {
 	private Quote quote;	
 	
 	@PostConstruct
-	public void init() {				
-		loadData();
+	public void init() {	
+		queryAllData();		
 	}		
 		
 	public SforceSession getSforceSession() {
@@ -97,9 +99,14 @@ public class QuoteFormBean implements QuoteForm {
 	}
 	
 	@Override
-	public void loadData() {
-		setOpportunity(sforceSession.queryOpportunity());
-		setQuoteList(sforceSession.queryQuotes());
+	public void queryAllData() {		
+		try {
+			setOpportunity(sforceSession.queryOpportunity());
+			setQuoteList(sforceSession.queryQuotes());
+		} catch (SforceServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}		
 	}	
 	
 	@Override

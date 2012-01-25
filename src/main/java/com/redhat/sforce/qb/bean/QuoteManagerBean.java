@@ -7,17 +7,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
-import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.User;
 import com.redhat.sforce.qb.exception.SforceServiceException;
-import com.redhat.sforce.qb.service.QuoteService;
-import com.redhat.sforce.qb.service.SforceService;
 
 @ManagedBean(name="quoteManager")
 @SessionScoped
@@ -27,17 +23,19 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	private static final long serialVersionUID = 1L;
 		
 	@ManagedProperty(value="#{sforceSession}")
-    private SforceSession sforceSession;
+    private SforceSession sforceSession;	
 	
-	@Inject
-	SforceService sforceService;	
-	
-	@Inject
-	QuoteService quoteService;
-	
+	public SforceSession getSforceSession() {
+		return sforceSession;
+	}
+
+	public void setSforceSession(SforceSession sforceSession) {
+		this.sforceSession = sforceSession;
+	}
+
 	@Override
 	public void refresh() {
-		getQuoteForm().loadData();
+		getQuoteForm().queryAllData();
 	}
 	
 	@Override
@@ -47,65 +45,45 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void saveQuote(Quote quote) {
-		if (quote.getId() != null) {
-			updateQuote(quote);
-		} else {
-			createQuote(quote);
-		}
-	}
-	
-	@Override
-	public void updateQuote(Quote quote) {
 		try {
-	        //sforceService.update(sforceSession.getSessionId(), "Quote__c", quote.getId(), QuoteFactory.toJson(quote));
-	        quoteService.updateQuote(quote);
-	        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully updated!", "Succesfully updated!"));
-		} catch (SforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
-			System.out.println(e);
-		}
-	}
-	
-	@Override
-	public void createQuote(Quote quote) {
-		try {
-			sforceService.create(sforceSession.getSessionId(), "Quote__c", QuoteFactory.toJson(quote));
-			refresh();
-		} catch (SforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
-			System.out.println(e);
-		}
-	}
-	
-	@Override
-	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {
-		String[] ids = new String[opportunity.getOpportunityLineItems().size()];
-		for (int i = 0; i < opportunity.getOpportunityLineItems().size(); i++) {
-			OpportunityLineItem opportunityLineItem = opportunity.getOpportunityLineItems().get(i);
-			ids[i] = opportunityLineItem.getId();
-		}
-		
-		try {
-		    sforceService.addOpportunityLineItems(sforceSession.getSessionId(), quote.getId(), ids);
+		    if (quote.getId() != null) {
+			    updateQuote(quote);
+		    } else {
+			    createQuote(quote);
+		    }
 		    refresh();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			System.out.println(e);
+		}
+	}
+		
+	@Override
+	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {
+		String[] opportunityLineIds = new String[opportunity.getOpportunityLineItems().size()];
+		for (int i = 0; i < opportunity.getOpportunityLineItems().size(); i++) {
+			OpportunityLineItem opportunityLineItem = opportunity.getOpportunityLineItems().get(i);
+			opportunityLineIds[i] = opportunityLineItem.getId();
+		}
+		
+		try {
+			sforceSession.addOpportunityLineItems(quote, opportunityLineIds);		    
+		    refresh();
+		} catch (SforceServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		}		
 	}
 	
 	@Override 
 	public void activateQuote(Quote quote) {
-		sforceService.activateQuote(sforceSession.getSessionId(), quote.getId());
+		sforceSession.activateQuote(quote);
 		refresh();
 	}
 	
 	@Override
 	public void calculateQuote(Quote quote) {
-		sforceService.calculateQuote(sforceSession.getSessionId(), quote.getId());
+		sforceSession.calculateQuote(quote);		
 		refresh();
 	}
 	
@@ -116,14 +94,14 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void deleteQuote(Quote quote) {
-		sforceService.delete(sforceSession.getSessionId(), "Quote__c", quote.getId());
+		sforceSession.deleteQuote(quote);
 		refresh();		
 		getQuoteForm().setSelectedQuote(null);
 	}
 	
 	@Override
 	public void copyQuote(Quote quote) {	
-		sforceService.copyQuote(sforceSession.getSessionId(), quote.getId());
+		sforceSession.copyQuote(quote);
 		refresh();
 	}	
 	
@@ -139,7 +117,17 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		quote.setOwnerId(user.getId());
 		quote.setOwnerName(user.getName());
 		saveQuote(quote);
-	}			
+	}	
+	
+	private void updateQuote(Quote quote) throws SforceServiceException {
+		sforceSession.updateQuote(quote);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully updated!", "Succesfully updated!"));
+	}
+	
+	private void createQuote(Quote quote) throws SforceServiceException {			
+		sforceSession.createQuote(quote);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully created!", "Succesfully created!"));
+	}
 			
 	private QuoteForm getQuoteForm() {
 		return (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");

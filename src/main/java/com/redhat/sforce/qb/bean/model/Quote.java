@@ -47,6 +47,7 @@ public class Quote extends SObject {
 	private Boolean hasApprovalRequests;
 	private Date lastCalculatedDate;
 	private List<QuoteLineItem> quoteLineItems;
+	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
 	//private ArrayList approvalRequests;	
 	//private ArrayList revenueSchedules;
 	//private ArrayList invoiceSchedules;
@@ -365,5 +366,13 @@ public class Quote extends SObject {
 
 	public void setQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
 		this.quoteLineItems = quoteLineItems;
+	}
+
+	public List<QuoteLineItemSchedule> getQuoteLineItemSchedules() {
+		return quoteLineItemSchedules;
+	}
+
+	public void setQuoteLineItemSchedules(List<QuoteLineItemSchedule> quoteLineItemSchedules) {
+		this.quoteLineItemSchedules = quoteLineItemSchedules;
 	}
 }

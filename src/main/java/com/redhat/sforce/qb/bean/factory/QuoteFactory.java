@@ -51,7 +51,7 @@ public class QuoteFactory {
 			quote.setLastCalculatedDate(wrapper.getDateTime("LastCalculatedDate__c"));
 			quote.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
 			quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
-			quote.setLastModifiedDate(wrapper.getDate("LastModifiedDate"));
+			quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
 			quote.setLink(wrapper.getString("Link__c"));
 			quote.setName(wrapper.getString("Name"));
 			quote.setNumber(wrapper.getString("Number__c"));			
@@ -72,9 +72,15 @@ public class QuoteFactory {
 			quote.setYear5PaymentAmount(wrapper.getDouble("Year5PaymentAmount__c"));
 			quote.setYear6PaymentAmount(wrapper.getDouble("Year6PaymentAmount__c"));
 			
-			JSONArray records = wrapper.getRecords("QuoteLineItem__r");
+			JSONArray records = null;
+			
+			records = wrapper.getRecords("QuoteLineItem__r");
 			if (records != null)
 			    quote.setQuoteLineItems(QuoteLineItemFactory.getQuoteLineItems(records));
+			
+			records = wrapper.getRecords("QuoteLineItemSchedule__r");
+			if (records != null)
+				quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory.parseQuoteLineItemSchedules(records));
 			
 			quoteList.add(quote);
 		}		

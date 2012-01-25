@@ -7,6 +7,10 @@
     
     <a4j:status id="ajaxStatus" forceId="true" onstart="#{rich:component('statusPane')}.show()"
         onstop="#{rich:component('statusPane')}.hide()" />
+        
+        <rich:panel styleClass="top">
+            
+        
 	
 	<h:form id="quoteForm">
 	
@@ -127,7 +131,7 @@
             <h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
         </rich:popupPanel>
 
-		<a4j:outputPanel ajaxRendered="true">
+		<a4j:outputPanel id="messages" ajaxRendered="true">
 			<rich:messages />
 		</a4j:outputPanel>
 
@@ -348,7 +352,6 @@
 					<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
 						rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
 						bypassUpdates="true" type="reset" render="details"
-						action="#{quoteManager.cancel()}"
 						ajaxSingle="true" execute="@this" />
 
 				</h:panelGroup>
@@ -388,23 +391,21 @@
 								<f:facet name="header">#{msgs.description}</f:facet>
 								<h:outputText value="#{lineItem.productDescription}" />
 							</rich:column>
-							<rich:column>
+							<rich:column style="text-align: center;">
 								<f:facet name="header">#{msgs.startDate}</f:facet>
-								<h:outputText value="#{lineItem.startDate}"
-									style="text-align: center">
+								<h:outputText value="#{lineItem.startDate}">
 									<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
-										pattern="#{userBean.dateFormatPattern}" type="date" />
+										pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
 								</h:outputText>
 							</rich:column>
-							<rich:column>
+							<rich:column style="text-align: center;">
 								<f:facet name="header">#{msgs.endDate}</f:facet>
-								<h:outputText value="#{lineItem.endDate}"
-									style="text-align: center">
+								<h:outputText value="#{lineItem.endDate}">
 									<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
-										pattern="#{userBean.dateFormatPattern}" type="date" />
+										pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
 								</h:outputText>
 							</rich:column>
-							<rich:column>
+							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.listPrice}</f:facet>
 								<h:outputText value="#{lineItem.listPrice}">
 									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
@@ -412,12 +413,12 @@
 								</h:outputText>
 							</rich:column>
 
-							<rich:column>
+							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.quantity}</f:facet>
 								<h:outputText value="#{lineItem.quantity}" />
 							</rich:column>
 
-							<rich:column>
+							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.unitPrice}</f:facet>
 								<h:outputText value="#{lineItem.unitPrice}">
 									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
@@ -425,7 +426,7 @@
 								</h:outputText>
 							</rich:column>
 
-							<rich:column>
+							<rich:column style="text-align: right;">
 								<f:facet name="header">#{msgs.totalPrice}</f:facet>
 								<h:outputText value="#{lineItem.totalPrice}">
 									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
@@ -436,9 +437,38 @@
 						</rich:dataTable>
 					</rich:tab>
 					<rich:tab header="#{msgs.invoiceSchedule}">
+                            <rich:dataTable style="width: 100%" var="lineItemSchedule"
+							value="#{quoteForm.selectedQuote.quoteLineItemSchedules}"
+							rendered="#{not empty quoteForm.selectedQuote}">
+							
+							<rich:column>
+								<f:facet name="header">#{msgs.productCode}</f:facet>
+								<h:outputText value="#{lineItemSchedule.productCode}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msgs.description}</f:facet>
+								<h:outputText value="#{lineItemSchedule.productDescription}" />
+							</rich:column>
+							
+							<rich:column style="text-align: right;">
+								<f:facet name="header">#{msgs.totalPrice}</f:facet>
+								<h:outputText value="#{lineItemSchedule.prorateYearUnitPrice}">
+									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+								</h:outputText>
+							</rich:column>
+							
+							<rich:column style="text-align: right;">
+								<f:facet name="header">#{msgs.totalPrice}</f:facet>
+								<h:outputText value="#{lineItemSchedule.prorateYearTotalPrice}">
+									<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+										pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+								</h:outputText>
+							</rich:column>
+							
 
-
-
+							
+							</rich:dataTable>
 
 					</rich:tab>
 
@@ -452,4 +482,5 @@
 
 	</h:form>
 
+</rich:panel>
 </ui:composition>

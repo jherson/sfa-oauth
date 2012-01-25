@@ -45,6 +45,14 @@ public class JSONObjectWrapper {
 		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getString(key);
 	}
 	
+	public Double getDouble(String object, String key) throws JSONException {
+		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getDouble(key);
+	}
+	
+	public Integer getInteger(String object, String key) throws JSONException {
+		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getInt(key);
+	}
+	
 	public Date getDateTime(String key) throws ParseException, JSONException {
 		return jsonObject.isNull(key) ? null : dateTimeFormat.parse(jsonObject.getString(key));
 	}

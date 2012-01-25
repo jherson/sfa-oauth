@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -20,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
+import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
 
@@ -92,7 +95,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public JSONObject getCurrentUserInfo(String accessToken) {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/currentUserInfo";
+		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/currentUserInfo";
 		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
@@ -103,11 +106,57 @@ public class SforceServiceImpl implements Serializable,  SforceService {
         try {
 			httpclient.executeMethod(getMethod);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
-				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));			
+				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
 			}
 		} catch (HttpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			getMethod.releaseConnection();
+		}
+        
+        return response;
+	}
+	
+	@Override
+	public Opportunity getOpportunity(String accessToken, String opportunityId) throws SforceServiceException {
+		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/opportunity?opportunityId=" + opportunityId;
+		JSONObject jsonObject = doGet(accessToken, url);
+		try {
+			return OpportunityFactory.fromJSON(jsonObject);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		return null;
+	}
+	
+	private JSONObject doGet(String accessToken, String url) throws SforceServiceException {
+		GetMethod getMethod = new GetMethod(url);
+		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
+		getMethod.setRequestHeader("Content-type", "application/json");
+		
+		JSONObject response = null;
+		HttpClient httpclient = new HttpClient();
+        try {
+			httpclient.executeMethod(getMethod);
+			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
+				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
+			} else {
+				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));									
+			}
+		} catch (HttpException e) {
+			throw new SforceServiceException(e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -142,7 +191,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
-	public JSONArray read(String accessToken, String query) {
+	public JSONArray query(String accessToken, String query) {
 		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/query";
 		
 		NameValuePair[] params = new NameValuePair[1];

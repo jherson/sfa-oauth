@@ -43,8 +43,8 @@ public class SessionUserFactory {
 		sessionUser.setFullPhotoUrl(wrapper.getString("FullPhotoUrl"));
 		sessionUser.setSmallPhotoUrl(wrapper.getString("SmallPhotoUrl"));
 		sessionUser.setRegion(wrapper.getString("Region__c"));
-		sessionUser.setRoleName(wrapper.getString("UserRole.Name"));
-		sessionUser.setProfileName(wrapper.getString("Profile.Name"));
+		sessionUser.setRoleName(wrapper.getString("UserRole","Name"));
+		sessionUser.setProfileName(wrapper.getString("Profile","Name"));
 		
 		Locale locale = stringToLocale(sessionUser.getLocaleSidKey());
 		SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);

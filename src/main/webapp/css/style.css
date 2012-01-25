@@ -1,7 +1,10 @@
 <style>
 
-.body { margin: 0; padding: 0; }
-
+body {
+   height: 100px;
+        overflow: auto;
+    }
+    
 .row1 {
 	background-color: #EDEBEB;
 	font-size: 10px;

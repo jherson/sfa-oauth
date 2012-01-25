@@ -4,6 +4,7 @@ import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.User;
+import com.redhat.sforce.qb.exception.SforceServiceException;
 
 public interface QuoteManager {
 	
@@ -13,8 +14,6 @@ public interface QuoteManager {
 	public void saveQuote(Quote quote);
 	public void newQuote(Opportunity opportunity);
 	public void editQuote(Quote quote);
-	public void updateQuote(Quote quote);
-	public void createQuote(Quote quote);
 	public void activateQuote(Quote quote);
 	public void calculateQuote(Quote quote);
 	public void setQuoteContact(Quote quote, Contact contact);

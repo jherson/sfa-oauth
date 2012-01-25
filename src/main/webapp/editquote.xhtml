@@ -1,24 +1,17 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
-	
-	    <f:view>
-	<h:head>
-		<title>#{msgs.apptitle}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
-		<link href="./css/style.css" rel="stylesheet" type="text/css" />
-	</h:head>		
 
-    <h:body>
-    
-	    <h:panelGrid bgcolor="#000000" width="100%">
-		    <h:graphicImage id="logo" alt="logo" url="/images/hdr-logo.png" />
-		</h:panelGrid>
-		<hr />
+<body>
+
+	<ui:composition template="/templates/template.xhtml">
+
+		<ui:define name="body">
+
     
     <a4j:status id="ajaxStatus" forceId="true" onstart="#{rich:component('statusPane')}.show()"
         onstop="#{rich:component('statusPane')}.hide()" />
@@ -90,7 +83,7 @@
 
 					<h:outputText value="#{msgs.amount}" />
 					<h:outputText value="#{quoteForm.selectedQuote.amount}">
-						<f:convertNumber locale="#{sforcesforceSession.sessionUser.localeSidKey}"
+						<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
 							pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 					</h:outputText>
 
@@ -138,8 +131,8 @@
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
 						<rich:calendar value="#{quoteForm.selectedQuote.effectiveDate}"
-							id="effectiveDate" locale="#{sforcesforceSession.sessionUser.localeSidKey}" popup="true"
-							datePattern="#{sforcesforceSession.sessionUser.dateFormatPattern}"
+							id="effectiveDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							datePattern="#{vSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
 							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
@@ -154,8 +147,8 @@
 							rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 
 						<rich:calendar value="#{quoteForm.selectedQuote.expirationDate}"
-							id="expirationDate" locale="#{sforcesforceSession.sessionUser.localeSidKey}" popup="true"
-							datePattern="#{sforcesforceSession.sessionUser.dateFormatPattern}"
+							id="expirationDate" locale="#{sforceSession.sessionUser.localeSidKey}" popup="true"
+							datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
 							showApplyButton="false" cellWidth="24px" cellHeight="22px"
 							style="width:200px"
 							rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
@@ -210,8 +203,8 @@
 						<h:outputText value=", " escape="false"
 							rendered="#{not empty quoteForm.selectedQuote}" />
 						<h:outputText value="#{quoteForm.selectedQuote.createdDate}">
-							<f:convertDateTime locale="#{sforcesforceSession.sessionUser.localeSidKey}"
-								pattern="#{sforcesforceSession.sessionUser.dateTimeFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+								pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}" type="date" />
 						</h:outputText>
 					</h:panelGroup>
 					<h:outputText value="#{msgs.lastModifiedBy}" />
@@ -345,7 +338,9 @@
 		
 	</h:form>
 	
-			</h:body>
-    </f:view>
+		</ui:define>
 
-</ui:composition>		
+	</ui:composition>
+
+</body>
+</html>

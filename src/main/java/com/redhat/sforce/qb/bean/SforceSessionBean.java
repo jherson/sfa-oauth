@@ -14,13 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.SessionUser;
-import com.redhat.sforce.qb.service.QuoteService;
+import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
 
 @ManagedBean(name="sforceSession")
@@ -37,10 +36,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	private String quoteId;
 	
 	@Inject
-	private SessionUser sessionUser;
-	
-	@Inject
-	private QuoteService quoteService;
+	private SessionUser sessionUser;	
 	
 	@Inject
 	private SforceService sforceService;	
@@ -52,7 +48,6 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		
 		if (request.getParameter("sessionId") != null) {			
 			setSessionId(request.getParameter("sessionId"));
-			quoteService.setSessionId(request.getParameter("sessionId"));
 		}		
 		
 		if (request.getParameter("opportunityId") != null) {			
@@ -66,14 +61,18 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		try {
 			sessionUser = SessionUserFactory.parseSessionUser(sforceService.getCurrentUserInfo(getSessionId()));
 			System.out.println("Session user name: " + sessionUser.getName());
+			System.out.println("Session profile name: " + sessionUser.getProfileName());
+			System.out.println("Session role name: " + sessionUser.getRoleName());					
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}				
+		}			
 	}
 	
+	@Override
 	public List<Quote> queryQuotes() {
-        JSONArray queryResults = sforceService.read(getSessionId(), quoteQuery.replace("#opportunityId#", getOpportunityId()));
+        JSONArray queryResults = sforceService.query(getSessionId(), quoteQuery.replace("#opportunityId#", getOpportunityId()));
 		
 		if (queryResults != null) {		
 		    try {
@@ -90,24 +89,52 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		return null;
 	}
 	
-	public Opportunity queryOpportunity() {
-	    JSONArray queryResults = sforceService.read(getSessionId(), opportunityQuery.replace("#opportunityId#", getOpportunityId()));
-			
-		if (queryResults != null) {		
-		    try {
-		    	return OpportunityFactory.fromJSON(queryResults);
-		    } catch (JSONException e) {
-		    	//logger.error(e);
-		    	e.printStackTrace();
-		    } catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return null;		
-	}	
+	@Override
+	public Opportunity queryOpportunity() throws SforceServiceException {
+		return sforceService.getOpportunity(getSessionId(), getOpportunityId());			
+	}
 	
+	@Override
+	public Quote queryQuote() {
+		// TODO add queryQuote function
+		System.out.println(getQuoteId());
+		return null;
+	}
+	
+	@Override
+	public void createQuote(Quote quote) throws SforceServiceException {
+		sforceService.create(getSessionId(), "Quote__c", QuoteFactory.toJson(quote));		
+	}
+
+	@Override
+	public void updateQuote(Quote quote) throws SforceServiceException {
+		sforceService.update(getSessionId(), "Quote__c", quote.getId(), QuoteFactory.toJson(quote));		
+	}
+	
+	@Override
+	public void activateQuote(Quote quote) {
+		sforceService.activateQuote(getSessionId(), quote.getId());
+	}
+	
+	@Override
+	public void calculateQuote(Quote quote) {
+		sforceService.calculateQuote(getSessionId(), quote.getId());
+	}
+	
+	@Override
+	public void deleteQuote(Quote quote) {
+		sforceService.copyQuote(getSessionId(), quote.getId());
+	}
+	
+	@Override
+	public void copyQuote(Quote quote) {
+		sforceService.delete(getSessionId(), "Quote__c", quote.getId());
+	}
+	
+	@Override
+	public void addOpportunityLineItems(Quote quote, String[] opportunityLineIds) throws SforceServiceException {
+		sforceService.addOpportunityLineItems(getSessionId(), quote.getId(), opportunityLineIds);
+	}
 //	
 //	public List<String> queryCurrencies() {
 	//private static final String currencyQuery = 
@@ -117,34 +144,27 @@ public class SforceSessionBean implements Serializable, SforceSession {
 //		return;
 //	}
 		
-	@Override
-	public void setSessionId(String sessionId) {
+	private void setSessionId(String sessionId) {
 		this.sessionId = sessionId; 		
 	}
 
-	@Override
-	public String getSessionId() {
+	private String getSessionId() {
 		return sessionId;
 	}
 		
-	@Override
-	public void setOpportunityId(String opportunityId) {
+	private void setOpportunityId(String opportunityId) {
 		this.opportunityId = opportunityId;		
 	}
 
-	@Override
-	public String getOpportunityId() {
+	private String getOpportunityId() {
 		return opportunityId;
 	}
 	
-	@Override
-	public void setQuoteId(String quoteId) {
-		this.quoteId = quoteId;
-		
+	private void setQuoteId(String quoteId) {
+		this.quoteId = quoteId;		
 	}
 
-	@Override
-	public String getQuoteId() {
+	private String getQuoteId() {
 		return quoteId;
 	}	
 	
@@ -157,152 +177,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	public SessionUser getSessionUser() {
 		return sessionUser;
 	}
-	
-	private static final String opportunityQuery =
-	    	"Select Id, " +
-	    	       "AccountId, " +
-	    	       "Name, " +
-	    	       "Description, " +
-	    	       "StageName, " +
-	    	       "Amount, " +
-			       "Probability, " +
-			       "CloseDate, " +
-			       "Type, " +
-			       "IsClosed, " +
-			       "IsWon, " +
-			       "ForecastCategory, " +
-			       "CurrencyIsoCode, " +
-			       "HasOpportunityLineItem, " +		       
-			       "CreatedDate, " +
-			       "LastModifiedDate, " +
-			       "FulfillmentChannel__c, " +			       
-			       "BillingAddress__c, " +
-			       "ShippingAddress__c, " +
-			       "BillingCity__c, " +
-			       "ShippingCity__c, " +
-			       "BillingCountry__c, " +
-			       "ShippingCountry__c, " +
-			       "BillingZipPostalCode__c, " +
-			       "ShippingZipPostalCode__c, " +
-			       "BillingState__c, " +
-			       "ShippingState__c, " +			       
-			       "OpportunityNumber__c, " +
-			       "Year1PaymentAmount__c, " +
-			       "Year2PaymentAmount__c, " +
-			       "Year3PaymentAmount__c, " +
-			       "Year4PaymentAmount__c, " +
-			       "Year5PaymentAmount__c, " +
-			       "Year6PaymentAmount__c, " +
-			       "Pay_Now__c, " +
-	               "Country_of_Order__c, " +
-			       "Account.Name, " +
-			       "Account.OracleAccountNumber__c, " +
-			       "Account.Account_Alias_Name__c, " +
-			       "Owner.Id, " +
-			       "Owner.Name, " +
-			       "Owner.FirstName, " +
-			       "Owner.LastName, " +
-			       "Owner.ContactId, " +
-			       "Owner.Email, " +
-			       "Owner.Phone, " +
-			       "Owner.Title, " +
-			       "Owner.Department, " +
-	               "Owner.UserRole.Name, " +
-	               "Owner.Profile.Name, " +
-	               "CreatedBy.Id, " +
-			       "CreatedBy.Name, " +
-			       "CreatedBy.FirstName, " +
-			       "CreatedBy.LastName, " +
-			       "LastModifiedBy.Id, " +
-			       "LastModifiedBy.Name, " +
-			       "LastModifiedBy.FirstName, " +
-			       "LastModifiedBy.LastName, " +
-			       "Pricebook2.Id, " +
-			       "Pricebook2.Name, " +               
-			       "(Select Id, " +
-	                       "Name, " +
-	                       "ContentType, " +
-	                       "CreatedDate, " +
-	                       "CreatedBy.Name, " +
-	                       "CreatedBy.FirstName, " +
-	                       "CreatedBy.LastName " +
-	                  "From Attachments " +
-	                 "Order By CreatedDate), " +
-			       "(Select Id, " +
-			               "OpportunityId, " +
-			               "ActualStartDate__c, " +
-			               "ActualEndDate__c, " +
-			               "ActualTerm__c, " +			
-			               "Contract_Numbers__c, " +
-			               "ListPrice, " +
-	                       "NewOrRenewal__c, " +
-	                       "Quantity, " +
-	                       "UnitPrice, " +
-	                       "TotalPrice, " +
-	                       "YearlySalesPrice__c, " +
-	                       "Year1Amount__c, " +
-	                       "Year2Amount__c, " +
-	                       "Year3Amount__c, " +
-	                       "Year4Amount__c, " +
-	                       "Year5Amount__c, " +
-	                       "Year6Amount__c, " +
-	                       "CurrencyIsoCode, " +
-	                       "Configured_SKU__c, " +
-	                       "Pricing_Attributes__c, " +
-	                       "CreatedBy.Id, " +
-	    			       "CreatedBy.Name, " +
-	    			       "CreatedBy.FirstName, " +
-	    			       "CreatedBy.LastName, " +
-	    			       "LastModifiedBy.Id, " +
-	    			       "LastModifiedBy.Name, " +
-	    			       "LastModifiedBy.FirstName, " +
-	    			       "LastModifiedBy.LastName, " +
-	                       "PricebookEntry.Id, " +
-	                       "PricebookEntry.CurrencyIsoCode, " +
-	                       "PricebookEntry.Product2.Id, " +
-	                       "PricebookEntry.Product2.Description, " +
-	                       "PricebookEntry.Product2.Name, " +
-	                       "PricebookEntry.Product2.Family, " +
-	                       "PricebookEntry.Product2.ProductCode " +			           
-			        "From   OpportunityLineItems), " +
-			       "(Select Id, " +
-			               "User.Id, " +
-	    	               "User.Name, " +
-	    	               "User.FirstName, " +
-	    	               "User.LastName, " +
-	                       "User.ContactId, " +
-	    	               "User.Email, " +
-	                       "User.Phone, " +
-	    	               "User.Title, " +
-	                       "User.Department " +
-	    	        "From   OpportunityTeamMembers), " +
-	    	       "(Select Id, " +
-	    	               "Contact.Id, " +
-	    	               "Contact.Name, " +
-	    	               "Contact.FirstName, " +
-	    	               "Contact.LastName, " +
-	    	               "Contact.Email, " +
-	    	               "Contact.Phone, " +
-	    	               "Contact.Department, " +
-	    	               "Contact.Title " +
-	    	        "From   OpportunityContactRoles), " +
-	               "(Select Id, " +
-	    	               "A_R_Balance__c, " +
-	    	               "A_R_Past_Due_Amount__c, " +
-	    	               "Comments__c, " +
-	    	               "Credit_Limit__c, " +
-	                       "Credit_Stage__c, " +
-	                       "Opportunity__c, " +
-	                       "Payment_Terms__c, " + 
-	                       "Pending_Reasons__c, " +
-	                       "IsFinal__c, " +
-	                       "BillingAccountNumberUsed__c, " +
-	                       "BillingAccountNameUsed__c " +
-	                "From   CreditChecks__r " +
-	              "Order By CreatedDate) " +                
-			"From   Opportunity " +
-			"Where  Id = '#opportunityId#' ";
-	
+		
 	private static final String quoteQuery =
 			"Select Id, " +
 		    	   "Name, " +

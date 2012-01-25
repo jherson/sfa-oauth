@@ -7,7 +7,7 @@ import com.redhat.sforce.qb.bean.model.Quote;
 
 public interface QuoteForm {
 		
-	public void loadData();
+	public void queryAllData();
     public List<Quote> getQuoteList();
 	public void setQuoteList(List<Quote> quoteList);	
 	public Opportunity getOpportunity();
