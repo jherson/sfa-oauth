@@ -39,16 +39,15 @@ public class SessionUserFactory {
 		sessionUser.setDefaultCurrencyIsoCode(wrapper.getString("DefaultCurrencyIsoCode"));
 		sessionUser.setExtension(wrapper.getString("Extension"));
 		sessionUser.setDepartment(wrapper.getString("Department"));
-		sessionUser.setLocaleSidKey(wrapper.getString("LocaleSidKey"));
 		sessionUser.setFullPhotoUrl(wrapper.getString("FullPhotoUrl"));
 		sessionUser.setSmallPhotoUrl(wrapper.getString("SmallPhotoUrl"));
 		sessionUser.setRegion(wrapper.getString("Region__c"));
 		sessionUser.setRoleName(wrapper.getString("UserRole","Name"));
-		sessionUser.setProfileName(wrapper.getString("Profile","Name"));
+		sessionUser.setProfileName(wrapper.getString("Profile","Name"));		
+		sessionUser.setLocale(stringToLocale(wrapper.getString("LocaleSidKey")));
 		
-		Locale locale = stringToLocale(sessionUser.getLocaleSidKey());
-		SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
-	    SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+		SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, sessionUser.getLocale());
+	    SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, sessionUser.getLocale());
 	    
 	    sessionUser.setDateFormatPattern(formatPattern(dateFormat));
         sessionUser.setDateTimeFormatPattern(formatPattern(dateTimeFormat));

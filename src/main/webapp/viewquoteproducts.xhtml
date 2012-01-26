@@ -27,7 +27,7 @@
 	<rich:column style="text-align: center;">
 		<f:facet name="header">#{msgs.startDate}</f:facet>
 		<h:outputText value="#{lineItem.startDate}">
-			<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 	</rich:column>
@@ -35,7 +35,7 @@
 	<rich:column style="text-align: center;">
 		<f:facet name="header">#{msgs.endDate}</f:facet>
 		<h:outputText value="#{lineItem.endDate}">
-			<f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 	</rich:column>
@@ -43,7 +43,7 @@
 	<rich:column style="text-align: right;">
 		<f:facet name="header">#{msgs.listPrice}</f:facet>
 		<h:outputText value="#{lineItem.listPrice}">
-			<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
 				pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 		</h:outputText>
 	</rich:column>
@@ -56,7 +56,7 @@
 	<rich:column style="text-align: right;">
 		<f:facet name="header">#{msgs.unitPrice}</f:facet>
 		<h:outputText value="#{lineItem.unitPrice}">
-			<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
 				pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 		</h:outputText>
 	</rich:column>
@@ -64,7 +64,7 @@
 	<rich:column style="text-align: right;">
 		<f:facet name="header">#{msgs.totalPrice}</f:facet>
 		<h:outputText value="#{lineItem.totalPrice}">
-			<f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
 				pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 		</h:outputText>
 	</rich:column>

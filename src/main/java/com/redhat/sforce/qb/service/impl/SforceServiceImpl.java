@@ -129,7 +129,6 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/opportunity?opportunityId=" + opportunityId;
 		JSONObject jsonObject = doGet(accessToken, url);
 		try {
-			System.out.println(jsonObject);
 			return OpportunityFactory.fromJSON(jsonObject);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

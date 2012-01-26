@@ -38,7 +38,7 @@
 
 		<h:outputText value="#{msgs.amount}" />
 		<h:outputText value="#{quoteForm.selectedQuote.amount}">
-		    <f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+		    <f:convertNumber locale="#{sforceSession.sessionUser.locale}"
 			    pattern="#,##0.00;(#,##0.00)" />
 		</h:outputText>
 
@@ -50,40 +50,40 @@
 
 		<h:outputText value="#{msgs.effectiveDate}" />
 		<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}" >
-		    <f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+		    <f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 			    pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 				type="date" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.expirationDate}" />
 		<h:outputText value="#{quoteForm.selectedQuote.expirationDate}" >
-		    <f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+		    <f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 			    pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 				type="date" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.referenceNumber}" />
 		<h:outputText value="#{quoteForm.selectedQuote.referenceNumber}" />
-
+				
+		<h:outputText value=" "
+			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
+		<h:outputText value=" "
+			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />			
 		<h:outputText value="#{msgs.term}"
 			rendered="#{quoteForm.selectedQuote.type == 'Standard'}" />
 		<h:outputText value="#{quoteForm.selectedQuote.term}" 
 		    rendered="#{quoteForm.selectedQuote.type == 'Standard'}" >
-		    <f:convertNumber locale="#{sforceSession.sessionUser.localeSidKey}"
+		    <f:convertNumber locale="#{sforceSession.sessionUser.locale}"
 			    pattern="#,##0" />
 		</h:outputText>
 		<h:outputText value="#{msgs.endDate}"
 			rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}" />
 		<h:outputText value="#{quoteForm.selectedQuote.endDate}"
 			rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}" >
-		    <f:convertDateTime locale="#{sforceSession.sessionUser.localeSidKey}"
+		    <f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 			    pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 				type="date" />
 		</h:outputText>		
-		<h:outputText value=" "
-		    rendered="empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
-		<h:outputText value=" "
-			rendered="empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />				
 		
 		<h:outputText value="#{msgs.createdBy}" />
 		<h:panelGroup>
@@ -92,7 +92,7 @@
 			    rendered="#{not empty quoteForm.selectedQuote}" />
 			<h:outputText value="#{quoteForm.selectedQuote.createdDate}">
 		        <f:convertDateTime
-					locale="#{sforceSession.sessionUser.localeSidKey}"
+					locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
@@ -105,7 +105,7 @@
 			    rendered="#{not empty quoteForm.selectedQuote}" />
 			<h:outputText value="#{quoteForm.selectedQuote.lastModifiedDate}">
 			    <f:convertDateTime
-				    locale="#{sforceSession.sessionUser.localeSidKey}"
+				    locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
@@ -113,7 +113,7 @@
 		
 		</h:panelGrid>
 		
-		<hr />
+		<hr style="background-color:#C27E3A; border: 0; height: 1px;"/>
 		
 		<h:panelGrid styleClass="rf-dt"
 		style="background-color: #FCF9F5; width: 100%;
@@ -182,7 +182,7 @@
 		    
         </h:panelGrid>
 		
-		<hr />
+		<hr style="background-color:#C27E3A; border: 0; height: 1px;"/>
 		
 		<h:panelGrid styleClass="rf-dt"
 		style="background-color: #FCF9F5; width: 100%;

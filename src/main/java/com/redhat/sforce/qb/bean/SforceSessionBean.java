@@ -44,7 +44,10 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	@PostConstruct
 	public void init() {	
 				
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();		
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
+		
+		System.out.println("url: " + request.getParameter("apiUrl"));
 		
 		if (request.getParameter("sessionId") != null) {			
 			setSessionId(request.getParameter("sessionId"));
@@ -61,8 +64,11 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		try {
 			sessionUser = SessionUserFactory.parseSessionUser(sforceService.getCurrentUserInfo(getSessionId()));
 			System.out.println("Session user name: " + sessionUser.getName());
-			System.out.println("Session profile name: " + sessionUser.getProfileName());
-			System.out.println("Session role name: " + sessionUser.getRoleName());					
+			System.out.println("Session user profile name: " + sessionUser.getProfileName());
+			System.out.println("Session user role name: " + sessionUser.getRoleName());					
+			System.out.println("Session user locale: " + sessionUser.getLocale());
+			
+			context.getViewRoot().setLocale(sessionUser.getLocale());
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

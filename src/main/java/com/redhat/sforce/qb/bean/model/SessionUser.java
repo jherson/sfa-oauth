@@ -1,13 +1,15 @@
 package com.redhat.sforce.qb.bean.model;
 
+import java.util.Locale;
+
 
 public class SessionUser extends User {
 
 	private static final long serialVersionUID = 1L;
 	private String defaultCurrencyIsoCode;
-	private String localeSidKey;
 	private String dateFormatPattern;
 	private String dateTimeFormatPattern;
+	private Locale locale;
 	
 	public SessionUser() {
 		super();
@@ -21,14 +23,6 @@ public class SessionUser extends User {
 		this.defaultCurrencyIsoCode = defaultCurrencyIsoCode;
 	}
 
-	public String getLocaleSidKey() {
-		return localeSidKey;
-	}
-
-	public void setLocaleSidKey(String localeSidKey) {
-		this.localeSidKey = localeSidKey;
-	}	
-		
 	public String getDateFormatPattern() {
 		return dateFormatPattern;
 	}
@@ -43,5 +37,13 @@ public class SessionUser extends User {
 	
 	public void setDateTimeFormatPattern(String dateTimeFormatPattern) {
 		this.dateTimeFormatPattern = dateTimeFormatPattern;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}	
 }
