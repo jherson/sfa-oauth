@@ -4,6 +4,10 @@
 	background-color: #E4C6A7;
 	border-color: #C27E3A;	
 }
+
+.panel {
+        vertical-align: top;
+        }
    
 .row1 {
 	background-color: #EDEBEB;

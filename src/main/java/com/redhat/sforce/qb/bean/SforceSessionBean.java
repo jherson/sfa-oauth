@@ -47,8 +47,6 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		FacesContext context = FacesContext.getCurrentInstance();
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
 		
-		System.out.println("url: " + request.getParameter("apiUrl"));
-		
 		if (request.getParameter("sessionId") != null) {			
 			setSessionId(request.getParameter("sessionId"));
 		}		
