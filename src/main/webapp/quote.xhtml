@@ -31,8 +31,6 @@
 					focus="#{rich:clientId('name')}" render="quoteList, :details"
 					ajaxSingle="true" />
 
-				<h:outputText value=" " />
-
 				<a4j:commandButton value="#{msgs.refresh}"
 					action="#{quoteManager.refresh()}" styleClass="button"
 					ajaxSingle="true" render="quoteList, :details" status="ajaxStatus" />

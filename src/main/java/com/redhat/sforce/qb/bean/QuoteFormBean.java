@@ -54,17 +54,18 @@ public class QuoteFormBean implements QuoteForm {
 
 	@Override
 	public void editQuote(Quote quote) {
-		this.quote = quote;		
-	}
-
-	@Override
-	public void createQuote(Opportunity opportunity) {
+		this.quote = quote;
+		setSelectedQuote(quote);				
+		
 		try {
 		    FacesContext.getCurrentInstance().getExternalContext().redirect("editquote.jsf");
 		} catch (Exception e) {
 		    e.printStackTrace();
-		}
-			
+		}				
+	}
+
+	@Override
+	public void createQuote(Opportunity opportunity) {			
 		quote = new Quote();	
 		quote.setOpportunityId(opportunity.getId());
 		quote.setOwnerId(opportunity.getOwner().getId());
@@ -76,6 +77,12 @@ public class QuoteFormBean implements QuoteForm {
 		quote.setEffectiveDate(new java.util.Date());
 		quote.setExpirationDate(quote.getEffectiveDate());
 		setSelectedQuote(quote);			
+		
+		try {
+		    FacesContext.getCurrentInstance().getExternalContext().redirect("editquote.jsf");
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 	}
 
 	@Override

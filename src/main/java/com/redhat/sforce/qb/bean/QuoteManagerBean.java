@@ -57,7 +57,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
-		
+			
 	@Override
 	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {
 		String[] opportunityLineIds = new String[opportunity.getOpportunityLineItems().size()];
