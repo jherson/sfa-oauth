@@ -29,7 +29,7 @@
 					<rich:column width="200px">
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<a4j:commandLink value="#{contact.name}"
-							action="#{quoteManager.setQuoteContact(quoteForm.quote, contact)}"
+							action="#{quoteManager.setQuoteContact(quoteForm.selectedQuote, contact)}"
 							render="quoteList, details" ajaxSingle="true"
 							oncomplete="#{rich:component('contactPanel')}.hide(); return false;" />
 					</rich:column>

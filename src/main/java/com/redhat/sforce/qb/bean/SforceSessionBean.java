@@ -127,12 +127,12 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	
 	@Override
 	public void deleteQuote(Quote quote) {
-		sforceService.copyQuote(getSessionId(), quote.getId());
+		sforceService.delete(getSessionId(), "Quote__c", quote.getId());		
 	}
 	
 	@Override
 	public void copyQuote(Quote quote) {
-		sforceService.delete(getSessionId(), "Quote__c", quote.getId());
+		sforceService.copyQuote(getSessionId(), quote.getId());
 	}
 	
 	@Override

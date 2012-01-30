@@ -52,10 +52,23 @@ public class Quote extends SObject {
 	//private ArrayList revenueSchedules;
 	//private ArrayList invoiceSchedules;
 	//
-        public Quote() {
-            super();
-        }
-	
+    public Quote() {
+        super();
+    }
+    
+    public Quote(Opportunity opportunity) {
+        super();
+        setOpportunityId(opportunity.getId());
+		setOwnerId(opportunity.getOwner().getId());
+		setOwnerName(opportunity.getOwner().getName());
+		setPayNow(opportunity.getPayNow());
+		setType("Standard");
+		setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
+		setPricebookId(opportunity.getPricebookId());
+		setEffectiveDate(new java.util.Date());
+		setExpirationDate(getEffectiveDate());
+    }
+    
 	public String getOpportunityId() {
 		return opportunityId;
 	}

@@ -56,6 +56,12 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
+		getQuoteForm().toggleEditMode();
+	}
+	
+	@Override
+	public void cancelEditQuote() {
+		getQuoteForm().toggleEditMode();
 	}
 			
 	@Override
@@ -88,7 +94,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public void editQuote(Quote quote) {		
+	public void editQuote(Quote quote) {										
 		getQuoteForm().editQuote(quote);
 	}
 	

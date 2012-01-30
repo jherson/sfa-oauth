@@ -6,46 +6,49 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
 		
-<rich:panel style="border-color: #C27E3A; background-color: #FCF9F5; width: 100%;">
-<f:facet name="header">
-<rich:toolbar height="26" itemSeparator="grid" style="border: 0; background-color: #FCF9F5;">
+<rich:panel id="viewQuotePanel" rendered="#{not quoteForm.editMode}" 
+    style="border-color: #C27E3A; background-color: #FCF9F5; ">
+    <f:facet name="header">
+        <rich:toolbar height="26" itemSeparator="grid" style="border: 0; background-color: #FCF9F5;">
 
 			<rich:toolbarGroup location="right">
 			
 			    <a4j:commandLink id="edit"
-					action="#{quoteManager.editQuote(quote)}" ajaxSingle="true"
-					status="ajaxStatus"
+					action="#{quoteManager.editQuote(quoteForm.selectedQuote)}" 
+					ajaxSingle="true"
 					disabled="#{empty quoteForm.selectedQuote}"
-					render="quoteList, :details">
-					<h:graphicImage value="./images/calc.png" />
+					render="details" >
+					<h:graphicImage value="./images/edit.png" />
 					<h:outputText value=" " />
 					<h:outputText value="#{msgs.edit}" />
 				</a4j:commandLink>
 
 				<a4j:commandLink id="activate"
-					action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
-					status="ajaxStatus"
+					action="#{quoteManager.activateQuote(quoteForm.selectedQuote)}" 
+					ajaxSingle="true"
 					disabled="#{empty quoteForm.selectedQuote}"
-					render="quoteList, :details">
+					render="quoteList, viewQuotePanel" >
 					<h:graphicImage value="./images/activate.png" />
 					<h:outputText value=" " />
 					<h:outputText value="#{msgs.activate}" />
 				</a4j:commandLink>
 
-				<a4j:commandLink id="copy" action="#{quoteManager.copyQuote(quote)}"
-					ajaxSingle="true" render="quoteList" styleClass="no-decor"
-					status="ajaxStatus" 
+				<a4j:commandLink id="copy" 
+				    action="#{quoteManager.copyQuote(quoteForm.selectedQuote)}"
+					ajaxSingle="true" 
+					render="quoteList" 
 					disabled="#{empty quoteForm.selectedQuote}" >	
 					<h:graphicImage value="./images/copy.png" />
 					<h:outputText value=" " />
 					<h:outputText value="#{msgs.copy}" />
 				</a4j:commandLink>
 
-				<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
-					action="#{quoteManager.deleteQuote(quote)}"
-					ajaxSingle="true" status="ajaxStatus" 
-					render="quoteList, :details"
-					disabled="#{empty quoteForm.selectedQuote}" >
+				<a4j:commandLink id="delete" 
+					action="#{quoteManager.deleteQuote(quoteForm.selectedQuote)}"
+					ajaxSingle="true" 
+					disabled="#{empty quoteForm.selectedQuote}"
+					render="quoteList, viewQuotePanel"
+					rendered="#{not quoteForm.selectedQuote.isActive}" >
 					<h:graphicImage value="./images/delete.png" />
 					<h:outputText value=" " />
 					<h:outputText value="#{msgs.delete}" />
@@ -53,7 +56,7 @@
 
 			</rich:toolbarGroup>
 		</rich:toolbar>
-</f:facet>
+    </f:facet>
 
 	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 

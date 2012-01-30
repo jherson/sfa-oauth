@@ -35,9 +35,9 @@ public class QuoteFormBean implements QuoteForm {
 	
 	private Quote selectedQuote;	
 	
-	private Boolean toggleCheckboxes = false;
-		
-	private Quote quote;	
+	private Boolean editMode = false;
+	
+	private Boolean toggleCheckboxes = false;			
 	
 	@PostConstruct
 	public void init() {	
@@ -51,38 +51,23 @@ public class QuoteFormBean implements QuoteForm {
 	public void setSforceSession(SforceSession sforceSession) {
 		this.sforceSession = sforceSession;
 	}
+	
+	@Override
+	public void toggleEditMode() {
+		setEditMode(!getEditMode());
+	}
 
 	@Override
 	public void editQuote(Quote quote) {
-		this.quote = quote;
-		setSelectedQuote(quote);				
-		
-		try {
-		    FacesContext.getCurrentInstance().getExternalContext().redirect("editquote.jsf");
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}				
+		setSelectedQuote(quote);
+		toggleEditMode();
 	}
 
 	@Override
 	public void createQuote(Opportunity opportunity) {			
-		quote = new Quote();	
-		quote.setOpportunityId(opportunity.getId());
-		quote.setOwnerId(opportunity.getOwner().getId());
-		quote.setOwnerName(opportunity.getOwner().getName());
-		quote.setPayNow(opportunity.getPayNow());
-		quote.setType("Standard");
-		quote.setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
-		quote.setPricebookId(opportunity.getPricebookId());
-		quote.setEffectiveDate(new java.util.Date());
-		quote.setExpirationDate(quote.getEffectiveDate());
+		Quote quote = new Quote(opportunity);			
 		setSelectedQuote(quote);			
-		
-		try {
-		    FacesContext.getCurrentInstance().getExternalContext().redirect("editquote.jsf");
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+		toggleEditMode();
 	}
 
 	@Override
@@ -126,6 +111,14 @@ public class QuoteFormBean implements QuoteForm {
 		this.selectedQuote = selectedQuote;
 	}
 	
+	public Boolean getEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(Boolean editMode) {
+		this.editMode = editMode;
+	}
+
 	public void selectionListener(AjaxBehaviorEvent event) {
         UIExtendedDataTable dataTable = (UIExtendedDataTable) event.getComponent();
         for (Object selectionKey : selection) {
@@ -168,13 +161,5 @@ public class QuoteFormBean implements QuoteForm {
 
 	public void setSelection(Collection<Object> selection) {
 		this.selection = selection;
-	}
-	
-	public Quote getQuote() {
-		return quote;
-	}
-
-	public void setQuote(Quote quote) {
-		this.quote = quote;
 	}
 }

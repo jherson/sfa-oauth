@@ -331,7 +331,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void addOpportunityLineItems(String accessToken, String quoteId, String[] opportunityLineItemIds) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/v.23/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);

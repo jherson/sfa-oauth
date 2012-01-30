@@ -11,6 +11,7 @@ public interface QuoteManager {
 	public void deleteQuote(Quote quote);
 	public void copyQuote(Quote quote);
 	public void saveQuote(Quote quote);
+	public void cancelEditQuote();
 	public void newQuote(Opportunity opportunity);
 	public void editQuote(Quote quote);
 	public void activateQuote(Quote quote);
