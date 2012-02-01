@@ -62,10 +62,22 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void saveQuoteLineItems(Quote quote) {
 		try {
-		    sforceSession.updateQuoteLineItems(quote.getQuoteLineItems());
+		    sforceSession.saveQuoteLineItems(quote.getQuoteLineItems());
 		    sforceSession.calculateQuote(quote.getId());
 		    refresh();
 		    cancelEditQuote();
+		} catch (SforceServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+	}
+	
+	@Override
+	public void deleteQuoteLineItems(Quote quote) {		
+		try {
+		    sforceSession.deleteQuoteLineItems(quote.getQuoteLineItems());
+		    sforceSession.calculateQuote(quote.getId());
+		    refresh();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);

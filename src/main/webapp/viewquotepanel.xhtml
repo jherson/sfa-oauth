@@ -8,43 +8,45 @@
 
 <rich:panel id="viewQuotePanel" rendered="#{not quoteForm.editMode}"
 	style="border-color: #C27E3A; background-color: #FCF9F5; ">
+	<f:facet name="header">
 
-	<rich:toolbar height="18" itemSeparator="grid"
-		style="border: 0; background-color: #FCF9F5;">
+		<rich:toolbar height="18" itemSeparator="grid"
+			style="border: 0; background-color: #FCF9F5;">
 
-		<rich:toolbarGroup location="right">
+			<rich:toolbarGroup location="right">
 
-			<a4j:commandLink id="edit"
-				action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
-				ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
-				render="details">
-				<h:outputText value="#{msgs.edit}" />
-			</a4j:commandLink>
+				<a4j:commandLink id="edit"
+					action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
+					ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
+					render="details">
+					<h:outputText value="#{msgs.edit}" />
+				</a4j:commandLink>
 
-			<a4j:commandLink id="activate"
-				action="#{quoteManager.activateQuote(quoteForm.selectedQuote)}"
-				ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
-				render="quoteList, viewQuotePanel">
-				<h:outputText value="#{msgs.activate}" />
-			</a4j:commandLink>
+				<a4j:commandLink id="activate"
+					action="#{quoteManager.activateQuote(quoteForm.selectedQuote)}"
+					ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
+					render="quoteList, viewQuotePanel">
+					<h:outputText value="#{msgs.activate}" />
+				</a4j:commandLink>
 
-			<a4j:commandLink id="copy"
-				action="#{quoteManager.copyQuote(quoteForm.selectedQuote)}"
-				ajaxSingle="true" render="quoteList"
-				disabled="#{empty quoteForm.selectedQuote}">
-				<h:outputText value="#{msgs.copy}" />
-			</a4j:commandLink>
+				<a4j:commandLink id="copy"
+					action="#{quoteManager.copyQuote(quoteForm.selectedQuote)}"
+					ajaxSingle="true" render="quoteList"
+					disabled="#{empty quoteForm.selectedQuote}">
+					<h:outputText value="#{msgs.copy}" />
+				</a4j:commandLink>
 
-			<a4j:commandLink id="delete"
-				action="#{quoteManager.deleteQuote(quoteForm.selectedQuote)}"
-				ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
-				render="quoteList, viewQuotePanel"
-				rendered="#{not quoteForm.selectedQuote.isActive}">
-				<h:outputText value="#{msgs.delete}" />
-			</a4j:commandLink>
+				<a4j:commandLink id="delete"
+					action="#{quoteManager.deleteQuote(quoteForm.selectedQuote)}"
+					ajaxSingle="true"
+					disabled="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.isActive}"
+					render="quoteList, viewQuotePanel">
+					<h:outputText value="#{msgs.delete}" />
+				</a4j:commandLink>
 
-		</rich:toolbarGroup>
-	</rich:toolbar>
+			</rich:toolbarGroup>
+		</rich:toolbar>
+	</f:facet>
 
 	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 

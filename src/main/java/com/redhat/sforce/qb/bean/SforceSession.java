@@ -22,8 +22,7 @@ public interface SforceSession {
 	public void deleteQuote(Quote quote);
 	public void copyQuote(Quote quote);
 	public void addOpportunityLineItems(Quote quote, String[] opportunityLineIds) throws SforceServiceException;
-	public void updateQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
-	public void updateQuoteLineItem(QuoteLineItem quoteLineItem) throws SforceServiceException;
-	public void createQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
-	public void createQuoteLineItem(QuoteLineItem quoteLineItem) throws SforceServiceException;
+	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
+	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
+
 }

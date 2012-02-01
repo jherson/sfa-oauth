@@ -7,19 +7,20 @@
 	xmlns:rich="http://richfaces.org/rich">
 
 <rich:panel id="viewQuoteProducts"
-	style="border-color: #C27E3A; background-color: #FCF9F5; ">
-
+	style="border-color: #C27E3A; background-color: #FCF9F5;">
+	
 	<rich:toolbar height="18" itemSeparator="grid">
 
 		<rich:toolbarGroup location="right">
 
-			<a4j:commandLink value="#{msgs.deleteSelected}"
-				action="#{quoteManager.saveQuoteLineItems(quoteForm.selectedQuote)}"
-				render="quoteList, viewQuotePanel, viewQuoteProducts"
-				ajaxSingle="true" />
+			<a4j:commandLink value="#{msgs.delete}"
+				action="#{quoteManager.deleteQuoteLineItems(quoteForm.selectedQuote)}"
+				render="quoteList"
+				rerender="details"
+				ajaxSingle="true"  />
 
-			<a4j:commandLink value="#{msgs.cancel}" styleClass="button"
-				immediate="true" action="#{quoteManager.cancelEditQuote()}"
+			<a4j:commandLink value="#{msgs.reset}"
+				immediate="true" status="ajaxStatus"
 				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
 				execute="@this" />
 

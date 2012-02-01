@@ -185,30 +185,13 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
-	public void updateQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {		
-		sforceService.saveQuoteLineItems(getSessionId(), QuoteLineItemFactory.convertQuoteLineItemsToJson(quoteLineItemList));
-		
+	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {		
+		sforceService.saveQuoteLineItems(getSessionId(), QuoteLineItemFactory.serializeQuoteLineItems(quoteLineItemList));	
 	}
-
+	
 	@Override
-	public void updateQuoteLineItem(QuoteLineItem quoteLineItem)
-			throws SforceServiceException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void createQuoteLineItems(List<QuoteLineItem> quoteLineItemList)
-			throws SforceServiceException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void createQuoteLineItem(QuoteLineItem quoteLineItem)
-			throws SforceServiceException {
-		// TODO Auto-generated method stub
-		
+	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {
+		sforceService.deleteQuoteLineItems(getSessionId(), QuoteLineItemFactory.serializeQuoteLineItemIds(quoteLineItemList));
 	}
 		
 	private static final String quoteQuery =

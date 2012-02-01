@@ -70,4 +70,22 @@ public class OpportunityLineItemFactory {
 		
 		return product;
 	}
+	
+	public static JSONArray serializeOpportunityLineItemIds(List<OpportunityLineItem> opportunityLineItemList) {
+		JSONArray jsonArray = new JSONArray();
+		
+		for (OpportunityLineItem opportunityLineItem : opportunityLineItemList) {
+			JSONObject jsonObject = new JSONObject();			
+			try {
+				jsonObject.put("Id", opportunityLineItem.getId());
+				jsonArray.put(jsonObject);				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		return jsonArray;
+	}
 }

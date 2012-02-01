@@ -57,8 +57,31 @@ public class QuoteLineItemFactory {
 		
 		return quoteLineItemList;
 	}
+	
+	public static JSONArray serializeQuoteLineItemIds(List<QuoteLineItem> quoteLineItemList) {
+        JSONArray jsonArray = new JSONArray();
+		
+		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
+			
+			if (quoteLineItem.getDelete()) {
+			    JSONObject jsonObject = new JSONObject();
+			    try {
+				    jsonObject.put("Id", quoteLineItem.getId());
+			
+				    jsonArray.put(jsonObject);
+				
+			    } catch (JSONException e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				    return null;
+			    }
+			}			
+		}
+				
+		return jsonArray;
+	}
 
-	public static JSONArray convertQuoteLineItemsToJson(List<QuoteLineItem> quoteLineItemList) {
+	public static JSONArray serializeQuoteLineItems(List<QuoteLineItem> quoteLineItemList) {
 		JSONArray jsonArray = new JSONArray();
 		
 		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
@@ -99,8 +122,7 @@ public class QuoteLineItemFactory {
 			}
 			
 		}
-		
-		
+				
 		return jsonArray;
 	}		
 }
