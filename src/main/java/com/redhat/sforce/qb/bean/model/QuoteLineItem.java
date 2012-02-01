@@ -32,6 +32,7 @@ public class QuoteLineItem extends SObject {
     private Double basePrice;
     private String unitOfMeasure;
     private Integer sortOrder;
+    private Boolean delete;
 
     public QuoteLineItem() {
         super();
@@ -250,5 +251,13 @@ public class QuoteLineItem extends SObject {
 
 	public void setSortOrder(Integer sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public Boolean getDelete() {
+		return delete;
+	}
+
+	public void setDelete(Boolean delete) {
+		this.delete = delete;
 	}
 }

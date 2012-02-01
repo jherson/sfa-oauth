@@ -1,19 +1,13 @@
 package com.redhat.sforce.util;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JSONObjectWrapper {
-	private static final Locale locale = new Locale("en", "in");
-	private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'.000+0000'", locale);
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", locale);	
 
 	private JSONObject jsonObject;
 	
@@ -54,11 +48,11 @@ public class JSONObjectWrapper {
 	}
 	
 	public Date getDateTime(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : dateTimeFormat.parse(jsonObject.getString(key));
+		return jsonObject.isNull(key) ? null : SforceDateFormatter.parseDateTime(jsonObject.getString(key));
 	}
 	
 	public Date getDate(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : dateFormat.parse(jsonObject.getString(key));		
+		return jsonObject.isNull(key) ? null : SforceDateFormatter.parseDate(jsonObject.getString(key));		
 	}
 	
 	public JSONObject getJSONObject(String key) throws JSONException {

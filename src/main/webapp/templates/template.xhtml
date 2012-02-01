@@ -1,20 +1,44 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j">
 
 <h:head>
-		<title>#{msgs.apptitle}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
-		<link href="./css/style.css" rel="stylesheet" type="text/css" />
+	<title>#{msgs.apptitle}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
+	<link href="./css/style.css" rel="stylesheet" type="text/css" />
+
+	<style type="text/css">
+        html {
+	        overflow-y: scroll;
+        }
+        
+        .rf-p {
+	background-color: #E4C6A7;
+	border-color: #C27E3A;	
+}
+
+.button {
+    cursor: hand;
+	width: 100px;
+	height: 20px;	
+}
+    </style>
+
 </h:head>
 
-<h:body>
-	    <h:panelGrid width="100%">
-		    <h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
-		</h:panelGrid>
-		<hr />
+<div style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;">
 
-        <ui:insert name="body">Default content</ui:insert>
-</h:body>
+	<h:panelGrid width="100%">
+		<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
+	</h:panelGrid>
+	
+	<hr />
+
+	<ui:insert name="body">Default content</ui:insert>
+
+</div>
 </html>

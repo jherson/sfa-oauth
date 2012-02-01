@@ -1,5 +1,6 @@
 <style>
 
+
 .rf-p {
 	background-color: #E4C6A7;
 	border-color: #C27E3A;	
@@ -38,11 +39,7 @@
 	width: 150px;
 }
 
-.button {
-    cursor: hand;
-	width: 100px;
-	height: 20px;	
-}
+
 
 a.no-decor>img {
 	border: none;

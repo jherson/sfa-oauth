@@ -5,63 +5,52 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
-		
-<rich:panel id="viewQuotePanel" rendered="#{not quoteForm.editMode}" 
-    style="border-color: #C27E3A; background-color: #FCF9F5; ">
-    <f:facet name="header">
-        <rich:toolbar height="26" itemSeparator="grid" style="border: 0; background-color: #FCF9F5;">
 
-			<rich:toolbarGroup location="right">
-			
-			    <a4j:commandLink id="edit"
-					action="#{quoteManager.editQuote(quoteForm.selectedQuote)}" 
-					ajaxSingle="true"
-					disabled="#{empty quoteForm.selectedQuote}"
-					render="details" >
-					<h:graphicImage value="./images/edit.png" />
-					<h:outputText value=" " />
-					<h:outputText value="#{msgs.edit}" />
-				</a4j:commandLink>
+<rich:panel id="viewQuotePanel" rendered="#{not quoteForm.editMode}"
+	style="border-color: #C27E3A; background-color: #FCF9F5; ">
 
-				<a4j:commandLink id="activate"
-					action="#{quoteManager.activateQuote(quoteForm.selectedQuote)}" 
-					ajaxSingle="true"
-					disabled="#{empty quoteForm.selectedQuote}"
-					render="quoteList, viewQuotePanel" >
-					<h:graphicImage value="./images/activate.png" />
-					<h:outputText value=" " />
-					<h:outputText value="#{msgs.activate}" />
-				</a4j:commandLink>
+	<rich:toolbar height="18" itemSeparator="grid"
+		style="border: 0; background-color: #FCF9F5;">
 
-				<a4j:commandLink id="copy" 
-				    action="#{quoteManager.copyQuote(quoteForm.selectedQuote)}"
-					ajaxSingle="true" 
-					render="quoteList" 
-					disabled="#{empty quoteForm.selectedQuote}" >	
-					<h:graphicImage value="./images/copy.png" />
-					<h:outputText value=" " />
-					<h:outputText value="#{msgs.copy}" />
-				</a4j:commandLink>
+		<rich:toolbarGroup location="right">
 
-				<a4j:commandLink id="delete" 
-					action="#{quoteManager.deleteQuote(quoteForm.selectedQuote)}"
-					ajaxSingle="true" 
-					disabled="#{empty quoteForm.selectedQuote}"
-					render="quoteList, viewQuotePanel"
-					rendered="#{not quoteForm.selectedQuote.isActive}" >
-					<h:graphicImage value="./images/delete.png" />
-					<h:outputText value=" " />
-					<h:outputText value="#{msgs.delete}" />
-				</a4j:commandLink>
+			<a4j:commandLink id="edit"
+				action="#{quoteManager.editQuote(quoteForm.selectedQuote)}"
+				ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
+				render="details">
+				<h:outputText value="#{msgs.edit}" />
+			</a4j:commandLink>
 
-			</rich:toolbarGroup>
-		</rich:toolbar>
-    </f:facet>
+			<a4j:commandLink id="activate"
+				action="#{quoteManager.activateQuote(quoteForm.selectedQuote)}"
+				ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
+				render="quoteList, viewQuotePanel">
+				<h:outputText value="#{msgs.activate}" />
+			</a4j:commandLink>
+
+			<a4j:commandLink id="copy"
+				action="#{quoteManager.copyQuote(quoteForm.selectedQuote)}"
+				ajaxSingle="true" render="quoteList"
+				disabled="#{empty quoteForm.selectedQuote}">
+				<h:outputText value="#{msgs.copy}" />
+			</a4j:commandLink>
+
+			<a4j:commandLink id="delete"
+				action="#{quoteManager.deleteQuote(quoteForm.selectedQuote)}"
+				ajaxSingle="true" disabled="#{empty quoteForm.selectedQuote}"
+				render="quoteList, viewQuotePanel"
+				rendered="#{not quoteForm.selectedQuote.isActive}">
+				<h:outputText value="#{msgs.delete}" />
+			</a4j:commandLink>
+
+		</rich:toolbarGroup>
+	</rich:toolbar>
 
 	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 
 		border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-		columnClasses="label-column,column-l-align,label-column,column-l-align" columns="4">
+		columnClasses="label-column,column-l-align,label-column,column-l-align"
+		columns="4">
 
 		<h:outputText value="#{msgs.name}" />
 		<h:outputText value="#{quoteForm.selectedQuote.name}" />
@@ -74,23 +63,23 @@
 
 		<h:outputText value="#{msgs.version}" />
 		<h:outputText value="#{quoteForm.selectedQuote.version}" />
-				
+
 		<h:outputText value="#{msgs.active}" />
 		<h:panelGroup>
-		    <h:graphicImage value="./images/active.png"
-			    rendered="#{quoteForm.selectedQuote.isActive}" />
+			<h:graphicImage value="./images/active.png"
+				rendered="#{quoteForm.selectedQuote.isActive}" />
 		</h:panelGroup>
 
-	    <h:outputText value="#{msgs.currency}" />
-		<h:outputText value="#{quoteForm.selectedQuote.currencyIsoCode}"/>
+		<h:outputText value="#{msgs.currency}" />
+		<h:outputText value="#{quoteForm.selectedQuote.currencyIsoCode}" />
 
 		<h:outputText value="#{msgs.payNow}" />
 		<h:outputText value="#{quoteForm.selectedQuote.payNow}" />
 
 		<h:outputText value="#{msgs.amount}" />
 		<h:outputText value="#{quoteForm.selectedQuote.amount}">
-		    <f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-			    pattern="#,##0.00;(#,##0.00)" />
+			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+				pattern="#,##0.00;(#,##0.00)" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.owner}" />
@@ -100,164 +89,151 @@
 		<h:outputText value="#{quoteForm.selectedQuote.contactName}" />
 
 		<h:outputText value="#{msgs.effectiveDate}" />
-		<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}" >
-		    <f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-			    pattern="#{sforceSession.sessionUser.dateFormatPattern}"
-				type="date" />
+		<h:outputText value="#{quoteForm.selectedQuote.effectiveDate}">
+			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
+				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.expirationDate}" />
-		<h:outputText value="#{quoteForm.selectedQuote.expirationDate}" >
-		    <f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-			    pattern="#{sforceSession.sessionUser.dateFormatPattern}"
-				type="date" />
+		<h:outputText value="#{quoteForm.selectedQuote.expirationDate}">
+			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
+				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.referenceNumber}" />
 		<h:outputText value="#{quoteForm.selectedQuote.referenceNumber}" />
-				
+
 		<h:outputText value=" "
 			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
 		<h:outputText value=" "
-			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />			
+			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
 		<h:outputText value="#{msgs.term}"
 			rendered="#{quoteForm.selectedQuote.type == 'Standard'}" />
-		<h:outputText value="#{quoteForm.selectedQuote.term}" 
-		    rendered="#{quoteForm.selectedQuote.type == 'Standard'}" >
-		    <f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-			    pattern="#,##0" />
+		<h:outputText value="#{quoteForm.selectedQuote.term}"
+			rendered="#{quoteForm.selectedQuote.type == 'Standard'}">
+			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+				pattern="#,##0" />
 		</h:outputText>
 		<h:outputText value="#{msgs.endDate}"
 			rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}" />
 		<h:outputText value="#{quoteForm.selectedQuote.endDate}"
-			rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}" >
-		    <f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-			    pattern="#{sforceSession.sessionUser.dateFormatPattern}"
-				type="date" />
-		</h:outputText>		
-		
+			rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}">
+			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
+				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
+		</h:outputText>
+
 		<h:outputText value="#{msgs.createdBy}" />
 		<h:panelGroup>
 			<h:outputText value="#{quoteForm.selectedQuote.createdByName}" />
-			<h:outputText value=", " escape="false" 
-			    rendered="#{not empty quoteForm.selectedQuote}" />
+			<h:outputText value=", " escape="false"
+				rendered="#{not empty quoteForm.selectedQuote}" />
 			<h:outputText value="#{quoteForm.selectedQuote.createdDate}">
-		        <f:convertDateTime
-					locale="#{sforceSession.sessionUser.locale}"
+				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</h:panelGroup>
-		
+
 		<h:outputText value="#{msgs.lastModifiedBy}" />
 		<h:panelGroup>
-		    <h:outputText value="#{quoteForm.selectedQuote.lastModifiedByName}" />
-			<h:outputText value=", " escape="false" 
-			    rendered="#{not empty quoteForm.selectedQuote}" />
+			<h:outputText value="#{quoteForm.selectedQuote.lastModifiedByName}" />
+			<h:outputText value=", " escape="false"
+				rendered="#{not empty quoteForm.selectedQuote}" />
 			<h:outputText value="#{quoteForm.selectedQuote.lastModifiedDate}">
-			    <f:convertDateTime
-				    locale="#{sforceSession.sessionUser.locale}"
+				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</h:panelGroup>
-		
-		</h:panelGrid>
-		
-		<hr style="background-color:#C27E3A; border: 0; height: 1px;"/>
-		
-		<h:panelGrid styleClass="rf-dt" width="100%"
+
+	</h:panelGrid>
+
+	<hr style="background-color: #C27E3A; border: 0; height: 1px;" />
+
+	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 
 		border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-		columnClasses="label-column,column-l-align,label-column,column-l-align" columns="4">
-		
+		columnClasses="label-column,column-l-align,label-column,column-l-align"
+		columns="4">
+
 		<h:outputText value="#{msgs.billingAddress}" />
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingAddress}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>
-		
-		<h:outputText value="#{msgs.shippingAddress}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingAddress}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>	
-		    
-        <h:outputText value="#{msgs.billingCity}" />
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingCity}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>
-		
-		<h:outputText value="#{msgs.shippingCity}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingCity}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>			    
-		
-        <h:outputText value="#{msgs.billingState}" />
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingState}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>
-		
-		<h:outputText value="#{msgs.shippingState}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingState}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>		
-		
-		<h:outputText value="#{msgs.billingZipPostalCode}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingZipPostalCode}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>
-		    
-		<h:outputText value="#{msgs.shippingZipPostalCode}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingZipPostalCode}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>	
-		    
-		<h:outputText value="#{msgs.billingCountry}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingCountry}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>
-		    
-		<h:outputText value="#{msgs.shippingCountry}" />	
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingCountry}" 
-		    rendered="#{not empty quoteForm.selectedQuote}"/>	
-		    
-        </h:panelGrid>
-		
-		<hr style="background-color:#C27E3A; border: 0; height: 1px;"/>
-		
-		<h:panelGrid styleClass="rf-dt" width="100%"
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.billingAddress}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.shippingAddress}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.shippingAddress}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.billingCity}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.billingCity}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.shippingCity}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.shippingCity}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.billingState}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.billingState}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.shippingState}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.shippingState}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.billingZipPostalCode}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.billingZipPostalCode}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.shippingZipPostalCode}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.shippingZipPostalCode}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.billingCountry}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.billingCountry}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+		<h:outputText value="#{msgs.shippingCountry}" />
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText value="#{quoteForm.opportunity.shippingCountry}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+	</h:panelGrid>
+
+	<hr style="background-color: #C27E3A; border: 0; height: 1px;" />
+
+	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 
 		border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-		columnClasses="label-column,column-l-align,label-column,column-l-align" columns="4">		    		    		    		    
-		    
+		columnClasses="label-column,column-l-align,label-column,column-l-align"
+		columns="4">
+
 		<h:outputText value="Payment Terms" />
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.approvedCreditCheck.paymentTerms}" 
-		    rendered="#{not empty quoteForm.selectedQuote}" />
-		    		    
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText
+			value="#{quoteForm.opportunity.approvedCreditCheck.paymentTerms}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
 		<h:outputText value="Credit Limit" />
-		<h:outputText value=" " 
-		    rendered="#{empty quoteForm.selectedQuote}" />
-		<h:outputText value="#{quoteForm.opportunity.approvedCreditCheck.creditLimit}" 
-		    rendered="#{not empty quoteForm.selectedQuote}" />        
-				
-	
-	    </h:panelGrid>
-	
+		<h:outputText value=" " rendered="#{empty quoteForm.selectedQuote}" />
+		<h:outputText
+			value="#{quoteForm.opportunity.approvedCreditCheck.creditLimit}"
+			rendered="#{not empty quoteForm.selectedQuote}" />
+
+
+	</h:panelGrid>
+
 	<br />
-		
+
 	<ui:include src="viewquoteproducts.xhtml" />
-	
+
 </rich:panel>
 </html>

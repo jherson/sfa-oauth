@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Quote;
+import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.SessionUser;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 
@@ -17,8 +18,12 @@ public interface SforceSession {
 	public void createQuote(Quote quote) throws SforceServiceException;
 	public void updateQuote(Quote quote) throws SforceServiceException;
 	public void activateQuote(Quote quote);
-	public void calculateQuote(Quote quote);
+	public void calculateQuote(String quoteId);
 	public void deleteQuote(Quote quote);
 	public void copyQuote(Quote quote);
 	public void addOpportunityLineItems(Quote quote, String[] opportunityLineIds) throws SforceServiceException;
+	public void updateQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
+	public void updateQuoteLineItem(QuoteLineItem quoteLineItem) throws SforceServiceException;
+	public void createQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
+	public void createQuoteLineItem(QuoteLineItem quoteLineItem) throws SforceServiceException;
 }

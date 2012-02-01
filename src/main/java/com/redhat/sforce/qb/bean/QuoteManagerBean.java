@@ -52,11 +52,24 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 			    createQuote(quote);
 		    }
 		    refresh();
+		    getQuoteForm().toggleEditMode();
+		} catch (SforceServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}		
+	}
+	
+	@Override
+	public void saveQuoteLineItems(Quote quote) {
+		try {
+		    sforceSession.updateQuoteLineItems(quote.getQuoteLineItems());
+		    sforceSession.calculateQuote(quote.getId());
+		    refresh();
+		    cancelEditQuote();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
-		getQuoteForm().toggleEditMode();
 	}
 	
 	@Override
@@ -89,7 +102,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void calculateQuote(Quote quote) {
-		sforceSession.calculateQuote(quote);		
+		sforceSession.calculateQuote(quote.getId());		
 		refresh();
 	}
 	

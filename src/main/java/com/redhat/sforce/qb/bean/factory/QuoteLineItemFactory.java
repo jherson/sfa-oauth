@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.util.JSONObjectWrapper;
+import com.redhat.sforce.util.SforceDateFormatter;
 
 public class QuoteLineItemFactory {
 	
@@ -64,10 +65,11 @@ public class QuoteLineItemFactory {
 			
 			JSONObject jsonObject = new JSONObject();
 			try {
+				jsonObject.put("Id", quoteLineItem.getId());
 				jsonObject.put("Configured_SKU__c", quoteLineItem.getConfiguredSku());
 				jsonObject.put("ContractNumbers__c", quoteLineItem.getContractNumbers());
 				jsonObject.put("CurrencyIsoCode", quoteLineItem.getCurrencyIsoCode());
-				//jsonObject.put("EndDate__c", quoteLineItem.getEndDate());
+				jsonObject.put("EndDate__c", SforceDateFormatter.dateFormat(quoteLineItem.getEndDate()));
 				jsonObject.put("ListPrice__c", quoteLineItem.getListPrice());
 				jsonObject.put("Name", quoteLineItem.getName());
 				jsonObject.put("NewOrRenewal__c", quoteLineItem.getNewOrRenewal());
@@ -81,7 +83,7 @@ public class QuoteLineItemFactory {
                 jsonObject.put("Quantity__c", quoteLineItem.getQuantity());
 				jsonObject.put("QuoteId__c", quoteLineItem.getQuoteId());
 				jsonObject.put("SortOrder__c", quoteLineItem.getSortOrder());
-				//jsonObject.put("StartDate__c", quoteLineItem.getStartDate());
+				jsonObject.put("StartDate__c", SforceDateFormatter.dateFormat(quoteLineItem.getStartDate()));
 				jsonObject.put("Term__c", quoteLineItem.getTerm());
 				jsonObject.put("TotalPrice__c", quoteLineItem.getTotalPrice());
 				jsonObject.put("UnitPrice__c", quoteLineItem.getUnitPrice());

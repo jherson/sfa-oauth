@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.util.JSONObjectWrapper;
+import com.redhat.sforce.util.SforceDateFormatter;
 
 public class QuoteFactory {    
 
@@ -90,19 +90,19 @@ public class QuoteFactory {
 	
 	public static JSONObject toJson(Quote quote) {				
 		JSONObject jsonObject = new JSONObject();
-		try {			
+
+		try {		
 			jsonObject.put("Amount__c", quote.getAmount());
 			jsonObject.put("Comments__c", quote.getComments());
 			jsonObject.put("ContactId__c", quote.getContactId());
 			jsonObject.put("CurrencyIsoCode", quote.getCurrencyIsoCode());
-			//jsonObject.put("EffectiveDate__c", quote.getEffectiveDate());			
-			//jsonObject.put("EndDate__c", quote.getEndDate());
-			//jsonObject.put("ExpirationDate__c", quote.getExpirationDate());
+			jsonObject.put("EffectiveDate__c", SforceDateFormatter.dateFormat(quote.getEffectiveDate()));			
+			jsonObject.put("EndDate__c", SforceDateFormatter.dateFormat(quote.getEndDate()));
+			jsonObject.put("ExpirationDate__c", SforceDateFormatter.dateFormat(quote.getExpirationDate()));
 			jsonObject.put("HasQuoteLineItems__c", quote.getHasQuoteLineItems());
 			jsonObject.put("IsActive__c", quote.getIsActive());
 			jsonObject.put("IsCalculated__c", quote.getIsCalculated());
 			jsonObject.put("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
-			//jsonObject.put("LastCalculatedDate__c", quote.getLastCalculatedDate());
 			jsonObject.put("Link__c", quote.getLink());
 			jsonObject.put("Name", quote.getName());
 			jsonObject.put("OpportunityId__c", quote.getOpportunityId());
@@ -110,7 +110,7 @@ public class QuoteFactory {
 			jsonObject.put("PayNow__c", quote.getPayNow());
 			jsonObject.put("PricebookId__c", quote.getPricebookId());
 			jsonObject.put("ReferenceNumber__c", quote.getReferenceNumber());
-			//jsonObject.put("StartDate__c", quote.getStartDate());
+			jsonObject.put("StartDate__c", SforceDateFormatter.dateFormat(quote.getStartDate()));
 			jsonObject.put("Term__c", quote.getTerm());
 			jsonObject.put("Type__c", quote.getType());
 			jsonObject.put("Version__c", quote.getVersion());
@@ -128,30 +128,5 @@ public class QuoteFactory {
 		}
 		
 		return jsonObject;
-	}
-	
-	public static Quote copyQuote(Quote quote) {
-		Quote copy = quote;
-		copy.setId(null);
-		copy.setName("Copy of: " + (quote.getName().length() < 80 ? quote.getName() : quote.getName().substring(0, 79)));
-		copy.setVersion(Double.valueOf(1));		
-		copy.setIsActive(Boolean.FALSE);
-		copy.setIsCalculated(Boolean.FALSE);
-		copy.setQuoteLineItems(copyQuoteLineItems(quote.getQuoteLineItems()));
-		
-		return copy;
-		
-	}
-		
-	public static List<QuoteLineItem> copyQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
-		List<QuoteLineItem> copy = quoteLineItems;	
-		for (QuoteLineItem quoteLineItem : copy) {
-			quoteLineItem.setId(null);
-			quoteLineItem.setQuoteId(null);
-			quoteLineItem.setOpportunityLineItemId(null);			
-		}
-		
-		return copy;
-		
-	}
+	}	
 }

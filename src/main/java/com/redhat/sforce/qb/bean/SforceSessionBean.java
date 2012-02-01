@@ -15,9 +15,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
+import com.redhat.sforce.qb.bean.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Quote;
+import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.SessionUser;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
@@ -121,8 +123,8 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
-	public void calculateQuote(Quote quote) {
-		sforceService.calculateQuote(getSessionId(), quote.getId());
+	public void calculateQuote(String quoteId) {
+		sforceService.calculateQuote(getSessionId(), quoteId);
 	}
 	
 	@Override
@@ -180,6 +182,33 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	@Override
 	public SessionUser getSessionUser() {
 		return sessionUser;
+	}
+	
+	@Override
+	public void updateQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {		
+		sforceService.saveQuoteLineItems(getSessionId(), QuoteLineItemFactory.convertQuoteLineItemsToJson(quoteLineItemList));
+		
+	}
+
+	@Override
+	public void updateQuoteLineItem(QuoteLineItem quoteLineItem)
+			throws SforceServiceException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createQuoteLineItems(List<QuoteLineItem> quoteLineItemList)
+			throws SforceServiceException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createQuoteLineItem(QuoteLineItem quoteLineItem)
+			throws SforceServiceException {
+		// TODO Auto-generated method stub
+		
 	}
 		
 	private static final String quoteQuery =
@@ -291,4 +320,5 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		    "From   Quote__c " +
 	 	    "Where  OpportunityId__c = '#opportunityId#' " +
 		    "Order  By Number__c";
+
 }

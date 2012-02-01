@@ -54,6 +54,39 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}	
 	
 	@Override
+	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException {
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/saveQuoteLineItems";
+		
+		PostMethod postMethod = new PostMethod(url);	
+		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
+		postMethod.setRequestHeader("Content-type", "application/json");
+		
+		try {		
+			
+			postMethod.setRequestEntity(new StringRequestEntity(jsonArray.toString(), "application/json", null));
+									
+			HttpClient httpclient = new HttpClient();
+			httpclient.executeMethod(postMethod);
+			
+			if (postMethod.getStatusCode() == 400) {				
+				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
+			} 
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			postMethod.releaseConnection();
+		}
+
+	}
+	
+	@Override
 	public void activateQuote(String accessToken, String quoteId) {
 		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/activate?quoteId=" + quoteId;	
 				

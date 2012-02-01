@@ -9,29 +9,27 @@
 		onstart="#{rich:component('statusPane')}.show()"
 		onstop="#{rich:component('statusPane')}.hide()" />
 
-
-
 	<h:form id="quoteForm">
 
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
 		<ui:include src="addopportunityproducts.xhtml" />
 
-		<rich:toolbar height="26" itemSeparator="grid" >
+		<rich:toolbar height="18" itemSeparator="grid" >
 			<rich:toolbarGroup>
 				<h:outputText
 					value="#{msgs.headerTitle}: #{quoteForm.opportunity.name}" />
 			</rich:toolbarGroup>
-			<rich:toolbarGroup location="right">
+			<rich:toolbarGroup location="right">			
 
-				<a4j:commandButton id="new" value="#{msgs.new}"
+				<a4j:commandLink id="new" value="#{msgs.new}"
 					action="#{quoteManager.newQuote(quoteForm.opportunity)}"
 					styleClass="button"
 					rendered="#{not quoteForm.opportunity.isClosed}"
 					focus="#{rich:clientId('name')}" render="quoteList, :details"
 					ajaxSingle="true" />
 
-				<a4j:commandButton value="#{msgs.refresh}"
+				<a4j:commandLink value="#{msgs.refresh}"
 					action="#{quoteManager.refresh()}" styleClass="button"
 					ajaxSingle="true" render="quoteList, :details" status="ajaxStatus" />
 
@@ -51,8 +49,8 @@
 
 				<a4j:commandLink id="activate"
 					action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
-					styleClass="no-decor" status="ajaxStatus"
-					render="quoteList, :details">
+					styleClass="no-decor" 
+					render="quoteList, viewQuotePanel">
 					<h:graphicImage value="./images/activate.png"
 						title="#{msgs.activate}" />
 				</a4j:commandLink>
@@ -115,6 +113,10 @@
 				<f:facet name="header">#{msgs.contact}</f:facet>
 				<h:outputText value="#{quote.contactName}" />
 			</rich:column>
+			
+            <f:facet name="footer">
+                <h:outputText value=" " />
+            </f:facet>			
 
 		</rich:extendedDataTable>
 

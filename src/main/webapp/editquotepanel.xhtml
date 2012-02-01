@@ -8,26 +8,23 @@
 
 <rich:panel id="editQuotePanel" rendered="#{quoteForm.editMode}"
 	style="border-color: #C27E3A; background-color: #FCF9F5; ">
-	<f:facet name="header">
-		<rich:toolbar height="26" itemSeparator="grid"
-			style="border: 0; background-color: #FCF9F5;">
+	<rich:toolbar height="18" itemSeparator="grid"
+		style="border: 0; background-color: #FCF9F5;">
 
-			<rich:toolbarGroup location="right">
-			
-				<a4j:commandButton value="#{msgs.save}" styleClass="button"
-						rendered="#{not empty quoteForm.selectedQuote}"
-						action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
-						render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
+		<rich:toolbarGroup location="right">
 
-				<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
-						rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
-						action="#{quoteManager.cancelEditQuote()}"
-						bypassUpdates="true" type="reset" render="details"
-						ajaxSingle="true" execute="@this" />
+			<a4j:commandButton value="#{msgs.save}" styleClass="button"
+				rendered="#{not empty quoteForm.selectedQuote}"
+				action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
+				render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
 
-			</rich:toolbarGroup>
-		</rich:toolbar>
-	</f:facet>
+			<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
+				rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
+				action="#{quoteManager.cancelEditQuote()}" bypassUpdates="true"
+				type="reset" render="details" ajaxSingle="true" execute="@this" />
+
+		</rich:toolbarGroup>
+	</rich:toolbar>
 
 	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 
@@ -206,35 +203,35 @@
 	</h:panelGrid>
 
 	<br />
-	
-    <rich:tabPanel switchType="client">
-					<rich:tab header="#{msgs.quoteLineItems}">
 
-						<h:panelGroup style="display: block; text-align: right">
+	<rich:tabPanel switchType="client">
+		<rich:tab header="#{msgs.quoteLineItems}">
 
-							<a4j:commandButton id="importProducts"
-								value="#{msgs.addOpportunityProducts}"
-								action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
-								rendered="#{not empty quoteForm.selectedQuote}"
-								render="quoteList, details"
-								rerender="#{rich:clientId('addOpportunityProductsPanel')}"
-								ajaxSingle="true" status="ajaxStatus" />
+			<h:panelGroup style="display: block; text-align: right">
 
-							<h:outputText value=" " escape="false" />
+				<a4j:commandButton id="importProducts"
+					value="#{msgs.addOpportunityProducts}"
+					action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
+					rendered="#{not empty quoteForm.selectedQuote}"
+					render="quoteList, details"
+					rerender="#{rich:clientId('addOpportunityProductsPanel')}"
+					ajaxSingle="true" status="ajaxStatus" />
 
-
-						</h:panelGroup>
-						
-						<ui:include src="viewquoteproducts.xhtml" />
+				<h:outputText value=" " escape="false" />
 
 
-					</rich:tab>
+			</h:panelGroup>
 
-					<rich:tab header="#{msgs.discounts}">
+			<ui:include src="editquoteproducts.xhtml" />
 
 
-					</rich:tab>
-				</rich:tabPanel>	
+		</rich:tab>
+
+		<rich:tab header="#{msgs.discounts}">
+
+
+		</rich:tab>
+	</rich:tabPanel>
 
 </rich:panel>
 </html>
