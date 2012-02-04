@@ -16,18 +16,7 @@ public class QuoteFactory {
 
 	public static List<Quote> fromJSON(JSONArray jsonArray) throws JSONException, ParseException {
 		List<Quote> quoteList = new ArrayList<Quote>();
-		
-		/**
-
-	       "ApprovalCustom__r": null,
-	       "ApprovalsRequested__c": null,
-	       "AprvlRqstNonStd__c": false,
-	       "AprvlRqstPaymentTerms__c": false,
-	       "AprvlRqstPriceDiscnt__c": false,	      
-	       "HasApprovalRequests__c": false,
-	       
-	    */
-	       		
+			       		
 		for (int i = 0; i < jsonArray.length(); i++) {		    
 		    JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(i));
 			
@@ -81,6 +70,10 @@ public class QuoteFactory {
 			records = wrapper.getRecords("QuoteLineItemSchedule__r");
 			if (records != null)
 				quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory.parseQuoteLineItemSchedules(records));
+			
+			records = wrapper.getRecords("QuotePriceAdjustment__r");
+			if (records != null)
+				quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.parseQuotePriceAdjustments(records));				
 			
 			quoteList.add(quote);
 		}		

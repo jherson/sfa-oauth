@@ -9,7 +9,7 @@ import com.redhat.sforce.qb.exception.SforceServiceException;
 public interface SforceService {
 	
 	public String create(String accessToken, String sobject, JSONObject jsonObject) throws SforceServiceException;
-	public JSONArray query(String accessToken, String query);
+	public JSONArray query(String accessToken, String query) throws SforceServiceException;
 	public void update(String accessToken, String sobject, String id, JSONObject jsonObject) throws SforceServiceException;
 	public void delete(String accessToken, String sobject, String id);
 	public void copyQuote(String accessToken, String quoteId);

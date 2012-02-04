@@ -15,12 +15,13 @@
 
 			<a4j:commandLink value="#{msgs.delete}"
 				action="#{quoteManager.deleteQuoteLineItems(quoteForm.selectedQuote)}"
-				render="quoteList"
-				rerender="details"
+				disabled="#{empty quoteForm.selectedQuote}"
+				render="quoteList, details"
 				ajaxSingle="true"  />
 
 			<a4j:commandLink value="#{msgs.reset}"
 				immediate="true" status="ajaxStatus"
+				disabled="#{empty quoteForm.selectedQuote}"
 				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
 				execute="@this" />
 
@@ -38,7 +39,7 @@
 
 		<rich:column>
 			<f:facet name="header">#{msgs.productCode}</f:facet>
-			<h:outputText value="#{lineItem.productCode}" />
+			<h:outputText value="#{lineItem.product.productCode}" />
 		</rich:column>
 
 		<rich:column>
@@ -48,7 +49,7 @@
 
 		<rich:column>
 			<f:facet name="header">#{msgs.description}</f:facet>
-			<h:outputText value="#{lineItem.productDescription}" />
+			<h:outputText value="#{lineItem.product.productDescription}" />
 		</rich:column>
 
 		<rich:column style="text-align: center;">

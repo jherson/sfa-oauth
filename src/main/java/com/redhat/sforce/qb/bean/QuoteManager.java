@@ -21,4 +21,5 @@ public interface QuoteManager {
 	public void addOpportunityLineItems(Opportunity opportunity, Quote quote);
 	public void saveQuoteLineItems(Quote quote);
 	public void deleteQuoteLineItems(Quote quote);
+	public void addQuotePriceAdjustments(Quote quote);
 }

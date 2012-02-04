@@ -28,7 +28,7 @@ import com.redhat.sforce.qb.service.SforceService;
 
 public class SforceServiceImpl implements Serializable,  SforceService {		
 
-	private static final long serialVersionUID = 6506272900287022663L;
+	private static final long serialVersionUID = 1L;
 	private static String API_VERSION = null;
 	private static String INSTANCE_URL = null;
 	
@@ -256,7 +256,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
-	public JSONArray query(String accessToken, String query) {
+	public JSONArray query(String accessToken, String query) throws SforceServiceException {
 		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/query";
 		
 		NameValuePair[] params = new NameValuePair[1];
@@ -274,13 +274,13 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				try {
 					JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-					//System.out.println("Query response: " + response.toString(2));
-
 					queryResult = response.getJSONArray("records");
 					
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+			} else {
+				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));		
 			}
 		} catch (HttpException e) {
 			// TODO Auto-generated catch block

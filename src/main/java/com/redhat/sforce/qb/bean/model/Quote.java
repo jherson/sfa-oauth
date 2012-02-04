@@ -46,12 +46,10 @@ public class Quote extends SObject {
 	private Boolean aprvlRqstPriceDiscnt;
 	private Boolean hasApprovalRequests;
 	private Date lastCalculatedDate;
+	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
-	//private ArrayList approvalRequests;	
-	//private ArrayList revenueSchedules;
-	//private ArrayList invoiceSchedules;
-	//
+
     public Quote() {
         super();
     }
@@ -373,6 +371,14 @@ public class Quote extends SObject {
 		this.lastCalculatedDate = lastCalculatedDate;
 	}
 	
+	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {
+		return quotePriceAdjustments;
+	}
+
+	public void setQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {
+		this.quotePriceAdjustments = quotePriceAdjustments;
+	}
+
 	public List<QuoteLineItem> getQuoteLineItems() {
 		return quoteLineItems;
 	}

@@ -38,10 +38,7 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setOpportunityId(wrapper.getString("OpportunityId__c"));
 		    quoteLineItem.setOpportunityLineItemId(wrapper.getString("OpportunityLineItemId__c"));
 		    quoteLineItem.setPricebookEntryId(wrapper.getString("PricebookEntryId__c"));
-		    quoteLineItem.setPricingAttributes(wrapper.getString("Pricing_Attributes__c"));
-		    quoteLineItem.setProductCode(wrapper.getString("ProductCode__c"));
-		    quoteLineItem.setProductDescription(wrapper.getString("ProductDescription__c"));
-		    quoteLineItem.setProductFamily(wrapper.getString("ProductFamily__c"));
+		    quoteLineItem.setPricingAttributes(wrapper.getString("Pricing_Attributes__c"));		    
 		    quoteLineItem.setQuantity(wrapper.getInteger("Quantity__c"));
 		    quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));
 		    quoteLineItem.setSortOrder(wrapper.getInteger("SortOrder__c"));
@@ -49,7 +46,6 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setTerm(wrapper.getDouble("Term__c"));
 		    quoteLineItem.setTotalPrice(wrapper.getDouble("TotalPrice__c"));
 		    quoteLineItem.setUnitPrice(wrapper.getDouble("UnitPrice__c"));
-		    quoteLineItem.setUnitOfMeasure(wrapper.getString("Unit_Of_Measure__c"));
 		    quoteLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
 		    
 		    quoteLineItemList.add(quoteLineItem);
@@ -99,18 +95,15 @@ public class QuoteLineItemFactory {
 				jsonObject.put("OpportunityId__c", quoteLineItem.getOpportunityId());
 				jsonObject.put("OpportunityLineItemId__c", quoteLineItem.getOpportunityLineItemId());
 			    jsonObject.put("PricebookEntryId__c", quoteLineItem.getPricebookEntryId());
+			    jsonObject.put("Product__c", quoteLineItem.getProduct().getId());
                 jsonObject.put("Pricing_Attributes__c", quoteLineItem.getPricingAttributes());
-                jsonObject.put("ProductCode__c", quoteLineItem.getProductCode());
-                jsonObject.put("ProductDescription__c", quoteLineItem.getProductDescription());
-                jsonObject.put("ProductFamily__c", quoteLineItem.getProductFamily());
                 jsonObject.put("Quantity__c", quoteLineItem.getQuantity());
 				jsonObject.put("QuoteId__c", quoteLineItem.getQuoteId());
 				jsonObject.put("SortOrder__c", quoteLineItem.getSortOrder());
 				jsonObject.put("StartDate__c", SforceDateFormatter.dateFormat(quoteLineItem.getStartDate()));
 				jsonObject.put("Term__c", quoteLineItem.getTerm());
 				jsonObject.put("TotalPrice__c", quoteLineItem.getTotalPrice());
-				jsonObject.put("UnitPrice__c", quoteLineItem.getUnitPrice());
-				jsonObject.put("Unit_Of_Measure__c", quoteLineItem.getUnitOfMeasure());
+				jsonObject.put("UnitPrice__c", quoteLineItem.getUnitPrice());				
 				jsonObject.put("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());
 			
 				jsonArray.put(jsonObject);

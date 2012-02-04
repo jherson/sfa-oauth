@@ -1,6 +1,9 @@
 package com.redhat.sforce.qb.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -12,6 +15,8 @@ import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
+import com.redhat.sforce.qb.bean.model.QuoteLineItem;
+import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.bean.model.User;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 
@@ -78,9 +83,39 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		    sforceSession.deleteQuoteLineItems(quote.getQuoteLineItems());
 		    sforceSession.calculateQuote(quote.getId());
 		    refresh();
+		    getQuoteForm().setSelectedQuote(quote);
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+	}
+	
+	@Override
+	public void addQuotePriceAdjustments(Quote quote) {		
+		String[] reasons = new String[] {"Platform and Cloud", "Middleware", "Services"};
+		
+		BigDecimal pc = new BigDecimal(0.00);
+		BigDecimal mw = new BigDecimal(0.00);
+		BigDecimal svc = new BigDecimal(0.00); 
+		for (int i = 0; i < quote.getQuoteLineItems().size(); i++) {
+			QuoteLineItem quoteLineItem = quote.getQuoteLineItems().get(i);
+			if ("Platform and Cloud".equals(quoteLineItem.getProduct().getPrimaryBusinessUnit())) {
+				pc = pc.add(new BigDecimal(quoteLineItem.getTotalPrice()));
+			}
+			
+			if ("Middleware".equals(quoteLineItem.getProduct().getPrimaryBusinessUnit())) {
+				mw = mw.add(new BigDecimal(quoteLineItem.getTotalPrice()));
+			}
+			
+			if ("Services".equals(quoteLineItem.getProduct().getPrimaryBusinessUnit())) {
+				svc = svc.add(new BigDecimal(quoteLineItem.getTotalPrice()));
+			}
+		}
+		
+		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
+		for (int i = 0; i < reasons.length; i++) {
+			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment(0.00, "Percent", 0.00, reasons[i], "Amount", 0.00, 0.00);			
+			quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}
 	}
 	
@@ -110,6 +145,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void activateQuote(Quote quote) {
 		sforceSession.activateQuote(quote);
 		refresh();
+		getQuoteForm().setSelectedQuote(quote);
 	}
 	
 	@Override

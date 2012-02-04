@@ -8,23 +8,25 @@
 
 <rich:panel id="editQuotePanel" rendered="#{quoteForm.editMode}"
 	style="border-color: #C27E3A; background-color: #FCF9F5; ">
-	<rich:toolbar height="18" itemSeparator="grid"
-		style="border: 0; background-color: #FCF9F5;">
 
-		<rich:toolbarGroup location="right">
+	<f:facet name="header">
+		<rich:toolbar height="18" itemSeparator="grid"
+			style="border: 0; background-color: #FCF9F5;">
 
-			<a4j:commandButton value="#{msgs.save}" styleClass="button"
-				rendered="#{not empty quoteForm.selectedQuote}"
-				action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
-				render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
+			<rich:toolbarGroup location="right">
 
-			<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
-				rendered="#{not empty quoteForm.selectedQuote}" immediate="true"
-				action="#{quoteManager.cancelEditQuote()}" bypassUpdates="true"
-				type="reset" render="details" ajaxSingle="true" execute="@this" />
+				<a4j:commandLink value="#{msgs.save}"					
+					action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
+					render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
 
-		</rich:toolbarGroup>
-	</rich:toolbar>
+				<a4j:commandLink value="#{msgs.cancel}"
+					immediate="true"
+					action="#{quoteManager.cancelEditQuote()}" bypassUpdates="true"
+					type="reset" render="details" ajaxSingle="true" execute="@this" />
+
+			</rich:toolbarGroup>
+		</rich:toolbar>
+	</f:facet>
 
 	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 
@@ -181,7 +183,19 @@
 				<f:selectItem itemLabel="" itemValue="" />
 				<f:selectItem itemLabel="1" itemValue="365" />
 				<f:selectItem itemLabel="3" itemValue="1095" />
-			</h:selectOneMenu>
+			</h:selectOneMenu>			
+			<h:outputText value="#{quoteForm.selectedQuote.startDate}"
+				rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+			<rich:calendar value="#{quoteForm.selectedQuote.startDate}"
+				id="startDate" locale="#{sforceSession.sessionUser.locale}"
+				popup="true"
+				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				showApplyButton="false" cellWidth="24px" cellHeight="22px"
+				style="width:200px"
+				rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}"
+				disabled="false">
+			</rich:calendar>
+			
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.endDate}"

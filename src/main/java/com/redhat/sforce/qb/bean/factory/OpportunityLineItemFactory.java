@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
-import com.redhat.sforce.qb.bean.model.Product;
 import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class OpportunityLineItemFactory {
@@ -50,25 +49,13 @@ public class OpportunityLineItemFactory {
 		    opportunityLineItem.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		    opportunityLineItem.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
 		    opportunityLineItem.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
-		    opportunityLineItem.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
-		    opportunityLineItem.setProduct(parseProduct(wrapper.getJSONObject("PricebookEntry")));
+		    opportunityLineItem.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));		    		    
+		    opportunityLineItem.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("PricebookEntry").getJSONObject("Product2")));
 		    
 		    opportunityLineItemList.add(opportunityLineItem);
 		}
 		
 		return opportunityLineItemList;
-	}
-	
-	private static Product parseProduct(JSONObject jsonObject) throws JSONException {
-		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject.getJSONObject("Product2"));
-
-		Product product = new Product();
-		product.setName(wrapper.getString("Name"));
-		product.setDescription(wrapper.getString("Description"));
-		product.setFamily(wrapper.getString("Family"));
-		product.setProductCode(wrapper.getString("ProductCode"));
-		
-		return product;
 	}
 	
 	public static JSONArray serializeOpportunityLineItemIds(List<OpportunityLineItem> opportunityLineItemList) {

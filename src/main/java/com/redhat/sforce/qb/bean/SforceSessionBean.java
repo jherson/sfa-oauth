@@ -77,16 +77,16 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
-	public List<Quote> queryQuotes() {
+	public List<Quote> queryQuotes() throws SforceServiceException {
         JSONArray queryResults = sforceService.query(getSessionId(), quoteQuery.replace("#opportunityId#", getOpportunityId()));
 		
 		if (queryResults != null) {		
-		    try {
-		    	return QuoteFactory.fromJSON(queryResults);
-		    } catch (JSONException e) {
-		    	//logger.error(e);
-		    	e.printStackTrace();
-		    } catch (ParseException e) {
+	    	try {
+				return QuoteFactory.fromJSON(queryResults);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -198,9 +198,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 			"Select Id, " +
 		    	   "Name, " +
 		    	   "CurrencyIsoCode, " +		    	   		    	   
-				   "Link__c, " +
 				   "ReferenceNumber__c, " +
-				   "AprvlRqstPriceDiscnt__c, " +
 				   "Term__c, " +
 				   "PricebookId__c, " +
 				   "Number__c, " +
@@ -208,7 +206,6 @@ public class SforceSessionBean implements Serializable, SforceSession {
 				   "Type__c, " +
 				   "StartDate__c, " +
 				   "HasQuoteLineItems__c, " +
-				   "HasApprovalRequests__c, " +
 				   "Year1PaymentAmount__c, " +
 				   "Year3PaymentAmount__c, " +
 				   "Year2PaymentAmount__c, " +
@@ -223,9 +220,6 @@ public class SforceSessionBean implements Serializable, SforceSession {
 				   "Year4PaymentAmount__c, " +
 				   "EndDate__c, " +
 				   "Amount__c, " +
-				   "AprvlRqstPaymentTerms__c, " +
-				   "AprvlRqstNonStd__c, " +
-				   "ApprovalsRequested__c, " +
 				   "PayNow__c, " +
 				   "LastCalculatedDate__c, " +
 				   "QuoteOwnerId__r.Id, " +
@@ -250,9 +244,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		    	           "LastModifiedBy.Name, " +
 		                   "OpportunityLineItemId__c, " +
 		                   "Quantity__c, " +
-		                   "ProductDescription__c, " +
 		                   "EndDate__c, " +
-		                   "ProductCode__c, " +
 		                   "ContractNumbers__c, " +
 		                   "ListPrice__c, " +
 		                   "OpportunityId__c, " +
@@ -262,15 +254,32 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		                   "YearlySalesPrice__c, " +
 		                   "NewOrRenewal__c, " +
 		                   "QuoteId__c, " +
-		                   "ProductFamily__c, " + 
+		                   "Product__c.Id, " +
+		                   "Product__c.Description, " +
+		                   "Product__c.Name, " +
+		                   "Product__c.Family, " +
+		                   "Product__c.ProductCode, " +
+		                   "Product__c.Primary_Business_Unit__c, " + 
+		                   "Product__c.Product_Line__c, " +
+		                   "Product__c.Unit_Of_Measure__c, " +
+		                   "Product__c.Term__c, " +
 		                   "TotalPrice__c, " +
 		                   "StartDate__c, " +
 		                   "PricebookEntryId__c, " +
 		                   "Configured_SKU__c, " +
-		                   "Unit_Of_Measure__c, " +
 		                   "Pricing_Attributes__c " +
 		            "From   QuoteLineItem__r " +
-		          "Order By SortOrder__c), " +		    	   
+		          "Order By SortOrder__c), " +		
+		           "(Select Id, " +
+		                   "QuoteId__c, " +
+		                   "Amount__c, " +
+		                   "Operator__c, " +
+		                   "Percent__c, " +
+		                   "Reason__c, " +
+		                   "Type__c, " +
+		                   "AmountBeforeAdjustment__c, " +
+		                   "AmountAfterAdjustment__c " +
+		            "From   QuotePriceAdjustment__r), " +
 		           "(Select Id, " +
 		 	               "Name, " +
 		 	               "CurrencyIsoCode, " +
@@ -303,5 +312,4 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		    "From   Quote__c " +
 	 	    "Where  OpportunityId__c = '#opportunityId#' " +
 		    "Order  By Number__c";
-
 }

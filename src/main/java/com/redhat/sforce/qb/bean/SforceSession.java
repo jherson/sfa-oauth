@@ -11,7 +11,7 @@ import com.redhat.sforce.qb.exception.SforceServiceException;
 public interface SforceSession {
 
 	public Opportunity queryOpportunity() throws SforceServiceException;
-	public List<Quote> queryQuotes();
+	public List<Quote> queryQuotes() throws SforceServiceException;
 	public Quote queryQuote();
 	public void setSessionUser(SessionUser sessionUser);
 	public SessionUser getSessionUser();

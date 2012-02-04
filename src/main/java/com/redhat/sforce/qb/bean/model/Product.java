@@ -7,6 +7,10 @@ public class Product extends SObject {
     private String description;
     private String family;
     private String productCode;
+    private String primaryBusinessUnit;
+    private String productLine;
+    private String unitOfMeasure;
+    private Integer term;
 
     public Product() {
         super();
@@ -43,4 +47,36 @@ public class Product extends SObject {
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
+
+	public String getPrimaryBusinessUnit() {
+		return primaryBusinessUnit;
+	}
+
+	public void setPrimaryBusinessUnit(String primaryBusinessUnit) {
+		this.primaryBusinessUnit = primaryBusinessUnit;
+	}
+
+	public String getProductLine() {
+		return productLine;
+	}
+
+	public void setProductLine(String productLine) {
+		this.productLine = productLine;
+	}
+
+	public String getUnitOfMeasure() {
+		return unitOfMeasure;
+	}
+
+	public void setUnitOfMeasure(String unitOfMeasure) {
+		this.unitOfMeasure = unitOfMeasure;
+	}
+
+	public Integer getTerm() {
+		return term;
+	}
+
+	public void setTerm(Integer term) {
+		this.term = term;
+	}	
 }

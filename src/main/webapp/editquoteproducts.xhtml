@@ -29,7 +29,7 @@
 
 	<rich:column>
 		<f:facet name="header">#{msgs.productCode}</f:facet>
-		<h:inputText value="#{lineItem.productCode}" />
+		<h:inputText value="#{lineItem.product.productCode}" />
 	</rich:column>
 
 	<rich:column>
@@ -39,7 +39,7 @@
 
 	<rich:column>
 		<f:facet name="header">#{msgs.description}</f:facet>
-		<h:outputText value="#{lineItem.productDescription}" />
+		<h:outputText value="#{lineItem.product.productDescription}" />
 	</rich:column>
 
 	<rich:column style="text-align: center;">

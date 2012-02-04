@@ -9,10 +9,6 @@ public class QuoteLineItem extends SObject {
 	private String opportunityLineItemId;
 	private String description;
 	private String name;
-	private String family;
-	private String productCode;
-	private String productDescription;
-	private String productFamily;
 	private Date endDate;
 	private Date startDate;
 	private Double term;
@@ -22,7 +18,6 @@ public class QuoteLineItem extends SObject {
 	private String newOrRenewal;
 	private String opportunityId;
 	private String pricebookEntryId;
-	private String productId;
 	private Integer quantity;
 	private Double unitPrice;
 	private Double totalPrice;
@@ -30,8 +25,8 @@ public class QuoteLineItem extends SObject {
     private String configuredSku;
     private String pricingAttributes;
     private Double basePrice;
-    private String unitOfMeasure;
     private Integer sortOrder;
+    private Product product;
     private Boolean delete;
 
     public QuoteLineItem() {
@@ -68,22 +63,6 @@ public class QuoteLineItem extends SObject {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public String getFamily() {
-		return family;
-	}
-	
-	public void setFamily(String family) {
-		this.family = family;
-	}
-	
-	public String getProductCode() {
-		return productCode;
-	}
-	
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
 	}
 	
 	public Date getEndDate() {
@@ -157,30 +136,6 @@ public class QuoteLineItem extends SObject {
 		this.pricebookEntryId = pricebookEntryId;
 	}
 	
-	public String getProductId() {
-		return productId;
-	}
-	
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-	
-	public String getProductDescription() {
-		return productDescription;
-	}
-
-	public void setProductDescription(String productDescription) {
-		this.productDescription = productDescription;
-	}
-	
-	public String getProductFamily() {
-		return productFamily;
-	}
-
-	public void setProductFamily(String productFamily) {
-		this.productFamily = productFamily;
-	}
-	
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -236,14 +191,6 @@ public class QuoteLineItem extends SObject {
 	public void setBasePrice(Double basePrice) {
 		this.basePrice = basePrice;
 	}
-	
-	public String getUnitOfMeasure() {
-		return unitOfMeasure;
-	}
-
-	public void setUnitOfMeasure(String unitOfMeasure) {
-		this.unitOfMeasure = unitOfMeasure;
-	}
 
 	public Integer getSortOrder() {
 		return sortOrder;
@@ -251,6 +198,14 @@ public class QuoteLineItem extends SObject {
 
 	public void setSortOrder(Integer sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+	
+	public Product getProduct() {
+		return product;
+	}
+	
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Boolean getDelete() {
