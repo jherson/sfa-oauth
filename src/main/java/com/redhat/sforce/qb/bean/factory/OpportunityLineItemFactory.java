@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.util.JSONObjectWrapper;
+import com.redhat.sforce.util.SforceDateFormatter;
 
 public class OpportunityLineItemFactory {
 
@@ -58,15 +59,39 @@ public class OpportunityLineItemFactory {
 		return opportunityLineItemList;
 	}
 	
-	public static JSONArray serializeOpportunityLineItemIds(List<OpportunityLineItem> opportunityLineItemList) {
+	public static JSONArray serializeOpportunityLineItems(List<OpportunityLineItem> opportunityLineItemList) {
 		JSONArray jsonArray = new JSONArray();
 		
 		for (OpportunityLineItem opportunityLineItem : opportunityLineItemList) {
 			JSONObject jsonObject = new JSONObject();			
 			try {
 				jsonObject.put("Id", opportunityLineItem.getId());
-				jsonArray.put(jsonObject);				
+				jsonObject.put("OpportunityId", opportunityLineItem.getOpportunityId());
+				jsonObject.put("Configured_SKU__c", opportunityLineItem.getConfiguredSku());
+				jsonObject.put("ContractNumbers__c", opportunityLineItem.getContractNumbers());
+				jsonObject.put("CurrencyIsoCode", opportunityLineItem.getCurrencyIsoCode());
+				jsonObject.put("ActualEndDate__c", SforceDateFormatter.dateFormat(opportunityLineItem.getActualEndDate()));
+				jsonObject.put("ListPrice", opportunityLineItem.getListPrice());
+				jsonObject.put("NewOrRenewal__c", opportunityLineItem.getNewOrRenewal());								
+				jsonObject.put("Pricing_Attributes__c", opportunityLineItem.getPricingAttributes());
+				jsonObject.put("Quantity", opportunityLineItem.getQuantity());
+				jsonObject.put("ActualStartDate__c", SforceDateFormatter.dateFormat(opportunityLineItem.getActualStartDate()));
+				jsonObject.put("ActualTerm__c", opportunityLineItem.getActualTerm());
+				jsonObject.put("TotalPrice", opportunityLineItem.getTotalPrice());
+				jsonObject.put("UnitPrice", opportunityLineItem.getUnitPrice());
+				jsonObject.put("Year1Amount__c", opportunityLineItem.getYear1Amount());
+				jsonObject.put("Year2Amount__c", opportunityLineItem.getYear2Amount());
+				jsonObject.put("Year3Amount__c", opportunityLineItem.getYear3Amount());
+				jsonObject.put("Year4Amount__c", opportunityLineItem.getYear4Amount());
+				jsonObject.put("Year5Amount__c", opportunityLineItem.getYear5Amount());
+				jsonObject.put("Year6Amount__c", opportunityLineItem.getYear6Amount());
+				jsonObject.put("YearlySalesPrice__c", opportunityLineItem.getYearlySalesPrice());
+				jsonObject.put("PricebookEntry", serializePricebookEntry(opportunityLineItem));
+								
+				jsonArray.put(jsonObject);
+				
 			} catch (JSONException e) {
+				
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
@@ -74,5 +99,32 @@ public class OpportunityLineItemFactory {
 		}
 		
 		return jsonArray;
+	}
+	
+	private static JSONObject serializePricebookEntry(OpportunityLineItem opportunityLineItem) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("Id", opportunityLineItem.getPricebookEntryId());
+			jsonObject.put("Product2", serializeProdct(opportunityLineItem));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		return jsonObject;
+	}
+	
+	private static JSONObject serializeProdct(OpportunityLineItem opportunityLineItem) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("Id", opportunityLineItem.getProduct().getId());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		return jsonObject;		
 	}
 }

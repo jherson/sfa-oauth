@@ -49,15 +49,11 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public void saveQuote(Quote quote) {
+	public void saveQuote(Quote quote) {		
 		try {
-		    if (quote.getId() != null) {
-			    updateQuote(quote);
-		    } else {
-			    createQuote(quote);
-		    }
+		    sforceSession.saveQuote(quote);
 		    refresh();
-		    getQuoteForm().toggleEditMode();
+		    setEditMode(false);
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -70,7 +66,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		    sforceSession.saveQuoteLineItems(quote.getQuoteLineItems());
 		    sforceSession.calculateQuote(quote.getId());
 		    refresh();
-		    cancelEditQuote();
+		    setEditMode(false);
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -120,20 +116,17 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	}
 	
 	@Override
-	public void cancelEditQuote() {
-		getQuoteForm().toggleEditMode();
+	public void cancelQuote(Quote quote) {
+		if (quote.getId() == null)
+			getQuoteForm().setSelectedQuote(null);
+		
+		setEditMode(false);
 	}
 			
 	@Override
-	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {
-		String[] opportunityLineIds = new String[opportunity.getOpportunityLineItems().size()];
-		for (int i = 0; i < opportunity.getOpportunityLineItems().size(); i++) {
-			OpportunityLineItem opportunityLineItem = opportunity.getOpportunityLineItems().get(i);
-			opportunityLineIds[i] = opportunityLineItem.getId();
-		}
-		
+	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {		
 		try {
-			sforceSession.addOpportunityLineItems(quote, opportunityLineIds);		    
+			sforceSession.addOpportunityLineItems(quote, opportunity.getOpportunityLineItems());		    
 		    refresh();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
@@ -145,13 +138,14 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void activateQuote(Quote quote) {
 		sforceSession.activateQuote(quote);
 		refresh();
-		getQuoteForm().setSelectedQuote(quote);
+		getQuoteForm().refreshSelectedQuote();
 	}
 	
 	@Override
 	public void calculateQuote(Quote quote) {
 		sforceSession.calculateQuote(quote.getId());		
 		refresh();
+		getQuoteForm().refreshSelectedQuote();
 	}
 	
 	@Override
@@ -176,26 +170,22 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void setQuoteContact(Quote quote, Contact contact) {
 		quote.setContactId(contact.getId());
 		quote.setContactName(contact.getName());
-		saveQuote(quote);
+		if (quote.getId() != null)
+		    saveQuote(quote);
 	}
 	
 	@Override
 	public void setQuoteOwner(Quote quote, User user) {
 		quote.setOwnerId(user.getId());
 		quote.setOwnerName(user.getName());
-		saveQuote(quote);
+		if (quote.getId() != null)
+		    saveQuote(quote);
 	}	
 	
-	private void updateQuote(Quote quote) throws SforceServiceException {
-		sforceSession.updateQuote(quote);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully updated!", "Succesfully updated!"));
+	private void setEditMode(Boolean editMode) {
+		getQuoteForm().setEditMode(editMode);
 	}
 	
-	private void createQuote(Quote quote) throws SforceServiceException {			
-		sforceSession.createQuote(quote);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Succesfully created!", "Succesfully created!"));
-	}
-			
 	private QuoteForm getQuoteForm() {
 		return (QuoteForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("quoteForm");
 	}

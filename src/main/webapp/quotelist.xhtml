@@ -1,19 +1,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
-
-	<a4j:status id="ajaxStatus" forceId="true"
-		onstart="#{rich:component('statusPane')}.show()"
-		onstop="#{rich:component('statusPane')}.hide()" />
-
-	<h:form id="quoteForm">
-
-		<ui:include src="owners.xhtml" />
-		<ui:include src="contacts.xhtml" />
-		<ui:include src="addopportunityproducts.xhtml" />
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
 
 		<rich:toolbar height="18" itemSeparator="grid" >
 			<rich:toolbarGroup>
@@ -35,11 +25,11 @@
 
 			</rich:toolbarGroup>
 		</rich:toolbar>
-
+		
 		<rich:extendedDataTable id="quoteList" var="quote"
 			value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
 			selection="#{quoteForm.selection}" style="height:220px;"
-			selectedClass="dataTableSelectedRow" status="ajaxStatus" >
+			status="ajaxStatus" >
 
 			<a4j:ajax execute="@this" event="selectionchange"
 				listener="#{quoteForm.selectionListener}" render=":details" />
@@ -114,28 +104,6 @@
 				<h:outputText value="#{quote.contactName}" />
 			</rich:column>
 			
-            <f:facet name="footer">
-                <h:outputText value=" " />
-            </f:facet>			
-
 		</rich:extendedDataTable>
-
-		<br />
-
-		<rich:popupPanel id="statusPane" autosized="true">
-			<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
-		</rich:popupPanel>
-
-		<a4j:outputPanel id="messages" ajaxRendered="true">
-			<rich:messages />
-		</a4j:outputPanel>
-
-		<a4j:outputPanel id="details">
-
-			<ui:include src="viewquotepanel.xhtml" />
-			<ui:include src="editquotepanel.xhtml" />
-
-	    </a4j:outputPanel>
-
-	</h:form>
+		
 </ui:composition>

@@ -10,21 +10,16 @@
 
 	<rich:toolbarGroup location="right">
 
-		<a4j:commandButton value="#{msgs.save}" styleClass="button"
-			action="#{quoteManager.saveQuoteLineItems(quoteForm.selectedQuote)}"
-			render="quoteList, viewQuotePanel, viewQuoteProducts"
-			ajaxSingle="true" />
-
-		<a4j:commandButton value="#{msgs.cancel}" styleClass="button"
-			immediate="true" action="#{quoteManager.cancelEditQuote()}"
-			bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
-			execute="@this" />
+		<a4j:commandLink value="#{msgs.addOpportunityProducts}"
+		    rendered="#{quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode and not empty quoteForm.opportunity.opportunityLineItems}"
+			action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
+			render="quoteList, details" ajaxSingle="true" />
 
 	</rich:toolbarGroup>
 </rich:toolbar>
 
-<rich:extendedDataTable style="width: 100%; height:600px;"
-	var="lineItem" noDataLabel="#{msgs.noRecords}"
+<rich:extendedDataTable style="height:600px;" var="lineItem"
+	noDataLabel="#{msgs.noRecords}"
 	value="#{quoteForm.selectedQuote.quoteLineItems}">
 
 	<rich:column>
@@ -39,7 +34,7 @@
 
 	<rich:column>
 		<f:facet name="header">#{msgs.description}</f:facet>
-		<h:outputText value="#{lineItem.product.productDescription}" />
+		<h:outputText value="#{lineItem.description}" />
 	</rich:column>
 
 	<rich:column style="text-align: center;">

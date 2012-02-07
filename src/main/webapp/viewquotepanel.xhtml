@@ -109,13 +109,21 @@
 			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
 		<h:outputText value=" "
 			rendered="#{empty quoteForm.selectedQuote or quoteForm.selectedQuote.type == 'Non Standard'}" />
+			
 		<h:outputText value="#{msgs.term}"
 			rendered="#{quoteForm.selectedQuote.type == 'Standard'}" />
-		<h:outputText value="#{quoteForm.selectedQuote.term}"
-			rendered="#{quoteForm.selectedQuote.type == 'Standard'}">
-			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-				pattern="#,##0" />
-		</h:outputText>
+		<h:panelGroup rendered="#{quoteForm.selectedQuote.type == 'Standard'}">						
+		    <h:outputText value="#{quoteForm.selectedQuote.term}"
+			    rendered="#{quoteForm.selectedQuote.type == 'Standard'}">
+			    <f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+				    pattern="#,##0" />
+		    </h:outputText>	
+		    <h:outputText value="#{msgs.startDate}" 
+		        rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
+		    <h:outputText value="#{quoteForm.selectedQuote.startDate}"
+				rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />				
+		</h:panelGroup>
+		
 		<h:outputText value="#{msgs.endDate}"
 			rendered="#{quoteForm.selectedQuote.type == 'Co-Term'}" />
 		<h:outputText value="#{quoteForm.selectedQuote.endDate}"

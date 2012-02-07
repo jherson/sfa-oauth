@@ -23,6 +23,7 @@ public class OpportunityFactory {
 		Opportunity opportunity = new Opportunity();
 		opportunity.setId(wrapper.getId());
 		opportunity.setName(wrapper.getString("Name"));
+		opportunity.setCloseDate(wrapper.getDate("CloseDate"));
 		opportunity.setIsClosed(wrapper.getBoolean("IsClosed"));
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
 		opportunity.setPricebookId(wrapper.getString("PricebookId"));

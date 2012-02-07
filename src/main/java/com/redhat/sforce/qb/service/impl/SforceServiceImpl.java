@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -21,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.exception.SforceServiceException;
@@ -135,8 +137,8 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		getMethod.setRequestHeader("Content-type", "application/json");
 		
 		JSONObject response = null;
-		HttpClient httpclient = new HttpClient();
         try {
+        	HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(getMethod);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
 				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
@@ -272,13 +274,8 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		try {
 			httpclient.executeMethod(getMethod );
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				try {
-					JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-					queryResult = response.getJSONArray("records");
-					
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+				queryResult = response.getJSONArray("records");
 			} else {
 				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));		
 			}
@@ -288,6 +285,8 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		} finally {
 			getMethod.releaseConnection();
 		}
@@ -296,31 +295,23 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
-	public String create(String accessToken, String sobject, JSONObject jsonObject) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/sobjects/" + sobject;
+	public String saveQuote(String accessToken, JSONObject jsonObject) throws SforceServiceException {
+        String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/saveQuote";	
 		
-		PostMethod postMethod = new PostMethod(url);
+		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
-		postMethod.setRequestHeader("Content-type", "application/json");
-		
-		String id = null;	
-		try {
-			postMethod.setRequestEntity(new StringRequestEntity(jsonObject.toString(), "application/json", null));
-			
-			HttpClient httpclient = new HttpClient();
+		postMethod.setRequestHeader("Content-type", "application/json");		
+					
+		JSONObject response = null;
+        try {
+        	postMethod.setRequestEntity(new StringRequestEntity(jsonObject.toString(), "application/json", null));	
+        	
+        	HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(postMethod);
-			
-			if (postMethod.getStatusCode() == HttpStatus.SC_CREATED) {
-				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));
-				System.out.println("Create response: " + response.toString(2));
-
-				if (response.getBoolean("success")) {
-					System.out.println("created: " + response.getString("id"));
-					id = response.getString("id");
-				}
-
+			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {	
+				response = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));	
 			} else {
-				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));									
+				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
 			}
 		} catch (HttpException e) {
 			// TODO Auto-generated catch block
@@ -329,13 +320,13 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block					
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			postMethod.releaseConnection();
 		}
-		
-		return id;
+        
+        return response.toString();
 	}
 
 	@Override
@@ -395,7 +386,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
-	public void addOpportunityLineItems(String accessToken, String quoteId, String[] opportunityLineItemIds) throws SforceServiceException {
+	public void addOpportunityLineItems(String accessToken, String quoteId, JSONArray jsonArray) throws SforceServiceException {
 		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
 		
 		PostMethod postMethod = new PostMethod(url);	
@@ -404,19 +395,18 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		
 		try {		
 			
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("OpportunityLineIds", opportunityLineItemIds);
-
-			postMethod.setRequestEntity(new StringRequestEntity(jsonObject.toString(), "application/json", null));
+			postMethod.setRequestEntity(new StringRequestEntity(jsonArray.toString(), "application/json", null));
 			
-			System.out.println("add opp line item request: " + jsonObject.toString(2));
-			
+			System.out.println("addOpportunityLineItems - " + jsonArray.toString());
+						
 			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(postMethod);
 			
-			if (postMethod.getStatusCode() == 400) {				
-				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
-			} 
+			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {	
+				//response = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));	
+			} else {
+				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
+			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -424,9 +414,6 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {

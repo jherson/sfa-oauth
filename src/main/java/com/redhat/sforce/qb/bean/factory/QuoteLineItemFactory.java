@@ -34,6 +34,7 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
 		    quoteLineItem.setListPrice(wrapper.getDouble("ListPrice__c"));
 		    quoteLineItem.setName(wrapper.getString("Name"));
+		    quoteLineItem.setDescription(wrapper.getString("Description"));
 		    quoteLineItem.setNewOrRenewal(wrapper.getString("NewOrRenewal__c"));
 		    quoteLineItem.setOpportunityId(wrapper.getString("OpportunityId__c"));
 		    quoteLineItem.setOpportunityLineItemId(wrapper.getString("OpportunityLineItemId__c"));
@@ -47,6 +48,10 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setTotalPrice(wrapper.getDouble("TotalPrice__c"));
 		    quoteLineItem.setUnitPrice(wrapper.getDouble("UnitPrice__c"));
 		    quoteLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
+		    quoteLineItem.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product__r")));
+		    
+		    if (quoteLineItem.getDescription() == null)
+		    	quoteLineItem.setDescription(quoteLineItem.getProduct().getDescription());
 		    
 		    quoteLineItemList.add(quoteLineItem);
 		}
@@ -85,6 +90,7 @@ public class QuoteLineItemFactory {
 			JSONObject jsonObject = new JSONObject();
 			try {
 				jsonObject.put("Id", quoteLineItem.getId());
+				jsonObject.put("Description", quoteLineItem.getDescription());
 				jsonObject.put("Configured_SKU__c", quoteLineItem.getConfiguredSku());
 				jsonObject.put("ContractNumbers__c", quoteLineItem.getContractNumbers());
 				jsonObject.put("CurrencyIsoCode", quoteLineItem.getCurrencyIsoCode());

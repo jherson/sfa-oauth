@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.redhat.sforce.qb.bean.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.SessionUser;
@@ -62,18 +64,19 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		}
 		
 		try {
-			sessionUser = SessionUserFactory.parseSessionUser(sforceService.getCurrentUserInfo(getSessionId()));
+			sessionUser = SessionUserFactory.parseSessionUser(sforceService.getCurrentUserInfo(getSessionId()));			
+						
 			System.out.println("Session user name: " + sessionUser.getName());
 			System.out.println("Session user profile name: " + sessionUser.getProfileName());
 			System.out.println("Session user role name: " + sessionUser.getRoleName());					
 			System.out.println("Session user locale: " + sessionUser.getLocale());
 			
-			context.getViewRoot().setLocale(sessionUser.getLocale());
-			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}			
+		}	
+		
+		context.getViewRoot().setLocale(sessionUser.getLocale());
 	}
 	
 	@Override
@@ -106,15 +109,10 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		System.out.println(getQuoteId());
 		return null;
 	}
-	
-	@Override
-	public void createQuote(Quote quote) throws SforceServiceException {
-		sforceService.create(getSessionId(), "Quote__c", QuoteFactory.toJson(quote));		
-	}
 
 	@Override
-	public void updateQuote(Quote quote) throws SforceServiceException {
-		sforceService.update(getSessionId(), "Quote__c", quote.getId(), QuoteFactory.toJson(quote));		
+	public void saveQuote(Quote quote) throws SforceServiceException {
+		sforceService.saveQuote(getSessionId(), QuoteFactory.toJson(quote));		
 	}
 	
 	@Override
@@ -138,8 +136,8 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
-	public void addOpportunityLineItems(Quote quote, String[] opportunityLineIds) throws SforceServiceException {
-		sforceService.addOpportunityLineItems(getSessionId(), quote.getId(), opportunityLineIds);
+	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SforceServiceException {
+		sforceService.addOpportunityLineItems(getSessionId(), quote.getId(), OpportunityLineItemFactory.serializeOpportunityLineItems(opportunityLineItems));
 	}
 //	
 //	public List<String> queryCurrencies() {
@@ -254,15 +252,15 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		                   "YearlySalesPrice__c, " +
 		                   "NewOrRenewal__c, " +
 		                   "QuoteId__c, " +
-		                   "Product__c.Id, " +
-		                   "Product__c.Description, " +
-		                   "Product__c.Name, " +
-		                   "Product__c.Family, " +
-		                   "Product__c.ProductCode, " +
-		                   "Product__c.Primary_Business_Unit__c, " + 
-		                   "Product__c.Product_Line__c, " +
-		                   "Product__c.Unit_Of_Measure__c, " +
-		                   "Product__c.Term__c, " +
+		                   "Product__r.Id, " +
+		                   "Product__r.Description, " +
+		                   "Product__r.Name, " +
+		                   "Product__r.Family, " +
+		                   "Product__r.ProductCode, " +
+		                   "Product__r.Primary_Business_Unit__c, " + 
+		                   "Product__r.Product_Line__c, " +
+		                   "Product__r.Unit_Of_Measure__c, " +
+		                   "Product__r.Term__c, " +
 		                   "TotalPrice__c, " +
 		                   "StartDate__c, " +
 		                   "PricebookEntryId__c, " +
@@ -299,7 +297,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		 	               "EndDate__c, " +
 		 	               "ProrateYearUnitPrice__c, " +
 		 	               "QuoteLineItemId__r.ProductDescription__c, " +
-		 	               "QuoteLineItemId__r.ProductCode__c, " +
+		 	               "QuoteLineItemId__r.Product__r.ProductCode, " +
 		 	               "QuoteLineItemId__r.StartDate__c, " +
 		 	               "QuoteLineItemId__r.EndDate__c, " +
 		 	               "QuoteLineItemId__r.Term__c, " +
@@ -308,7 +306,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		 	               "QuoteLineItemId__r.TotalPrice__c, " +
 		 	               "QuoteLineItemId__r.ContractNumbers__c " +
 		 	        "From   QuoteLineItemSchedule__r " +
-		 	        "Order By EndDate__c, QuoteLineItemId__r.ProductCode__c) " +
+		 	        "Order By EndDate__c, QuoteLineItemId__r.Product__r.ProductCode) " +
 		    "From   Quote__c " +
 	 	    "Where  OpportunityId__c = '#opportunityId#' " +
 		    "Order  By Number__c";

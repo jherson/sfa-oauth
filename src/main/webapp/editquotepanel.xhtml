@@ -10,18 +10,19 @@
 	style="border-color: #C27E3A; background-color: #FCF9F5; ">
 
 	<f:facet name="header">
-		<rich:toolbar height="18" itemSeparator="grid"
+		<rich:toolbar height="16" itemSeparator="grid"
 			style="border: 0; background-color: #FCF9F5;">
 
 			<rich:toolbarGroup location="right">
 
 				<a4j:commandLink value="#{msgs.save}"					
 					action="#{quoteManager.saveQuote(quoteForm.selectedQuote)}"
-					render="quoteList, details" ajaxSingle="true" status="ajaxStatus" />
+					render="quoteList, :details" ajaxSingle="true" />
 
 				<a4j:commandLink value="#{msgs.cancel}"
 					immediate="true"
-					action="#{quoteManager.cancelEditQuote()}" bypassUpdates="true"
+					action="#{quoteManager.cancelQuote(quoteForm.selectedQuote)}" 
+					bypassUpdates="true"
 					type="reset" render="details" ajaxSingle="true" execute="@this" />
 
 			</rich:toolbarGroup>
@@ -180,10 +181,10 @@
 				rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 			<h:selectOneMenu value="#{quoteForm.selectedQuote.term}"
 				rendered="#{not quoteForm.opportunity.isClosed and not empty quoteForm.selectedQuote}">
-				<f:selectItem itemLabel="" itemValue="" />
 				<f:selectItem itemLabel="1" itemValue="365" />
 				<f:selectItem itemLabel="3" itemValue="1095" />
-			</h:selectOneMenu>			
+			</h:selectOneMenu>	
+			<h:outputText value="#{msgs.startDate}" />		
 			<h:outputText value="#{quoteForm.selectedQuote.startDate}"
 				rendered="#{quoteForm.opportunity.isClosed or empty quoteForm.selectedQuote}" />
 			<rich:calendar value="#{quoteForm.selectedQuote.startDate}"
@@ -218,34 +219,8 @@
 
 	<br />
 
-	<rich:tabPanel switchType="client">
-		<rich:tab header="#{msgs.quoteLineItems}">
-
-			<h:panelGroup style="display: block; text-align: right">
-
-				<a4j:commandButton id="importProducts"
-					value="#{msgs.addOpportunityProducts}"
-					action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
-					rendered="#{not empty quoteForm.selectedQuote}"
-					render="quoteList, details"
-					rerender="#{rich:clientId('addOpportunityProductsPanel')}"
-					ajaxSingle="true" status="ajaxStatus" />
-
-				<h:outputText value=" " escape="false" />
-
-
-			</h:panelGroup>
-
 			<ui:include src="editquoteproducts.xhtml" />
 
-
-		</rich:tab>
-
-		<rich:tab header="#{msgs.discounts}">
-
-
-		</rich:tab>
-	</rich:tabPanel>
 
 </rich:panel>
 </html>

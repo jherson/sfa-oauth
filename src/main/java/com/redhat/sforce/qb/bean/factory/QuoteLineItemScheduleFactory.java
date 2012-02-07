@@ -32,7 +32,7 @@ public class QuoteLineItemScheduleFactory {
 		    quoteLineItemSchedule.setQuoteLineItemId(wrapper.getString("QuoteLineItemId__c"));
 		    quoteLineItemSchedule.setEndDate(wrapper.getDate("EndDate__c"));		    
 		    quoteLineItemSchedule.setProductDescription(wrapper.getString("QuoteLineItemId__r","ProductDescription__c"));
-		    quoteLineItemSchedule.setProductCode(wrapper.getString("QuoteLineItemId__r","ProductCode__c"));
+		    //quoteLineItemSchedule.setProductCode(wrapper.getJSONObject("QuoteLineItemId__r").getJSONObject("Product__r").getString("ProductCode"));
 		    quoteLineItemSchedule.setTerm(wrapper.getInteger("QuoteLineItemId__r","Term__c"));
 		    quoteLineItemSchedule.setQuantity(wrapper.getInteger("QuoteLineItemId__r","Quantity__c"));
 		    quoteLineItemSchedule.setYearlySalesPrice(wrapper.getDouble("QuoteLineItemId__r","YearlySalesPrice__c"));

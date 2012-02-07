@@ -51,23 +51,18 @@ public class QuoteFormBean implements QuoteForm {
 	public void setSforceSession(SforceSession sforceSession) {
 		this.sforceSession = sforceSession;
 	}
-	
-	@Override
-	public void toggleEditMode() {
-		setEditMode(!getEditMode());
-	}
 
 	@Override
 	public void editQuote(Quote quote) {
 		setSelectedQuote(quote);
-		toggleEditMode();
+		setEditMode(true);
 	}
 
 	@Override
 	public void createQuote(Opportunity opportunity) {			
 		Quote quote = new Quote(opportunity);			
 		setSelectedQuote(quote);			
-		toggleEditMode();
+		setEditMode(true);
 	}
 
 	@Override
@@ -95,11 +90,22 @@ public class QuoteFormBean implements QuoteForm {
 		try {
 			setOpportunity(sforceSession.queryOpportunity());
 			setQuoteList(sforceSession.queryQuotes());
+									
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}		
 	}	
+	
+	public void refreshSelectedQuote() {
+		UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm.quoteList");
+		for (Object selectionKey : selection) {
+            dataTable.setRowKey(selectionKey);
+            if (dataTable.isRowAvailable()) {
+            	setSelectedQuote((Quote) dataTable.getRowData());
+            }
+        }
+	}
 	
 	@Override
 	public Quote getSelectedQuote() {
@@ -111,12 +117,14 @@ public class QuoteFormBean implements QuoteForm {
 		this.selectedQuote = selectedQuote;
 	}
 	
-	public Boolean getEditMode() {
-		return editMode;
-	}
-
+	@Override
 	public void setEditMode(Boolean editMode) {
 		this.editMode = editMode;
+	}
+	
+	public Boolean getEditMode() {
+		System.out.println(editMode);
+		return editMode;
 	}
 
 	public void selectionListener(AjaxBehaviorEvent event) {

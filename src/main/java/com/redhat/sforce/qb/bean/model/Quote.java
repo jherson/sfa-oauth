@@ -1,6 +1,8 @@
 package com.redhat.sforce.qb.bean.model;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
@@ -36,7 +38,7 @@ public class Quote extends SObject {
 	private Date expirationDate;
 	private Date startDate;
 	private Date endDate;
-	private Double term;
+	private Integer term;
 	private Date effectiveDate;
 	private String referenceNumber;
 	private Boolean isNonStandardPayment;
@@ -55,7 +57,7 @@ public class Quote extends SObject {
     }
     
     public Quote(Opportunity opportunity) {
-        super();
+        super();        
         setOpportunityId(opportunity.getId());
 		setOwnerId(opportunity.getOwner().getId());
 		setOwnerName(opportunity.getOwner().getName());
@@ -63,8 +65,24 @@ public class Quote extends SObject {
 		setType("Standard");
 		setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
 		setPricebookId(opportunity.getPricebookId());
-		setEffectiveDate(new java.util.Date());
-		setExpirationDate(getEffectiveDate());
+		setVersion(new Double(0));
+		setAmount(new Double(0));
+		setTerm(365);
+		setEffectiveDate(new Date());
+		
+		GregorianCalendar calendar = new GregorianCalendar();
+		
+		calendar.setTime(getEffectiveDate());
+		calendar.add(Calendar.DATE, 15);
+		setExpirationDate(calendar.getTime());
+		
+		calendar.setTime(opportunity.getCloseDate());
+		calendar.add(Calendar.DATE, 1);
+        setStartDate(calendar.getTime());
+        
+        calendar.add(Calendar.YEAR, getTerm());
+        calendar.add(Calendar.DATE, -1);
+        setEndDate(calendar.getTime());		
     }
     
 	public String getOpportunityId() {
@@ -291,11 +309,11 @@ public class Quote extends SObject {
 		this.endDate = endDate;
 	}
 	
-	public Double getTerm() {
+	public Integer getTerm() {
 		return term;
 	}
 	
-	public void setTerm(Double term) {
+	public void setTerm(Integer term) {
 		this.term = term;
 	}
 	

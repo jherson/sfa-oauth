@@ -51,7 +51,7 @@ public class QuoteFactory {
 			quote.setPricebookId(wrapper.getString("PricebookId__c"));
 			quote.setReferenceNumber(wrapper.getString("ReferenceNumber__c"));
 			quote.setEndDate(wrapper.getDate("StartDate__c"));
-			quote.setTerm(wrapper.getDouble("Term__c"));			
+			quote.setTerm(wrapper.getInteger("Term__c"));			
 			quote.setType(wrapper.getString("Type__c"));
 			quote.setVersion(wrapper.getDouble("Version__c"));
 			quote.setYear1PaymentAmount(wrapper.getDouble("Year1PaymentAmount__c"));		
@@ -84,7 +84,8 @@ public class QuoteFactory {
 	public static JSONObject toJson(Quote quote) {				
 		JSONObject jsonObject = new JSONObject();
 
-		try {		
+		try {
+			jsonObject.put("Id", quote.getId());
 			jsonObject.put("Amount__c", quote.getAmount());
 			jsonObject.put("Comments__c", quote.getComments());
 			jsonObject.put("ContactId__c", quote.getContactId());
@@ -96,7 +97,6 @@ public class QuoteFactory {
 			jsonObject.put("IsActive__c", quote.getIsActive());
 			jsonObject.put("IsCalculated__c", quote.getIsCalculated());
 			jsonObject.put("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
-			jsonObject.put("Link__c", quote.getLink());
 			jsonObject.put("Name", quote.getName());
 			jsonObject.put("OpportunityId__c", quote.getOpportunityId());
 			jsonObject.put("QuoteOwnerId__c", quote.getOwnerId());
