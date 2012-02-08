@@ -13,7 +13,6 @@ import javax.faces.context.FacesContext;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
@@ -41,6 +40,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void refresh() {
 		getQuoteForm().queryAllData();
+		getQuoteForm().refreshSelectedQuote();
 	}
 	
 	@Override
@@ -52,8 +52,9 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void saveQuote(Quote quote) {		
 		try {
 		    sforceSession.saveQuote(quote);
+		    saveQuoteLineItems(quote);
 		    refresh();
-		    setEditMode(false);
+		    setEditMode(false);		    
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -65,8 +66,6 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		try {
 		    sforceSession.saveQuoteLineItems(quote.getQuoteLineItems());
 		    sforceSession.calculateQuote(quote.getId());
-		    refresh();
-		    setEditMode(false);
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -79,7 +78,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		    sforceSession.deleteQuoteLineItems(quote.getQuoteLineItems());
 		    sforceSession.calculateQuote(quote.getId());
 		    refresh();
-		    getQuoteForm().setSelectedQuote(quote);
+		    getQuoteForm().refreshSelectedQuote();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -128,6 +127,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		try {
 			sforceSession.addOpportunityLineItems(quote, opportunity.getOpportunityLineItems());		    
 		    refresh();
+		    getQuoteForm().refreshSelectedQuote();
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -136,16 +136,24 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override 
 	public void activateQuote(Quote quote) {
-		sforceSession.activateQuote(quote);
-		refresh();
-		getQuoteForm().refreshSelectedQuote();
+	//	try {
+		    sforceSession.activateQuote(quote);
+		    refresh();
+//		} catch (SforceServiceException e) {
+//			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+//			FacesContext.getCurrentInstance().addMessage(null, message);
+//		}		
 	}
 	
 	@Override
 	public void calculateQuote(Quote quote) {
-		sforceSession.calculateQuote(quote.getId());		
-		refresh();
-		getQuoteForm().refreshSelectedQuote();
+		//try {
+		    sforceSession.calculateQuote(quote.getId());		
+		    refresh();		
+	//	} catch (SforceServiceException e) {
+	//		// TODO Auto-generated catch block
+	//		e.printStackTrace();
+	//	}
 	}
 	
 	@Override
@@ -156,7 +164,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void deleteQuote(Quote quote) {
 		sforceSession.deleteQuote(quote);
-		refresh();		
+		getQuoteForm().queryAllData();		
 		getQuoteForm().setSelectedQuote(null);
 	}
 	

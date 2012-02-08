@@ -13,9 +13,9 @@ public interface SforceSession {
 
 	public Opportunity queryOpportunity() throws SforceServiceException;
 	public List<Quote> queryQuotes() throws SforceServiceException;
-	public Quote queryQuote();
-	public void setSessionUser(SessionUser sessionUser);
+	public Quote queryQuote(String quoteId) throws SforceServiceException;	
 	public SessionUser getSessionUser();
+	public void setSessionUser(SessionUser sessionUser);
 	public void saveQuote(Quote quote) throws SforceServiceException;
 	public void activateQuote(Quote quote);
 	public void calculateQuote(String quoteId);
@@ -24,5 +24,4 @@ public interface SforceSession {
 	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SforceServiceException;
 	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
-
 }

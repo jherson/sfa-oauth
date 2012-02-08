@@ -10,10 +10,7 @@
 
 	<rich:toolbarGroup location="right">
 
-		<a4j:commandLink value="#{msgs.addOpportunityProducts}"
-		    rendered="#{quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode and not empty quoteForm.opportunity.opportunityLineItems}"
-			action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
-			render="quoteList, details" ajaxSingle="true" />
+		
 
 	</rich:toolbarGroup>
 </rich:toolbar>

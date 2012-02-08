@@ -10,9 +10,9 @@
 	style="border-color: #C27E3A; background-color: #FCF9F5;">
 	
 	<rich:toolbar height="18" itemSeparator="grid">
-
-		<rich:toolbarGroup location="right">
-
+	    
+	    <rich:toolbarGroup location="left">	    
+	    
 			<a4j:commandLink value="#{msgs.delete}"
 				action="#{quoteManager.deleteQuoteLineItems(quoteForm.selectedQuote)}"
 				disabled="#{empty quoteForm.selectedQuote}"
@@ -24,6 +24,15 @@
 				disabled="#{empty quoteForm.selectedQuote}"
 				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
 				execute="@this" />					
+	    
+	    </rich:toolbarGroup>
+
+		<rich:toolbarGroup location="right">
+		
+		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
+		        rendered="#{quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode and not empty quoteForm.opportunity.opportunityLineItems}"
+			    action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
+			    render="quoteList, details" ajaxSingle="true" />
 
 		</rich:toolbarGroup>
 	</rich:toolbar>
@@ -39,7 +48,10 @@
 
 		<rich:column>
 			<f:facet name="header">#{msgs.productCode}</f:facet>
-			<h:outputText value="#{lineItem.product.productCode}" />
+			<h:outputText value="#{lineItem.product.productCode}" 
+			    rendered="#{not quoteForm.editMode}" />
+			<h:inputText value="#{lineItem.product.productCode}" 
+			    rendered="#{quoteForm.editMode}" />
 		</rich:column>
 
 		<rich:column>

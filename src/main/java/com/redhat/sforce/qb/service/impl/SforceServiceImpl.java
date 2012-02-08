@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -22,9 +21,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
+import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
 
@@ -175,6 +175,23 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		
 		return null;
 	}
+	
+	@Override
+	public Quote getQuote(String accessToken, String quoteId) throws SforceServiceException {
+		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/quote?quoteId=" + quoteId;
+		JSONObject jsonObject = doGet(accessToken, url);
+		try {
+			return QuoteFactory.deserialize(jsonObject);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		return null;
+	}	
 	
 	@Override
 	public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException {
@@ -396,9 +413,7 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		try {		
 			
 			postMethod.setRequestEntity(new StringRequestEntity(jsonArray.toString(), "application/json", null));
-			
-			System.out.println("addOpportunityLineItems - " + jsonArray.toString());
-						
+												
 			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(postMethod);
 			

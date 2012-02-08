@@ -85,7 +85,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		
 		if (queryResults != null) {		
 	    	try {
-				return QuoteFactory.fromJSON(queryResults);
+				return QuoteFactory.deserialize(queryResults);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -104,15 +104,16 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
-	public Quote queryQuote() {
-		// TODO add queryQuote function
-		System.out.println(getQuoteId());
-		return null;
+	public Quote queryQuote(String quoteId) throws SforceServiceException {
+		Quote quote = sforceService.getQuote(getSessionId(), quoteId);
+		System.out.println(quote.getId());
+		System.out.println(quote.getLastModifiedDate());
+		return quote;
 	}
 
 	@Override
 	public void saveQuote(Quote quote) throws SforceServiceException {
-		sforceService.saveQuote(getSessionId(), QuoteFactory.toJson(quote));		
+		sforceService.saveQuote(getSessionId(), QuoteFactory.serialize(quote));		
 	}
 	
 	@Override

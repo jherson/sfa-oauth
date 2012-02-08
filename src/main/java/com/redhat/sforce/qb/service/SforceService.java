@@ -1,12 +1,10 @@
 package com.redhat.sforce.qb.service;
 
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
+import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.exception.SforceServiceException;
 
 public interface SforceService {
@@ -21,6 +19,7 @@ public interface SforceService {
     public void addOpportunityLineItems(String accessToken, String quoteId, JSONArray jsonArray) throws SforceServiceException;
     public JSONObject getCurrentUserInfo(String accessToken);
     public Opportunity getOpportunity(String accessToken, String opportunityId) throws SforceServiceException;
+    public Quote getQuote(String accessToken, String quoteId) throws SforceServiceException;
     public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;
     public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;
 }

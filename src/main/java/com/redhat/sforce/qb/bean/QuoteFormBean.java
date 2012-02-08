@@ -90,19 +90,20 @@ public class QuoteFormBean implements QuoteForm {
 		try {
 			setOpportunity(sforceSession.queryOpportunity());
 			setQuoteList(sforceSession.queryQuotes());
-									
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}		
 	}	
 	
-	public void refreshSelectedQuote() {
-		UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm.quoteList");
-		for (Object selectionKey : selection) {
+	public void refreshSelectedQuote() {		
+		UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteList");		
+        setSelection(dataTable.getSelection());
+		for (Object selectionKey : getSelection()) {
             dataTable.setRowKey(selectionKey);
             if (dataTable.isRowAvailable()) {
-            	setSelectedQuote((Quote) dataTable.getRowData());
+            	Quote quote = quoteList.get(dataTable.getRowIndex());
+            	setSelectedQuote(quote);
             }
         }
 	}
@@ -123,7 +124,6 @@ public class QuoteFormBean implements QuoteForm {
 	}
 	
 	public Boolean getEditMode() {
-		System.out.println(editMode);
 		return editMode;
 	}
 
