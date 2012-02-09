@@ -58,7 +58,7 @@ public class QuoteFactory {
 		quote.setPayNow(wrapper.getString("PayNow__c"));
 		quote.setPricebookId(wrapper.getString("PricebookId__c"));
 		quote.setReferenceNumber(wrapper.getString("ReferenceNumber__c"));
-		quote.setEndDate(wrapper.getDate("StartDate__c"));
+		quote.setStartDate(wrapper.getDate("StartDate__c"));
 		quote.setTerm(wrapper.getInteger("Term__c"));			
 		quote.setType(wrapper.getString("Type__c"));
 		quote.setVersion(wrapper.getDouble("Version__c"));
@@ -117,7 +117,7 @@ public class QuoteFactory {
 			jsonObject.put("Year3PaymentAmount__c", quote.getYear3PaymentAmount());
 			jsonObject.put("Year4PaymentAmount__c", quote.getYear4PaymentAmount());
 			jsonObject.put("Year5PaymentAmount__c", quote.getYear5PaymentAmount());
-			jsonObject.put("Year6PaymentAmount__c", quote.getYear6PaymentAmount());					
+			jsonObject.put("Year6PaymentAmount__c", quote.getYear6PaymentAmount());
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

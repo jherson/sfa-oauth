@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.bean;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,7 +18,8 @@ import org.richfaces.component.UIExtendedDataTable;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.exception.SforceServiceException;
+import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="quoteForm")
 @ViewScoped
@@ -62,7 +64,7 @@ public class QuoteFormBean implements QuoteForm {
 	public void createQuote(Opportunity opportunity) {			
 		Quote quote = new Quote(opportunity);			
 		setSelectedQuote(quote);			
-		setEditMode(true);
+		setEditMode(true);		
 	}
 
 	@Override

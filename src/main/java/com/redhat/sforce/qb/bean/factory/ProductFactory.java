@@ -21,6 +21,8 @@ public class ProductFactory {
 		product.setProductLine(wrapper.getString("Product_Line__c"));
 		product.setUnitOfMeasure(wrapper.getString("Unit_Of_Measure__c"));
 		product.setTerm(wrapper.getInteger("Term__c"));
+		product.setConfigurable(wrapper.getBoolean("Configurable__c"));
+		product.setIsActive(wrapper.getBoolean("IsActive"));
 		
 		return product;
 	}

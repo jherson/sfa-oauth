@@ -8,33 +8,33 @@
 
 <rich:panel id="viewQuoteProducts"
 	style="border-color: #C27E3A; background-color: #FCF9F5;">
-	
+
 	<rich:toolbar height="18" itemSeparator="grid">
-	    
-	    <rich:toolbarGroup location="left">	    
-	    
+
+		<rich:toolbarGroup location="left">
+
 			<a4j:commandLink value="#{msgs.delete}"
 				action="#{quoteManager.deleteQuoteLineItems(quoteForm.selectedQuote)}"
 				disabled="#{empty quoteForm.selectedQuote}"
-				render="quoteList, details"
-				ajaxSingle="true"  />
+				render="quoteList, details" ajaxSingle="true" />
 
-			<a4j:commandLink value="#{msgs.reset}"
-				immediate="true" status="ajaxStatus"
-				disabled="#{empty quoteForm.selectedQuote}"
+			<a4j:commandLink value="#{msgs.reset}" immediate="true"
+				status="ajaxStatus" disabled="#{empty quoteForm.selectedQuote}"
 				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
-				execute="@this" />					
-	    
-	    </rich:toolbarGroup>
-
-		<rich:toolbarGroup location="right">
-		
-		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
-		        rendered="#{quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode and not empty quoteForm.opportunity.opportunityLineItems}"
-			    action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
-			    render="quoteList, details" ajaxSingle="true" />
+				execute="@this" />
 
 		</rich:toolbarGroup>
+
+		<rich:toolbarGroup location="right">
+
+			<a4j:commandLink value="#{msgs.addOpportunityProducts}"
+				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode}"
+				disabled="#{empty quoteForm.opportunity.opportunityLineItems}"
+				action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
+				render="quoteList, details" ajaxSingle="true" />
+
+		</rich:toolbarGroup>
+		
 	</rich:toolbar>
 
 	<rich:dataTable style="width: 100%" var="lineItem"
@@ -48,15 +48,18 @@
 
 		<rich:column>
 			<f:facet name="header">#{msgs.productCode}</f:facet>
-			<h:outputText value="#{lineItem.product.productCode}" 
-			    rendered="#{not quoteForm.editMode}" />
-			<h:inputText value="#{lineItem.product.productCode}" 
-			    rendered="#{quoteForm.editMode}" />
+			<h:outputText value="#{lineItem.product.productCode}"
+				rendered="#{not quoteForm.editMode}" />
+			<h:inputText value="#{lineItem.product.productCode}"
+				rendered="#{quoteForm.editMode}" />
 		</rich:column>
 
 		<rich:column>
 			<f:facet name="header">#{msgs.configuredSku}</f:facet>
-			<h:outputText value="#{lineItem.configuredSku}" />
+			<h:outputText value="#{lineItem.configuredSku}"
+				rendered="#{not quoteForm.editMode or not lineItem.product.configurable}" />
+			<h:inputText value="#{lineItem.configuredSku}"
+				rendered="#{quoteForm.editMode and lineItem.product.configurable}" />
 		</rich:column>
 
 		<rich:column>
@@ -66,7 +69,14 @@
 
 		<rich:column style="text-align: center;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
-			<h:outputText value="#{lineItem.startDate}">
+			<h:outputText value="#{lineItem.startDate}"
+				rendered="#{not quoteForm.editMode}">
+				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
+					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
+					type="date" />
+			</h:outputText>
+			<h:outputText value="#{lineItem.startDate}"
+				rendered="#{quoteForm.editMode}">
 				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 					type="date" />
@@ -75,7 +85,14 @@
 
 		<rich:column style="text-align: center;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
-			<h:outputText value="#{lineItem.endDate}">
+			<h:outputText value="#{lineItem.endDate}"
+				rendered="#{not quoteForm.editMode}">
+				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
+					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
+					type="date" />
+			</h:outputText>
+			<h:outputText value="#{lineItem.endDate}"
+				rendered="#{quoteForm.editMode}">
 				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 					type="date" />
@@ -84,30 +101,73 @@
 
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.listPrice}</f:facet>
-			<h:outputText value="#{lineItem.listPrice}">
+			<h:outputText value="#{lineItem.listPrice}"
+				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+					pattern="#,##0.00;(#,##0.00)"/>
 			</h:outputText>
+			<h:inputText value="#{lineItem.listPrice}"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"
+					type="number"/>					
+			</h:inputText>
 		</rich:column>
+		
+		<rich:column style="text-align: right;">
+			<f:facet name="header">#{msgs.salesPrice}</f:facet>
+			<h:outputText value="#{lineItem.yearlySalesPrice}"
+				rendered="#{not quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"/>
+			</h:outputText>
+			<h:inputText value="#{lineItem.yearlySalesPrice}"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"
+					type="number"/>					
+			</h:inputText>
+		</rich:column>		
 
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.quantity}</f:facet>
-			<h:outputText value="#{lineItem.quantity}" />
+			<h:outputText value="#{lineItem.quantity}"
+				rendered="#{not quoteForm.editMode}" />
+			<h:inputText value="#{lineItem.quantity}"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0;(#,##0)"
+					type="number"/>
+			</h:inputText>
 		</rich:column>
 
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
-			<h:outputText value="#{lineItem.unitPrice}">
+			<h:outputText value="#{lineItem.unitPrice}"
+				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+					pattern="#,##0.00;(#,##0.00)"/>
+			</h:outputText>
+			<h:outputText value="#{lineItem.unitPrice}"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"
+					type="number"/>
 			</h:outputText>
 		</rich:column>
 
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
-			<h:outputText value="#{lineItem.totalPrice}">
+			<h:outputText value="#{lineItem.totalPrice}"
+				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+					pattern="#,##0.00;(#,##0.00)"/>
+			</h:outputText>
+			<h:outputText value="#{lineItem.totalPrice}"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"
+					type="number"/>
 			</h:outputText>
 		</rich:column>
 

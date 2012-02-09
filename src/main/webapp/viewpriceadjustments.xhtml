@@ -6,47 +6,45 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
 
-<rich:panel 
+<rich:panel id="viewPriceAdjustments"
 	style="border-color: #C27E3A; background-color: #FCF9F5;">
 	
 	<rich:toolbar height="18" itemSeparator="grid">
 
-		<rich:toolbarGroup location="right">
-
-			<a4j:commandLink value="#{msgs.reset}"
-				immediate="true" status="ajaxStatus"
-				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
-				disabled="#{empty quoteForm.selectedQuote}"
-				execute="@this" />
-
-		</rich:toolbarGroup>
 	</rich:toolbar>
 
 	<rich:dataTable style="width: 100%" var="priceAdjustment"
 		noDataLabel="#{msgs.noRecords}"
 		value="#{quoteForm.selectedQuote.quotePriceAdjustments}">
 
-		<rich:column>
+		<rich:column style="width: 20%;">
 			<f:facet name="header">#{msgs.reason}</f:facet>
 			<h:outputText value="#{priceAdjustment.reason}" />
 		</rich:column>
 
-		<rich:column>
+		<rich:column style="text-align: right; width: 20%;">
 			<f:facet name="header">#{msgs.percent}</f:facet>
-			<h:outputText value="#{priceAdjustment.percent}" />
-		</rich:column>
-
-		<rich:column>
-			<f:facet name="header">#{msgs.amount}</f:facet>
-			<h:outputText value="#{priceAdjustment.amount}" />
+			<h:outputText value="#{priceAdjustment.percent}"
+			    rendered="#{not quoteForm.editMode}" />
+			<h:inputText value="#{priceAdjustment.percent}"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"
+					type="number"/>					
+			</h:inputText>    
 		</rich:column>
 		
-		<rich:column>
+		<rich:column style="text-align: right; width: 20%;">
 			<f:facet name="header">#{msgs.amountBeforeAdjustment}</f:facet>
 			<h:outputText value="#{priceAdjustment.amountBeforeAdjustment}" />
 		</rich:column>
+
+		<rich:column style="text-align: right; width: 20%;">
+			<f:facet name="header">#{msgs.amount}</f:facet>
+			<h:outputText value="#{priceAdjustment.amount}" />
+		</rich:column>		
 		
-		<rich:column>
+		<rich:column style="text-align: right; width: 20%;">
 			<f:facet name="header">#{msgs.amountAfterAdjustment}</f:facet>
 			<h:outputText value="#{priceAdjustment.amountAfterAdjustment}" />
 		</rich:column>

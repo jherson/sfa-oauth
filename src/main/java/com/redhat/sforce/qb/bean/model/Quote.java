@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.bean.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -82,7 +83,15 @@ public class Quote extends SObject {
         
         calendar.add(Calendar.YEAR, getTerm());
         calendar.add(Calendar.DATE, -1);
-        setEndDate(calendar.getTime());		
+        setEndDate(calendar.getTime());	
+        
+        String[] reasons = new String[] {"Platform and Cloud", "Middleware", "Services"};
+		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
+		for (int i = 0; i < reasons.length; i++) {
+			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment(0.00, "Percent", 0.00, reasons[i], "Amount", 0.00, 0.00);			
+			quotePriceAdjustmentList.add(quotePriceAdjustment);
+		}		
+		setQuotePriceAdjustments(quotePriceAdjustmentList);
     }
     
 	public String getOpportunityId() {

@@ -6,8 +6,9 @@ import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
+import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.bean.model.SessionUser;
-import com.redhat.sforce.qb.exception.SforceServiceException;
+import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 public interface SforceSession {
 
@@ -24,4 +25,5 @@ public interface SforceSession {
 	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SforceServiceException;
 	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
+	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SforceServiceException;
 }

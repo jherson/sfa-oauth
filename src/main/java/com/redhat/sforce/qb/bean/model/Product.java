@@ -11,6 +11,8 @@ public class Product extends SObject {
     private String productLine;
     private String unitOfMeasure;
     private Integer term;
+    private Boolean configurable;
+    private Boolean isActive;
 
     public Product() {
         super();
@@ -78,5 +80,21 @@ public class Product extends SObject {
 
 	public void setTerm(Integer term) {
 		this.term = term;
+	}
+	
+	public Boolean getConfigurable() {
+		return configurable;
+	}
+	
+	public void setConfigurable(Boolean configurable) {
+		this.configurable = configurable;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}	
 }

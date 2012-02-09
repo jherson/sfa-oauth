@@ -6,11 +6,13 @@ public class OpportunityLineItem extends SObject {
 
 	private static final long serialVersionUID = 1L;
     private String opportunityId;
+    private String description;
     private Date actualStartDate;
     private Date actualEndDate;
     private Integer actualTerm;
     private String contractNumbers;
     private Double listPrice;
+    private Double basePrice;
     private String newOrRenewal;
     private Integer quantity;            
     private Double unitPrice;
@@ -36,6 +38,14 @@ public class OpportunityLineItem extends SObject {
 		return opportunityId;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public void setOpportunityId(String opportunityId) {
 		this.opportunityId = opportunityId;
 	}
@@ -79,7 +89,15 @@ public class OpportunityLineItem extends SObject {
 	public void setListPrice(Double listPrice) {
 		this.listPrice = listPrice;
 	}
-	
+			
+	public Double getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Double basePrice) {
+		this.basePrice = basePrice;
+	}
+
 	public String getNewOrRenewal() {
 		return newOrRenewal;
 	}

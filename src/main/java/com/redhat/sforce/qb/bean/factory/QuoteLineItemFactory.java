@@ -34,7 +34,7 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
 		    quoteLineItem.setListPrice(wrapper.getDouble("ListPrice__c"));
 		    quoteLineItem.setName(wrapper.getString("Name"));
-		    quoteLineItem.setDescription(wrapper.getString("Description"));
+		    quoteLineItem.setDescription(wrapper.getString("ProductDescription__c"));
 		    quoteLineItem.setNewOrRenewal(wrapper.getString("NewOrRenewal__c"));
 		    quoteLineItem.setOpportunityId(wrapper.getString("OpportunityId__c"));
 		    quoteLineItem.setOpportunityLineItemId(wrapper.getString("OpportunityLineItemId__c"));
@@ -59,30 +59,9 @@ public class QuoteLineItemFactory {
 		return quoteLineItemList;
 	}
 	
-	public static JSONArray serializeQuoteLineItemIds(List<QuoteLineItem> quoteLineItemList) {
-        JSONArray jsonArray = new JSONArray();
-		
-		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
-			
-			if (quoteLineItem.getDelete()) {
-			    JSONObject jsonObject = new JSONObject();
-			    try {
-				    jsonObject.put("Id", quoteLineItem.getId());
-			
-				    jsonArray.put(jsonObject);
-				
-			    } catch (JSONException e) {
-				    // TODO Auto-generated catch block
-				    e.printStackTrace();
-				    return null;
-			    }
-			}			
-		}
-				
-		return jsonArray;
-	}
 
-	public static JSONArray serializeQuoteLineItems(List<QuoteLineItem> quoteLineItemList) {
+
+	public static JSONArray serializeQuoteLineItems(List<QuoteLineItem> quoteLineItemList) {		
 		JSONArray jsonArray = new JSONArray();
 		
 		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
@@ -90,7 +69,7 @@ public class QuoteLineItemFactory {
 			JSONObject jsonObject = new JSONObject();
 			try {
 				jsonObject.put("Id", quoteLineItem.getId());
-				jsonObject.put("Description", quoteLineItem.getDescription());
+				jsonObject.put("ProductDescription__c", quoteLineItem.getDescription());
 				jsonObject.put("Configured_SKU__c", quoteLineItem.getConfiguredSku());
 				jsonObject.put("ContractNumbers__c", quoteLineItem.getContractNumbers());
 				jsonObject.put("CurrencyIsoCode", quoteLineItem.getCurrencyIsoCode());
@@ -109,7 +88,8 @@ public class QuoteLineItemFactory {
 				jsonObject.put("StartDate__c", SforceDateFormatter.dateFormat(quoteLineItem.getStartDate()));
 				jsonObject.put("Term__c", quoteLineItem.getTerm());
 				jsonObject.put("TotalPrice__c", quoteLineItem.getTotalPrice());
-				jsonObject.put("UnitPrice__c", quoteLineItem.getUnitPrice());				
+				jsonObject.put("UnitPrice__c", quoteLineItem.getUnitPrice());			
+				jsonObject.put("ListPrice__c", quoteLineItem.getListPrice());
 				jsonObject.put("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());
 			
 				jsonArray.put(jsonObject);

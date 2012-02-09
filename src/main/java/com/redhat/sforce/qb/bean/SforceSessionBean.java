@@ -17,14 +17,16 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.bean.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteLineItemFactory;
+import com.redhat.sforce.qb.bean.factory.QuotePriceAdjustmentFactory;
 import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
+import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.bean.model.SessionUser;
-import com.redhat.sforce.qb.exception.SforceServiceException;
 import com.redhat.sforce.qb.service.SforceService;
+import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="sforceSession")
 @SessionScoped
@@ -106,8 +108,6 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	@Override
 	public Quote queryQuote(String quoteId) throws SforceServiceException {
 		Quote quote = sforceService.getQuote(getSessionId(), quoteId);
-		System.out.println(quote.getId());
-		System.out.println(quote.getLastModifiedDate());
 		return quote;
 	}
 
@@ -189,8 +189,13 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}
 	
 	@Override
+	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SforceServiceException {
+		sforceService.saveQuotePriceAdjustments(getSessionId(), QuotePriceAdjustmentFactory.serializeQuotePriceAdjustments(quotePriceAdjustmentList));
+	}
+	
+	@Override
 	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {
-		sforceService.deleteQuoteLineItems(getSessionId(), QuoteLineItemFactory.serializeQuoteLineItemIds(quoteLineItemList));
+		sforceService.deleteQuoteLineItems(getSessionId(), QuoteLineItemFactory.serializeQuoteLineItems(quoteLineItemList));
 	}
 		
 	private static final String quoteQuery =

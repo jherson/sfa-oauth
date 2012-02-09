@@ -23,12 +23,14 @@ public class OpportunityLineItemFactory {
 		    OpportunityLineItem opportunityLineItem = new OpportunityLineItem();
 		    opportunityLineItem.setId(wrapper.getId());
 		    opportunityLineItem.setOpportunityId(wrapper.getString("OpportunityId"));
+		    opportunityLineItem.setDescription(wrapper.getString("Description"));
 		    opportunityLineItem.setConfiguredSku(wrapper.getString("Configured_SKU__c"));		    		   
 		    opportunityLineItem.setContractNumbers(wrapper.getString("Contract_Numbers__c"));	
 		    opportunityLineItem.setActualStartDate(wrapper.getDate("ActualStartDate__c"));
 		    opportunityLineItem.setActualEndDate(wrapper.getDate("ActualEndDate__c"));
 		    opportunityLineItem.setActualTerm(wrapper.getInteger("ActualTerm__c"));
 		    opportunityLineItem.setContractNumbers(wrapper.getString("Contract_Numbers__c"));
+		    opportunityLineItem.setBasePrice(wrapper.getDouble("Base_Price__c"));
 		    opportunityLineItem.setListPrice(wrapper.getDouble("ListPrice"));
 		    opportunityLineItem.setNewOrRenewal(wrapper.getString("NewOrRenewal__c"));
 		    opportunityLineItem.setQuantity(wrapper.getInteger("Quantity"));
@@ -71,6 +73,7 @@ public class OpportunityLineItemFactory {
 				jsonObject.put("ContractNumbers__c", opportunityLineItem.getContractNumbers());
 				jsonObject.put("CurrencyIsoCode", opportunityLineItem.getCurrencyIsoCode());
 				jsonObject.put("ActualEndDate__c", SforceDateFormatter.dateFormat(opportunityLineItem.getActualEndDate()));
+				jsonObject.put("Base_Price__c", opportunityLineItem.getBasePrice());
 				jsonObject.put("ListPrice", opportunityLineItem.getListPrice());
 				jsonObject.put("NewOrRenewal__c", opportunityLineItem.getNewOrRenewal());								
 				jsonObject.put("Pricing_Attributes__c", opportunityLineItem.getPricingAttributes());
