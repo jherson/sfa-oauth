@@ -49,6 +49,7 @@ public class QuoteLineItem extends SObject {
     	setDiscountAmount(0.00);
     	setDiscountPercent(0.00);
     	setListPrice(0.00);
+    	setCurrencyIsoCode(quote.getCurrencyIsoCode());
     	setProduct(new Product());
     }
 	

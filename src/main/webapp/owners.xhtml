@@ -30,7 +30,7 @@
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<a4j:commandLink value="#{user.name}"
 							render="quoteList, details" ajaxSingle="true"
-							action="#{quoteManager.setQuoteOwner(quoteForm.selectedQuote, user)}"
+							action="#{quoteManager.setQuoteOwner(quoteBean.quote, user)}"
 							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;">
 						</a4j:commandLink>
 					</rich:column>

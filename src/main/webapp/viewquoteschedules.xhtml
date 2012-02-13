@@ -10,8 +10,8 @@
 	style="border-color: #C27E3A; background-color: #FCF9F5;">
 
 	<rich:dataTable style="width: 100%" var="lineItemSchedule"
-		value="#{quoteForm.selectedQuote.quoteLineItemSchedules}"
-		rendered="#{not empty quoteForm.selectedQuote}">
+		value="#{quoteBean.quote.quoteLineItemSchedules}"
+		rendered="#{not empty quoteBean.quote}">
 
 		<rich:column>
 			<f:facet name="header">#{msgs.productCode}</f:facet>

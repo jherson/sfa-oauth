@@ -15,7 +15,7 @@
 
 	<rich:dataTable style="width: 100%" var="priceAdjustment"
 		noDataLabel="#{msgs.noRecords}"
-		value="#{quoteForm.selectedQuote.quotePriceAdjustments}">
+		value="#{quoteBean.quote.quotePriceAdjustments}">
 
 		<rich:column style="width: 20%;">
 			<f:facet name="header">#{msgs.reason}</f:facet>

@@ -30,6 +30,9 @@ public class QuoteFormBean implements QuoteForm {
 	@ManagedProperty(value="#{sforceSession}")
     private SforceSession sforceSession;
 	
+	@ManagedProperty(value="#{quoteBean}")
+	private QuoteBean quoteBean;
+	
 	private Opportunity opportunity;
 	
 	private List<Quote> quoteList;	
@@ -56,17 +59,25 @@ public class QuoteFormBean implements QuoteForm {
 	public void setSforceSession(SforceSession sforceSession) {
 		this.sforceSession = sforceSession;
 	}
+	
+	public QuoteBean getQuoteBean() {
+		return quoteBean;
+	}
+	
+	public void setQuoteBean(QuoteBean quoteBean) {
+		this.quoteBean = quoteBean;
+	}
 
 	@Override
 	public void editQuote(Quote quote) {
-		setSelectedQuote(quote);
+		quoteBean.setQuote(quote);	
 		setEditMode(true);
 	}
 
 	@Override
 	public void createQuote(Opportunity opportunity) {			
 		Quote quote = new Quote(opportunity);			
-		setSelectedQuote(quote);			
+		quoteBean.setQuote(quote);			
 		setEditMode(true);		
 	}
 
@@ -108,21 +119,11 @@ public class QuoteFormBean implements QuoteForm {
             dataTable.setRowKey(selectionKey);
             if (dataTable.isRowAvailable()) {
             	Quote quote = quoteList.get(dataTable.getRowIndex());
-            	setSelectedQuote(quote);
+            	quoteBean.setQuote(quote);
             }
         }
 	}
-	
-	@Override
-	public Quote getSelectedQuote() {
-		return selectedQuote;
-	}
-
-	@Override
-	public void setSelectedQuote(Quote selectedQuote) {
-		this.selectedQuote = selectedQuote;
-	}
-	
+		
 	@Override
 	public void setEditMode(Boolean editMode) {
 		this.editMode = editMode;
@@ -137,15 +138,16 @@ public class QuoteFormBean implements QuoteForm {
         for (Object selectionKey : selection) {
             dataTable.setRowKey(selectionKey);
             if (dataTable.isRowAvailable()) {
-            	setSelectedQuote((Quote) dataTable.getRowData());
+            	quoteBean.setQuote((Quote) dataTable.getRowData());
+            	
             }
         }
     }
 	
 	public void validateProduct(AjaxBehaviorEvent event) {		
-		System.out.println("index: " + lineItemIndex);
 		HtmlInputText inputText = (HtmlInputText) event.getComponent();
 		String productCode = inputText.getValue().toString();
+		System.out.println(inputText.getId());
 		try {
 		    PricebookEntry pricebookEntry = sforceSession.validateProduct(selectedQuote.getPricebookId(), productCode, selectedQuote.getCurrencyIsoCode());
 		    

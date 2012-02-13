@@ -12,10 +12,10 @@ public interface QuoteForm {
 	public void setQuoteList(List<Quote> quoteList);	
 	public Opportunity getOpportunity();
 	public void setOpportunity(Opportunity opportunity);		
-	public Quote getSelectedQuote();
-	public void setSelectedQuote(Quote selectedQuote);
 	public void editQuote(Quote quote);
 	public void createQuote(Opportunity opportunity);
     public void setEditMode(Boolean editMode);
     public void refreshSelectedQuote();
+    public void setQuoteBean(QuoteBean quoteBean);
+    public QuoteBean getQuoteBean();
 }

@@ -15,13 +15,13 @@
 
 			<a4j:commandLink value="#{msgs.delete}"
 				rendered="#{quoteForm.editMode}"
-				action="#{quoteManager.deleteQuoteLineItems(quoteForm.selectedQuote)}"
-				disabled="#{empty quoteForm.selectedQuote.quoteLineItems}"
+				action="#{quoteManager.deleteQuoteLineItems(quoteBean.quote)}"
+				disabled="#{empty quoteBean.quote.quoteLineItems}"
 				render="quoteList, details" ajaxSingle="true" />
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true"
 				rendered="#{quoteForm.editMode}" status="ajaxStatus"
-				disabled="#{empty quoteForm.selectedQuote.quoteLineItems}"
+				disabled="#{empty quoteBean.quote.quoteLineItems}"
 				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
 				execute="@this" />
 
@@ -30,14 +30,14 @@
 		<rich:toolbarGroup location="right">
 		
 		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
-				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode}"
+				rendered="#{quoteForm.editMode and quoteBean.quote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode}"
 				disabled="#{empty quoteForm.opportunity.opportunityLineItems}"
-				action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
+				action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteBean.quote)}"
 				render="quoteList, details" ajaxSingle="true" />
 
 			<a4j:commandLink value="#{msgs.addProduct}"
 				rendered="#{quoteForm.editMode}"
-				action="#{quoteManager.addQuoteLineItem(quoteForm.selectedQuote)}"
+				action="#{quoteManager.addQuoteLineItem(quoteBean.quote)}"
 				render="quoteList, details" ajaxSingle="true" />
 
 		</rich:toolbarGroup>
@@ -47,7 +47,7 @@
 	<rich:dataTable style="width: 100%" var="lineItem"
 		noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it"
-		value="#{quoteForm.selectedQuote.quoteLineItems}">
+		value="#{quoteBean.quote.quoteLineItems}">
 
 		<rich:column style="text-align: center; width: 3%;">
 			<f:facet name="header">#{msgs.select}</f:facet>
@@ -85,13 +85,13 @@
 		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItem.startDate}"
-				rendered="#{not quoteForm.editMode or quoteForm.selectedQuote.type == 'Standard'}">
+				rendered="#{not quoteForm.editMode or quoteBean.quote.type == 'Standard'}">
 				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.startDate}"
-				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.type != 'Standard'}"
+				rendered="#{quoteForm.editMode and quoteBean.quote.type != 'Standard'}"
 				id="lineStartDate" locale="#{sforceSession.sessionUser.locale}"
 				popup="true" enableManualInput="true"
 				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
@@ -103,13 +103,13 @@
 		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItem.endDate}"
-				rendered="#{not quoteForm.editMode or quoteForm.selectedQuote.type != 'Non Standard'}">
+				rendered="#{not quoteForm.editMode or quoteBean.quote.type != 'Non Standard'}">
 				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.endDate}"
-				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.type == 'Non Standard'}"
+				rendered="#{quoteForm.editMode and quoteBean.quote.type == 'Non Standard'}"
 				id="lineEndDate" locale="#{sforceSession.sessionUser.locale}"
 				popup="true" enableManualInput="true"
 				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"

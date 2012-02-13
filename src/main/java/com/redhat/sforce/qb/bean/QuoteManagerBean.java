@@ -1,7 +1,5 @@
 package com.redhat.sforce.qb.bean;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
@@ -70,7 +67,6 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		if (quote.getQuoteLineItems() == null)
 			return;
 		
-		System.out.println("save quote line items");
 		try {
 		    sforceSession.saveQuoteLineItems(quote.getQuoteLineItems());
 		    sforceSession.calculateQuote(quote.getId());
@@ -84,8 +80,6 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void saveQuotePriceAdjustments(Quote quote) {
 		if (quote.getQuotePriceAdjustments() == null)
 			return;
-		
-		System.out.println("save quote price adjustments");
 		
 		calculateProductDiscounts(quote);
 	}
@@ -119,7 +113,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	@Override
 	public void addQuoteLineItem(Quote quote) {
 		QuoteLineItem quoteLineItem = new QuoteLineItem(quote);
-		getQuoteForm().getSelectedQuote().getQuoteLineItems().add(quoteLineItem);
+		getQuoteForm().getQuoteBean().getQuoteLineItems().add(quoteLineItem);
 	}
 	
 	private void calculateProductDiscounts(Quote quote) {						
@@ -181,8 +175,9 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	
 	@Override
 	public void cancelQuote(Quote quote) {
-		if (quote.getId() == null)
-			getQuoteForm().setSelectedQuote(null);
+		if (quote.getId() == null) {
+			getQuoteForm().getQuoteBean().setQuote(null);
+		} 
 		
 		setEditMode(false);
 	}
@@ -230,7 +225,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	public void deleteQuote(Quote quote) {
 		sforceSession.deleteQuote(quote);
 		getQuoteForm().queryAllData();		
-		getQuoteForm().setSelectedQuote(null);
+		getQuoteForm().getQuoteBean().setQuote(null);
 	}
 	
 	@Override
