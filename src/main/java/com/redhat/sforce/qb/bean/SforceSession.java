@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
+import com.redhat.sforce.qb.bean.model.PricebookEntry;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
@@ -26,4 +27,5 @@ public interface SforceSession {
 	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SforceServiceException;
+	public PricebookEntry validateProduct(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
 }

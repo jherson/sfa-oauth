@@ -14,52 +14,67 @@
 		<rich:toolbarGroup location="left">
 
 			<a4j:commandLink value="#{msgs.delete}"
+				rendered="#{quoteForm.editMode}"
 				action="#{quoteManager.deleteQuoteLineItems(quoteForm.selectedQuote)}"
-				disabled="#{empty quoteForm.selectedQuote}"
+				disabled="#{empty quoteForm.selectedQuote.quoteLineItems}"
 				render="quoteList, details" ajaxSingle="true" />
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true"
-				status="ajaxStatus" disabled="#{empty quoteForm.selectedQuote}"
+				rendered="#{quoteForm.editMode}" status="ajaxStatus"
+				disabled="#{empty quoteForm.selectedQuote.quoteLineItems}"
 				bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
 				execute="@this" />
 
 		</rich:toolbarGroup>
 
 		<rich:toolbarGroup location="right">
-
-			<a4j:commandLink value="#{msgs.addOpportunityProducts}"
+		
+		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
 				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.currencyIsoCode == quoteForm.opportunity.currencyIsoCode}"
 				disabled="#{empty quoteForm.opportunity.opportunityLineItems}"
 				action="#{quoteManager.addOpportunityLineItems(quoteForm.opportunity, quoteForm.selectedQuote)}"
 				render="quoteList, details" ajaxSingle="true" />
 
+			<a4j:commandLink value="#{msgs.addProduct}"
+				rendered="#{quoteForm.editMode}"
+				action="#{quoteManager.addQuoteLineItem(quoteForm.selectedQuote)}"
+				render="quoteList, details" ajaxSingle="true" />
+
 		</rich:toolbarGroup>
-		
+
 	</rich:toolbar>
 
 	<rich:dataTable style="width: 100%" var="lineItem"
 		noDataLabel="#{msgs.noRecords}"
+		iterationStatusVar="it"
 		value="#{quoteForm.selectedQuote.quoteLineItems}">
 
-		<rich:column style="text-align: center;">
+		<rich:column style="text-align: center; width: 3%;">
 			<f:facet name="header">#{msgs.select}</f:facet>
-			<h:selectBooleanCheckbox value="#{lineItem.delete}" />
+			<h:outputText value="#{it.index}" 
+			    rendered="#{not quoteForm.editMode}" />
+			<h:selectBooleanCheckbox value="#{lineItem.delete}" 
+			    rendered="#{quoteForm.editMode}"/>
 		</rich:column>
 
-		<rich:column>
+		<rich:column style="text-align: center; width: 7%;">
 			<f:facet name="header">#{msgs.productCode}</f:facet>
 			<h:outputText value="#{lineItem.product.productCode}"
 				rendered="#{not quoteForm.editMode}" />
-			<h:inputText value="#{lineItem.product.productCode}"
-				rendered="#{quoteForm.editMode}" />
+			<h:inputText id="productCode" value="#{lineItem.product.productCode}"
+				style="width: 75px;" rendered="#{quoteForm.editMode}"
+				execute="immediate" ajaxSingle="true">
+
+				<a4j:ajax execute="@this" event="valueChange"
+					listener="#{quoteForm.validateProduct}" render="viewQuoteProducts" />
+
+			</h:inputText>
+
 		</rich:column>
 
-		<rich:column>
+		<rich:column style="text-align: center; width: 7%;">
 			<f:facet name="header">#{msgs.configuredSku}</f:facet>
-			<h:outputText value="#{lineItem.configuredSku}"
-				rendered="#{not quoteForm.editMode or not lineItem.product.configurable}" />
-			<h:inputText value="#{lineItem.configuredSku}"
-				rendered="#{quoteForm.editMode and lineItem.product.configurable}" />
+			<h:outputText value="#{lineItem.configuredSku}" />
 		</rich:column>
 
 		<rich:column>
@@ -67,108 +82,135 @@
 			<h:outputText value="#{lineItem.product.description}" />
 		</rich:column>
 
-		<rich:column style="text-align: center;">
+		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItem.startDate}"
-				rendered="#{not quoteForm.editMode}">
+				rendered="#{not quoteForm.editMode or quoteForm.selectedQuote.type == 'Standard'}">
 				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<h:outputText value="#{lineItem.startDate}"
-				rendered="#{quoteForm.editMode}">
-				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
-					type="date" />
-			</h:outputText>
+			<rich:calendar value="#{lineItem.startDate}"
+				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.type != 'Standard'}"
+				id="lineStartDate" locale="#{sforceSession.sessionUser.locale}"
+				popup="true" enableManualInput="true"
+				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				showApplyButton="false" cellWidth="24px" cellHeight="22px"
+				inputStyle="width:68px" disabled="false">
+			</rich:calendar>
 		</rich:column>
 
-		<rich:column style="text-align: center;">
+		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItem.endDate}"
-				rendered="#{not quoteForm.editMode}">
+				rendered="#{not quoteForm.editMode or quoteForm.selectedQuote.type != 'Non Standard'}">
 				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
 					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<h:outputText value="#{lineItem.endDate}"
-				rendered="#{quoteForm.editMode}">
-				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
-					type="date" />
-			</h:outputText>
+			<rich:calendar value="#{lineItem.endDate}"
+				rendered="#{quoteForm.editMode and quoteForm.selectedQuote.type == 'Non Standard'}"
+				id="lineEndDate" locale="#{sforceSession.sessionUser.locale}"
+				popup="true" enableManualInput="true"
+				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				showApplyButton="false" cellWidth="24px" cellHeight="22px"
+				inputStyle="width:68px" disabled="false">
+			</rich:calendar>
 		</rich:column>
 
-		<rich:column style="text-align: right;">
+		<rich:column style="text-align: right; width: 5%;">
+			<f:facet name="header">#{msgs.quantity}</f:facet>
+			<h:outputText value="#{lineItem.quantity}"
+				rendered="#{not quoteForm.editMode}" />
+			<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0;(#,##0)" type="number" />
+			</h:inputText>
+		</rich:column>
+
+		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.listPrice}</f:facet>
 			<h:outputText value="#{lineItem.listPrice}"
 				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"/>
+					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
-			<h:inputText value="#{lineItem.listPrice}"
+			<h:inputText value="#{lineItem.listPrice}" style="width: 70px;"
 				rendered="#{quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"
-					type="number"/>					
+					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
-		
-		<rich:column style="text-align: right;">
+
+		<rich:column style="text-align: right; width: 4%;">
+			<f:facet name="header">#{msgs.discountPercent}</f:facet>
+			<h:outputText value="#{lineItem.discountPercent}"
+				rendered="#{not quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)" />
+			</h:outputText>
+			<h:inputText value="#{lineItem.discountPercent}" style="width: 70px;"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)" type="number" />
+			</h:inputText>
+		</rich:column>
+
+		<rich:column style="text-align: right; width: 4%;">
+			<f:facet name="header">#{msgs.discountAmount}</f:facet>
+			<h:outputText value="#{lineItem.discountAmount}"
+				rendered="#{not quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)" />
+			</h:outputText>
+			<h:inputText value="#{lineItem.discountAmount}" style="width: 70px;"
+				rendered="#{quoteForm.editMode}">
+				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)" type="number" />
+			</h:inputText>
+		</rich:column>
+
+		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.salesPrice}</f:facet>
 			<h:outputText value="#{lineItem.yearlySalesPrice}"
 				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"/>
+					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.yearlySalesPrice}"
-				rendered="#{quoteForm.editMode}">
+				style="width: 70px;" rendered="#{quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"
-					type="number"/>					
-			</h:inputText>
-		</rich:column>		
-
-		<rich:column style="text-align: right;">
-			<f:facet name="header">#{msgs.quantity}</f:facet>
-			<h:outputText value="#{lineItem.quantity}"
-				rendered="#{not quoteForm.editMode}" />
-			<h:inputText value="#{lineItem.quantity}"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0;(#,##0)"
-					type="number"/>
+					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
 
-		<rich:column style="text-align: right;">
+		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItem.unitPrice}"
 				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"/>
+					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
-			<h:outputText value="#{lineItem.unitPrice}"
+			<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
 				rendered="#{quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"
-					type="number"/>
-			</h:outputText>
+					pattern="#,##0.00;(#,##0.00)" type="number" />
+			</h:inputText>
 		</rich:column>
 
-		<rich:column style="text-align: right;">
+		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
 			<h:outputText value="#{lineItem.totalPrice}"
 				rendered="#{not quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"/>
+					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
-			<h:outputText value="#{lineItem.totalPrice}"
+			<h:inputText value="#{lineItem.totalPrice}" style="width: 78px;"
 				rendered="#{quoteForm.editMode}">
 				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
-					pattern="#,##0.00;(#,##0.00)"
-					type="number"/>
-			</h:outputText>
+					pattern="#,##0.00;(#,##0.00)" type="number" />
+			</h:inputText>
 		</rich:column>
 
 	</rich:dataTable>

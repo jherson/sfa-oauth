@@ -1,5 +1,7 @@
 package com.redhat.sforce.qb.bean;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.Contact;
@@ -113,6 +116,12 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 		}
 	}
 	
+	@Override
+	public void addQuoteLineItem(Quote quote) {
+		QuoteLineItem quoteLineItem = new QuoteLineItem(quote);
+		getQuoteForm().getSelectedQuote().getQuoteLineItems().add(quoteLineItem);
+	}
+	
 	private void calculateProductDiscounts(Quote quote) {						
 		BigDecimal pc = new BigDecimal(0.00);
 		BigDecimal mw = new BigDecimal(0.00);
@@ -210,7 +219,7 @@ public class QuoteManagerBean implements Serializable, QuoteManager {
 	//		// TODO Auto-generated catch block
 	//		e.printStackTrace();
 	//	}
-	}
+	}	
 	
 	@Override
 	public void editQuote(Quote quote) {										

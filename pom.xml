@@ -10,7 +10,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<richfaces.version>4.1.0.Final</richfaces.version>
+		<richfaces.version>4.2.0.CR1</richfaces.version>
 		<seam.version>2.2.2.Final</seam.version>
 		<jboss-as-maven-plugin-version>7.0.0.Final</jboss-as-maven-plugin-version>
 		<version.arquillian_core>1.0.0.CR4</version.arquillian_core>

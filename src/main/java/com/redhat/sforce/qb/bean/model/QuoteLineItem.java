@@ -11,7 +11,7 @@ public class QuoteLineItem extends SObject {
 	private String name;
 	private Date endDate;
 	private Date startDate;
-	private Double term;
+	private Integer term;
 	private String contractNumbers;
 	private String currencyIsoCode;
 	private Double listPrice;
@@ -25,12 +25,31 @@ public class QuoteLineItem extends SObject {
     private String configuredSku;
     private String pricingAttributes;
     private Double basePrice;
+    private Double discountAmount;
+    private Double discountPercent;    
     private Integer sortOrder;
     private Product product;
     private Boolean delete;
 
     public QuoteLineItem() {
         super();
+    }
+    
+    public QuoteLineItem(Quote quote) {
+    	setQuoteId(quote.getId());
+    	setEndDate(quote.getEndDate());
+    	setStartDate(quote.getStartDate());
+    	setTerm(quote.getTerm());
+    	setOpportunityId(quote.getOpportunityId());
+    	setQuantity(0);
+    	setUnitPrice(0.00);
+    	setTotalPrice(0.00);
+    	setYearlySalesPrice(0.00);
+    	setBasePrice(0.00);
+    	setDiscountAmount(0.00);
+    	setDiscountPercent(0.00);
+    	setListPrice(0.00);
+    	setProduct(new Product());
     }
 	
 	public String getQuoteId() {
@@ -81,11 +100,11 @@ public class QuoteLineItem extends SObject {
 		this.startDate = startDate;
 	}
 	
-	public Double getTerm() {
+	public Integer getTerm() {
 		return term;
 	}
 	
-	public void setTerm(Double term) {
+	public void setTerm(Integer term) {
 		this.term = term;
 	}
 	
@@ -190,6 +209,22 @@ public class QuoteLineItem extends SObject {
 	
 	public void setBasePrice(Double basePrice) {
 		this.basePrice = basePrice;
+	}	
+
+	public Double getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(Double discountAmount) {
+		this.discountAmount = discountAmount;
+	}
+
+	public Double getDiscountPercent() {
+		return discountPercent;
+	}
+
+	public void setDiscountPercent(Double discountPercent) {
+		this.discountPercent = discountPercent;
 	}
 
 	public Integer getSortOrder() {

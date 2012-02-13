@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.PricebookEntry;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
@@ -23,4 +24,5 @@ public interface SforceService {
     public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;
     public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;
     public void saveQuotePriceAdjustments(String accessToken, JSONArray jsonArray) throws SforceServiceException;
+    public PricebookEntry validateProduct(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
 }

@@ -22,8 +22,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
+import com.redhat.sforce.qb.bean.factory.PricebookEntryFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.PricebookEntry;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.service.SforceService;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
@@ -86,6 +88,25 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 			postMethod.releaseConnection();
 		}
 
+	}
+	
+	@Override
+	public PricebookEntry validateProduct(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/validateProduct?pricebookId=" + 
+	        pricebookId + "&productCode=" + productCode + "&currencyIsoCode=" + currencyIsoCode;
+		
+		JSONObject jsonObject = doGet(accessToken, url);
+		try {
+			return PricebookEntryFactory.deserializePricebookEntry(jsonObject);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		return null;		
 	}
 	
 	@Override

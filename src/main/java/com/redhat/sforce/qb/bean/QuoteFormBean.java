@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.bean;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -17,8 +17,9 @@ import org.richfaces.component.UIExtendedDataTable;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
+import com.redhat.sforce.qb.bean.model.PricebookEntry;
 import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="quoteForm")
@@ -38,6 +39,8 @@ public class QuoteFormBean implements QuoteForm {
 	private Quote selectedQuote;	
 	
 	private Boolean editMode = false;
+	
+	private Integer lineItemIndex;
 	
 	private Boolean toggleCheckboxes = false;			
 	
@@ -139,6 +142,28 @@ public class QuoteFormBean implements QuoteForm {
         }
     }
 	
+	public void validateProduct(AjaxBehaviorEvent event) {		
+		System.out.println("index: " + lineItemIndex);
+		HtmlInputText inputText = (HtmlInputText) event.getComponent();
+		String productCode = inputText.getValue().toString();
+		try {
+		    PricebookEntry pricebookEntry = sforceSession.validateProduct(selectedQuote.getPricebookId(), productCode, selectedQuote.getCurrencyIsoCode());
+		    
+		    QuoteLineItem quoteLineItem = selectedQuote.getQuoteLineItems().get(selectedQuote.getQuoteLineItems().size() - 1);
+		    quoteLineItem.setCurrencyIsoCode(pricebookEntry.getCurrencyIsoCode());
+		    quoteLineItem.setDescription(pricebookEntry.getProduct().getDescription());
+		    quoteLineItem.setPricebookEntryId(pricebookEntry.getId());
+		    quoteLineItem.setProduct(pricebookEntry.getProduct());
+		    if (quoteLineItem.getProduct().getConfigurable()) {
+		    	quoteLineItem.setConfiguredSku(productCode);
+		    }		    
+		} catch (SforceServiceException e) {
+			System.out.println(e.getMessage());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+    }
+	
 	public void valueChangeListener(AjaxBehaviorEvent event) {
 		//System.out.println("here: " + event.getNewValue());
 		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
@@ -157,6 +182,14 @@ public class QuoteFormBean implements QuoteForm {
 
 	}
 	
+	public Integer getLineItemIndex() {
+		return lineItemIndex;
+	}
+
+	public void setLineItemIndex(Integer lineItemIndex) {
+		this.lineItemIndex = lineItemIndex;
+	}
+
 	public Boolean getToggleCheckboxes() {
 		return toggleCheckboxes;
 	}

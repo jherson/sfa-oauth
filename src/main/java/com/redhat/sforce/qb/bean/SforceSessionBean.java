@@ -21,6 +21,7 @@ import com.redhat.sforce.qb.bean.factory.QuotePriceAdjustmentFactory;
 import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
+import com.redhat.sforce.qb.bean.model.PricebookEntry;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
@@ -174,6 +175,11 @@ public class SforceSessionBean implements Serializable, SforceSession {
 	}	
 	
 	@Override
+	public PricebookEntry validateProduct(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {		
+		return sforceService.validateProduct(getSessionId(), pricebookId, productCode, currencyIsoCode);
+	}
+	
+	@Override
 	public void setSessionUser(SessionUser sessionUser) {
 	    this.sessionUser = sessionUser;
 	}
@@ -258,6 +264,8 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		                   "YearlySalesPrice__c, " +
 		                   "NewOrRenewal__c, " +
 		                   "QuoteId__c, " +
+		                   "DiscountAmount__c, " +
+		                   "DiscountPercent__c, " +
 		                   "Product__r.Id, " +
 		                   "Product__r.Description, " +
 		                   "Product__r.Name, " +
@@ -273,7 +281,7 @@ public class SforceSessionBean implements Serializable, SforceSession {
 		                   "Configured_SKU__c, " +
 		                   "Pricing_Attributes__c " +
 		            "From   QuoteLineItem__r " +
-		          "Order By SortOrder__c), " +		
+		          "Order By CreatedDate), " +		
 		           "(Select Id, " +
 		                   "QuoteId__c, " +
 		                   "Amount__c, " +

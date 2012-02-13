@@ -26,7 +26,8 @@ public class OpportunityFactory {
 		opportunity.setCloseDate(wrapper.getDate("CloseDate"));
 		opportunity.setIsClosed(wrapper.getBoolean("IsClosed"));
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
-		opportunity.setPricebookId(wrapper.getString("PricebookId"));
+		opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
+		opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		opportunity.setBillingAddress(wrapper.getString("BillingAddress__c"));
 		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));
@@ -38,7 +39,6 @@ public class OpportunityFactory {
 		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
 		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
 		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));		
-		opportunity.setOwner(parseOwner(wrapper.getJSONObject("Owner")));
 		
 		List<User> ownerList = new ArrayList<User>();
 		ownerList.add(opportunity.getOwner());

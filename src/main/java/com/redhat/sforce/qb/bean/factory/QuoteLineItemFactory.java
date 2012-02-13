@@ -44,10 +44,12 @@ public class QuoteLineItemFactory {
 		    quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));
 		    quoteLineItem.setSortOrder(wrapper.getInteger("SortOrder__c"));
 		    quoteLineItem.setStartDate(wrapper.getDate("StartDate__c"));
-		    quoteLineItem.setTerm(wrapper.getDouble("Term__c"));
+		    quoteLineItem.setTerm(wrapper.getInteger("Term__c"));
 		    quoteLineItem.setTotalPrice(wrapper.getDouble("TotalPrice__c"));
 		    quoteLineItem.setUnitPrice(wrapper.getDouble("UnitPrice__c"));
 		    quoteLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
+		    quoteLineItem.setDiscountAmount(wrapper.getDouble("DiscountAmount__c"));
+		    quoteLineItem.setDiscountPercent(wrapper.getDouble("DiscountPercent__c"));
 		    quoteLineItem.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product__r")));
 		    
 		    if (quoteLineItem.getDescription() == null)
