@@ -270,9 +270,11 @@
 
 		<h:outputText value="#{msgs.createdBy}"
 			rendered="#{not quoteForm.editMode}" />			
-		<h:panelGroup rendered="#{not quoteForm.editMode}">
-			<h:outputText value="#{quoteController.selectedQuote.createdByName}, " />
-			<h:outputText value="#{quoteController.selectedQuote.createdDate}">
+		<h:panelGroup>
+			<h:outputText value="#{quoteController.selectedQuote.createdByName}, " 
+			    rendered="#{not quoteForm.editMode}" />
+			<h:outputText value="#{quoteController.selectedQuote.createdDate}"
+			    rendered="#{not quoteForm.editMode}">
 				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
 					pattern="#{sessionManager.sessionUser.dateTimeFormatPattern}"
 					type="date" />
@@ -281,9 +283,11 @@
 
 		<h:outputText value="#{msgs.lastModifiedBy}"
 			rendered="#{not quoteForm.editMode}" />
-		<h:panelGroup rendered="#{not quoteForm.editMode}">
-			<h:outputText value="#{quoteController.selectedQuote.lastModifiedByName}, " />
-			<h:outputText value="#{quoteController.selectedQuote.lastModifiedDate}">
+		<h:panelGroup>
+			<h:outputText value="#{quoteController.selectedQuote.lastModifiedByName}, " 
+			    rendered="#{not quoteForm.editMode}"/>
+			<h:outputText value="#{quoteController.selectedQuote.lastModifiedDate}"
+			    rendered="#{not quoteForm.editMode}">
 				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
 					pattern="#{sessionManager.sessionUser.dateTimeFormatPattern}"
 					type="date" />

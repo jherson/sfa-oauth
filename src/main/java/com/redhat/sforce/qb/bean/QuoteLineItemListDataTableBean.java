@@ -49,7 +49,6 @@ public class QuoteLineItemListDataTableBean {
 	}
 
 	public void setDataTable(UIDataTable dataTable) {
-		System.out.println("calling set on datatable");
 		this.dataTable = dataTable;
 	}
 	

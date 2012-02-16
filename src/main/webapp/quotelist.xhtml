@@ -6,40 +6,52 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
+<h:outputStylesheet>
+	.panel-body {
+        color: #000000;
+        font-family: Arial,Verdana,sans-serif;
+        font-size: 11px;
+        padding: 0px;
+    }
+</h:outputStylesheet>
+
+<rich:collapsiblePanel
+	header="#{msgs.headerTitle}: #{quoteController.opportunity.name}"
+	switchType="client" rightCollapsedIcon="triangleUp"
+	rightExpandedIcon="triangleDown" leftCollapsedIcon="./images/quote.png"
+	leftExpandedIcon="./images/quote.png" bodyClass="panel-body"
+	style="border-top: 0; border-left: 0; border-right: 0; border-bottom: 0;">
+
 	<rich:toolbar height="18" itemSeparator="grid">
-		<rich:toolbarGroup>
-			<h:outputText
-				value="#{msgs.headerTitle}: #{quoteController.opportunity.name}" />
-		</rich:toolbarGroup>
+
 		<rich:toolbarGroup location="right">
 
 			<a4j:commandLink id="new" value="#{msgs.new}"
-				action="#{quoteController.newQuote()}"							
+				action="#{quoteController.newQuote()}"
 				rendered="#{not quoteController.opportunity.isClosed}"
-				render="quoteList, details"
-				ajaxSingle="true" status="ajaxStatus">
-				<f:setPropertyActionListener value="#{true}" target="#{quoteForm.editMode}"/>
+				render="quoteList, details" ajaxSingle="true" status="ajaxStatus">
+				<f:setPropertyActionListener value="#{true}"
+					target="#{quoteForm.editMode}" />
 			</a4j:commandLink>
 
-			<a4j:commandLink value="#{msgs.refresh}"
-				ajaxSingle="true" render="quoteList, details"> 
-				<f:setPropertyActionListener value="#{null}" target="#{quoteController.opportunity}"/>
-				<f:setPropertyActionListener value="#{null}" target="#{quoteController.quoteList}"/>
+			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="true"
+				render="quoteList, details">
+				<f:setPropertyActionListener value="#{null}"
+					target="#{quoteController.opportunity}" />
+				<f:setPropertyActionListener value="#{null}"
+					target="#{quoteController.quoteList}" />
 			</a4j:commandLink>
 
 		</rich:toolbarGroup>
 	</rich:toolbar>
 
-	<rich:extendedDataTable 
-	    var="quote"
-		value="#{quoteController.quoteList}" 
-		noDataLabel="#{msgs.noRecords}"
-        style="height:120px;"
-		iterationStatusVar="it"
-		status="ajaxStatus">
+	<rich:extendedDataTable var="quote"
+		value="#{quoteController.quoteList}" noDataLabel="#{msgs.noRecords}"
+		style="height:120px;" iterationStatusVar="it" status="ajaxStatus">
 
 		<a4j:ajax execute="@this" event="selectionchange"
-			listener="#{quoteListExtendedDataTableBean.selectionListener}" render="details" />
+			listener="#{quoteListExtendedDataTableBean.selectionListener}"
+			render="details" />
 
 		<rich:column width="75px">
 			<f:facet name="header">#{msgs.action}</f:facet>
@@ -53,9 +65,9 @@
 
 			<h:outputText value="  " escape="false" />
 
-			<a4j:commandLink id="copy" action="#{quoteController.copyQuote(quote)}"
-				ajaxSingle="true" render="quoteList" styleClass="no-decor"
-				status="ajaxStatus">
+			<a4j:commandLink id="copy"
+				action="#{quoteController.copyQuote(quote)}" ajaxSingle="true"
+				render="quoteList" styleClass="no-decor" status="ajaxStatus">
 				<h:graphicImage value="./images/copy.png" title="#{msgs.copy}" />
 			</a4j:commandLink>
 
@@ -111,5 +123,5 @@
 		</rich:column>
 
 	</rich:extendedDataTable>
-
+</rich:collapsiblePanel>
 </html>
