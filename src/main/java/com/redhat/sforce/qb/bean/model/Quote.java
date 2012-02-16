@@ -85,6 +85,8 @@ public class Quote extends SObject {
         calendar.add(Calendar.DATE, -1);
         setEndDate(calendar.getTime());	
         
+        setQuoteLineItems(new ArrayList<QuoteLineItem>());
+        
         String[] reasons = new String[] {"Platform and Cloud", "Middleware", "Services"};
 		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
 		for (int i = 0; i < reasons.length; i++) {

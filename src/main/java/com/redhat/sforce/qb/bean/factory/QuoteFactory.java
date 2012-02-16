@@ -73,7 +73,7 @@ public class QuoteFactory {
 		
 		records = wrapper.getRecords("QuoteLineItem__r");
 		if (records != null)
-		    quote.setQuoteLineItems(QuoteLineItemFactory.getQuoteLineItems(records));
+		    quote.setQuoteLineItems(QuoteLineItemFactory.deserializeQuoteLineItems(records));
 		
 		records = wrapper.getRecords("QuoteLineItemSchedule__r");
 		if (records != null)

@@ -38,7 +38,8 @@ public class OpportunityFactory {
 		opportunity.setShippingCity(wrapper.getString("ShippingCity__c"));
 		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
 		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
-		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));		
+		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));
+		opportunity.setOwner(parseOwner(wrapper.getJSONObject("Owner")));
 		
 		List<User> ownerList = new ArrayList<User>();
 		ownerList.add(opportunity.getOwner());

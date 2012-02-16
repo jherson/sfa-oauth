@@ -23,14 +23,15 @@
 			<a4j:outputPanel layout="block">
 
 				<rich:dataTable id="userList" var="user"
-					value="#{quoteForm.opportunity.owners}"
+					value="#{quoteController.opportunity.owners}"
 					noDataLabel="#{msgs.noRecords}" style="width:100%;">
 
 					<rich:column width="200px">
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<a4j:commandLink value="#{user.name}"
 							render="quoteList, details" ajaxSingle="true"
-							action="#{quoteManager.setQuoteOwner(quoteBean.quote, user)}"
+							action="#{quoteController.setQuoteOwner(user)}"
+							status="ajaxStatus"
 							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;">
 						</a4j:commandLink>
 					</rich:column>

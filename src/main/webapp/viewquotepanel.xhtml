@@ -10,47 +10,55 @@
 
 	<rich:toolbarGroup location="right">
 
-		<a4j:commandLink id="edit"
-			action="#{quoteManager.editQuote(quoteBean.quote)}"
+		<a4j:commandLink id="edit"		
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			disabled="#{empty quoteBean.quote}" render="details"
-			status="ajaxStatus">
-			<h:outputText value="#{msgs.edit}" />
+			disabled="#{empty quoteController.selectedQuote}" render="details"
+			status="ajaxStatus">			
+			<f:setPropertyActionListener value="#{true}" target="#{quoteForm.editMode}"/>
+			<h:outputText value="#{msgs.edit}" />			
 		</a4j:commandLink>
 
 		<a4j:commandLink id="activate"
-			action="#{quoteManager.activateQuote(quoteBean.quote)}"
+			action="#{quoteController.activateQuote()}"
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			disabled="#{empty quoteBean.quote}"
-			render="quoteList, viewQuotePanel">
+			disabled="#{empty quoteController.selectedQuote}"
+			render="quoteList, details">
 			<h:outputText value="#{msgs.activate}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="copy"
-			action="#{quoteManager.copyQuote(quoteBean.quote)}"
+			action="#{quoteController.copyQuote()}"
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			render="quoteList" disabled="#{empty quoteBean.quote}">
+			render="quoteList" disabled="#{empty quoteController.selectedQuote}">
 			<h:outputText value="#{msgs.copy}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="delete"
-			action="#{quoteManager.deleteQuote(quoteBean.quote)}"
+			action="#{quoteController.deleteQuote()}"
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			disabled="#{empty quoteBean.quote or quoteBean.quote.isActive}"
-			render="quoteList, viewQuotePanel">
+			disabled="#{empty quoteController.selectedQuote or quoteController.selectedQuote.isActive}"
+			render="quoteList, details">
 			<h:outputText value="#{msgs.delete}" />
 		</a4j:commandLink>
 
-		<a4j:commandLink id="save" value="#{msgs.save}"
-			action="#{quoteManager.saveQuote(quoteBean.quote)}"
-			rendered="#{quoteForm.editMode}" render="quoteList, :details"
-			ajaxSingle="true" />
+		<a4j:commandLink id="save" 
+			action="#{quoteController.save()}"
+			rendered="#{quoteForm.editMode}" render="quoteList, details"
+			ajaxSingle="true" >
+			<f:setPropertyActionListener value="#{false}" target="#{quoteForm.editMode}"/>
+			<h:outputText value="#{msgs.save}" />
+		</a4j:commandLink>
 
-		<a4j:commandLink id="cancel" value="#{msgs.cancel}"
-			rendered="#{quoteForm.editMode}" immediate="true"
-			action="#{quoteManager.cancelQuote(quoteBean.quote)}"
-			bypassUpdates="true" type="reset" render="details" ajaxSingle="true"
-			execute="@this" />
+		<a4j:commandLink id="reset" 
+			rendered="#{quoteForm.editMode}" 
+			action="#{quoteController.reset()}"
+			render="details" ajaxSingle="true" 
+			bypassUpdates="true"
+			type="reset"
+			immediate="true">
+			<f:setPropertyActionListener value="#{false}" target="#{quoteForm.editMode}"/>
+			<h:outputText value="#{msgs.cancel}" />
+		</a4j:commandLink>
 
 	</rich:toolbarGroup>
 </rich:toolbar>
@@ -58,8 +66,6 @@
 <rich:panel id="viewQuotePanel"
 	style="border-color: #C27E3A; background-color: #FCF9F5; ">
 	
-	<rich:hotKey selector="#viewQuotePanel" key="backspace" handler="#{rich:component('quoteForm:save')}.click()"/>	
-
 	<h:panelGrid styleClass="rf-dt" width="100%"
 		style="background-color: #FCF9F5; 
 		border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
@@ -67,22 +73,22 @@
 		columns="4">
 
 		<h:outputText value="#{msgs.name}" />
-		<h:outputText value="#{quoteBean.quote.name}"
+		<h:outputText value="#{quoteController.selectedQuote.name}"
 			rendered="#{not quoteForm.editMode}" />
 		<h:inputText id="name" required="true"
-			value="#{quoteBean.quote.name}" style="width:300px"
+			value="#{quoteController.selectedQuote.name}" style="width:300px"
 			rendered="#{quoteForm.editMode}"
 			requiredMessage="#{msgs.quoteNameRequiredMessage}">
 			<rich:validator />
 		</h:inputText>
 
 		<h:outputText value="#{msgs.number}" />
-		<h:outputText value="#{quoteBean.quote.number}" />
+		<h:outputText value="#{quoteController.selectedQuote.number}" />
 
 		<h:outputText value="#{msgs.type}" />
-		<h:outputText value="#{quoteBean.quote.type}"
+		<h:outputText value="#{quoteController.selectedQuote.type}"
 			rendered="#{not quoteForm.editMode}" />
-		<h:selectOneMenu value="#{quoteBean.quote.type}"
+		<h:selectOneMenu value="#{quoteController.selectedQuote.type}"
 			rendered="#{quoteForm.editMode}">
 			<f:selectItem itemValue="Standard" />
 			<f:selectItem itemValue="Co-Term" />
@@ -92,18 +98,18 @@
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.version}" />
-		<h:outputText value="#{quoteBean.quote.version}" />
+		<h:outputText value="#{quoteController.selectedQuote.version}" />
 
 		<h:outputText value="#{msgs.active}" />
 		<h:panelGroup>
 			<h:graphicImage value="./images/active.png"
-				rendered="#{quoteBean.quote.isActive}" />
+				rendered="#{quoteController.selectedQuote.isActive}" />
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.currency}" />
-		<h:outputText value="#{quoteBean.quote.currencyIsoCode}"
+		<h:outputText value="#{quoteController.selectedQuote.currencyIsoCode}"
 			rendered="#{not quoteForm.editMode}" />
-		<h:selectOneMenu value="#{quoteBean.quote.currencyIsoCode}"
+		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}"
 			rendered="#{quoteForm.editMode}">
 			<f:selectItem itemValue="USD" />
 			<f:selectItem itemValue="EUR" />
@@ -111,33 +117,33 @@
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.payNow}" />
-		<h:outputText value="#{quoteBean.quote.payNow}"
+		<h:outputText value="#{quoteController.selectedQuote.payNow}"
 			rendered="#{not quoteForm.editMode}" />
-		<h:selectOneMenu value="#{quoteBean.quote.payNow}"
+		<h:selectOneMenu value="#{quoteController.selectedQuote.payNow}"
 			rendered="#{quoteForm.editMode}">
 			<f:selectItem itemValue="Yes" />
 			<f:selectItem itemValue="No" />
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.amount}" />
-		<h:outputText value="#{quoteBean.quote.amount}">
-			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+		<h:outputText value="#{quoteController.selectedQuote.amount}">
+			<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
 				pattern="#,##0.00;(#,##0.00)" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.owner}" />
-		<h:outputText value="#{quoteBean.quote.ownerName}"
+		<h:outputText value="#{quoteController.selectedQuote.ownerName}"
 			rendered="#{not quoteForm.editMode}" />
 
 		<h:panelGroup rendered="#{quoteForm.editMode}">
 			<h:outputText id="ownerName"
-				value="#{quoteBean.quote.ownerName}" />
+				value="#{quoteController.selectedQuote.ownerName}" />
 
 			<h:outputText value=" " />
 
 			<a4j:commandLink id="changeOwner"
 				oncomplete="#{rich:component('ownerPanel')}.show()"
-				action="#{quoteManager.editQuote(quoteBean.quote)}"
+				status="ajaxStatus"
 				rerender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
 
 				<h:graphicImage value="./images/search.png" title="#{msgs.change}" />
@@ -147,16 +153,16 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.contact}" />
-		<h:outputText value="#{quoteBean.quote.contactName}"
+		<h:outputText value="#{quoteController.selectedQuote.contactName}"
 			rendered="#{not quoteForm.editMode}" />
 		<h:panelGroup rendered="#{quoteForm.editMode}">
-			<h:outputText value="#{quoteBean.quote.contactName}" />
+			<h:outputText value="#{quoteController.selectedQuote.contactName}" />
 
 			<h:outputText value=" " />
 
 			<a4j:commandLink id="changeContact"
 				oncomplete="#{rich:component('contactPanel')}.show()"
-				action="#{quoteManager.editQuote(quoteBean.quote)}"
+				status="ajaxStatus"
 				reRender="#{rich:clientId('contactPanel')}" ajaxSingle="true">
 
 				<h:graphicImage value="./images/search.png" title="#{msgs.change}" />
@@ -166,20 +172,20 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.effectiveDate}" />
-		<h:outputText value="#{quoteBean.quote.effectiveDate}"
+		<h:outputText value="#{quoteController.selectedQuote.effectiveDate}"
 			rendered="#{not quoteForm.editMode}">
-			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
+			<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
+				pattern="#{sessionManager.sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
 		<h:panelGroup rendered="#{quoteForm.editMode}">
-			<h:outputText value="#{quoteBean.quote.effectiveDate}"
-				rendered="#{quoteForm.opportunity.isClosed or empty quoteBean.quote}" />
+			<h:outputText value="#{quoteController.selectedQuote.effectiveDate}"
+				rendered="#{quoteController.opportunity.isClosed or empty quoteController.selectedQuote}" />
 
-			<rich:calendar value="#{quoteBean.quote.effectiveDate}"
-				id="effectiveDate" locale="#{sforceSession.sessionUser.locale}"
+			<rich:calendar value="#{quoteController.selectedQuote.effectiveDate}"
+				id="effectiveDate" locale="#{sessionManager.sessionUser.locale}"
 				popup="true"
-				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px" disabled="false">
 			</rich:calendar>
@@ -187,77 +193,77 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.expirationDate}" />
-		<h:outputText value="#{quoteBean.quote.expirationDate}"
+		<h:outputText value="#{quoteController.selectedQuote.expirationDate}"
 			rendered="#{not quoteForm.editMode}">
-			<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-				pattern="#{sforceSession.sessionUser.dateFormatPattern}" type="date" />
+			<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
+				pattern="#{sessionManager.sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
 		<h:panelGroup rendered="#{quoteForm.editMode}">
-			<h:outputText value="#{quoteBean.quote.expirationDate}"
+			<h:outputText value="#{quoteController.selectedQuote.expirationDate}"
 				rendered="#{not quoteForm.editMode}" />
 
-			<rich:calendar value="#{quoteBean.quote.expirationDate}"
-				id="expirationDate" locale="#{sforceSession.sessionUser.locale}"
+			<rich:calendar value="#{quoteController.selectedQuote.expirationDate}"
+				id="expirationDate" locale="#{sessionManager.sessionUser.locale}"
 				popup="true"
-				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px" disabled="false">
 			</rich:calendar>
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.referenceNumber}" />
-		<h:outputText value="#{quoteBean.quote.referenceNumber}"
+		<h:outputText value="#{quoteController.selectedQuote.referenceNumber}"
 			rendered="#{not quoteForm.editMode}" />
-		<h:inputText value="#{quoteBean.quote.referenceNumber}"
+		<h:inputText value="#{quoteController.selectedQuote.referenceNumber}"
 			rendered="#{quoteForm.editMode}" />
 
 		<h:outputText value="#{msgs.term}" />
-		<h:outputText value="#{quoteBean.quote.term}"
-			rendered="#{not quoteForm.editMode or quoteBean.quote.type != 'Standard'}">
-			<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+		<h:outputText value="#{quoteController.selectedQuote.term}"
+			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Standard'}">
+			<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
 				pattern="#,##0" />
 		</h:outputText>
-		<h:selectOneMenu value="#{quoteBean.quote.term}"
-			rendered="#{quoteForm.editMode and quoteBean.quote.type == 'Standard'}">
+		<h:selectOneMenu value="#{quoteController.selectedQuote.term}"
+			rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Standard'}">
 			<f:selectItem itemLabel="1" itemValue="365" />
 			<f:selectItem itemLabel="3" itemValue="1095" />
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.startDate}" />
 		<h:panelGroup>
-			<h:outputText value="#{quoteBean.quote.startDate}"
-				rendered="#{not quoteForm.editMode or quoteBean.quote.type != 'Standard'}">
-				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
+			<h:outputText value="#{quoteController.selectedQuote.startDate}"
+				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Standard'}">
+				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
+					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<rich:calendar value="#{quoteBean.quote.startDate}"
-				id="startDate" locale="#{sforceSession.sessionUser.locale}"
+			<rich:calendar value="#{quoteController.selectedQuote.startDate}"
+				id="startDate" locale="#{sessionManager.sessionUser.locale}"
 				popup="true"
-				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px"
-				rendered="#{quoteForm.editMode and quoteBean.quote.type == 'Standard'}"
+				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Standard'}"
 				disabled="false">
 			</rich:calendar>
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.endDate}" />
 		<h:panelGroup>
-			<h:outputText value="#{quoteBean.quote.endDate}"
-				rendered="#{not quoteForm.editMode or quoteBean.quote.type != 'Co-Term'}">
-				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-					pattern="#{sforceSession.sessionUser.dateFormatPattern}"
+			<h:outputText value="#{quoteController.selectedQuote.endDate}"
+				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Co-Term'}">
+				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
+					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<rich:calendar value="#{quoteBean.quote.endDate}"
-				id="endDate" locale="#{sforceSession.sessionUser.locale}"
+			<rich:calendar value="#{quoteController.selectedQuote.endDate}"
+				id="endDate" locale="#{sessionManager.sessionUser.locale}"
 				popup="true"
-				datePattern="#{sforceSession.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px"
-				rendered="#{quoteForm.editMode and quoteBean.quote.type == 'Co-Term'}"
+				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Co-Term'}"
 				disabled="false">
 			</rich:calendar>
 		</h:panelGroup>
@@ -265,12 +271,10 @@
 		<h:outputText value="#{msgs.createdBy}"
 			rendered="#{not quoteForm.editMode}" />			
 		<h:panelGroup rendered="#{not quoteForm.editMode}">
-			<h:outputText value="#{quoteBean.quote.createdByName}" />
-			<h:outputText value=", "
-				rendered="#{not empty quoteBean.quote}" escape="false" />
-			<h:outputText value="#{quoteBean.quote.createdDate}">
-				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-					pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
+			<h:outputText value="#{quoteController.selectedQuote.createdByName}, " />
+			<h:outputText value="#{quoteController.selectedQuote.createdDate}">
+				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
+					pattern="#{sessionManager.sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</h:panelGroup>
@@ -278,12 +282,10 @@
 		<h:outputText value="#{msgs.lastModifiedBy}"
 			rendered="#{not quoteForm.editMode}" />
 		<h:panelGroup rendered="#{not quoteForm.editMode}">
-			<h:outputText value="#{quoteBean.quote.lastModifiedByName}" />
-			<h:outputText value=", "
-				rendered="#{not empty quoteBean.quote}" escape="false" />
-			<h:outputText value="#{quoteBean.quote.lastModifiedDate}">
-				<f:convertDateTime locale="#{sforceSession.sessionUser.locale}"
-					pattern="#{sforceSession.sessionUser.dateTimeFormatPattern}"
+			<h:outputText value="#{quoteController.selectedQuote.lastModifiedByName}, " />
+			<h:outputText value="#{quoteController.selectedQuote.lastModifiedDate}">
+				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
+					pattern="#{sessionManager.sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</h:panelGroup>
@@ -305,54 +307,54 @@
 		columns="4">
 
 		<h:outputText value="#{msgs.billingAddress}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingAddress}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.billingAddress}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingAddress}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingAddress}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.shippingAddress}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingCity}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingCity}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.billingCity}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingCity}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingCity}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.shippingCity}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingState}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingState}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.billingState}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingState}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingState}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.shippingState}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingZipPostalCode}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingZipPostalCode}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.billingZipPostalCode}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingZipPostalCode}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingZipPostalCode}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.shippingZipPostalCode}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingCountry}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.billingCountry}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.billingCountry}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingCountry}" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
-		<h:outputText value="#{quoteForm.opportunity.shippingCountry}"
-			rendered="#{not empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+		<h:outputText value="#{quoteController.opportunity.shippingCountry}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 	</h:panelGrid>
 
@@ -365,16 +367,16 @@
 		columns="4">
 
 		<h:outputText value="Payment Terms" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
 		<h:outputText
-			value="#{quoteForm.opportunity.approvedCreditCheck.paymentTerms}"
-			rendered="#{not empty quoteBean.quote}" />
+			value="#{quoteController.opportunity.approvedCreditCheck.paymentTerms}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 		<h:outputText value="Credit Limit" />
-		<h:outputText value=" " rendered="#{empty quoteBean.quote}" />
+		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
 		<h:outputText
-			value="#{quoteForm.opportunity.approvedCreditCheck.creditLimit}"
-			rendered="#{not empty quoteBean.quote}" />
+			value="#{quoteController.opportunity.approvedCreditCheck.creditLimit}"
+			rendered="#{not empty quoteController.selectedQuote}" />
 
 
 	</h:panelGrid>

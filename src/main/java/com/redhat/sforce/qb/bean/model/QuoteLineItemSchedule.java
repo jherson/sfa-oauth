@@ -13,17 +13,10 @@ public class QuoteLineItemSchedule extends SObject {
     private Date startDate;
     private Double pricePerDay;
     private Integer year;
-    private String quoteLineItemId;
     private Date endDate;
     private Double prorateYearUnitPrice;
-    private String productDescription;
-    private String productCode;
-    private Integer term;
-    private Integer quantity;
-    private Double yearlySalesPrice;
-    private Double totalPrice;
-    private String contractNumbers;
-
+    private QuoteLineItem quoteLineItem;
+    
 	public QuoteLineItemSchedule() {
         super();
     }
@@ -92,14 +85,6 @@ public class QuoteLineItemSchedule extends SObject {
 		this.year = year;
 	}
 
-	public String getQuoteLineItemId() {
-		return quoteLineItemId;
-	}
-
-	public void setQuoteLineItemId(String quoteLineItemId) {
-		this.quoteLineItemId = quoteLineItemId;
-	}
-
 	public Date getEndDate() {
 		return endDate;
 	}
@@ -115,60 +100,12 @@ public class QuoteLineItemSchedule extends SObject {
 	public void setProrateYearUnitPrice(Double prorateYearUnitPrice) {
 		this.prorateYearUnitPrice = prorateYearUnitPrice;
 	}
-
-	public String getProductDescription() {
-		return productDescription;
+	
+	public QuoteLineItem getQuoteLineItem() {
+		return quoteLineItem;
 	}
-
-	public void setProductDescription(String productDescription) {
-		this.productDescription = productDescription;
-	}
-
-	public String getProductCode() {
-		return productCode;
-	}
-
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
-	}
-
-	public Integer getTerm() {
-		return term;
-	}
-
-	public void setTerm(Integer term) {
-		this.term = term;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
-	public Double getYearlySalesPrice() {
-		return yearlySalesPrice;
-	}
-
-	public void setYearlySalesPrice(Double yearlySalesPrice) {
-		this.yearlySalesPrice = yearlySalesPrice;
-	}
-
-	public Double getTotalPrice() {
-		return totalPrice;
-	}
-
-	public void setTotalPrice(Double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
-	public String getContractNumbers() {
-		return contractNumbers;
-	}
-
-	public void setContractNumbers(String contractNumbers) {
-		this.contractNumbers = contractNumbers;
+	
+	public void setQuoteLineItem(QuoteLineItem quoteLineItem) {
+		this.quoteLineItem = quoteLineItem;
 	}
 }

@@ -6,6 +6,10 @@
          
          <display-name>Quote Builder</display-name>  
          
+         <context-param>
+             <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+             <param-value>false</param-value>
+         </context-param>
 
          <session-config>
              <session-timeout>0</session-timeout>

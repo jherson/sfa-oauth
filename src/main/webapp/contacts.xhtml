@@ -23,14 +23,15 @@
 			<a4j:outputPanel layout="block">
 
 				<rich:dataTable id="contactList" var="contact"
-					value="#{quoteForm.opportunity.contacts}"
+					value="#{quoteController.opportunity.contacts}"
 					noDataLabel="#{msgs.noRecords}" style="width:100%;">
 
 					<rich:column width="200px">
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<a4j:commandLink value="#{contact.name}"
-							action="#{quoteManager.setQuoteContact(quoteBean.quote, contact)}"
+							action="#{quoteController.setQuoteContact(contact)}"
 							render="quoteList, details" ajaxSingle="true"
+							status="ajaxStatus"
 							oncomplete="#{rich:component('contactPanel')}.hide(); return false;" />
 					</rich:column>
 

@@ -1,4 +1,5 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -8,44 +9,51 @@
 	<rich:toolbar height="18" itemSeparator="grid">
 		<rich:toolbarGroup>
 			<h:outputText
-				value="#{msgs.headerTitle}: #{quoteForm.opportunity.name}" />
+				value="#{msgs.headerTitle}: #{quoteController.opportunity.name}" />
 		</rich:toolbarGroup>
 		<rich:toolbarGroup location="right">
 
 			<a4j:commandLink id="new" value="#{msgs.new}"
-				action="#{quoteManager.newQuote(quoteForm.opportunity)}"
-				styleClass="button" rendered="#{not quoteForm.opportunity.isClosed}"
-				focus="#{rich:clientId('name')}" render="quoteList, :details"
-				ajaxSingle="true" />
+				action="#{quoteController.newQuote()}"							
+				rendered="#{not quoteController.opportunity.isClosed}"
+				render="quoteList, details"
+				ajaxSingle="true" status="ajaxStatus">
+				<f:setPropertyActionListener value="#{true}" target="#{quoteForm.editMode}"/>
+			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.refresh}"
-				action="#{quoteManager.refresh()}" styleClass="button"
-				ajaxSingle="true" render="quoteList, :details" status="ajaxStatus" />
+				ajaxSingle="true" render="quoteList, details"> 
+				<f:setPropertyActionListener value="#{null}" target="#{quoteController.opportunity}"/>
+				<f:setPropertyActionListener value="#{null}" target="#{quoteController.quoteList}"/>
+			</a4j:commandLink>
 
 		</rich:toolbarGroup>
 	</rich:toolbar>
 
-	<rich:extendedDataTable id="quoteList" var="quote"
-		value="#{quoteForm.quoteList}" noDataLabel="#{msgs.noRecords}"
-		selection="#{quoteForm.selection}" style="height:120px;"
+	<rich:extendedDataTable 
+	    var="quote"
+		value="#{quoteController.quoteList}" 
+		noDataLabel="#{msgs.noRecords}"
+        style="height:120px;"
+		iterationStatusVar="it"
 		status="ajaxStatus">
 
 		<a4j:ajax execute="@this" event="selectionchange"
-			listener="#{quoteForm.selectionListener}" render=":details" />
+			listener="#{quoteListExtendedDataTableBean.selectionListener}" render="details" />
 
 		<rich:column width="75px">
 			<f:facet name="header">#{msgs.action}</f:facet>
 
 			<a4j:commandLink id="activate"
-				action="#{quoteManager.activateQuote(quote)}" ajaxSingle="true"
-				styleClass="no-decor" render="quoteList, viewQuotePanel">
+				action="#{quoteController.activateQuote(quote)}" ajaxSingle="true"
+				render="quoteList, viewQuotePanel">
 				<h:graphicImage value="./images/activate.png"
 					title="#{msgs.activate}" />
 			</a4j:commandLink>
 
 			<h:outputText value="  " escape="false" />
 
-			<a4j:commandLink id="copy" action="#{quoteManager.copyQuote(quote)}"
+			<a4j:commandLink id="copy" action="#{quoteController.copyQuote(quote)}"
 				ajaxSingle="true" render="quoteList" styleClass="no-decor"
 				status="ajaxStatus">
 				<h:graphicImage value="./images/copy.png" title="#{msgs.copy}" />
@@ -54,7 +62,7 @@
 			<h:outputText value="  " escape="false" />
 
 			<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
-				action="#{quoteManager.deleteQuote(quote)}" styleClass="no-decor"
+				action="#{quoteController.deleteQuote(quote)}" styleClass="no-decor"
 				ajaxSingle="true" status="ajaxStatus" render="quoteList, :details">
 				<h:graphicImage value="./images/delete.png" title="#{msgs.delete}" />
 			</a4j:commandLink>
@@ -87,7 +95,7 @@
 			<h:outputText value="#{quote.currencyIsoCode}" />
 			<h:outputText value="  " escape="false" />
 			<h:outputText value="#{quote.amount}">
-				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>
@@ -104,4 +112,4 @@
 
 	</rich:extendedDataTable>
 
-</ui:composition>
+</html>

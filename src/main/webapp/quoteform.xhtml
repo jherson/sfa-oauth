@@ -11,7 +11,11 @@
 
 	<h:form id="quoteForm">
 	
-		<ui:include src="quotelist.xhtml" />
+	    <a4j:outputPanel id="quoteList">
+		    
+		    <ui:include src="quotelist.xhtml" />
+		    
+        </a4j:outputPanel>	
 
 		<br />
 
@@ -22,7 +26,7 @@
 		<a4j:outputPanel id="messages" ajaxRendered="true">
 			<rich:messages />
 		</a4j:outputPanel>
-
+		
 		<a4j:outputPanel id="details">
 
 			<ui:include src="viewquotepanel.xhtml" />
@@ -32,8 +36,6 @@
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
 		<ui:include src="addopportunityproducts.xhtml" />	
-		
-		
 
 	</h:form>
 </ui:composition>

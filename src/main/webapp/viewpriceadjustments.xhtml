@@ -15,7 +15,7 @@
 
 	<rich:dataTable style="width: 100%" var="priceAdjustment"
 		noDataLabel="#{msgs.noRecords}"
-		value="#{quoteBean.quote.quotePriceAdjustments}">
+		value="#{quoteController.selectedQuote.quotePriceAdjustments}">
 
 		<rich:column style="width: 20%;">
 			<f:facet name="header">#{msgs.reason}</f:facet>
@@ -25,10 +25,10 @@
 		<rich:column style="text-align: right; width: 20%;">
 			<f:facet name="header">#{msgs.percent}</f:facet>
 			<h:outputText value="#{priceAdjustment.percent}"
-			    rendered="#{not quoteForm.editMode}" />
+			    rendered="#{not quotebean.editMode}" />
 			<h:inputText value="#{priceAdjustment.percent}"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sforceSession.sessionUser.locale}"
+				rendered="#{quotebean.editMode}">
+				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>					
 			</h:inputText>    
