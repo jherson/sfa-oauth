@@ -15,9 +15,10 @@
 			<supported-locale>fr</supported-locale>
 		</locale-config>
 		<resource-bundle>
-			<base-name>com.redhat.sforce.qb.bean.resources.MessageResources</base-name>
+			<base-name>com.redhat.sforce.qb.resources.messages</base-name>
 			<var>msgs</var>
 		</resource-bundle>
+
 	</application>
 
 

@@ -20,7 +20,7 @@
 	switchType="client" rightCollapsedIcon="triangleUp"
 	rightExpandedIcon="triangleDown" leftCollapsedIcon="./images/quote.png"
 	leftExpandedIcon="./images/quote.png" bodyClass="panel-body"
-	style="border-top: 0; border-left: 0; border-right: 0; border-bottom: 0;">
+	style="border: 0;">
 
 	<rich:toolbar height="18" itemSeparator="grid">
 
@@ -28,10 +28,11 @@
 
 			<a4j:commandLink id="new" value="#{msgs.new}"
 				action="#{quoteController.newQuote()}"
-				rendered="#{not quoteController.opportunity.isClosed}"
+				rendered="#{not quoteController.opportunity.isClosed}"				
+				oncomplete="#{rich:element('quoteForm:quoteName')}.focus() "
 				render="quoteList, details" ajaxSingle="true" status="ajaxStatus">
 				<f:setPropertyActionListener value="#{true}"
-					target="#{quoteForm.editMode}" />
+					target="#{quoteForm.editMode}" />					
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="true"
@@ -45,9 +46,10 @@
 		</rich:toolbarGroup>
 	</rich:toolbar>
 
-	<rich:extendedDataTable var="quote"
+	<rich:extendedDataTable id="quoteListDataTable" var="quote"
 		value="#{quoteController.quoteList}" noDataLabel="#{msgs.noRecords}"
-		style="height:120px;" iterationStatusVar="it" status="ajaxStatus">
+		style="height:120px;" iterationStatusVar="it" status="ajaxStatus"
+		selectionMode="single">
 
 		<a4j:ajax execute="@this" event="selectionchange"
 			listener="#{quoteListExtendedDataTableBean.selectionListener}"

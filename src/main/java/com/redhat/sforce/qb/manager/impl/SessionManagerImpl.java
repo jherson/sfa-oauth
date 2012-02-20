@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.manager.impl;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
@@ -102,6 +104,23 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		return null;
 	}
 	
+	public List<String> queryCurrencies() throws SforceServiceException {
+		List<String> currencyList = new ArrayList<String>();
+		JSONArray queryResults = sforceService.query(getSessionId(), "Select IsoCode from CurrencyType Where IsActive = true Order By IsoCode");
+		for (int i = 0; i < queryResults.length(); i++) {
+			JSONObject jsonObject = null;
+			try {
+				jsonObject = queryResults.getJSONObject(i);
+				currencyList.add(jsonObject.getString("IsoCode"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return currencyList;
+	}
+	
 	@Override
 	public Opportunity queryOpportunity() throws SforceServiceException {
 		return sforceService.getOpportunity(getSessionId(), getOpportunityId());			
@@ -142,14 +161,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SforceServiceException {
 		sforceService.addOpportunityLineItems(getSessionId(), quote.getId(), OpportunityLineItemFactory.serializeOpportunityLineItems(opportunityLineItems));
 	}
-//	
-//	public List<String> queryCurrencies() {
-	//private static final String currencyQuery = 
-	//		"Select CurrencyIsoCode from CurrencyType Where IsActive = true Order By CurrencyIsoCode";
-//		JSONArray queryResults = sforceService.read(userBean.getSessionId(), currencyQuery);
-//		
-//		return;
-//	}
 		
 	private void setSessionId(String sessionId) {
 		this.sessionId = sessionId; 		
@@ -176,8 +187,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	}	
 	
 	@Override
-	public PricebookEntry validateProduct(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {		
-		return sforceService.validateProduct(getSessionId(), pricebookId, productCode, currencyIsoCode);
+	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {		
+		return sforceService.queryPricebookEntry(getSessionId(), pricebookId, productCode, currencyIsoCode);
 	}
 	
 	@Override

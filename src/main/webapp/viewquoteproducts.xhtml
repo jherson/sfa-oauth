@@ -5,9 +5,19 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
+	
+<h:outputStylesheet>
+	.panel-body {
+        color: #000000;
+        font-family: Arial,Verdana,sans-serif;
+        font-size: 11px;
+        padding: 0px;
+    }
+</h:outputStylesheet>	
 
 <rich:panel id="viewQuoteProducts"
-	style="border-color: #C27E3A; background-color: #FCF9F5;">
+	style="border: 0px; border-color: #C27E3A; background-color: #FCF9F5;"
+	bodyClass="panel-body">
 
 	<rich:toolbar height="18" itemSeparator="grid">
 
@@ -15,14 +25,14 @@
 
 			<a4j:commandLink value="#{msgs.delete}"
 				rendered="#{quoteForm.editMode}"
-				action="#{quoteForm.deleteQuoteLineItems()}"
+				action="#{quoteController.deleteQuoteLineItems()}"
 				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
-				render="quoteList, quoteForm:details" ajaxSingle="true" />
+				render="quoteList, details" ajaxSingle="true" />
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true"
 				rendered="#{quoteForm.editMode}" status="ajaxStatus"
 				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
-				action="#{quoteForm.cancelQuote()}"
+				action="#{quoteController.cancelQuote()}"
 				render="details" ajaxSingle="true" />
 
 		</rich:toolbarGroup>
@@ -32,26 +42,23 @@
 		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
 				rendered="#{quoteForm.editMode and quoteController.selectedQuote.currencyIsoCode == quoteController.opportunity.currencyIsoCode}"
 				disabled="#{empty quoteController.opportunity.opportunityLineItems}"
-				action="#{quoteForm.addOpportunityLineItems(quoteForm.opportunity)}"
+				action="#{quoteController.addOpportunityLineItems(quoteForm.opportunity)}"
 				render="quoteList, details" ajaxSingle="true" />
 
 			<a4j:commandLink value="#{msgs.addProduct}"
 				rendered="#{quoteForm.editMode}"
-				action="#{quoteForm.addQuoteLineItem()}"
-				render="quoteList, details" ajaxSingle="true" 
+				action="#{quoteController.newQuoteLineItem()}"
+				render="quoteList, details" ajaxSingle="true"		
 				status="ajaxStatus"/>
 
 		</rich:toolbarGroup>
 
 	</rich:toolbar>
 
-	<rich:dataTable style="width: 100%" var="lineItem"
+	<rich:dataTable id="quoteProductsTable" style="width: 100%" var="lineItem"
 		noDataLabel="#{msgs.noRecords}"
-		binding="#{quoteLineItemListDataTableBean.dataTable}"
 		iterationStatusVar="it"
 		status="ajaxStatus"
-		onRowMouseOver="this.style.backgroundColor='#B5F3FB'"
-        onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowBackgroundColor}'"
 		value="#{quoteController.selectedQuote.quoteLineItems}">
 
 		<rich:column style="text-align: center; width: 3%;">
@@ -69,9 +76,11 @@
 			<h:inputText id="productCode" value="#{lineItem.product.productCode}"
 				style="width: 75px;" rendered="#{quoteForm.editMode}"
 				execute="immediate" ajaxSingle="true">
+				<f:attribute name="rowIndex" value="#{it.index}"/>
 
 				<a4j:ajax execute="@this" event="valueChange"
-					listener="#{quoteLineItemListDataTableBean.validateProduct}" render="viewQuoteProducts" />
+					listener="#{quoteLineItemListDataTableBean.validateProduct}" render="viewQuoteProducts">					  
+				</a4j:ajax>
 
 			</h:inputText>
 

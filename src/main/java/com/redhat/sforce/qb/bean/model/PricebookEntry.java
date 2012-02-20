@@ -4,6 +4,7 @@ public class PricebookEntry extends SObject {
 	
 	private static final long serialVersionUID = 1L;
     private String currencyIsoCode;
+    private Double unitPrice;
     private Product product;
     
 	public String getCurrencyIsoCode() {
@@ -14,6 +15,14 @@ public class PricebookEntry extends SObject {
 		this.currencyIsoCode = currencyIsoCode;
 	}
 	
+	public Double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
 	public Product getProduct() {
 		return product;
 	}

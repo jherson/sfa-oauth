@@ -27,5 +27,6 @@ public interface SessionManager {
 	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SforceServiceException;
-	public PricebookEntry validateProduct(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
+	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
+	public List<String> queryCurrencies() throws SforceServiceException;
 }

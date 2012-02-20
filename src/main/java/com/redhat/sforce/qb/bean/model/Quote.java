@@ -70,6 +70,8 @@ public class Quote extends SObject {
 		setAmount(new Double(0));
 		setTerm(365);
 		setEffectiveDate(new Date());
+		setHasQuoteLineItems(Boolean.FALSE);
+		setHasApprovalRequests(Boolean.FALSE);
 		
 		GregorianCalendar calendar = new GregorianCalendar();
 		

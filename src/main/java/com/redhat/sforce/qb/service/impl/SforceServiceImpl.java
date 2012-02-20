@@ -30,11 +30,13 @@ import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.service.SforceService;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
-public class SforceServiceImpl implements Serializable,  SforceService {		
+public class SforceServiceImpl implements Serializable, SforceService {		
 
 	private static final long serialVersionUID = 1L;
-	private static String API_VERSION = null;
-	private static String INSTANCE_URL = null;
+	
+	private static String API_VERSION;
+	
+	private static String INSTANCE_URL;
 	
 	private SforceServiceImpl() {
 		try {
@@ -53,8 +55,8 @@ public class SforceServiceImpl implements Serializable,  SforceService {
         Properties properties = new Properties();
 		properties.load(inStream);
 
-		API_VERSION = properties.getProperty("api.version");
-		INSTANCE_URL = properties.getProperty("instance.url");
+		API_VERSION = properties.getProperty("apiVersion");
+		INSTANCE_URL = properties.getProperty("instanceUrl");
 	}	
 	
 	@Override
@@ -91,11 +93,16 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	}
 	
 	@Override
-	public PricebookEntry validateProduct(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/validateProduct?pricebookId=" + 
-	        pricebookId + "&productCode=" + productCode + "&currencyIsoCode=" + currencyIsoCode;
+	public PricebookEntry queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/pricebookEntry";
 		
-		JSONObject jsonObject = doGet(accessToken, url);
+		NameValuePair[] params = new NameValuePair[3];
+		params[0] = new NameValuePair("pricebookId", pricebookId);
+		params[1] = new NameValuePair("productCode", productCode);
+		params[2] = new NameValuePair("currencyIsoCode", currencyIsoCode);
+		
+		System.out.println(url);
+		JSONObject jsonObject = doGet(accessToken, url, params);
 		try {
 			return PricebookEntryFactory.deserializePricebookEntry(jsonObject);
 		} catch (JSONException e) {
@@ -215,8 +222,12 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public Opportunity getOpportunity(String accessToken, String opportunityId) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/opportunity?opportunityId=" + opportunityId;
-		JSONObject jsonObject = doGet(accessToken, url);
+		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/opportunity";
+		
+		NameValuePair[] params = new NameValuePair[1];
+		params[0] = new NameValuePair("opportunityId", opportunityId);
+		
+		JSONObject jsonObject = doGet(accessToken, url, params);
 		try {
 			return OpportunityFactory.fromJSON(jsonObject);
 		} catch (JSONException e) {
@@ -232,8 +243,12 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public Quote getQuote(String accessToken, String quoteId) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/quote?quoteId=" + quoteId;
-		JSONObject jsonObject = doGet(accessToken, url);
+		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/quote";
+		
+		NameValuePair[] params = new NameValuePair[1];
+		params[0] = new NameValuePair("quoteId", quoteId);
+		
+		JSONObject jsonObject = doGet(accessToken, url, params);
 		try {
 			return QuoteFactory.deserialize(jsonObject);
 		} catch (JSONException e) {
@@ -279,10 +294,14 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 		}
 	}
 	
-	private JSONObject doGet(String accessToken, String url) throws SforceServiceException {
+	private JSONObject doGet(String accessToken, String url, NameValuePair[] params) throws SforceServiceException {
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
 		getMethod.setRequestHeader("Content-type", "application/json");
+		
+		if (params != null) {
+			getMethod.setQueryString(params);
+		}
 		
 		JSONObject response = null;
 		HttpClient httpclient = new HttpClient();
@@ -310,11 +329,15 @@ public class SforceServiceImpl implements Serializable,  SforceService {
 	
 	@Override
 	public void copyQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/copy?quoteId=" + quoteId;	
+		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/copy";	
+		
+		NameValuePair[] params = new NameValuePair[1];
+		params[0] = new NameValuePair("quoteId", quoteId);
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
 		postMethod.setRequestHeader("Content-type", "application/json");
+		postMethod.setQueryString(params);
 		
 		HttpClient httpclient = new HttpClient();
 		try {

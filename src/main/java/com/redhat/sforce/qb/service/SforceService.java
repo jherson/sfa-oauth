@@ -24,5 +24,5 @@ public interface SforceService {
     public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;
     public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;
     public void saveQuotePriceAdjustments(String accessToken, JSONArray jsonArray) throws SforceServiceException;
-    public PricebookEntry validateProduct(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
+    public PricebookEntry queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;    
 }

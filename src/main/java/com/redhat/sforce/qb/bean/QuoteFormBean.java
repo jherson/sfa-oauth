@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.bean;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -8,10 +9,13 @@ import javax.faces.event.AjaxBehaviorEvent;
 @ManagedBean(name="quoteForm")
 @ViewScoped
 
-public class QuoteFormBean implements QuoteForm {
+public class QuoteFormBean {
 
-	private Boolean editMode = false;
-	private Boolean toggleCheckboxes = false;	
+	@ManagedProperty(value="false")
+	private Boolean editMode;
+	
+	@ManagedProperty(value="false")
+	private Boolean toggleCheckboxes;	
 	
 	public void setEditMode(Boolean editMode) {
 		this.editMode = editMode;

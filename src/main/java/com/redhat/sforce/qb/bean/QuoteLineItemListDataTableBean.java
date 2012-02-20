@@ -41,27 +41,29 @@ public class QuoteLineItemListDataTableBean {
 	public void setQuoteController(QuoteController quoteController) {
 		this.quoteController = quoteController;
 	}
-		
-	private UIDataTable dataTable;
 	
-	public UIDataTable getDataTable() {
-		return dataTable;
-	}
-
-	public void setDataTable(UIDataTable dataTable) {
-		this.dataTable = dataTable;
+	private int rowIndex;
+	
+	public void setRowIndex(int rowIndex) {
+		this.rowIndex = rowIndex;
 	}
 	
-	public void validateProduct(AjaxBehaviorEvent event) {		
+	public int getRowIndex() {
+		return rowIndex;
+	}
+	
+	public void validateProduct(AjaxBehaviorEvent event) {						
 		HtmlInputText inputText = (HtmlInputText) event.getComponent();
 		String productCode = inputText.getValue().toString();
-		int rowIndex = getDataTable().getRowIndex();
+
+		int rowIndex = Integer.valueOf(event.getComponent().getAttributes().get("rowIndex").toString());
 		
 		try {
 		    PricebookEntry pricebookEntry = queryPricebookEntry(quoteController.getSelectedQuote().getPricebookId(), productCode, quoteController.getSelectedQuote().getCurrencyIsoCode());
 		    
 		    QuoteLineItem quoteLineItem = quoteController.getSelectedQuote().getQuoteLineItems().get(rowIndex);
 		    quoteLineItem.setCurrencyIsoCode(pricebookEntry.getCurrencyIsoCode());
+		    quoteLineItem.setListPrice(pricebookEntry.getUnitPrice());
 		    quoteLineItem.setDescription(pricebookEntry.getProduct().getDescription());
 		    quoteLineItem.setPricebookEntryId(pricebookEntry.getId());
 		    quoteLineItem.setProduct(pricebookEntry.getProduct());
@@ -76,6 +78,6 @@ public class QuoteLineItemListDataTableBean {
 	}
 	
 	private PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {
-		return sessionManager.validateProduct(pricebookId, productCode, currencyIsoCode); 
+		return sessionManager.queryPricebookEntry(pricebookId, productCode, currencyIsoCode); 
 	}
 }

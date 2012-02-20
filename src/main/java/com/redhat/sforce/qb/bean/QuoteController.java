@@ -12,6 +12,7 @@ public interface QuoteController {
 	public Opportunity getOpportunity();
 	public List<Quote> getQuoteList();
 	public Quote getSelectedQuote();
+	public Quote getActiveQuote();
 	public void setOpportunity(Opportunity opportunity);
 	public void setQuoteList(List<Quote> quoteList);
 	public void setSelectedQuote(Quote quote);

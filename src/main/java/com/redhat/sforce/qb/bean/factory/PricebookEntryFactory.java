@@ -30,6 +30,7 @@ public class PricebookEntryFactory {
 	    PricebookEntry pricebookEntry = new PricebookEntry();
 	    pricebookEntry.setId(wrapper.getId());
 	    pricebookEntry.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+	    pricebookEntry.setUnitPrice(wrapper.getDouble("UnitPrice"));
 	    pricebookEntry.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product2")));
 	    
 	    return pricebookEntry;

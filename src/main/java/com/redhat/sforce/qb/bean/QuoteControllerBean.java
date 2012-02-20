@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.bean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -8,6 +9,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+
+import org.richfaces.component.UIExtendedDataTable;
 
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Opportunity;
@@ -36,18 +39,47 @@ public class QuoteControllerBean implements QuoteController {
 	private Opportunity opportunity;
 	private List<Quote> quoteList;
 	private Quote selectedQuote;
+	private Integer selectedQuoteIndex;
 
 	@Override
 	public List<Quote> getQuoteList() {
 		if (quoteList == null) {
 			try {
 				setQuoteList(sessionManager.queryQuotes());
+				
+				if (selectedQuoteIndex != null) {
+					setSelectedQuote(quoteList.get(selectedQuoteIndex.intValue()));
+				} else {
+				
+					if (quoteList != null) {
+						int index = 0;
+						Quote activeQuote = getActiveQuote();
+						if (activeQuote != null) {
+							index = quoteList.indexOf(activeQuote);
+						}
+			            UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteListDataTable");
+			            dataTable.setSelection(new ArrayList<Object>(Arrays.asList(new Object[] {index})));	
+			            setSelectedQuote(quoteList.get(index));
+					}			        
+				}
+				
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
 			}
 		}
 		return quoteList;
+	}
+	
+	@Override
+	public Quote getActiveQuote() {
+		for (Quote quote : getQuoteList()) {
+			if (quote.getIsActive()) { 
+				return quote;
+			}
+		}
+		
+		return null;
 	}
 	
 	@Override
@@ -62,7 +94,8 @@ public class QuoteControllerBean implements QuoteController {
 
 	@Override
 	public void setSelectedQuote(Quote selectedQuote) {
-		this.selectedQuote = selectedQuote;		
+		this.selectedQuote = selectedQuote;				
+		this.selectedQuoteIndex = quoteList.indexOf(selectedQuote);
 	}
 
 	@Override
@@ -125,7 +158,6 @@ public class QuoteControllerBean implements QuoteController {
 	public void deleteQuote(Quote quote) {
 		sessionManager.deleteQuote(quote);				
 		setQuoteList(null);
-		setSelectedQuote(null);
 	}
 	
 	@Override
@@ -138,14 +170,14 @@ public class QuoteControllerBean implements QuoteController {
 	public void save() {
 		saveQuote();
 		saveQuoteLineItems();
-		calculateQuote();
-		setQuoteList(null);
+		setQuoteList(null);		
 	}
 	
 	@Override
 	public void saveQuote() {	
 		try {
-		    sessionManager.saveQuote(getSelectedQuote());   
+		    sessionManager.saveQuote(getSelectedQuote());  
+		    
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -195,7 +227,8 @@ public class QuoteControllerBean implements QuoteController {
 	@Override
 	public void addOpportunityLineItems() {
 		try {
-			sessionManager.addOpportunityLineItems(getSelectedQuote(), getOpportunity().getOpportunityLineItems());		    
+			sessionManager.addOpportunityLineItems(getSelectedQuote(), getOpportunity().getOpportunityLineItems());		 
+			
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -204,7 +237,7 @@ public class QuoteControllerBean implements QuoteController {
 	
 	@Override
 	public void newQuoteLineItem() {
-		getSelectedQuote().getQuoteLineItems().add(new QuoteLineItem(getSelectedQuote()));
+		getSelectedQuote().getQuoteLineItems().add(new QuoteLineItem(getSelectedQuote()));				
 	}
 	
 	@Override
@@ -224,7 +257,7 @@ public class QuoteControllerBean implements QuoteController {
 		
 		try {
 		    sessionManager.deleteQuoteLineItems(quoteLineItems);
-		    calculateQuote();
+		    
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -241,5 +274,7 @@ public class QuoteControllerBean implements QuoteController {
 	public void setQuoteOwner(User user) {
 		getSelectedQuote().setOwnerId(user.getId());
 		getSelectedQuote().setOwnerName(user.getName());
-	}
+	}	
+	
+
 }

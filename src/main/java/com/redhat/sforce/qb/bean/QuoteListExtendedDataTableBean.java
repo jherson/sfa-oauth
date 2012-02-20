@@ -23,14 +23,15 @@ public class QuoteListExtendedDataTableBean {
 	
 	public void setQuoteController(QuoteController quoteController) {
 		this.quoteController = quoteController;
-	}
-		
+	}	
+			
 	public void selectionListener(AjaxBehaviorEvent event) {
 		UIExtendedDataTable dataTable = (UIExtendedDataTable) event.getComponent();
 		for (Object selectionKey : dataTable.getSelection()) {
 			dataTable.setRowKey(selectionKey);
             if (dataTable.isRowAvailable()) {
             	getQuoteController().setSelectedQuote((Quote) dataTable.getRowData());
+            	break;
             }
         }
     }	
