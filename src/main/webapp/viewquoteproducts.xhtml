@@ -27,13 +27,15 @@
 				rendered="#{quoteForm.editMode}"
 				action="#{quoteController.deleteQuoteLineItems()}"
 				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
-				render="quoteList, details" ajaxSingle="true" />
+				render="quoteList, details" ajaxSingle="true" >
+			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true"
 				rendered="#{quoteForm.editMode}" status="ajaxStatus"
 				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
-				action="#{quoteController.cancelQuote()}"
-				render="details" ajaxSingle="true" />
+				action="#{quoteController.reset()}"
+				render="details" ajaxSingle="true" >				
+			</a4j:commandLink>
 
 		</rich:toolbarGroup>
 
@@ -42,7 +44,7 @@
 		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
 				rendered="#{quoteForm.editMode and quoteController.selectedQuote.currencyIsoCode == quoteController.opportunity.currencyIsoCode}"
 				disabled="#{empty quoteController.opportunity.opportunityLineItems}"
-				action="#{quoteController.addOpportunityLineItems(quoteForm.opportunity)}"
+				action="#{quoteController.addOpportunityLineItems()}"
 				render="quoteList, details" ajaxSingle="true" />
 
 			<a4j:commandLink value="#{msgs.addProduct}"

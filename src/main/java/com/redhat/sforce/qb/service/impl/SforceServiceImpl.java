@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-import java.util.Properties;
+
+import javax.inject.Inject;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -21,6 +22,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ApplicationScoped;
+
+import com.redhat.sforce.qb.bean.PropertiesBean;
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.PricebookEntryFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
@@ -30,6 +36,9 @@ import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.service.SforceService;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
+@ManagedBean(name="sforceService")
+@ApplicationScoped
+
 public class SforceServiceImpl implements Serializable, SforceService {		
 
 	private static final long serialVersionUID = 1L;
@@ -38,26 +47,22 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	private static String INSTANCE_URL;
 	
-	private SforceServiceImpl() {
-		try {
-			init();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	@Inject
+	private PropertiesBean properties;
+	
+	public PropertiesBean getProperties() {
+		return properties;
+	}
+
+	public void setProperties(PropertiesBean properties) {
+		this.properties = properties;
 	}
 	
-	private void init() throws IOException, UnsupportedEncodingException {
-		InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");		
-        Properties properties = new Properties();
-		properties.load(inStream);
-
-		API_VERSION = properties.getProperty("apiVersion");
-		INSTANCE_URL = properties.getProperty("instanceUrl");
-	}	
+	@PostConstruct		
+	public void init() {
+		API_VERSION = properties.getApiVersion();
+		INSTANCE_URL = properties.getInstanceUrl();
+	}
 	
 	@Override
 	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException {
@@ -264,7 +269,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException {
-        String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/delete";	
+        String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/deleteQuoteLineItems";	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);

@@ -42,9 +42,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private String sessionId;
 	
 	private String opportunityId;
-	
-	private String quoteId;
-	
+		
 	@Inject
 	private SessionUser sessionUser;	
 	
@@ -63,10 +61,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		if (request.getParameter("opportunityId") != null) {			
 			setOpportunityId(request.getParameter("opportunityId"));
-		}
-		
-		if (request.getParameter("quoteId") != null) {
-			setQuoteId(request.getParameter("quoteId"));
 		}
 		
 		try {
@@ -176,14 +170,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	private String getOpportunityId() {
 		return opportunityId;
-	}
-	
-	private void setQuoteId(String quoteId) {
-		this.quoteId = quoteId;		
-	}
-
-	private String getQuoteId() {
-		return quoteId;
 	}	
 	
 	@Override

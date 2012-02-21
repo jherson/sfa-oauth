@@ -28,6 +28,10 @@
 		</a4j:outputPanel>
 		
 		<a4j:outputPanel id="details">
+		
+		    <rich:hotKey rendered="#{quoteForm.editMode}" enabledInInput="true" key="CTRL+s" preventDefault="true">
+                <rich:componentControl target="quoteForm:save" operation="onclick()" />
+            </rich:hotKey>	
 
 			<ui:include src="viewquotepanel.xhtml" />
 

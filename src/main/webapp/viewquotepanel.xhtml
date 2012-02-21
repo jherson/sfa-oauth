@@ -4,14 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+	xmlns:rich="http://richfaces.org/rich">		
 	
-	<rich:hotKey selector="#quoteForm" key="ctrl+s">
-                <rich:componentControl target="#{rich:element('quoteForm:save')}" operation="click()" />
-            </rich:hotKey>
-	
-	
-		
 <rich:toolbar height="18" itemSeparator="grid" style="border: 1;">
 
 	<rich:toolbarGroup location="right">
@@ -48,13 +42,13 @@
 			<h:outputText value="#{msgs.delete}" />
 		</a4j:commandLink>
 
-		<a4j:commandButton id="save" 
+		<a4j:commandLink id="save" 
 			action="#{quoteController.save()}"
 			rendered="#{quoteForm.editMode}" render="quoteList, details"
 			ajaxSingle="true" >
 			<f:setPropertyActionListener value="#{false}" target="#{quoteForm.editMode}"/>
 			<h:outputText value="#{msgs.save}" />			
-		</a4j:commandButton>
+		</a4j:commandLink>
 		
 		<a4j:commandLink id="reset" 
 			rendered="#{quoteForm.editMode}" 
@@ -115,8 +109,8 @@
 
 		<h:outputText value="#{msgs.currency}" />
 		<h:outputText value="#{quoteController.selectedQuote.currencyIsoCode}"
-			rendered="#{not quoteForm.editMode}" />
-		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}"
+			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.hasQuoteLineItems}" />
+		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}" style="width:50px;"
 			rendered="#{quoteForm.editMode and not quoteController.selectedQuote.hasQuoteLineItems}">
 			<f:selectItems value="#{salesforce.currencyList}"/>
 		</h:selectOneMenu>

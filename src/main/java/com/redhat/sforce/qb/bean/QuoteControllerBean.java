@@ -43,11 +43,11 @@ public class QuoteControllerBean implements QuoteController {
 
 	@Override
 	public List<Quote> getQuoteList() {
-		if (quoteList == null) {
+		if (quoteList == null) {			
 			try {
-				setQuoteList(sessionManager.queryQuotes());
-				
-				if (selectedQuoteIndex != null) {
+				setQuoteList(sessionManager.queryQuotes());				
+
+				if (selectedQuoteIndex != null) {					
 					setSelectedQuote(quoteList.get(selectedQuoteIndex.intValue()));
 				} else {
 				
@@ -56,8 +56,8 @@ public class QuoteControllerBean implements QuoteController {
 						Quote activeQuote = getActiveQuote();
 						if (activeQuote != null) {
 							index = quoteList.indexOf(activeQuote);
-						}
-			            UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteListDataTable");
+						}		
+						UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteListDataTable");
 			            dataTable.setSelection(new ArrayList<Object>(Arrays.asList(new Object[] {index})));	
 			            setSelectedQuote(quoteList.get(index));
 					}			        
@@ -84,7 +84,7 @@ public class QuoteControllerBean implements QuoteController {
 	
 	@Override
 	public void setQuoteList(List<Quote> quoteList) {
-		this.quoteList = quoteList;		
+		this.quoteList = quoteList;				
 	}	
 
 	@Override
@@ -94,8 +94,8 @@ public class QuoteControllerBean implements QuoteController {
 
 	@Override
 	public void setSelectedQuote(Quote selectedQuote) {
-		this.selectedQuote = selectedQuote;				
-		this.selectedQuoteIndex = quoteList.indexOf(selectedQuote);
+		this.selectedQuote = selectedQuote;
+		this.selectedQuoteIndex = getQuoteList().indexOf(selectedQuote);
 	}
 
 	@Override
@@ -158,6 +158,7 @@ public class QuoteControllerBean implements QuoteController {
 	public void deleteQuote(Quote quote) {
 		sessionManager.deleteQuote(quote);				
 		setQuoteList(null);
+		setSelectedQuote(null);
 	}
 	
 	@Override
@@ -215,6 +216,8 @@ public class QuoteControllerBean implements QuoteController {
 		if (quoteId != null) {
 			try {
 				setSelectedQuote(sessionManager.queryQuote(quoteId));
+				setQuoteList(null);
+
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
@@ -227,7 +230,8 @@ public class QuoteControllerBean implements QuoteController {
 	@Override
 	public void addOpportunityLineItems() {
 		try {
-			sessionManager.addOpportunityLineItems(getSelectedQuote(), getOpportunity().getOpportunityLineItems());		 
+			sessionManager.addOpportunityLineItems(getSelectedQuote(), getOpportunity().getOpportunityLineItems());	
+			setQuoteList(null);	
 			
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
@@ -257,6 +261,7 @@ public class QuoteControllerBean implements QuoteController {
 		
 		try {
 		    sessionManager.deleteQuoteLineItems(quoteLineItems);
+		    setQuoteList(null);	
 		    
 		} catch (SforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());

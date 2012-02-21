@@ -103,7 +103,7 @@
 			<groupId>org.richfaces.core</groupId>
 			<artifactId>richfaces-core-impl</artifactId>
 			<version>${richfaces.version}</version>
-		</dependency>
+		</dependency>		
 
 	</dependencies>
 

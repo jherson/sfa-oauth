@@ -8,8 +8,6 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import org.richfaces.component.UIDataTable;
-
 import com.redhat.sforce.qb.bean.model.PricebookEntry;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.manager.SessionManager;
