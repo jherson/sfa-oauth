@@ -1,7 +1,5 @@
 package com.redhat.sforce.qb.bean;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -9,6 +7,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import com.redhat.sforce.qb.bean.model.CurrencyIsoCodes;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
@@ -17,7 +16,7 @@ import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 public class SalesforceBean {
 
-	private List<String> currencyList;
+	private CurrencyIsoCodes currencyList;
 	
 	@ManagedProperty(value="#{sessionManager}")
     private SessionManager sessionManager;
@@ -39,13 +38,12 @@ public class SalesforceBean {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}		
 	}
-	
-	public List<String> getCurrencyList() {		
+
+	public CurrencyIsoCodes getCurrencyList() {
 		return currencyList;
 	}
-	
-	public void setCurrencyList(List<String> currencyList) {
+
+	public void setCurrencyList(CurrencyIsoCodes currencyList) {
 		this.currencyList = currencyList;
-	}
-	
+	}		
 }

@@ -39,7 +39,7 @@ public class Opportunity extends SObject {
     private String oracleAccountNumber;
     private String accountAliasName;
     private User owner;
-    private CreditCheck approvedCreditCheck;
+    private List<CreditCheck> creditChecks;
     private List<OpportunityLineItem> opportunityLineItems;
     private List<Contact> contacts;
     private List<User> salesTeam;
@@ -177,12 +177,12 @@ public class Opportunity extends SObject {
 		this.owner = owner;
 	}
 
-	public CreditCheck getApprovedCreditCheck() {
-		return approvedCreditCheck;
+	public List<CreditCheck> getCreditChecks() {
+		return creditChecks;
 	}
 
-	public void setApprovedCreditCheck(CreditCheck approvedCreditCheck) {
-		this.approvedCreditCheck = approvedCreditCheck;
+	public void setCreditChecks(List<CreditCheck> creditChecks) {
+		this.creditChecks = creditChecks;
 	}
 
 	public String getFulfillmentChannel() {

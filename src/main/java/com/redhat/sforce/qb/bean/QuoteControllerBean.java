@@ -1,7 +1,6 @@
 package com.redhat.sforce.qb.bean;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -10,10 +9,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.richfaces.component.UIExtendedDataTable;
-
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.bean.model.User;
@@ -36,32 +34,14 @@ public class QuoteControllerBean implements QuoteController {
 		this.sessionManager = sessionManager;
 	}
 
-	private Opportunity opportunity;
 	private List<Quote> quoteList;
 	private Quote selectedQuote;
-	private Integer selectedQuoteIndex;
 
 	@Override
 	public List<Quote> getQuoteList() {
 		if (quoteList == null) {			
 			try {
 				setQuoteList(sessionManager.queryQuotes());				
-
-				if (selectedQuoteIndex != null) {					
-					setSelectedQuote(quoteList.get(selectedQuoteIndex.intValue()));
-				} else {
-				
-					if (quoteList != null) {
-						int index = 0;
-						Quote activeQuote = getActiveQuote();
-						if (activeQuote != null) {
-							index = quoteList.indexOf(activeQuote);
-						}		
-						UIExtendedDataTable dataTable = (UIExtendedDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteListDataTable");
-			            dataTable.setSelection(new ArrayList<Object>(Arrays.asList(new Object[] {index})));	
-			            setSelectedQuote(quoteList.get(index));
-					}			        
-				}
 				
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
@@ -95,30 +75,11 @@ public class QuoteControllerBean implements QuoteController {
 	@Override
 	public void setSelectedQuote(Quote selectedQuote) {
 		this.selectedQuote = selectedQuote;
-		this.selectedQuoteIndex = getQuoteList().indexOf(selectedQuote);
 	}
-
-	@Override
-	public Opportunity getOpportunity() {	
-		if (opportunity == null) {
-			try {
-				setOpportunity(sessionManager.queryOpportunity());
-			} catch (SforceServiceException e) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-				FacesContext.getCurrentInstance().addMessage(null, message);
-			}
-		}
-		return opportunity;
-	}
-
-	@Override
-	public void setOpportunity(Opportunity opportunity) {
-        this.opportunity = opportunity;		
-	} 
 	
 	@Override
-	public void newQuote() {
-		Quote quote = new Quote(getOpportunity());
+	public void newQuote(Opportunity opportunity) {
+		Quote quote = new Quote(opportunity);
 		setSelectedQuote(quote);
 	}
 	
@@ -228,9 +189,9 @@ public class QuoteControllerBean implements QuoteController {
 	}
 	
 	@Override
-	public void addOpportunityLineItems() {
+	public void addOpportunityLineItems(List<OpportunityLineItem> opportunityLineItems) {
 		try {
-			sessionManager.addOpportunityLineItems(getSelectedQuote(), getOpportunity().getOpportunityLineItems());	
+			sessionManager.addOpportunityLineItems(getSelectedQuote(), opportunityLineItems);	
 			setQuoteList(null);	
 			
 		} catch (SforceServiceException e) {

@@ -7,20 +7,24 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jboss.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.redhat.sforce.qb.bean.factory.CurrencyIsoCodesFactory;
 import com.redhat.sforce.qb.bean.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.bean.factory.QuotePriceAdjustmentFactory;
 import com.redhat.sforce.qb.bean.factory.SessionUserFactory;
+import com.redhat.sforce.qb.bean.model.CurrencyIsoCodes;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.PricebookEntry;
@@ -42,12 +46,23 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private String sessionId;
 	
 	private String opportunityId;
+	
+	@Inject
+	private Logger log;
 		
 	@Inject
 	private SessionUser sessionUser;	
 	
-	@Inject
-	private SforceService sforceService;	
+	@ManagedProperty(value="#{sforceService}")
+	private SforceService sforceService;
+	
+	public SforceService getSforceService() {
+		return sforceService;
+	}
+	
+	public void setSforceService(SforceService sforceService) {
+		this.sforceService = sforceService;
+	}
 
 	@PostConstruct
 	public void init() {	
@@ -66,14 +81,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		try {
 			sessionUser = SessionUserFactory.parseSessionUser(sforceService.getCurrentUserInfo(getSessionId()));			
 						
-			System.out.println("Session user name: " + sessionUser.getName());
-			System.out.println("Session user profile name: " + sessionUser.getProfileName());
-			System.out.println("Session user role name: " + sessionUser.getRoleName());					
-			System.out.println("Session user locale: " + sessionUser.getLocale());
+			log.info("Session user name: " + sessionUser.getName());
+			log.info("Session user profile name: " + sessionUser.getProfileName());
+			log.info("Session user role name: " + sessionUser.getRoleName());					
+			log.info("Session user locale: " + sessionUser.getLocale());
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}	
 		
 		context.getViewRoot().setLocale(sessionUser.getLocale());
@@ -98,21 +112,19 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		return null;
 	}
 	
-	public List<String> queryCurrencies() throws SforceServiceException {
-		List<String> currencyList = new ArrayList<String>();
-		JSONArray queryResults = sforceService.query(getSessionId(), "Select IsoCode from CurrencyType Where IsActive = true Order By IsoCode");
-		for (int i = 0; i < queryResults.length(); i++) {
-			JSONObject jsonObject = null;
-			try {
-				jsonObject = queryResults.getJSONObject(i);
-				currencyList.add(jsonObject.getString("IsoCode"));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+	public CurrencyIsoCodes queryCurrencies() throws SforceServiceException {
+		JSONArray queryResults = sforceService.queryCurrencies(getSessionId());
+		try {
+			return CurrencyIsoCodesFactory.deserialize(queryResults);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return currencyList;
+		
+		return null;
 	}
 	
 	@Override
@@ -122,8 +134,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Override
 	public Quote queryQuote(String quoteId) throws SforceServiceException {
-		Quote quote = sforceService.getQuote(getSessionId(), quoteId);
-		return quote;
+		return sforceService.getQuote(getSessionId(), quoteId);
 	}	
 
 	@Override

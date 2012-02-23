@@ -66,7 +66,7 @@ public class OpportunityFactory {
 		
 		records = wrapper.getRecords("CreditChecks__r");
 		if (records != null) {
-			opportunity.setApprovedCreditCheck(CreditCheckFactory.parseCreditCheck(records));
+			opportunity.setCreditChecks(CreditCheckFactory.deserialize(records));
 		}
 				
 		return opportunity;

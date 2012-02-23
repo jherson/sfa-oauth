@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.manager;
 
 import java.util.List;
 
+import com.redhat.sforce.qb.bean.model.CurrencyIsoCodes;
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.PricebookEntry;
@@ -28,5 +29,5 @@ public interface SessionManager {
 	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException;
 	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SforceServiceException;
 	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
-	public List<String> queryCurrencies() throws SforceServiceException;
+	public CurrencyIsoCodes queryCurrencies() throws SforceServiceException;
 }

@@ -7,6 +7,10 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -17,16 +21,13 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.jboss.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ApplicationScoped;
-
-import com.redhat.sforce.qb.bean.PropertiesBean;
+import com.redhat.sforce.qb.bean.QuoteBuilderApplicationBean;
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.PricebookEntryFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
@@ -37,36 +38,54 @@ import com.redhat.sforce.qb.service.SforceService;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="sforceService")
-@ApplicationScoped
+@SessionScoped
 
 public class SforceServiceImpl implements Serializable, SforceService {		
 
 	private static final long serialVersionUID = 1L;
 	
-	private static String API_VERSION;
-	
-	private static String INSTANCE_URL;
-	
 	@Inject
-	private PropertiesBean properties;
+	private Logger log;
 	
-	public PropertiesBean getProperties() {
-		return properties;
+	@ManagedProperty(value="#{quoteBuilder}")
+	private QuoteBuilderApplicationBean quoteBuilder;
+	
+	public void setQuoteBuilder(QuoteBuilderApplicationBean quoteBuilder) {
+		this.quoteBuilder = quoteBuilder;
 	}
+	
+	public QuoteBuilderApplicationBean getQuoteBuilder() {
+		return quoteBuilder;
+	}
+		
+	private String apiVersion;
+	private String apiEndpoint;		
 
-	public void setProperties(PropertiesBean properties) {
-		this.properties = properties;
-	}
-	
 	@PostConstruct		
 	public void init() {
-		API_VERSION = properties.getApiVersion();
-		INSTANCE_URL = properties.getInstanceUrl();
+		setApiVersion(getQuoteBuilder().getApiVersion());
+		setApiEndpoint(getQuoteBuilder().getApiEndpoint());		
+	}
+	
+	public String getApiVersion() {
+		return apiVersion;
+	}
+
+	public void setApiVersion(String apiVersion) {
+		this.apiVersion = apiVersion;
+	}
+
+	public String getApiEndpoint() {
+		return apiEndpoint;
+	}
+
+	public void setApiEndpoint(String apiEndpoint) {
+		this.apiEndpoint = apiEndpoint;
 	}
 	
 	@Override
 	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/saveQuoteLineItems";
+		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/saveQuoteLineItems";
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -82,15 +101,13 @@ public class SforceServiceImpl implements Serializable, SforceService {
 			if (postMethod.getStatusCode() == 400) {				
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
 			} 
+			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -99,31 +116,33 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public PricebookEntry queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/pricebookEntry";
+		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/pricebookEntry";
 		
 		NameValuePair[] params = new NameValuePair[3];
 		params[0] = new NameValuePair("pricebookId", pricebookId);
 		params[1] = new NameValuePair("productCode", productCode);
 		params[2] = new NameValuePair("currencyIsoCode", currencyIsoCode);
 		
-		System.out.println(url);
 		JSONObject jsonObject = doGet(accessToken, url, params);
 		try {
 			return PricebookEntryFactory.deserializePricebookEntry(jsonObject);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}	
 		
 		return null;		
 	}
 	
 	@Override
+	public JSONArray queryCurrencies(String accessToken) throws SforceServiceException {
+		return query(accessToken, "Select IsoCode from CurrencyType Where IsActive = true Order By IsoCode");
+	}
+	
+	@Override
 	public void saveQuotePriceAdjustments(String accessToken, JSONArray jsonArray) throws SforceServiceException {
-        String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/saveQuotePriceAdjustments";
+        String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/saveQuotePriceAdjustments";
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -140,14 +159,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
 			} 
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -156,7 +172,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public void activateQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/activate?quoteId=" + quoteId;	
+		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/activate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -166,17 +182,15 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		try {
 			httpclient.executeMethod(postMethod);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}						
 	}
 	
 	@Override
 	public void calculateQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/calculate?quoteId=" + quoteId;	
+		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/calculate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -186,17 +200,15 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		try {
 			httpclient.executeMethod(postMethod);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}						
 	}
 	
 	@Override
 	public JSONObject getCurrentUserInfo(String accessToken) {
-		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/currentUserInfo";
+		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/currentUserInfo";
 		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
@@ -210,14 +222,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
 			}
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			getMethod.releaseConnection();
 		}
@@ -227,7 +236,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public Opportunity getOpportunity(String accessToken, String opportunityId) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/opportunity";
+		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/opportunity";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("opportunityId", opportunityId);
@@ -236,11 +245,9 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		try {
 			return OpportunityFactory.fromJSON(jsonObject);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}	
 		
 		return null;
@@ -248,7 +255,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public Quote getQuote(String accessToken, String quoteId) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/quote";
+		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/quote";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);
@@ -257,11 +264,9 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		try {
 			return QuoteFactory.deserialize(jsonObject);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}	
 		
 		return null;
@@ -269,7 +274,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException {
-        String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/deleteQuoteLineItems";	
+        String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/deleteQuoteLineItems";	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -286,14 +291,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
 			} 
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -320,11 +322,9 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		} catch (HttpException e) {
 			throw new SforceServiceException(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			getMethod.releaseConnection();
 		}
@@ -334,7 +334,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public void copyQuote(String accessToken, String quoteId) {
-		String url = INSTANCE_URL + "/services/apexrest/"  + API_VERSION + "/QuoteRestService/copy";	
+		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/copy";	
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);
@@ -348,17 +348,15 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		try {
 			httpclient.executeMethod(postMethod);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}						
 	}
 	
 	@Override
 	public JSONArray query(String accessToken, String query) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/query";
+		String url = getApiEndpoint() + "/data/" + getApiVersion() + "/query";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("q", query);
@@ -379,13 +377,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));		
 			}
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			getMethod.releaseConnection();
 		}
@@ -395,7 +391,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public String saveQuote(String accessToken, JSONObject jsonObject) throws SforceServiceException {
-        String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/saveQuote";	
+        String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/saveQuote";	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -413,14 +409,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
 			}
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -430,7 +423,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 
 	@Override
 	public void delete(String accessToken, String sobject, String id) {
-		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/sobjects/" + sobject + "/" + id;
+		String url = getApiEndpoint() + "/data/" + getApiVersion() + "/sobjects/" + sobject + "/" + id;
 				
 		DeleteMethod deleteMethod = new DeleteMethod(url);
 		deleteMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -441,11 +434,9 @@ public class SforceServiceImpl implements Serializable, SforceService {
 			httpclient.executeMethod(deleteMethod);
 			System.out.println(deleteMethod.getStatusText());
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			deleteMethod.releaseConnection();
 		}
@@ -454,7 +445,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 
 	@Override
 	public void update(String accessToken, String sobject, String id, JSONObject jsonObject) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/data/" + API_VERSION + "/sobjects/" + sobject + "/" + id  + "?_HttpMethod=PATCH";
+		String url = getApiEndpoint() + "/data/" + getApiVersion() + "/sobjects/" + sobject + "/" + id  + "?_HttpMethod=PATCH";
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -470,14 +461,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
 			} 
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -486,7 +474,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	
 	@Override
 	public void addOpportunityLineItems(String accessToken, String quoteId, JSONArray jsonArray) throws SforceServiceException {
-		String url = INSTANCE_URL + "/services/apexrest/" + API_VERSION + "/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
+		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -505,14 +493,11 @@ public class SforceServiceImpl implements Serializable, SforceService {
 				throw new SforceServiceException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
 			}
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			postMethod.releaseConnection();
 		}
@@ -533,8 +518,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 			return errorCode + ": " + errorMessage;
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 
 		return null;
