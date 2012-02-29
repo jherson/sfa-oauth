@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.bean;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+
+import org.json.JSONException;
 
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Opportunity;
@@ -34,15 +37,33 @@ public class QuoteControllerBean implements QuoteController {
 		this.sessionManager = sessionManager;
 	}
 
+	private Opportunity opportunity;
 	private List<Quote> quoteList;
 	private Quote selectedQuote;
 
 	@Override
+	public Opportunity getOpportunity() {	
+		if (opportunity == null) {
+			try {
+				setOpportunity(sessionManager.queryOpportunity());
+			} catch (SforceServiceException e) {
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, message);
+			}
+		}
+		return opportunity;
+	}
+	
+	@Override
+	public void setOpportunity(Opportunity opportunity) {
+        this.opportunity = opportunity;		
+	} 
+
+	@Override
 	public List<Quote> getQuoteList() {
 		if (quoteList == null) {			
-			try {
-				setQuoteList(sessionManager.queryQuotes());				
-				
+			try {			
+			 	quoteList = sessionManager.queryQuotes();
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
@@ -117,6 +138,11 @@ public class QuoteControllerBean implements QuoteController {
 	
 	@Override
 	public void deleteQuote(Quote quote) {
+		if (quote == null) {
+			System.out.println("quote id null");
+			return;
+		}
+			
 		sessionManager.deleteQuote(quote);				
 		setQuoteList(null);
 		setSelectedQuote(null);
@@ -182,6 +208,12 @@ public class QuoteControllerBean implements QuoteController {
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}			
 		} else {			
 			setSelectedQuote(null);

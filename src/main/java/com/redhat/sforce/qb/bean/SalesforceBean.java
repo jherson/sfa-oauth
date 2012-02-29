@@ -31,12 +31,16 @@ public class SalesforceBean {
 	
 	@PostConstruct
 	public void queryCurrencies() {
-		try {
-			currencyList = sessionManager.queryCurrencies();
-		} catch (SforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
-		}		
+		currencyList.add("USD");
+		currencyList.add("GBP");
+		currencyList.add("EUR");
+		currencyList.add("SGD");
+		//try {
+			//currencyList = sessionManager.queryCurrencies();
+		//} catch (SforceServiceException e) {
+		//	FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+		//	FacesContext.getCurrentInstance().addMessage(null, message);
+		//}		
 	}
 
 	public CurrencyIsoCodes getCurrencyList() {

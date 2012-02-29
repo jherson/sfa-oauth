@@ -10,12 +10,13 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.User;
+import com.redhat.sforce.qb.rest.QuoteBuilderRestResource;
 import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class OpportunityFactory {
-
-	public Opportunity opportunity;
 	
+	private static QuoteBuilderRestResource quoteBuilderService = new QuoteBuilderRestResource();
+		
 	public static Opportunity fromJSON(JSONObject jsonObject) throws JSONException, ParseException {
 		
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
@@ -23,8 +24,12 @@ public class OpportunityFactory {
 		Opportunity opportunity = new Opportunity();
 		opportunity.setId(wrapper.getId());
 		opportunity.setName(wrapper.getString("Name"));
+		opportunity.setOpportunityNumber(wrapper.getString("OpportunityNumber__c"));
+		opportunity.setFulfillmentChannel(wrapper.getString("FulfillmentChannel__c"));
+		opportunity.setAmount(wrapper.getDouble("Amount"));
 		opportunity.setCloseDate(wrapper.getDate("CloseDate"));
 		opportunity.setIsClosed(wrapper.getBoolean("IsClosed"));
+		opportunity.setPayNow(wrapper.getString("Pay_Now__c"));
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
 		opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
 		opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
@@ -71,6 +76,10 @@ public class OpportunityFactory {
 				
 		return opportunity;
 	}	
+	
+	public static Opportunity newOpportunity(String sessionId, String opportunityId) throws JSONException, ParseException {
+		return fromJSON(quoteBuilderService.getOpportunity(sessionId, opportunityId));
+	}
 	
 	private static User parseOwner(JSONObject jsonObject) throws JSONException {
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);

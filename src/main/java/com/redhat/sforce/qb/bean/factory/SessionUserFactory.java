@@ -5,15 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.SessionUser;
+import com.redhat.sforce.qb.rest.QuoteBuilderRestResource;
+import com.redhat.sforce.qb.service.exception.SforceServiceException;
 import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class SessionUserFactory {
-			
-	public static SessionUser parseSessionUser(JSONObject jsonObject) throws  JSONException {
+
+	private static QuoteBuilderRestResource quoteBuilderService = new QuoteBuilderRestResource();
+	
+	public static SessionUser parseSessionUser(JSONObject jsonObject) throws JSONException {
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 		
 		SessionUser sessionUser = new SessionUser();
@@ -53,6 +57,10 @@ public class SessionUserFactory {
         sessionUser.setDateTimeFormatPattern(formatPattern(dateTimeFormat));
 		
 		return sessionUser;		
+	}
+	
+	public static SessionUser newSessionUser(String sessionId) throws JSONException, SforceServiceException {
+		return parseSessionUser(quoteBuilderService.getCurrentUserInfo(sessionId));		
 	}
 	
 	private static Locale stringToLocale(String localeSidKey) {

@@ -18,7 +18,7 @@ public interface SforceService {
     public void activateQuote(String accessToken, String quoteId);
     public void calculateQuote(String accessToken, String quoteId);
     public void addOpportunityLineItems(String accessToken, String quoteId, JSONArray jsonArray) throws SforceServiceException;
-    public JSONObject getCurrentUserInfo(String accessToken);
+    public JSONObject getCurrentUserInfo(String accessToken) throws SforceServiceException;
     public Opportunity getOpportunity(String accessToken, String opportunityId) throws SforceServiceException;
     public Quote getQuote(String accessToken, String quoteId) throws SforceServiceException;
     public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SforceServiceException;

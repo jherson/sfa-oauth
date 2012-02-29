@@ -10,6 +10,8 @@ import com.redhat.sforce.qb.bean.model.User;
 
 public interface QuoteController {
 
+	public Opportunity getOpportunity();
+	public void setOpportunity(Opportunity opportunity);
 	public List<Quote> getQuoteList();
 	public Quote getSelectedQuote();
 	public Quote getActiveQuote();

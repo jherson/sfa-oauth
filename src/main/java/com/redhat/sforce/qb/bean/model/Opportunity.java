@@ -10,7 +10,7 @@ public class Opportunity extends SObject {
 	private String accountId;
 	private String description;
 	private String stageName;
-	private String amount;
+	private Double amount;
 	private String probability;
 	private Date closeDate;
 	private String type;
@@ -81,11 +81,11 @@ public class Opportunity extends SObject {
 		this.stageName = stageName;
 	}
 
-	public String getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

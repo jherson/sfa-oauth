@@ -10,13 +10,22 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<richfaces.version>4.2.0.CR1</richfaces.version>
+		<maven.war.plugin.version>2.1.1</maven.war.plugin.version>
+		<resteasy.version>2.3.1.GA</resteasy.version>
+		<richfaces.version>4.2.0.Final</richfaces.version>
 		<seam.version>2.2.2.Final</seam.version>
-		<jboss-as-maven-plugin-version>7.0.0.Final</jboss-as-maven-plugin-version>
+		<jboss-as-maven-plugin-version>7.0.2.Final</jboss-as-maven-plugin-version>
 		<version.arquillian_core>1.0.0.CR4</version.arquillian_core>
 		<seam.version>3.0.0.Final</seam.version>
 		<seam-international-version>3.0.0.Final</seam-international-version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>vaadin-addons</id>
+			<url>http://maven.vaadin.com/vaadin-addons</url>
+		</repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -40,6 +49,40 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin</artifactId>
+			<version>6.7.5</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>cdi-utils</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>${resteasy.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-cdi</artifactId>
+			<version>${resteasy.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
@@ -69,25 +112,17 @@
 			<version>1.2.2.GA</version>
 		</dependency>
 
-<dependency>
-
-    <groupId>org.jboss.seam.international</groupId>
-
-    <artifactId>seam-international</artifactId>
-
-    <version>${seam-international-version}</version>
-
-</dependency>
-		
 		<dependency>
+			<groupId>org.jboss.seam.international</groupId>
+			<artifactId>seam-international</artifactId>
+			<version>${seam-international-version}</version>
+		</dependency>
 
-      <groupId>joda-time</groupId>
-
-      <artifactId>joda-time</artifactId>
-
-      <version>1.6</version>
-
-   </dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>1.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -174,6 +209,22 @@
 	<build>
 		<finalName>quotebuilder</finalName>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven.war.plugin.version}</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<archive>
+						<manifestEntries>
+							<Dependencies>
+								org.jboss.resteasy.resteasy-jaxrs,
+								org.jboss.resteasy.resteasy-cdi
+							</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.jboss.as.plugins</groupId>
 				<artifactId>jboss-as-maven-plugin</artifactId>

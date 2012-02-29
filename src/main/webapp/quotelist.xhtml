@@ -6,6 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
+
 <h:outputStylesheet>
 	.panel-body {
         color: #000000;
@@ -13,30 +14,33 @@
         font-size: 11px;
         padding: 0px;
     }
+    
+ 
+.even-row {
+   background-color: #fcefa1;
+}
+.odd-row {
+   background-color: #f7f7f7;
+}
+
+    
 </h:outputStylesheet>
 
 	<rich:toolbar height="24px" itemSeparator="grid">
 	
-	    <rich:toolbarGroup location="left">
-	    
-	        <h:graphicImage value="./images/quote.png" style="vertical-align: middle"/>
-	        <h:outputText value="#{msgs.headerTitle}"/>
-	    
-	    </rich:toolbarGroup>
-
 		<rich:toolbarGroup location="right">
 
 			<a4j:commandLink id="new" value="#{msgs.new}"
 				action="#{quoteController.newQuote()}"
 				rendered="#{not opportunityController.opportunity.isClosed}"				
 				oncomplete="#{rich:element('quoteForm:quoteName')}.focus() "
-				render="quoteList, details" ajaxSingle="true" status="ajaxStatus">
+				render="quoteList" ajaxSingle="true" status="waitstatus">
 				<f:setPropertyActionListener value="#{true}"
 					target="#{quoteForm.editMode}" />					
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="true"
-				render="quoteList, details">
+				render="quoteList">
 				<f:setPropertyActionListener value="#{null}"
 					target="#{quoteController.opportunity}" />
 				<f:setPropertyActionListener value="#{null}"
@@ -48,33 +52,40 @@
 
 	<rich:dataTable id="quoteListDataTable" var="quote" style="width: 100%"
 		value="#{quoteController.quoteList}" noDataLabel="#{msgs.noRecords}"
-		iterationStatusVar="it" status="ajaxStatus" >
+		iterationStatusVar="it" 		
+		onRowClick="alert('clicked ' + it);"
+		onRowMouseOver="this.style.backgroundColor='#B5F3FB'"
+        onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowBackgroundColor}'">
 
-		<rich:column width="75px">
-			<f:facet name="header">#{msgs.action}</f:facet>			
+		<rich:column width="8%">
+			<f:facet name="header">#{msgs.action}</f:facet>
+			
+			<h:panelGroup>			
 
 			<a4j:commandLink id="activate"
 				action="#{quoteController.activateQuote(quote)}" ajaxSingle="true"
-				render="quoteList, viewQuotePanel">
+				render="quoteList">
 				<h:graphicImage value="./images/activate.png"
-					title="#{msgs.activate}" style="vertical-align: middle; height: 16px; width: 25px;"/>
-			</a4j:commandLink>
-
-			<h:outputText value="  " escape="false" />
+					title="#{msgs.activate}" style="vertical-align: middle;"/>
+			</a4j:commandLink>			
+			
+			<f:verbatim>&#32;&#124;&#32;</f:verbatim>   		  
 
 			<a4j:commandLink id="copy" 
 				action="#{quoteController.copyQuote(quote)}" ajaxSingle="true"
-				render="quoteList" styleClass="no-decor" status="ajaxStatus">
+				render="quoteList" >
 				<h:graphicImage value="./images/copy.png" title="#{msgs.copy}" style="vertical-align: middle;" />
 			</a4j:commandLink>
 
-			<h:outputText value="  " escape="false" />
+			<f:verbatim>&#32;&#124;&#32;</f:verbatim>   		
 
 			<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
-				action="#{quoteController.deleteQuote(quote)}" styleClass="no-decor"
-				ajaxSingle="true" status="ajaxStatus" render="quoteList, :details">
-				<h:graphicImage value="./images/delete.png" title="#{msgs.delete}" style="vertical-align: middle; height: 16px; width: 25px;"/>
+				action="#{quoteController.deleteQuote(quote)}"
+				ajaxSingle="true" render="quoteList">
+				<h:graphicImage value="./images/delete.png" title="#{msgs.delete}" style="vertical-align: middle;"/>
 			</a4j:commandLink>
+			
+			</h:panelGroup>
 			
 		</rich:column>
 
@@ -117,7 +128,7 @@
 		<rich:column width="15%">
 			<f:facet name="header">#{msgs.contact}</f:facet>
 			<h:outputText value="#{quote.contactName}" />
-		</rich:column>
+		</rich:column> 
 
 	</rich:dataTable>
 </html>

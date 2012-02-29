@@ -6,6 +6,7 @@ import java.util.Locale;
 public class SessionUser extends User {
 
 	private static final long serialVersionUID = 1L;
+	private String sessionId;
 	private String defaultCurrencyIsoCode;
 	private String dateFormatPattern;
 	private String dateTimeFormatPattern;
@@ -13,6 +14,14 @@ public class SessionUser extends User {
 	
 	public SessionUser() {
 		super();
+	}
+	
+	public String getSessionId() {
+		return sessionId;
+	}
+	
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 	
 	public String getDefaultCurrencyIsoCode() {

@@ -7,10 +7,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -27,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.qb.bean.QuoteBuilderApplicationBean;
 import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
 import com.redhat.sforce.qb.bean.factory.PricebookEntryFactory;
 import com.redhat.sforce.qb.bean.factory.QuoteFactory;
@@ -37,34 +32,24 @@ import com.redhat.sforce.qb.bean.model.Quote;
 import com.redhat.sforce.qb.service.SforceService;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
-@ManagedBean(name="sforceService")
-@SessionScoped
 
 public class SforceServiceImpl implements Serializable, SforceService {		
 
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	private Logger log;
-	
-	@ManagedProperty(value="#{quoteBuilder}")
-	private QuoteBuilderApplicationBean quoteBuilder;
-	
-	public void setQuoteBuilder(QuoteBuilderApplicationBean quoteBuilder) {
-		this.quoteBuilder = quoteBuilder;
-	}
-	
-	public QuoteBuilderApplicationBean getQuoteBuilder() {
-		return quoteBuilder;
-	}
+	private Logger log;	
 		
 	private String apiVersion;
 	private String apiEndpoint;		
-
-	@PostConstruct		
+	
+	public SforceServiceImpl() {
+		init();
+	}
+	
 	public void init() {
-		setApiVersion(getQuoteBuilder().getApiVersion());
-		setApiEndpoint(getQuoteBuilder().getApiEndpoint());		
+		setApiVersion("v24.0");
+		setApiEndpoint("https://cs4.salesforce.com/services");		
 	}
 	
 	public String getApiVersion() {
@@ -207,19 +192,22 @@ public class SforceServiceImpl implements Serializable, SforceService {
 	}
 	
 	@Override
-	public JSONObject getCurrentUserInfo(String accessToken) {
+	public JSONObject getCurrentUserInfo(String accessToken) throws SforceServiceException {
 		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/currentUserInfo";
 		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
 		getMethod.setRequestHeader("Content-type", "application/json");
-		
+				
 		JSONObject response = null;
         try {
         	HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(getMethod);
+			
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
 				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
+			} else {
+				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -251,7 +239,7 @@ public class SforceServiceImpl implements Serializable, SforceService {
 		}	
 		
 		return null;
-	}
+	}	
 	
 	@Override
 	public Quote getQuote(String accessToken, String quoteId) throws SforceServiceException {
@@ -372,9 +360,9 @@ public class SforceServiceImpl implements Serializable, SforceService {
 			httpclient.executeMethod(getMethod );
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-				queryResult = response.getJSONArray("records");
+				queryResult = response.getJSONArray("records");						
 			} else {
-				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));		
+				throw new SforceServiceException(parseErrorResponse(getMethod.getResponseBodyAsStream()));
 			}
 		} catch (HttpException e) {
 			log.error(e);

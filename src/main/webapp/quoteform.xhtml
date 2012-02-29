@@ -4,42 +4,47 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
-
-	<a4j:status id="ajaxStatus" forceId="true"
-		onstart="#{rich:component('statusPane')}.show()"
-		onstop="#{rich:component('statusPane')}.hide()" />
+	
+	<a4j:status id="waitstatus" forceId="false"
+	    onstart="#{rich:component('quoteForm:statusPane')}.show()"
+	    onstop="#{rich:component('quoteForm:statusPane')}.hide()" />
 
 	<h:form id="quoteForm">
 		
-	    <a4j:outputPanel id="quoteList">
-		    
-		    <ui:include src="quotelist.xhtml" />
-		    
-        </a4j:outputPanel>	
-
-		<br />
-
-		<rich:popupPanel id="statusPane" autosized="true">
+   		<rich:popupPanel id="statusPane" autosized="true">
 			<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
 		</rich:popupPanel>
 
 		<a4j:outputPanel id="messages" ajaxRendered="true">
 			<rich:messages />
 		</a4j:outputPanel>
-		
-		<a4j:outputPanel id="details">
+	    		
+	    <a4j:outputPanel id="quoteList" rendered="#{empty quoteController.selectedQuote}">
+	    	        	       
+	        <h:panelGrid width="100%" columns="1" cellpadding="3">
+	        	<h:panelGroup layout="block">
+                    <h:graphicImage value="./images/quote.png" style="vertical-align: middle"/>
+                    <h:outputText value=" " escape="false" />
+	                <h:outputText value="#{msgs.headerTitle}: #{quoteController.opportunity.name}" style="font-weight:bold; font-size: 18px;"/>
+	            </h:panelGroup>
+	        </h:panelGrid>            
+		    		    		    
+		    <ui:include src="quotelist.xhtml" />
+		    
+        </a4j:outputPanel>	
+
+		<a4j:outputPanel id="details" rendered="#{not empty quoteController.selectedQuote}}">
 		
 		    <rich:hotKey rendered="#{quoteForm.editMode}" enabledInInput="true" key="CTRL+s" preventDefault="true">
                 <rich:componentControl target="quoteForm:save" operation="onclick()" />
             </rich:hotKey>	
 
-			<ui:include src="viewquotepanel.xhtml" />
+			<ui:include src="viewquotepanel.xhtml" />			
+			<ui:include src="owners.xhtml" />
+		    <ui:include src="contacts.xhtml" />
+		    <ui:include src="addopportunityproducts.xhtml" />				
 
 		</a4j:outputPanel>
 		
-		<ui:include src="owners.xhtml" />
-		<ui:include src="contacts.xhtml" />
-		<ui:include src="addopportunityproducts.xhtml" />	
-
 	</h:form>
 </ui:composition>
