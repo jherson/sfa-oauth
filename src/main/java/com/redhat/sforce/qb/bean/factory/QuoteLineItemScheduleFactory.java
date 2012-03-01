@@ -12,7 +12,7 @@ import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class QuoteLineItemScheduleFactory {
 
-	public static List<QuoteLineItemSchedule> parseQuoteLineItemSchedules(JSONArray jsonArray) throws JSONException, ParseException {
+	public static List<QuoteLineItemSchedule> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<QuoteLineItemSchedule> quoteLineItemScheduleList = new ArrayList<QuoteLineItemSchedule>();
 		
 		for (int i = 0; i < jsonArray.length(); i++) {		    
@@ -30,7 +30,7 @@ public class QuoteLineItemScheduleFactory {
 		    quoteLineItemSchedule.setPricePerDay(wrapper.getDouble("PricePerDay__c"));		    
 		    quoteLineItemSchedule.setYear(wrapper.getInteger("Year__c"));
 		    quoteLineItemSchedule.setEndDate(wrapper.getDate("EndDate__c"));		    		    
-		    quoteLineItemSchedule.setQuoteLineItem(QuoteLineItemFactory.deserializeQuoteLineItem(wrapper.getJSONObject("QuoteLineItemId__r")));
+		    quoteLineItemSchedule.setQuoteLineItem(QuoteLineItemFactory.deserialize(wrapper.getJSONObject("QuoteLineItemId__r")));
 		    
 		    quoteLineItemScheduleList.add(quoteLineItemSchedule);
 		}

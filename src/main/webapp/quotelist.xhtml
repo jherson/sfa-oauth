@@ -26,7 +26,7 @@
     
 </h:outputStylesheet>
 
-	<rich:toolbar height="24px" itemSeparator="grid">
+	<rich:toolbar height="20px" itemSeparator="grid">
 	
 		<rich:toolbarGroup location="right">
 
@@ -39,7 +39,7 @@
 					target="#{quoteForm.editMode}" />					
 			</a4j:commandLink>
 
-			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="true"
+			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="false" immediate="false"
 				render="quoteList">
 				<f:setPropertyActionListener value="#{null}"
 					target="#{quoteController.opportunity}" />
@@ -53,9 +53,11 @@
 	<rich:dataTable id="quoteListDataTable" var="quote" style="width: 100%"
 		value="#{quoteController.quoteList}" noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it" 		
-		onRowClick="alert('clicked ' + it);"
+		rows="10"
 		onRowMouseOver="this.style.backgroundColor='#B5F3FB'"
         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowBackgroundColor}'">
+        
+        <rich:jQuery selector="#quoteListDataTable tr:odd" timing="domready" query="addClass(odd-row)"/>
 
 		<rich:column width="8%">
 			<f:facet name="header">#{msgs.action}</f:facet>
@@ -91,7 +93,10 @@
 
 		<rich:column width="8%" style="text-align: center;">
 			<f:facet name="header">#{msgs.number}</f:facet>
-			<a4j:commandLink value="#{quote.number}" />
+			<a4j:commandLink value="#{quote.number}" 
+			    action="#{quoteController.editQuote(quote)}" 
+			    render="quoteList, details">
+			</a4j:commandLink>
 		</rich:column>
 
 		<rich:column>

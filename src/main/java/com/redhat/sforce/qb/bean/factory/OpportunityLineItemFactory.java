@@ -14,7 +14,7 @@ import com.redhat.sforce.util.SforceDateFormatter;
 
 public class OpportunityLineItemFactory {
 
-	public static List<OpportunityLineItem> parseOpportunityLineItems(JSONArray jsonArray) throws JSONException, ParseException {
+	public static List<OpportunityLineItem> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
 		
 		for (int i = 0; i < jsonArray.length(); i++) {		    
@@ -61,7 +61,7 @@ public class OpportunityLineItemFactory {
 		return opportunityLineItemList;
 	}
 	
-	public static JSONArray serializeOpportunityLineItems(List<OpportunityLineItem> opportunityLineItemList) {
+	public static JSONArray serialize(List<OpportunityLineItem> opportunityLineItemList) {
 		JSONArray jsonArray = new JSONArray();
 		
 		for (OpportunityLineItem opportunityLineItem : opportunityLineItemList) {
@@ -89,7 +89,7 @@ public class OpportunityLineItemFactory {
 				jsonObject.put("Year5Amount__c", opportunityLineItem.getYear5Amount());
 				jsonObject.put("Year6Amount__c", opportunityLineItem.getYear6Amount());
 				jsonObject.put("YearlySalesPrice__c", opportunityLineItem.getYearlySalesPrice());
-				jsonObject.put("PricebookEntry", serializePricebookEntry(opportunityLineItem));
+				jsonObject.put("PricebookEntry", PricebookEntryFactory.serialize(opportunityLineItem));
 								
 				jsonArray.put(jsonObject);
 				
@@ -104,30 +104,5 @@ public class OpportunityLineItemFactory {
 		return jsonArray;
 	}
 	
-	private static JSONObject serializePricebookEntry(OpportunityLineItem opportunityLineItem) {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("Id", opportunityLineItem.getPricebookEntryId());
-			jsonObject.put("Product2", serializeProdct(opportunityLineItem));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		
-		return jsonObject;
-	}
-	
-	private static JSONObject serializeProdct(OpportunityLineItem opportunityLineItem) {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("Id", opportunityLineItem.getProduct().getId());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		
-		return jsonObject;		
-	}
+
 }

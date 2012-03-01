@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.json.JSONException;
+import org.richfaces.component.UIDataTable;
 
 import com.redhat.sforce.qb.bean.model.Contact;
 import com.redhat.sforce.qb.bean.model.Opportunity;
@@ -49,6 +50,12 @@ public class QuoteControllerBean implements QuoteController {
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		return opportunity;
@@ -67,6 +74,12 @@ public class QuoteControllerBean implements QuoteController {
 			} catch (SforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		return quoteList;
@@ -127,8 +140,9 @@ public class QuoteControllerBean implements QuoteController {
 	}
 	
 	@Override
-	public void editQuote() {
-		
+	public void editQuote(Quote quote) {
+		setSelectedQuote(quote);
+		//UIDataTable dataTable = (UIDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteListDataTable"); 
 	}
 	
 	@Override

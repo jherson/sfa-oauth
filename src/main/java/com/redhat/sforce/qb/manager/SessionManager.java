@@ -16,11 +16,10 @@ import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 public interface SessionManager {
 
-	public Opportunity queryOpportunity() throws SforceServiceException;
-	public List<Quote> queryQuotes() throws SforceServiceException;
+	public Opportunity queryOpportunity() throws SforceServiceException, JSONException, ParseException;
+	public List<Quote> queryQuotes() throws SforceServiceException, JSONException, ParseException;
 	public Quote queryQuote(String quoteId) throws SforceServiceException, JSONException, ParseException;	
 	public SessionUser getSessionUser();
-	public void setSessionUser(SessionUser sessionUser);
 	public void saveQuote(Quote quote) throws SforceServiceException;
 	public void activateQuote(Quote quote);
 	public void calculateQuote(String quoteId);

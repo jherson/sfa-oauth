@@ -3,6 +3,7 @@ package com.redhat.sforce.qb.bean.factory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
 import com.redhat.sforce.qb.bean.model.Product;
 import com.redhat.sforce.util.JSONObjectWrapper;
 
@@ -25,5 +26,18 @@ public class ProductFactory {
 		product.setIsActive(wrapper.getBoolean("IsActive"));
 		
 		return product;
+	}
+	
+	public static JSONObject serialize(OpportunityLineItem opportunityLineItem) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("Id", opportunityLineItem.getProduct().getId());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		return jsonObject;		
 	}
 }

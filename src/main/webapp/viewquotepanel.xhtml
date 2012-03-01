@@ -6,7 +6,7 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">		
 		
-<rich:toolbar height="18" itemSeparator="grid" style="border: 1;">
+<rich:toolbar height="20" itemSeparator="grid" style="border: 1;">
 
 	<rich:toolbarGroup location="right">
 
@@ -364,29 +364,6 @@
 	</h:panelGrid>
 
 	<hr style="background-color: #C27E3A; border: 0; height: 1px;" />
-
-	<h:panelGrid styleClass="rf-dt" width="100%"
-		style="background-color: #FCF9F5; 
-		border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-		columnClasses="label-column,column-l-align,label-column,column-l-align"
-		columns="4">
-
-		<h:outputText value="Payment Terms" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText
-			value="#{quoteController.opportunity.approvedCreditCheck.paymentTerms}"
-			rendered="#{not empty quoteController.selectedQuote}" />
-
-		<h:outputText value="Credit Limit" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText
-			value="#{quoteController.opportunity.approvedCreditCheck.creditLimit}"
-			rendered="#{not empty quoteController.selectedQuote}" />
-
-
-	</h:panelGrid>
-
-	<br />	
 
 	<ui:include src="viewpriceadjustments.xhtml" />
 

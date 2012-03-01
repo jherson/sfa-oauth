@@ -10,14 +10,11 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.bean.model.User;
-import com.redhat.sforce.qb.rest.QuoteBuilderRestResource;
 import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class OpportunityFactory {
 	
-	private static QuoteBuilderRestResource quoteBuilderService = new QuoteBuilderRestResource();
-		
-	public static Opportunity fromJSON(JSONObject jsonObject) throws JSONException, ParseException {
+	public static Opportunity deserialize(JSONObject jsonObject) throws JSONException, ParseException {
 		
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 				
@@ -44,7 +41,7 @@ public class OpportunityFactory {
 		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
 		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
 		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));
-		opportunity.setOwner(parseOwner(wrapper.getJSONObject("Owner")));
+		opportunity.setOwner(UserFactory.deserialize(wrapper.getJSONObject("Owner")));
 		
 		List<User> ownerList = new ArrayList<User>();
 		ownerList.add(opportunity.getOwner());
@@ -53,17 +50,17 @@ public class OpportunityFactory {
 		
 		records = wrapper.getRecords("OpportunityLineItems");
 		if (records != null) {
-			opportunity.setOpportunityLineItems(OpportunityLineItemFactory.parseOpportunityLineItems(records));
+			opportunity.setOpportunityLineItems(OpportunityLineItemFactory.deserialize(records));
 		}
 		
 		records = wrapper.getRecords("OpportunityContactRoles");
 		if (records != null) {
-			opportunity.setContacts(ContactFactory.parseContacts(records));
+			opportunity.setContacts(ContactFactory.deserialize(records));
 		}
 		
 		records = wrapper.getRecords("OpportunityTeamMembers");
 		if (records != null) {
-			opportunity.setSalesTeam(UserFactory.parseUsers(records));
+			opportunity.setSalesTeam(UserFactory.deserialize(records));
 			ownerList.addAll(opportunity.getSalesTeam());
 		}
 				   
@@ -76,27 +73,4 @@ public class OpportunityFactory {
 				
 		return opportunity;
 	}	
-	
-	public static Opportunity newOpportunity(String sessionId, String opportunityId) throws JSONException, ParseException {
-		return fromJSON(quoteBuilderService.getOpportunity(sessionId, opportunityId));
-	}
-	
-	private static User parseOwner(JSONObject jsonObject) throws JSONException {
-		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
-		
-		User owner = new User();
-		owner.setId(wrapper.getId());
-		owner.setLastName(wrapper.getString("LastName"));
-		owner.setFirstName(wrapper.getString("FirstName"));
-		owner.setName(wrapper.getString("Name"));
-		owner.setContactId(wrapper.getString("ContactId"));
-		owner.setTitle(wrapper.getString("Email"));
-		owner.setPhone(wrapper.getString("Phone"));
-		owner.setTitle(wrapper.getString("Title"));
-		owner.setDepartment(wrapper.getString("Department"));
-		owner.setRoleName(wrapper.getString("UserRole", "Name"));
-		owner.setProfileName(wrapper.getString("Profile", "Name"));
-		
-		return owner;
-	}
 }

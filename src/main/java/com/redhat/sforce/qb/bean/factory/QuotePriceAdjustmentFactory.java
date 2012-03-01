@@ -13,7 +13,7 @@ import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class QuotePriceAdjustmentFactory {
 	
-	public static List<QuotePriceAdjustment> parseQuotePriceAdjustments(JSONArray jsonArray) throws JSONException, ParseException {
+	public static List<QuotePriceAdjustment> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
 		
 		for (int i = 0; i < jsonArray.length(); i++) {		    
@@ -42,7 +42,7 @@ public class QuotePriceAdjustmentFactory {
 		return quotePriceAdjustmentList;
 	}	
 		
-	public static JSONArray serializeQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) {
+	public static JSONArray serialize(List<QuotePriceAdjustment> quotePriceAdjustmentList) {
 		JSONArray jsonArray = new JSONArray();
 		
 		for (QuotePriceAdjustment quotePriceAdjustment : quotePriceAdjustmentList) {

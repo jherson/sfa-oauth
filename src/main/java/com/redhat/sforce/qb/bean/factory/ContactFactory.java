@@ -12,7 +12,7 @@ import com.redhat.sforce.util.JSONObjectWrapper;
 
 public class ContactFactory {
 		
-	public static List<Contact> parseContacts(JSONArray jsonArray) throws JSONException, ParseException {
+	public static List<Contact> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<Contact> contactList = new ArrayList<Contact>();
 						
 		for (int i = 0; i < jsonArray.length(); i++) {		    

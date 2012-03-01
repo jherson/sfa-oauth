@@ -19,7 +19,7 @@
 			<rich:messages />
 		</a4j:outputPanel>
 	    		
-	    <a4j:outputPanel id="quoteList" rendered="#{empty quoteController.selectedQuote}">
+	    <a4j:outputPanel id="quoteList" >
 	    	        	       
 	        <h:panelGrid width="100%" columns="1" cellpadding="3">
 	        	<h:panelGroup layout="block">
@@ -33,7 +33,7 @@
 		    
         </a4j:outputPanel>	
 
-		<a4j:outputPanel id="details" rendered="#{not empty quoteController.selectedQuote}}">
+		<a4j:outputPanel id="details" rendered="#{not empty quoteController.quoteList}">
 		
 		    <rich:hotKey rendered="#{quoteForm.editMode}" enabledInInput="true" key="CTRL+s" preventDefault="true">
                 <rich:componentControl target="quoteForm:save" operation="onclick()" />

@@ -22,7 +22,7 @@ public interface QuoteController {
 	public void activateQuote(Quote quote);
 	public void copyQuote();
 	public void copyQuote(Quote quote);
-	public void editQuote();
+	public void editQuote(Quote quote);
 	public void deleteQuote();
 	public void deleteQuote(Quote quote);
 	public void calculateQuote();
