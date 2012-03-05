@@ -38,7 +38,7 @@
 			    rendered="#{not quotebean.editMode}" />
 			<h:inputText value="#{priceAdjustment.percent}"
 				rendered="#{quotebean.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>					
 			</h:inputText>    

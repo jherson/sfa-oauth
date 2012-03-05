@@ -102,15 +102,15 @@
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItem.startDate}"
 				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type == 'Standard'}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.startDate}"
 				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type != 'Standard'}"
-				id="lineStartDate" locale="#{sessionManager.sessionUser.locale}"
+				id="lineStartDate" locale="#{sessionUser.locale}"
 				popup="true" enableManualInput="true"
-				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				inputStyle="width:68px" disabled="false">
 			</rich:calendar>
@@ -120,15 +120,15 @@
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItem.endDate}"
 				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Non Standard'}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.endDate}"
 				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Non Standard'}"
-				id="lineEndDate" locale="#{sessionManager.sessionUser.locale}"
+				id="lineEndDate" locale="#{sessionUser.locale}"
 				popup="true" enableManualInput="true"
-				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				inputStyle="width:68px" disabled="false">
 			</rich:calendar>
@@ -140,7 +140,7 @@
 				rendered="#{not quoteForm.editMode}" />
 			<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
 				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0;(#,##0)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -149,12 +149,12 @@
 			<f:facet name="header">#{msgs.listPrice}</f:facet>
 			<h:outputText value="#{lineItem.listPrice}"
 				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.listPrice}" style="width: 70px;"
 				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -163,12 +163,12 @@
 			<f:facet name="header">#{msgs.discountPercent}</f:facet>
 			<h:outputText value="#{lineItem.discountPercent}"
 				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.discountPercent}" style="width: 70px;"
 				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -177,12 +177,12 @@
 			<f:facet name="header">#{msgs.discountAmount}</f:facet>
 			<h:outputText value="#{lineItem.discountAmount}"
 				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.discountAmount}" style="width: 70px;"
 				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -191,12 +191,12 @@
 			<f:facet name="header">#{msgs.salesPrice}</f:facet>
 			<h:outputText value="#{lineItem.yearlySalesPrice}"
 				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.yearlySalesPrice}"
 				style="width: 70px;" rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -205,12 +205,12 @@
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItem.unitPrice}"
 				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
 				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -219,12 +219,12 @@
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
 			<h:outputText value="#{lineItem.totalPrice}"
 				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.totalPrice}" style="width: 78px;"
 				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>

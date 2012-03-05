@@ -8,12 +8,15 @@
 <body>    
 
 	<ui:composition template="/templates/template.xhtml">
+	
+	<ui:define name="body">
+	<h:panelGroup id="mainArea" layout="block">
+	<h:panelGroup layout="block">
+	<ui:include src="#{quoteController.page}"/>
+	</h:panelGroup>
+	</h:panelGroup>
 
-		<ui:define name="body">
-
-			<ui:include src="quoteform.xhtml" />
-
-		</ui:define>
+	</ui:define>
 
 	</ui:composition>
 

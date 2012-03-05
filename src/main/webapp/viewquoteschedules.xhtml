@@ -40,8 +40,8 @@
 		<rich:column style="text-align: center;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItemSchedule.startDate}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</rich:column>
@@ -49,8 +49,8 @@
 		<rich:column style="text-align: center;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItemSchedule.endDate}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</rich:column>
@@ -63,7 +63,7 @@
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItemSchedule.quoteLineItem.yearlySalesPrice}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>
@@ -71,7 +71,7 @@
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItemSchedule.prorateYearUnitPrice}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>
@@ -79,7 +79,7 @@
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
 			<h:outputText value="#{lineItemSchedule.prorateYearTotalPrice}">
-				<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>

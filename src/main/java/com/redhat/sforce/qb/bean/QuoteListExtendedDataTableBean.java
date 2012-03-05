@@ -7,7 +7,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.richfaces.component.UIExtendedDataTable;
 
-import com.redhat.sforce.qb.bean.model.Quote;
+import com.redhat.sforce.qb.model.Quote;
 
 @ManagedBean(name="quoteListExtendedDataTableBean")
 @RequestScoped

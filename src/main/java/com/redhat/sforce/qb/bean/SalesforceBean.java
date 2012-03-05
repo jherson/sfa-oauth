@@ -7,8 +7,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import com.redhat.sforce.qb.bean.model.CurrencyIsoCodes;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.CurrencyIsoCodes;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="salesforce")

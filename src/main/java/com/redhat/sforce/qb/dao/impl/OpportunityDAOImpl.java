@@ -4,10 +4,10 @@ import java.text.ParseException;
 
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.bean.factory.OpportunityFactory;
-import com.redhat.sforce.qb.bean.model.Opportunity;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
+import com.redhat.sforce.qb.model.Opportunity;
+import com.redhat.sforce.qb.model.factory.OpportunityFactory;
 
 public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO {
 

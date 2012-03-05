@@ -9,17 +9,18 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
+import org.jboss.logging.Logger;
 import org.json.JSONException;
-import org.richfaces.component.UIDataTable;
 
-import com.redhat.sforce.qb.bean.model.Contact;
-import com.redhat.sforce.qb.bean.model.Opportunity;
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
-import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.QuoteLineItem;
-import com.redhat.sforce.qb.bean.model.User;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.Contact;
+import com.redhat.sforce.qb.model.Opportunity;
+import com.redhat.sforce.qb.model.OpportunityLineItem;
+import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="quoteController")
@@ -40,10 +41,24 @@ public class QuoteControllerBean implements QuoteController {
 
 	private Opportunity opportunity;
 	private List<Quote> quoteList;
-	private Quote selectedQuote;
+	private Quote selectedQuote;	
+	
+	
+	private String page = "quotelist.xhtml";
+	
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
+	@Inject
+	Logger log;
 
 	@Override
-	public Opportunity getOpportunity() {	
+	public Opportunity getOpportunity() {			
 		if (opportunity == null) {
 			try {
 				setOpportunity(sessionManager.queryOpportunity());
@@ -51,11 +66,9 @@ public class QuoteControllerBean implements QuoteController {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 		return opportunity;
@@ -67,7 +80,7 @@ public class QuoteControllerBean implements QuoteController {
 	} 
 
 	@Override
-	public List<Quote> getQuoteList() {
+	public List<Quote> getQuoteList() {		
 		if (quoteList == null) {			
 			try {			
 			 	quoteList = sessionManager.queryQuotes();
@@ -75,14 +88,18 @@ public class QuoteControllerBean implements QuoteController {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 		return quoteList;
+	}
+	
+	@Override
+	public void refresh() {
+        opportunity = null;
+        quoteList = null;
 	}
 	
 	@Override
@@ -112,8 +129,8 @@ public class QuoteControllerBean implements QuoteController {
 	}
 	
 	@Override
-	public void newQuote(Opportunity opportunity) {
-		Quote quote = new Quote(opportunity);
+	public void newQuote() {
+		Quote quote = new Quote(getOpportunity());
 		setSelectedQuote(quote);
 	}
 	
@@ -142,7 +159,7 @@ public class QuoteControllerBean implements QuoteController {
 	@Override
 	public void editQuote(Quote quote) {
 		setSelectedQuote(quote);
-		//UIDataTable dataTable = (UIDataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:quoteListDataTable"); 
+		setPage("quotedetails.xhtml");
 	}
 	
 	@Override
@@ -151,12 +168,7 @@ public class QuoteControllerBean implements QuoteController {
 	}
 	
 	@Override
-	public void deleteQuote(Quote quote) {
-		if (quote == null) {
-			System.out.println("quote id null");
-			return;
-		}
-			
+	public void deleteQuote(Quote quote) {			
 		sessionManager.deleteQuote(quote);				
 		setQuoteList(null);
 		setSelectedQuote(null);

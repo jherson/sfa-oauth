@@ -4,7 +4,7 @@ import java.text.ParseException;
 
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.bean.model.Opportunity;
+import com.redhat.sforce.qb.model.Opportunity;
 
 public interface OpportunityDAO {
 

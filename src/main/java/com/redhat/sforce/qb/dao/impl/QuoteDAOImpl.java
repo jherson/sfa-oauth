@@ -5,16 +5,16 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.bean.factory.OpportunityLineItemFactory;
-import com.redhat.sforce.qb.bean.factory.QuoteFactory;
-import com.redhat.sforce.qb.bean.factory.QuoteLineItemFactory;
-import com.redhat.sforce.qb.bean.factory.QuotePriceAdjustmentFactory;
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
-import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.QuoteLineItem;
-import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
+import com.redhat.sforce.qb.model.OpportunityLineItem;
+import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.factory.OpportunityLineItemFactory;
+import com.redhat.sforce.qb.model.factory.QuoteFactory;
+import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
+import com.redhat.sforce.qb.model.factory.QuotePriceAdjustmentFactory;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO {    

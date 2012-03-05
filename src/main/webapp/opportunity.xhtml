@@ -26,15 +26,15 @@
 		<h:panelGroup >
 		<h:outputText value="(#{quoteController.opportunity.currencyIsoCode}) " />
 		<h:outputText value="#{quoteController.opportunity.amount}" >
-			<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+			<f:convertNumber locale="#{sessionUser.locale}"
 				pattern="#,##0;(#,##0)" type="number" />
 		</h:outputText>
 		</h:panelGroup >
 		
 		<h:outputText value="#{msgs.closeDate}" />
 		<h:outputText value="#{quoteController.opportunity.closeDate}" > 
-		    <f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-			    pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+		    <f:convertDateTime locale="#{sessionUser.locale}"
+			    pattern="#{sessionUser.dateFormatPattern}"
 			    type="date" />
 		</h:outputText>			
 		

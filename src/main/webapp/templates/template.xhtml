@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:a4j="http://richfaces.org/a4j"
@@ -7,18 +7,21 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
-	<title>#{msgs.apptitle}</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
-	<link href="./css/style.css" rel="stylesheet" type="text/css" />
+<title>#{msgs.apptitle}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
+<link href="./css/style.css" rel="stylesheet" type="text/css" />
 
 <style type="text/css">
 html {
+	margin: 0px;
+	padding: 0px;
 	overflow-y: scroll;
 }
+
 #container {
-    margin: auto;
-    width: 100%;    
+	margin: auto;
+	width: 100%;
 }
 
 #header {
@@ -36,30 +39,45 @@ html {
 }
 
 #footer {
-    clear: both;
+	clear: both;
 }
-
 </style>
 
 </h:head>
 
 <h:panelGroup id="container">
 
-    <h:panelGroup id="header" layout="block">
-	    <h:panelGrid width="100%">
-		    <h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
-	    </h:panelGrid>
-    </h:panelGroup>
+	<h:panelGroup id="header" layout="block">
+		<h:panelGrid width="100%">
+			<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
+		</h:panelGrid>
+	</h:panelGroup>
 
-    <h:panelGroup id="leftbar" layout="block"></h:panelGroup>
+	<h:panelGroup id="leftbar" layout="block"></h:panelGroup>
 
-    <h:panelGroup id="content" layout="block">
-	    <ui:insert name="body">Default content</ui:insert>
-    </h:panelGroup>
+	<a4j:status id="waitstatus" forceId="false"
+		onstart="#{rich:component('quoteForm:statusPane')}.show()"
+		onstop="#{rich:component('quoteForm:statusPane')}.hide()" />
 
-    <h:panelGroup id="footer" layout="block">
-        
-    </h:panelGroup>
+	<h:form id="quoteForm">
+
+		<rich:popupPanel id="statusPane" autosized="true">
+			<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
+		</rich:popupPanel>
+
+		<a4j:outputPanel id="messages" ajaxRendered="true">
+			<rich:messages />
+		</a4j:outputPanel>
+
+		<h:panelGroup id="content" layout="block">
+			<ui:insert name="body">Default content</ui:insert>
+		</h:panelGroup>
+
+	</h:form>
+
+	<h:panelGroup id="footer" layout="block">
+
+	</h:panelGroup>
 
 </h:panelGroup>
 </html>

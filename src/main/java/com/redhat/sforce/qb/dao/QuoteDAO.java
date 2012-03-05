@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
-import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.QuoteLineItem;
-import com.redhat.sforce.qb.bean.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.OpportunityLineItem;
+import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 public interface QuoteDAO {

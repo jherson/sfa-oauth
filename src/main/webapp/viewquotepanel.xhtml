@@ -126,7 +126,7 @@
 
 		<h:outputText value="#{msgs.amount}" />
 		<h:outputText value="#{quoteController.selectedQuote.amount}">
-			<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+			<f:convertNumber locale="#{sessionUser.locale}"
 				pattern="#,##0.00;(#,##0.00)" />
 		</h:outputText>
 
@@ -173,8 +173,8 @@
 		<h:outputText value="#{msgs.effectiveDate}" />
 		<h:outputText value="#{quoteController.selectedQuote.effectiveDate}"
 			rendered="#{not quoteForm.editMode}">
-			<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-				pattern="#{sessionManager.sessionUser.dateFormatPattern}" type="date" />
+			<f:convertDateTime locale="#{sessionUser.locale}"
+				pattern="#{sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
 		<h:panelGroup rendered="#{quoteForm.editMode}">
@@ -182,9 +182,9 @@
 				rendered="#{quoteController.opportunity.isClosed or empty quoteController.selectedQuote}" />
 
 			<rich:calendar value="#{quoteController.selectedQuote.effectiveDate}"
-				id="effectiveDate" locale="#{sessionManager.sessionUser.locale}"
+				id="effectiveDate" locale="#{sessionUser.locale}"
 				popup="true"
-				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px" disabled="false">
 			</rich:calendar>
@@ -194,8 +194,8 @@
 		<h:outputText value="#{msgs.expirationDate}" />
 		<h:outputText value="#{quoteController.selectedQuote.expirationDate}"
 			rendered="#{not quoteForm.editMode}">
-			<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-				pattern="#{sessionManager.sessionUser.dateFormatPattern}" type="date" />
+			<f:convertDateTime locale="#{sessionUser.locale}"
+				pattern="#{sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
 		<h:panelGroup rendered="#{quoteForm.editMode}">
@@ -203,9 +203,9 @@
 				rendered="#{not quoteForm.editMode}" />
 
 			<rich:calendar value="#{quoteController.selectedQuote.expirationDate}"
-				id="expirationDate" locale="#{sessionManager.sessionUser.locale}"
+				id="expirationDate" locale="#{sessionUser.locale}"
 				popup="true"
-				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px" disabled="false">
 			</rich:calendar>
@@ -220,7 +220,7 @@
 		<h:outputText value="#{msgs.term}" />
 		<h:outputText value="#{quoteController.selectedQuote.term}"
 			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Standard'}">
-			<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+			<f:convertNumber locale="#{sessionUser.locale}"
 				pattern="#,##0" />
 		</h:outputText>
 		<h:selectOneMenu value="#{quoteController.selectedQuote.term}"
@@ -233,14 +233,14 @@
 		<h:panelGroup>
 			<h:outputText value="#{quoteController.selectedQuote.startDate}"
 				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Standard'}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{quoteController.selectedQuote.startDate}"
-				id="startDate" locale="#{sessionManager.sessionUser.locale}"
+				id="startDate" locale="#{sessionUser.locale}"
 				popup="true"
-				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px"
 				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Standard'}"
@@ -252,14 +252,14 @@
 		<h:panelGroup>
 			<h:outputText value="#{quoteController.selectedQuote.endDate}"
 				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Co-Term'}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{quoteController.selectedQuote.endDate}"
-				id="endDate" locale="#{sessionManager.sessionUser.locale}"
+				id="endDate" locale="#{sessionUser.locale}"
 				popup="true"
-				datePattern="#{sessionManager.sessionUser.dateFormatPattern}"
+				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px"
 				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Co-Term'}"
@@ -274,8 +274,8 @@
 			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}"/>
 			<h:outputText value="#{quoteController.selectedQuote.createdDate}"
 			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateTimeFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
@@ -288,8 +288,8 @@
 			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}"/>
 			<h:outputText value="#{quoteController.selectedQuote.lastModifiedDate}"
 			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}">
-				<f:convertDateTime locale="#{sessionManager.sessionUser.locale}"
-					pattern="#{sessionManager.sessionUser.dateTimeFormatPattern}"
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />

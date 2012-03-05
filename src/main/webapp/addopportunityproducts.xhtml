@@ -67,7 +67,7 @@
 					<rich:column style="text-align: right;">
 						<f:facet name="header">#{msgs.unitPrice}</f:facet>
 						<h:outputText value="#{lineItem.unitPrice}">
-							<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+							<f:convertNumber locale="#{sessionUser.locale}"
 								pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 						</h:outputText>
 					</rich:column>
@@ -75,7 +75,7 @@
 					<rich:column style="text-align: right;">
 						<f:facet name="header">#{msgs.totalPrice}</f:facet>
 						<h:outputText value="#{lineItem.totalPrice}">
-							<f:convertNumber locale="#{sessionManager.sessionUser.locale}"
+							<f:convertNumber locale="#{sessionUser.locale}"
 								pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 						</h:outputText>
 					</rich:column>

@@ -8,9 +8,9 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import com.redhat.sforce.qb.bean.model.PricebookEntry;
-import com.redhat.sforce.qb.bean.model.QuoteLineItem;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.PricebookEntry;
+import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="quoteLineItemListDataTableBean")

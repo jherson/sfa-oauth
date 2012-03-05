@@ -2,22 +2,23 @@ package com.redhat.sforce.qb.bean;
 
 import java.util.List;
 
-import com.redhat.sforce.qb.bean.model.Contact;
-import com.redhat.sforce.qb.bean.model.Opportunity;
-import com.redhat.sforce.qb.bean.model.OpportunityLineItem;
-import com.redhat.sforce.qb.bean.model.Quote;
-import com.redhat.sforce.qb.bean.model.User;
+import com.redhat.sforce.qb.model.Contact;
+import com.redhat.sforce.qb.model.Opportunity;
+import com.redhat.sforce.qb.model.OpportunityLineItem;
+import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.User;
 
 public interface QuoteController {
 
 	public Opportunity getOpportunity();
 	public void setOpportunity(Opportunity opportunity);
 	public List<Quote> getQuoteList();
+	public void refresh();
 	public Quote getSelectedQuote();
 	public Quote getActiveQuote();
 	public void setQuoteList(List<Quote> quoteList);
 	public void setSelectedQuote(Quote quote);
-	public void newQuote(Opportunity opportunity);
+	public void newQuote();
 	public void activateQuote();
 	public void activateQuote(Quote quote);
 	public void copyQuote();

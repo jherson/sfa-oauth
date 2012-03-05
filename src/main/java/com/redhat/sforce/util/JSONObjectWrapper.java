@@ -48,11 +48,11 @@ public class JSONObjectWrapper {
 	}
 	
 	public Date getDateTime(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : SforceDateFormatter.parseDateTime(jsonObject.getString(key));
+		return jsonObject.isNull(key) ? null : Util.parseDateTime(jsonObject.getString(key));
 	}
 	
 	public Date getDate(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : SforceDateFormatter.parseDate(jsonObject.getString(key));		
+		return jsonObject.isNull(key) ? null : Util.parseDate(jsonObject.getString(key));		
 	}
 	
 	public JSONObject getJSONObject(String key) throws JSONException {
