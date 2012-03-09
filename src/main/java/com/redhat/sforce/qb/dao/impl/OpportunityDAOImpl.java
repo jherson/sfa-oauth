@@ -13,6 +13,6 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO {
 
 	@Override
 	public Opportunity getOpportunity(String accessToken, String opportunityId) throws JSONException, ParseException {
-		return OpportunityFactory.deserialize(restService.getOpportunity(accessToken, opportunityId));
+		return OpportunityFactory.deserialize(sm.getOpportunity(accessToken, opportunityId));
 	}
 }

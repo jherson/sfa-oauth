@@ -1,10 +1,10 @@
 package com.redhat.sforce.qb.dao;
 
+import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.model.PricebookEntry;
-import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 public interface PricebookEntryDAO {
 
-	public PricebookEntry queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException;
+	public PricebookEntry queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws QuoteBuilderException;
 	
 }

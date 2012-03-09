@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Product;
-import com.redhat.sforce.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class ProductFactory {
 	

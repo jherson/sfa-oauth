@@ -8,6 +8,8 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -31,9 +33,19 @@ public class QuoteBuilderApplicationBean implements Serializable {
 	private String apiEndpoint;
 	private String sessionId;
 	
+	@ManagedProperty("#{request.contextPath}")
+	private String callbackUrl;
+	
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
+
 	@PostConstruct
 	public void init() {
-		log.info("init");
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");		
         Properties properties = new Properties();
 		try {
@@ -58,9 +70,13 @@ public class QuoteBuilderApplicationBean implements Serializable {
 		setSessionId(partnerConnection.getConfig().getSessionId());
 		setApiVersion(properties.getProperty("salesforce.apiVersion"));
 		
+		FacesContext context = FacesContext.getCurrentInstance();  
+		context.getApplicationContext();
+		
 		log.info("Api Endpoint: " + getApiEndpoint());
 		log.info("Api Version: " + getApiVersion());
 		log.info("Session Id " + getSessionId());
+		log.info("Callback URL: " + getCallbackUrl());
 	}
 
 	public String getSessionId() {

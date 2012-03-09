@@ -8,10 +8,9 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.service.exception.SforceServiceException;
 
 @ManagedBean(name="quoteLineItemListDataTableBean")
 @RequestScoped
@@ -68,14 +67,14 @@ public class QuoteLineItemListDataTableBean {
 		    if (quoteLineItem.getProduct().getConfigurable()) {
 		    	quoteLineItem.setConfiguredSku(productCode);
 		    }		    
-		} catch (SforceServiceException e) {
+		} catch (QuoteBuilderException e) {
 			System.out.println(e.getMessage());
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
 	
-	private PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {
+	private PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws QuoteBuilderException {
 		return sessionManager.queryPricebookEntry(pricebookId, productCode, currencyIsoCode); 
 	}
 }

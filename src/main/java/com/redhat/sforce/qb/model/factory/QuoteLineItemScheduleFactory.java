@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.model.QuoteLineItemSchedule;
-import com.redhat.sforce.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class QuoteLineItemScheduleFactory {
 

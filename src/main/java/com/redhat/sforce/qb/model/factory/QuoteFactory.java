@@ -4,21 +4,24 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.util.JSONObjectWrapper;
-import com.redhat.sforce.util.Util;
+import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.Util;
 
 public class QuoteFactory {    
+	private static final Logger log = Logger.getLogger(QuoteFactory.class); 
 	
 	public static List<Quote> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<Quote> quoteList = new ArrayList<Quote>();
 			       		
 		for (int i = 0; i < jsonArray.length(); i++) {		    
-		    Quote quote = deserialize(jsonArray.getJSONObject(i));			    
+		    Quote quote = null;
+			quote = deserialize(jsonArray.getJSONObject(i));
 			quoteList.add(quote);
 		}		
 		
@@ -120,8 +123,7 @@ public class QuoteFactory {
 			jsonObject.put("Year6PaymentAmount__c", quote.getYear6PaymentAmount());
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 			return null;
 		}
 		

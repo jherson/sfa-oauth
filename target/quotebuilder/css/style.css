@@ -1,10 +1,5 @@
 <style>
 
-		
-
-
-
-
 .rf-p {
 	background-color: #E4C6A7;
 	border-color: #C27E3A;	
@@ -26,6 +21,8 @@
 	padding-right: 5px;
 	height: 20px;
 	width: 15%;
+	font-family: Arial, Verdana, sans-serif;
+    font-size: 11px;
 }
 
 .column-l-align {
@@ -33,6 +30,8 @@
 	padding-left: 5px;
 	height: 20px;
 	width: 35%;
+	font-family: Arial, Verdana, sans-serif;
+    font-size: 11px;	
 }
 
 .centered {

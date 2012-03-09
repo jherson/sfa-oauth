@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.PricebookEntry;
-import com.redhat.sforce.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class PricebookEntryFactory {
 	

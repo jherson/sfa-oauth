@@ -4,9 +4,17 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">		
+	xmlns:rich="http://richfaces.org/rich">
 		
 <rich:toolbar height="20" itemSeparator="grid" style="border: 1;">
+
+    <rich:toolbarGroup location="left" >
+        <a4j:commandLink value="#{msgs.back}" ajaxSingle="false"
+            rendered="#{not quoteForm.editMode}"
+		    immediate="false" render="mainArea"
+		    action="#{quoteController.back()}">
+	    </a4j:commandLink>		
+    </rich:toolbarGroup>
 
 	<rich:toolbarGroup location="right">
 
@@ -23,14 +31,14 @@
 			action="#{quoteController.activateQuote()}"
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
 			disabled="#{empty quoteController.selectedQuote}"
-			render="quoteList, details">
+			render="details">
 			<h:outputText value="#{msgs.activate}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="copy"
 			action="#{quoteController.copyQuote()}"
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			render="quoteList" disabled="#{empty quoteController.selectedQuote}">
+			render="mainArea" disabled="#{empty quoteController.selectedQuote}">
 			<h:outputText value="#{msgs.copy}" />
 		</a4j:commandLink>
 
@@ -38,13 +46,13 @@
 			action="#{quoteController.deleteQuote()}"
 			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
 			disabled="#{empty quoteController.selectedQuote or quoteController.selectedQuote.isActive}"
-			render="quoteList, details">
+			render="mainArea">
 			<h:outputText value="#{msgs.delete}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="save" 
 			action="#{quoteController.save()}"
-			rendered="#{quoteForm.editMode}" render="quoteList, details"
+			rendered="#{quoteForm.editMode}" render="mainArea"
 			ajaxSingle="true" >
 			<f:setPropertyActionListener value="#{false}" target="#{quoteForm.editMode}"/>
 			<h:outputText value="#{msgs.save}" />			
@@ -53,7 +61,7 @@
 		<a4j:commandLink id="reset" 
 			rendered="#{quoteForm.editMode}" 
 			action="#{quoteController.reset()}"
-			render="details" ajaxSingle="true" 
+			render="mainArea" ajaxSingle="true" 
 			bypassUpdates="true"
 			type="reset"
 			immediate="true">
@@ -112,7 +120,11 @@
 			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.hasQuoteLineItems}" />
 		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}" style="width:50px;"
 			rendered="#{quoteForm.editMode and not quoteController.selectedQuote.hasQuoteLineItems}">
-			<f:selectItems value="#{salesforce.currencyList}"/>
+			<f:selectItem itemValue="USD" />
+			<f:selectItem itemValue="GBP" />
+			<f:selectItem itemValue="SGD" />
+			<f:selectItem itemValue="EUR" />
+			<f:selectItem itemValue="AUD" />			
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.payNow}" />

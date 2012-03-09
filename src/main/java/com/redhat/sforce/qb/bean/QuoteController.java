@@ -16,6 +16,7 @@ public interface QuoteController {
 	public void refresh();
 	public Quote getSelectedQuote();
 	public Quote getActiveQuote();
+	public void back();
 	public void setQuoteList(List<Quote> quoteList);
 	public void setSelectedQuote(Quote quote);
 	public void newQuote();

@@ -1,11 +1,18 @@
 package com.redhat.sforce.qb.dao;
 
-import com.redhat.sforce.qb.rest.QuoteBuilderRestResource;
-import com.redhat.sforce.qb.rest.QuoteBuilderRestServiceFactory;
+import javax.inject.Inject;
+
+import org.jboss.logging.Logger;
+
+import com.redhat.sforce.qb.services.ServicesManager;
 
 public class SObjectDAO {	
 	
-	protected QuoteBuilderRestResource restService = QuoteBuilderRestServiceFactory.getInstance();
+	@Inject
+	protected Logger log;
+		
+	@Inject 
+    protected ServicesManager sm;
 		
 	public SObjectDAO() {
 		

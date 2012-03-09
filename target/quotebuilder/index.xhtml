@@ -3,20 +3,20 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a4j="http://richfaces.org/a4j">	
+	xmlns:a4j="http://richfaces.org/a4j">
 
-<body>    
+<body>
 
 	<ui:composition template="/templates/template.xhtml">
-	
-	<ui:define name="body">
-	<h:panelGroup id="mainArea" layout="block">
-	<h:panelGroup layout="block">
-	<ui:include src="#{quoteController.page}"/>
-	</h:panelGroup>
-	</h:panelGroup>
 
-	</ui:define>
+		<ui:define name="body">
+			<h:panelGroup id="mainArea" layout="block">
+				<h:panelGroup layout="block">
+					<ui:include src="#{quoteController.template}" />
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</ui:define>
 
 	</ui:composition>
 

@@ -17,18 +17,31 @@ import javax.servlet.http.HttpServletRequest;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.dao.factory.SObjectDAOFactory;
-import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.dao.SessionUserDAO;
+import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.model.User;
-import com.redhat.sforce.qb.service.exception.SforceServiceException;
-import com.redhat.sforce.util.Util;
+import com.redhat.sforce.qb.util.Util;
 
 @ManagedBean(name="sessionUser")
 @RequestScoped
 
 public class SessionUser implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3380245446240256559L;
+
+	private String dateFormatPattern;
+	
+	private String dateTimeFormatPattern;
+	
+	private Locale locale;
+	
+	private User user;
+	
+	@Inject
+	Logger log;
+	
+	@Inject
+	SessionUserDAO sessionUserDAO;
 	
 	@ManagedProperty("#{sessionManager}")
 	private SessionManager sessionManager;
@@ -39,15 +52,7 @@ public class SessionUser implements Serializable {
 
 	public void setSessionManager(SessionManager sessionManager) {
 		this.sessionManager = sessionManager;
-	}
-
-	private String dateFormatPattern;
-	private String dateTimeFormatPattern;
-	private Locale locale;
-	private User user;
-	
-	@Inject
-	Logger log;
+	}	
 	
 	@PostConstruct
     public void init() {	
@@ -63,7 +68,7 @@ public class SessionUser implements Serializable {
 		}
 		
 		try {	
-		    user = SObjectDAOFactory.getSessionUserDAO().querySessionUser(sessionManager.getSessionId());
+		    user = sessionUserDAO.querySessionUser(sessionManager.getSessionId());
 		    
 	        setLocale(Util.stringToLocale(user.getLocaleSidKey()));
 			
@@ -75,7 +80,7 @@ public class SessionUser implements Serializable {
 		    
 		} catch (JSONException e) {
 			log.error(e);
-		} catch (SforceServiceException e) {
+		} catch (QuoteBuilderException e) {
 			log.error(e);
 		}	
 		

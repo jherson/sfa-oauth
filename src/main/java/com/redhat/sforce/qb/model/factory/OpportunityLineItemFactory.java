@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.OpportunityLineItem;
-import com.redhat.sforce.util.JSONObjectWrapper;
-import com.redhat.sforce.util.Util;
+import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.Util;
 
 public class OpportunityLineItemFactory {
 
