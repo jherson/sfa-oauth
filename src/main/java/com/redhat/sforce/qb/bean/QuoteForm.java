@@ -5,6 +5,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangeEvent;
 
 @ManagedBean(name="quoteForm")
 @ViewScoped
@@ -14,9 +16,6 @@ public class QuoteForm {
 	@ManagedProperty(value="false")
 	private Boolean editMode;
 	
-	@ManagedProperty(value="false")
-	private Boolean toggleCheckboxes;	
-	
 	public void setEditMode(Boolean editMode) {
 		this.editMode = editMode;
 	}
@@ -25,16 +24,23 @@ public class QuoteForm {
 		return editMode;
 	}
 	
-	public void valueChangeListener(AjaxBehaviorEvent event) {
-		//System.out.println("here: " + event.getNewValue());
-		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
+	@ManagedProperty(value="false")
+	private Boolean checkedValue;
+	
+	public Boolean getCheckedValue() {
+		return checkedValue;
+	}
 
-		System.out.println("id: " + checkBox.getId() + " " + checkBox.isSelected());
-		//if (toggleCheckboxes.getValue()) {
-		//	System.out.println("selected");
-		//} else {
-		//	System.out.println("not selected");
-		//}
+	public void setCheckedValue(Boolean checkedValue) {
+		this.checkedValue = checkedValue;
+	}
+	
+	public void toggleCheckboxes(ValueChangeEvent event) {
+		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
+		
+		System.out.println("id: " + checkBox.getId() + " " + checkBox.getValue());
+		System.out.println("checked value: " + checkedValue);
+
 		
 		//for (OpportunityLineItem opportunityLineItem : quoteManagerBean.getOpportunity().getOpportunityLineItems()) {
 		//	opportunityLineItem.setImportProduct(true);
@@ -42,13 +48,23 @@ public class QuoteForm {
 		//setToggleCheckboxes(true);
 
 	}
+	
+	public void toggleCheckboxes(AjaxBehaviorEvent event) {
+		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
+		
+		if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+			event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+			event.queue();
+ 		}
 
-	public Boolean getToggleCheckboxes() {
-		return toggleCheckboxes;
-	}
+		System.out.println("id: " + checkBox.getId() + " " + checkBox.getValue());
 
-	public void setToggleCheckboxes(Boolean toggleCheckboxes) {
-		this.toggleCheckboxes = toggleCheckboxes;
+		
+		//for (OpportunityLineItem opportunityLineItem : quoteManagerBean.getOpportunity().getOpportunityLineItems()) {
+		//	opportunityLineItem.setImportProduct(true);
+		//}
+		//setToggleCheckboxes(true);
+
 	}	
 
 //	public void saveQuotePriceAdjustments(Quote quote) {

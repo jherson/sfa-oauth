@@ -28,13 +28,12 @@ public class QuotePriceAdjustmentFactory {
 		    quotePriceAdjustment.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
 		    quotePriceAdjustment.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
 		    quotePriceAdjustment.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
-		    quotePriceAdjustment.setAmount(wrapper.getDouble("Amount__c"));
+		    quotePriceAdjustment.setAdjustmentAmount(wrapper.getDouble("AdjustmentAmount__c"));
 		    quotePriceAdjustment.setOperator(wrapper.getString("Operator__c"));
 		    quotePriceAdjustment.setPercent(wrapper.getDouble("Percent__c"));
 		    quotePriceAdjustment.setReason(wrapper.getString("Reason__c"));
 		    quotePriceAdjustment.setType(wrapper.getString("Type__c"));
-		    quotePriceAdjustment.setAmountBeforeAdjustment(wrapper.getDouble("AmountBeforeAdjustment__c"));
-		    quotePriceAdjustment.setAmountAfterAdjustment(wrapper.getDouble("AmountAfterAdjustment__c"));
+		    quotePriceAdjustment.setAppliesTo(wrapper.getString("AppliesTo__c"));
 		    
 		    quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}
@@ -51,13 +50,12 @@ public class QuotePriceAdjustmentFactory {
 			try {
 				jsonObject.put("Id", quotePriceAdjustment.getId());
 				jsonObject.put("QuoteId__c", quotePriceAdjustment.getQuoteId());
-                jsonObject.put("Amount__c", quotePriceAdjustment.getAmount());
+                jsonObject.put("AdjustmentAmount__c", quotePriceAdjustment.getAdjustmentAmount());
                 jsonObject.put("Operator__c", quotePriceAdjustment.getOperator());
                 jsonObject.put("Percent__c", quotePriceAdjustment.getPercent());
                 jsonObject.put("Reason__c", quotePriceAdjustment.getReason());
                 jsonObject.put("Type__c", quotePriceAdjustment.getType());
-                jsonObject.put("AmountBeforeAdjustment__c", quotePriceAdjustment.getAmountBeforeAdjustment());
-                jsonObject.put("AmountAfterAdjustment__c", quotePriceAdjustment.getAmountAfterAdjustment());
+                jsonObject.put("AppliesTo__C", quotePriceAdjustment.getAppliesTo());
 
 				jsonArray.put(jsonObject);
 				

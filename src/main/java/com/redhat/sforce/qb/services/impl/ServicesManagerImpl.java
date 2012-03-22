@@ -1,11 +1,11 @@
 package com.redhat.sforce.qb.services.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
-import javax.inject.Named;
+import javax.inject.Inject;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -21,47 +21,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.bean.QuotebuilderProperties;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.services.ServicesManager;
-
-import java.io.Serializable;
-
-@Named("ServicesManager")  
-@javax.enterprise.context.SessionScoped
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 	private static final long serialVersionUID = 6709733022603934113L;
-	
-	private Logger log = Logger.getLogger(ServicesManagerImpl.class);
-	
-	private String apiVersion = "v24.0";
-	
-	private String apiEndpoint = "https://cs4.salesforce.com/services";			
 			
-	public String getApiVersion() {
-		return apiVersion;
-	}
-
-	public void setApiVersion(String apiVersion) {
-		this.apiVersion = apiVersion;
-	}
-
-	public String getApiEndpoint() {
-		return apiEndpoint;
-	}
-
-	public void setApiEndpoint(String apiEndpoint) {
-		this.apiEndpoint = apiEndpoint;
-	}
+	@Inject
+	Logger log;
+	
+	@Inject 
+	QuotebuilderProperties properties;				
 			
 	@Override
 	public JSONObject getCurrentUserInfo(String accessToken) {
-		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/currentUserInfo";
+		String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/currentUserInfo";
 		
 		GetMethod getMethod = new GetMethod(url);
 		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);		
-		getMethod.setRequestHeader("Content-type", "application/json");		
+		getMethod.setRequestHeader("Content-type", "application/json");				
 				
 		JSONObject response = null;
         try {
@@ -71,7 +51,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
 				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
 			} else {
-				log.error(parseErrorResponse(getMethod.getResponseBodyAsStream()));
+				log.error(getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -88,7 +69,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	
 	@Override
 	public JSONObject getOpportunity(String accessToken, String opportunityId) {
-		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/opportunity";
+		String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/opportunity";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("opportunityId", opportunityId);
@@ -100,7 +81,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
 				jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
 			} else {
-				System.out.println(parseErrorResponse(getMethod.getResponseBodyAsStream()));									
+				log.error(getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());									
 			}
 
 		} catch (HttpException e) {
@@ -117,8 +99,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONArray getQuotesByOpportunityId(String accessToken, String opportunityId) throws QuoteBuilderException {
-        String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/get_quotes_for_opportunity";
+	public JSONArray getQuotesByOpportunityId(String accessToken, String opportunityId) throws SalesforceServiceException {
+        String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/get_quotes_for_opportunity";
         
         NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("opportunityId", opportunityId);
@@ -130,14 +112,18 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
 				jsonArray = new JSONArray(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
 			} else {
-				throw new QuoteBuilderException(parseErrorResponse(getMethod.getResponseBodyAsStream()));								
+				log.error(getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());								
 			}
 
 		} catch (HttpException e) {
+			e.printStackTrace();
 			log.error(e);
 		} catch (IOException e) {
+			e.printStackTrace();
 			log.error(e);
 		} catch (JSONException e) {
+			e.printStackTrace();
 			log.error(e);
 		} finally {
 			getMethod.releaseConnection();
@@ -147,38 +133,35 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String saveQuote(String accessToken, JSONObject jsonObject) throws QuoteBuilderException {
-        String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/saveQuote";	
-		
-		PostMethod postMethod = new PostMethod(url);	
-		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
-		postMethod.setRequestHeader("Content-type", "application/json");		
-					
-		String response = null;
-        try {
-        	postMethod.setRequestEntity(new StringRequestEntity(jsonObject.toString(), "application/json", null));	
-        	
-        	HttpClient httpclient = new HttpClient();
-			httpclient.executeMethod(postMethod);
-			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {	
-				response = new InputStreamReader(postMethod.getResponseBodyAsStream()).toString();	
-			} else {
-				throw new QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
+	public String saveQuote(String accessToken, JSONObject jsonObject) throws SalesforceServiceException {
+        String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/save_quote";
+        
+		String quoteId = null;      
+		PostMethod postMethod = null;
+		try {
+			postMethod = doPost(accessToken, url, null, jsonObject.toString());
+			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {				
+				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));				
+				quoteId = response.getString("id");
+				log.info("saved quote id: " + quoteId);
+	        } else {
+				log.error(postMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(postMethod.getResponseBodyAsStream());	
 			}
 		} catch (HttpException e) {
 			log.error(e);
 		} catch (IOException e) {
 			log.error(e);
-		} finally {
-			postMethod.releaseConnection();
+		} catch (JSONException e) {
+			log.error(e);
 		}
-        
-        return response;
+                
+        return quoteId;
 	}
 
 	@Override
-	public JSONArray query(String accessToken, String query) throws QuoteBuilderException {
-		String url = getApiEndpoint() + "/data/" + getApiVersion() + "/query";
+	public JSONArray query(String accessToken, String query) throws SalesforceServiceException {
+		String url = properties.getApiEndpoint() + "/data/" + properties.getApiVersion() + "/query";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("q", query);
@@ -196,7 +179,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 				queryResult = response.getJSONArray("records");						
 			} else {
-				throw new QuoteBuilderException(parseErrorResponse(getMethod.getResponseBodyAsStream()));
+				log.error(getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -212,8 +196,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws QuoteBuilderException {
-		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/saveQuoteLineItems";
+	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SalesforceServiceException {
+		String url = properties.getApiEndpoint() + "/apexrest/"  + properties.getApiVersion() + "/QuoteRestService/saveQuoteLineItems";
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -226,8 +210,9 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(postMethod);
 			
-			if (postMethod.getStatusCode() == 400) {				
-				throw new QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
+			if (postMethod.getStatusCode() != 200) {				
+				log.error(postMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(postMethod.getResponseBodyAsStream());
 			} 
 			
 		} catch (UnsupportedEncodingException e) {
@@ -243,8 +228,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONObject queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws QuoteBuilderException {
-		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/pricebookEntry";
+	public JSONObject queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException {
+		String url = properties.getApiEndpoint() + "/apexrest/"  + properties.getApiVersion() + "/QuoteRestService/get_pricebook_entry";
 		
 		NameValuePair[] params = new NameValuePair[3];
 		params[0] = new NameValuePair("pricebookId", pricebookId);
@@ -256,10 +241,10 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		try {
 			getMethod = doGet(accessToken, url, params);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
-			} else {
-				throw new QuoteBuilderException(parseErrorResponse(getMethod.getResponseBodyAsStream()));									
-			}
+				jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));					
+			} else {				
+				throw new SalesforceServiceException(getMethod.getResponseBodyAsStream());	
+			}		
 		} catch (JSONException e) {
 			log.error(e);
 		} catch (HttpException e) {
@@ -274,13 +259,13 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONArray queryCurrencies(String accessToken) throws QuoteBuilderException {
+	public JSONArray queryCurrencies(String accessToken) throws SalesforceServiceException {
 		return query(accessToken, "Select IsoCode from CurrencyType Where IsActive = true Order By IsoCode");
 	}
 	
 	@Override
-	public void saveQuotePriceAdjustments(String accessToken, JSONArray jsonArray) throws QuoteBuilderException {
-        String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/saveQuotePriceAdjustments";
+	public void saveQuotePriceAdjustments(String accessToken, JSONArray jsonArray) throws SalesforceServiceException {
+        String url = properties.getApiEndpoint() + "/apexrest/"  + properties.getApiVersion() + "/QuoteRestService/saveQuotePriceAdjustments";
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -294,7 +279,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			httpclient.executeMethod(postMethod);
 			
 			if (postMethod.getStatusCode() == 400) {				
-				throw new QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
+				log.error(postMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(postMethod.getResponseBodyAsStream());
 			} 
 		} catch (UnsupportedEncodingException e) {
 			log.error(e);
@@ -309,8 +295,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
-	public void activateQuote(String accessToken, String quoteId) throws QuoteBuilderException {
-		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/activate";	
+	public void activateQuote(String accessToken, String quoteId) throws SalesforceServiceException {
+		String url = properties.getApiEndpoint() + "/apexrest/"  + properties.getApiVersion() + "/QuoteRestService/activate";	
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);
@@ -321,7 +307,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			postMethod = doPost(accessToken, url, params, null);
 			
 			if (postMethod.getStatusCode() != HttpStatus.SC_OK) {	
-				throw new QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
+				log.error(postMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(postMethod.getResponseBodyAsStream());		
 			}
 		} catch (UnsupportedEncodingException e) {
 			log.error(e);
@@ -336,7 +323,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	
 	@Override
 	public void calculateQuote(String accessToken, String quoteId) {
-		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/calculate?quoteId=" + quoteId;	
+		String url = properties.getApiEndpoint() + "/apexrest/"  + properties.getApiVersion() + "/QuoteRestService/calculate?quoteId=" + quoteId;	
 				
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -355,8 +342,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONObject getQuoteById(String accessToken, String quoteId) throws QuoteBuilderException {
-		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/quote";
+	public JSONObject getQuoteById(String accessToken, String quoteId) throws SalesforceServiceException {
+		String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/quote";
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);
@@ -366,9 +353,10 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		try {
 			getMethod = doGet(accessToken, url, params);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
+				jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 			} else {
-				throw new QuoteBuilderException(parseErrorResponse(getMethod.getResponseBodyAsStream()));									
+				log.error(getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());									
 			}
 		} catch (JSONException e) {
 			log.error(e);
@@ -384,8 +372,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}	
 
 	@Override
-	public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws QuoteBuilderException {
-        String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/deleteQuoteLineItems";	
+	public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) throws SalesforceServiceException {
+        String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/deleteQuoteLineItems";	
 		
 		PostMethod postMethod = new PostMethod(url);	
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -399,7 +387,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			httpclient.executeMethod(postMethod);
 			
 			if (postMethod.getStatusCode() == 400) {				
-				throw new QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
+				log.error(postMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(postMethod.getResponseBodyAsStream());
 			} 
 		} catch (UnsupportedEncodingException e) {
 			log.error(e);
@@ -414,7 +403,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	
 	@Override
 	public void copyQuote(String accessToken, String quoteId) {
-		String url = getApiEndpoint() + "/apexrest/"  + getApiVersion() + "/QuoteRestService/copy";	
+		String url = properties.getApiEndpoint() + "/apexrest/"  + properties.getApiVersion() + "/QuoteRestService/copy";	
 		
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);
@@ -440,15 +429,16 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void addOpportunityLineItems(String accessToken, String quoteId, JSONArray jsonArray) throws QuoteBuilderException {
-		String url = getApiEndpoint() + "/apexrest/" + getApiVersion() + "/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
+	public void addOpportunityLineItems(String accessToken, String quoteId, JSONArray jsonArray) throws SalesforceServiceException {
+		String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/addOpportunityLineItems?quoteId=" + quoteId;	
 		PostMethod postMethod = null;
 		try {		
 
 			postMethod = doPost(accessToken, url, null, jsonArray.toString());
 			
 			if (postMethod.getStatusCode() != HttpStatus.SC_OK) {	
-				throw new QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));		
+				log.error(postMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(postMethod.getResponseBodyAsStream());
 			}
 		} catch (UnsupportedEncodingException e) {
 			log.error(e);
@@ -462,7 +452,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}	
 
 //	private void update(String accessToken, String sobject, String id, JSONObject jsonObject) throws QuoteBuilderException {
-//		String url = getApiEndpoint() + "/data/" + getApiVersion() + "/sobjects/" + sobject + "/" + id  + "?_HttpMethod=PATCH";
+//		String url = properties.getApiEndpoint() + "/data/" + properties.getApiVersion() + "/sobjects/" + sobject + "/" + id  + "?_HttpMethod=PATCH";
 //		
 //		PostMethod postMethod = new PostMethod(url);	
 //		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -491,7 +481,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	
 
 	private void delete(String accessToken, String sobject, String id) {
-		String url = getApiEndpoint() + "/data/" + getApiVersion() + "/sobjects/" + sobject + "/" + id;
+		String url = properties.getApiEndpoint() + "/data/" + properties.getApiVersion() + "/sobjects/" + sobject + "/" + id;
 				
 		DeleteMethod deleteMethod = new DeleteMethod(url);
 		deleteMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
@@ -542,26 +532,5 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		httpclient.executeMethod(getMethod);						
         
         return getMethod;
-	}
-	
-	private String parseErrorResponse(InputStream is) {
-		JSONArray value;
-		try {
-			value = (JSONArray) new JSONTokener(new InputStreamReader(is)).nextValue();
-			
-			JSONObject object = (JSONObject) value.get(0);
-			String errorCode = object.getString("errorCode");
-			String errorMessage = null;
-			if (errorCode != null) {
-				errorMessage = object.getString("message");
-			}
-			
-			return errorCode + ": " + errorMessage;
-			
-		} catch (JSONException e) {
-			log.error(e);
-		}
-
-		return null;
 	}
 }

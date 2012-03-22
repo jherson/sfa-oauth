@@ -2,6 +2,8 @@ package com.redhat.sforce.qb.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 public class QuoteLineItem extends SObject {
 
 	private static final long serialVersionUID = 1L;
@@ -28,6 +30,7 @@ public class QuoteLineItem extends SObject {
     private Double discountAmount;
     private Double discountPercent;    
     private Integer sortOrder;
+	@NotNull
     private Product product;
     private Boolean delete;
 

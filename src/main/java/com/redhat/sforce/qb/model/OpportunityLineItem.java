@@ -2,6 +2,12 @@ package com.redhat.sforce.qb.model;
 
 import java.util.Date;
 
+import javax.annotation.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+@ManagedBean
+@SessionScoped
+
 public class OpportunityLineItem extends SObject {
 
 	private static final long serialVersionUID = 1L;
@@ -28,7 +34,7 @@ public class OpportunityLineItem extends SObject {
     private String pricingAttributes;
     private String pricebookEntryId;  
     private Product product;
-    private Boolean importProduct;
+    private boolean selected;
 
     public OpportunityLineItem() {
         super();
@@ -218,11 +224,13 @@ public class OpportunityLineItem extends SObject {
 		this.product = product;
 	} 
 	
-	public Boolean getImportProduct() {
-		return importProduct;
+	public boolean isSelected() {
+		//System.out.println("calling isSelected: " + selected);
+		return selected;
 	}
 	
-	public void setImportProduct(Boolean importProduct) {
-		this.importProduct = importProduct;
+	public void setSelected(boolean selected) {
+		//System.out.println("calling setSelected: " + selected);
+		this.selected = selected;
 	}
 }

@@ -4,37 +4,32 @@ public class QuotePriceAdjustment extends SObject {
 
 	private static final long serialVersionUID = 1L;
 	private String quoteId;
-    private Double amount;
+    private Double adjustmentAmount;
     private String operator;
     private Double percent;
     private String reason;
     private String type;
-    private Double amountBeforeAdjustment;
-    private Double amountAfterAdjustment;
+    private String appliesTo;
 
     public QuotePriceAdjustment() {
         super();
     }
     
     public QuotePriceAdjustment(
-    		Double amount, 
+    		Double adjustmentAmount, 
     		String operator, 
     		Double percent, 
     		String reason, 
-    		String type, 
-    		Double amountBeforeAdjustment, 
-    		Double amountAfterAdjustment) {
+    		String type) {
     	
     	super();
-	    setAmount(amount);
+    	setAdjustmentAmount(adjustmentAmount);
 	    setOperator(operator);
 	    setPercent(percent);
 	    setReason(reason);
         setType(type);
-		setAmountBeforeAdjustment(amountBeforeAdjustment);
-		setAmountAfterAdjustment(amountAfterAdjustment);
     }
-	
+
 	public String getQuoteId() {
 		return quoteId;
 	}
@@ -43,12 +38,12 @@ public class QuotePriceAdjustment extends SObject {
 		this.quoteId = quoteId;
 	}
 
-	public Double getAmount() {
-		return amount;
+	public Double getAdjustmentAmount() {
+		return adjustmentAmount;
 	}
 
-	public void setAmount(Double amount) {
-		this.amount = amount;
+	public void setAdjustmentAmount(Double adjustmentAmount) {
+		this.adjustmentAmount = adjustmentAmount;
 	}
 
 	public String getOperator() {
@@ -82,20 +77,12 @@ public class QuotePriceAdjustment extends SObject {
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	public Double getAmountBeforeAdjustment() {
-		return amountBeforeAdjustment;
+	
+	public String getAppliesTo() {
+		return appliesTo;
 	}
 
-	public void setAmountBeforeAdjustment(Double amountBeforeAdjustment) {
-		this.amountBeforeAdjustment = amountBeforeAdjustment;
-	}
-
-	public Double getAmountAfterAdjustment() {
-		return amountAfterAdjustment;
-	}
-
-	public void setAmountAfterAdjustment(Double amountAfterAdjustment) {
-		this.amountAfterAdjustment = amountAfterAdjustment;
+	public void setAppliesTo(String appliesTo) {
+		this.appliesTo = appliesTo;
 	}
 }

@@ -9,9 +9,9 @@
 <rich:toolbar height="20" itemSeparator="grid" style="border: 1;">
 
     <rich:toolbarGroup location="left" >
-        <a4j:commandLink value="#{msgs.back}" ajaxSingle="false"
-            rendered="#{not quoteForm.editMode}"
-		    immediate="false" render="mainArea"
+        <a4j:commandLink value="#{msgs.back}" 
+            disabled="#{quoteForm.editMode}"
+		    immediate="false" render="mainArea" status="ajaxStatus"
 		    action="#{quoteController.back()}">
 	    </a4j:commandLink>		
     </rich:toolbarGroup>
@@ -118,13 +118,16 @@
 		<h:outputText value="#{msgs.currency}" />
 		<h:outputText value="#{quoteController.selectedQuote.currencyIsoCode}"
 			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.hasQuoteLineItems}" />
-		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}" style="width:50px;"
-			rendered="#{quoteForm.editMode and not quoteController.selectedQuote.hasQuoteLineItems}">
-			<f:selectItem itemValue="USD" />
-			<f:selectItem itemValue="GBP" />
-			<f:selectItem itemValue="SGD" />
-			<f:selectItem itemValue="EUR" />
-			<f:selectItem itemValue="AUD" />			
+		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}" style="width: 75px;"
+			rendered="#{quoteForm.editMode and not quoteController.selectedQuote.hasQuoteLineItems}"
+			status="ajaxStatus">
+			
+			<f:selectItems value="#{quoteBuilder.currencyIsoCodes}" />
+			
+			<a4j:ajax execute="@this" event="valueChange"
+				render="viewQuoteProducts">					  
+			</a4j:ajax>
+			
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.payNow}" />
@@ -381,7 +384,7 @@
 
 	<br />
 	
-    <ui:include src="viewquoteproducts.xhtml" />
+	<ui:include src="viewquoteproducts.xhtml" />
 
 </rich:panel>
 </html>

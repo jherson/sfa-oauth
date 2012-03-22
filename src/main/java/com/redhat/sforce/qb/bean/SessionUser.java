@@ -6,9 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
-
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -40,6 +39,9 @@ public class SessionUser implements Serializable {
 	@Inject
 	Logger log;
 	
+	@Inject 
+	QuotebuilderProperties properties;	
+	
 	@Inject
 	SessionUserDAO sessionUserDAO;
 	
@@ -61,7 +63,7 @@ public class SessionUser implements Serializable {
 		
 		if (request.getParameter("sessionId") != null) {			
 			sessionManager.setSessionId(request.getParameter("sessionId"));
-		}		
+		} 
 		
 		if (request.getParameter("opportunityId") != null) {			
 			sessionManager.setOpportunityId(request.getParameter("opportunityId"));

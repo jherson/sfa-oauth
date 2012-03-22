@@ -52,8 +52,19 @@ public class Quote extends SObject {
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
+	private Boolean selectAll;
+	
+	
 
-    public Quote() {
+    public Boolean getSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(Boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public Quote() {
         super();
     }
     
@@ -92,7 +103,7 @@ public class Quote extends SObject {
         String[] reasons = new String[] {"Platform and Cloud", "Middleware", "Services"};
 		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
 		for (int i = 0; i < reasons.length; i++) {
-			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment(0.00, "Percent", 0.00, reasons[i], "Amount", 0.00, 0.00);			
+			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment(0.00, "Percent", 0.00, reasons[i], "Amount");			
 			quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}		
 		setQuotePriceAdjustments(quotePriceAdjustmentList);

@@ -18,6 +18,7 @@ import com.redhat.sforce.qb.bean.QuoteController;
 import com.redhat.sforce.qb.bean.SessionManager;
 import com.redhat.sforce.qb.bean.TemplateEnum;
 import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Contact;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
@@ -86,7 +87,7 @@ public class QuoteControllerImpl implements QuoteController {
 		if (quoteList == null) {			
 			try {			
 			 	quoteList = sessionManager.queryQuotes();
-			} catch (QuoteBuilderException e) {
+			} catch (SalesforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
 			} catch (JSONException e) {
@@ -139,7 +140,7 @@ public class QuoteControllerImpl implements QuoteController {
 	public void newQuote() {
 		Quote quote = new Quote(getOpportunity());
 		setSelectedQuote(quote);
-		setTemplate("quotedetails.xhtml");
+		setTemplate(TemplateEnum.VIEW_QUOTE.getTemplate());
 	}
 	
 	@Override
@@ -152,7 +153,7 @@ public class QuoteControllerImpl implements QuoteController {
 		try {
 			setSelectedQuote(sessionManager.activateQuote(quote));
 			setQuoteList(null);
-		} catch (QuoteBuilderException e) {
+		} catch (SalesforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}		
@@ -205,7 +206,7 @@ public class QuoteControllerImpl implements QuoteController {
 		try {
 		    Quote quote = sessionManager.saveQuote(getSelectedQuote());
 		    setSelectedQuote(quote);
-		} catch (QuoteBuilderException e) {
+		} catch (SalesforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} 		
@@ -229,11 +230,10 @@ public class QuoteControllerImpl implements QuoteController {
 		try {
 		    sessionManager.saveQuoteLineItems(getSelectedQuote().getQuoteLineItems());
 			    
-		} catch (QuoteBuilderException e) {
+		} catch (SalesforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
-
 	}
 	
 	@Override
@@ -244,7 +244,7 @@ public class QuoteControllerImpl implements QuoteController {
 				setSelectedQuote(sessionManager.queryQuote(quoteId));
 				setQuoteList(null);
 
-			} catch (QuoteBuilderException e) {
+			} catch (SalesforceServiceException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 				FacesContext.getCurrentInstance().addMessage(null, message);
 			} catch (JSONException e) {
@@ -259,13 +259,25 @@ public class QuoteControllerImpl implements QuoteController {
 		}
 	}
 	
+	public void viewOpportunityLineItems() {
+		setTemplate(TemplateEnum.ADD_OPPORTUNITY_PRODUCTS.getTemplate());
+	}
+	
+	
 	@Override
-	public void addOpportunityLineItems(List<OpportunityLineItem> opportunityLineItems) {
+	public void addOpportunityLineItems() {		
+		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
+		for (OpportunityLineItem opportunityLineItem : getOpportunity().getOpportunityLineItems()) {			
+			if (opportunityLineItem.isSelected()) {
+				opportunityLineItemList.add(opportunityLineItem);
+				opportunityLineItem.setSelected(false);
+			}		    
+		}
+		
 		try {
-			sessionManager.addOpportunityLineItems(getSelectedQuote(), opportunityLineItems);	
-			setQuoteList(null);	
-			
-		} catch (QuoteBuilderException e) {
+			setSelectedQuote(sessionManager.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList));
+			setTemplate(TemplateEnum.VIEW_QUOTE.getTemplate());
+		} catch (SalesforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}	
@@ -295,7 +307,7 @@ public class QuoteControllerImpl implements QuoteController {
 		    sessionManager.deleteQuoteLineItems(quoteLineItems);
 		    setQuoteList(null);	
 		    
-		} catch (QuoteBuilderException e) {
+		} catch (SalesforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}

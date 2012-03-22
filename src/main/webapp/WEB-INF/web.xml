@@ -5,7 +5,7 @@
          id="WebApp_ID" version="3.0"> 
          
          <display-name>QuoteBuilder</display-name>  
-         
+                  
          <context-param>
              <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
              <param-value>false</param-value>
@@ -33,6 +33,11 @@
 	     <servlet-mapping>
 		     <servlet-name>Faces Servlet</servlet-name>
 		     <url-pattern>*.jsf</url-pattern>
-	     </servlet-mapping>     
+	     </servlet-mapping>    
+	     
+	     <welcome-file-list>
+             <welcome-file>index.html</welcome-file>
+         </welcome-file-list>
+	     
          
 </web-app>         

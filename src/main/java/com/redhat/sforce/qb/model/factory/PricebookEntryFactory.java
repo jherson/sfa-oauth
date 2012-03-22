@@ -25,14 +25,21 @@ public class PricebookEntryFactory {
 		return pricebookEntryList;
 	}
 	
-	public static PricebookEntry deserialize(JSONObject jsonObject) throws JSONException, ParseException {
+	public static PricebookEntry deserialize(JSONObject jsonObject) {
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 	    
-	    PricebookEntry pricebookEntry = new PricebookEntry();
-	    pricebookEntry.setId(wrapper.getId());
-	    pricebookEntry.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
-	    pricebookEntry.setUnitPrice(wrapper.getDouble("UnitPrice"));
-	    pricebookEntry.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product2")));
+	    PricebookEntry pricebookEntry = null;
+	    try {
+	    	pricebookEntry = new PricebookEntry();
+			pricebookEntry.setId(wrapper.getId());
+		    pricebookEntry.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+		    pricebookEntry.setUnitPrice(wrapper.getDouble("UnitPrice"));
+		    pricebookEntry.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product2")));
+		    		    		    
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    
 	    return pricebookEntry;
 	}

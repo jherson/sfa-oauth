@@ -15,6 +15,7 @@
     }
 </h:outputStylesheet>	
 
+
 <rich:panel id="viewQuoteProducts"
 	style="border: 0px; border-color: #C27E3A; background-color: #FCF9F5;"
 	bodyClass="panel-body">
@@ -41,12 +42,12 @@
 
 		<rich:toolbarGroup location="right">
 		
-		    <a4j:commandLink value="#{msgs.addOpportunityProducts}"
-				rendered="#{quoteForm.editMode and quoteController.selectedQuote.currencyIsoCode == quoteController.opportunity.currencyIsoCode}"
-				disabled="#{empty quoteController.opportunity.opportunityLineItems}"
-				action="#{quoteController.addOpportunityLineItems()}"
-				render="quoteList, details" ajaxSingle="true" />
-
+		    <a4j:commandLink id="addOpportunityProducts" value="#{msgs.addOpportunityProducts}"
+				rendered="#{not quoteForm.editMode and quoteController.selectedQuote.currencyIsoCode == quoteController.opportunity.currencyIsoCode}"
+				disabled="#{empty quoteController.opportunity.opportunityLineItems}"								 			
+                action="#{quoteController.viewOpportunityLineItems()}"
+                render="mainArea" status="ajaxStatus" />
+				
 			<a4j:commandLink value="#{msgs.addProduct}"
 				rendered="#{quoteForm.editMode}"
 				action="#{quoteController.newQuoteLineItem()}"
@@ -76,15 +77,15 @@
 			<h:outputText value="#{lineItem.product.productCode}"
 				rendered="#{not quoteForm.editMode}" />
 			<h:inputText id="productCode" value="#{lineItem.product.productCode}"
-				style="width: 75px;" rendered="#{quoteForm.editMode}"
-				execute="immediate" ajaxSingle="true">
+				style="width: 75px;" rendered="#{quoteForm.editMode}"		
+				execute="immediate" ajaxSingle="true">				
 				<f:attribute name="rowIndex" value="#{it.index}"/>
-
 				<a4j:ajax execute="@this" event="valueChange"
 					listener="#{quoteLineItemListDataTableBean.validateProduct}" render="viewQuoteProducts">					  
 				</a4j:ajax>
 
 			</h:inputText>
+			<rich:message for="productCode" />
 
 		</rich:column>
 

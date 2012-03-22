@@ -15,6 +15,13 @@
 	font-size: 10px;
 }
 
+.panel-body {
+    color: #000000;
+    font-family: Arial,Verdana,sans-serif;
+    font-size: 11px;
+    padding: 0px;
+}
+
 .label-column {
 	font-weight: bold;
 	text-align: right;
@@ -38,14 +45,8 @@
 	margin: 0px auto;
 }
 
-.width150 {
-	width: 150px;
-}
-
-
-
-a.no-decor>img {
-	border: none;
+.commandButton {
+	cursor: hand;
 }
 
 </style>

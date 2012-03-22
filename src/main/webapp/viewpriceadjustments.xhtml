@@ -45,20 +45,10 @@
 		</rich:column>
 		
 		<rich:column style="text-align: right; width: 20%;">
-			<f:facet name="header">#{msgs.amountBeforeAdjustment}</f:facet>
-			<h:outputText value="#{priceAdjustment.amountBeforeAdjustment}" />
-		</rich:column>
-
-		<rich:column style="text-align: right; width: 20%;">
 			<f:facet name="header">#{msgs.amount}</f:facet>
-			<h:outputText value="#{priceAdjustment.amount}" />
+			<h:outputText value="#{priceAdjustment.adjustmentAmount}" />
 		</rich:column>		
 		
-		<rich:column style="text-align: right; width: 20%;">
-			<f:facet name="header">#{msgs.amountAfterAdjustment}</f:facet>
-			<h:outputText value="#{priceAdjustment.amountAfterAdjustment}" />
-		</rich:column>
-
 	</rich:dataTable>
 </rich:panel>
 </html>

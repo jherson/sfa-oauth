@@ -8,7 +8,7 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
@@ -23,37 +23,37 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	private static final long serialVersionUID = 761677199610058917L;	
 	
 	@Override
-	public List<Quote> getQuotesByOpportunityId(String accessToken, String opportunityId) throws QuoteBuilderException {        
+	public List<Quote> getQuotesByOpportunityId(String accessToken, String opportunityId) throws SalesforceServiceException {        
 		try {					
 			return QuoteFactory.deserialize(sm.getQuotesByOpportunityId(accessToken, opportunityId));
 		} catch (JSONException e) {
 			log.error(e);
-			throw new QuoteBuilderException(e);
+			throw new SalesforceServiceException(e);
 		} catch (ParseException e) {
 			log.error(e);
-			throw new QuoteBuilderException(e);
+			throw new SalesforceServiceException(e);
 		}
 	}
 	
 	@Override
-	public Quote saveQuote(String accessToken, Quote quote) throws QuoteBuilderException {
+	public Quote saveQuote(String accessToken, Quote quote) throws SalesforceServiceException {
 		String quoteId = sm.saveQuote(accessToken, QuoteFactory.serialize(quote));
 		return getQuoteById(accessToken, quoteId);
 	}
 	
 	@Override
-	public Quote getQuoteById(String accessToken, String quoteId) throws QuoteBuilderException {		
+	public Quote getQuoteById(String accessToken, String quoteId) throws SalesforceServiceException {		
 		try {
 			return QuoteFactory.deserialize(sm.getQuoteById(accessToken, quoteId));
 		} catch (JSONException e) {
-			throw new QuoteBuilderException(e);
+			throw new SalesforceServiceException(e);
 		} catch (ParseException e) {
-			throw new QuoteBuilderException(e);
+			throw new SalesforceServiceException(e);
 		}
 	}
 	
 	@Override
-	public Quote activateQuote(String accessToken, String quoteId) throws QuoteBuilderException {
+	public Quote activateQuote(String accessToken, String quoteId) throws SalesforceServiceException {
 		sm.activateQuote(accessToken, quoteId);	
 		return getQuoteById(accessToken, quoteId);			
 	}
@@ -74,22 +74,23 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}		
 	
 	@Override
-	public void addOpportunityLineItems(String accessToken, String quoteId, List<OpportunityLineItem> opportunityLineItems) throws QuoteBuilderException {
-		sm.addOpportunityLineItems(accessToken, quoteId, OpportunityLineItemFactory.serialize(opportunityLineItems));		
+	public Quote addOpportunityLineItems(String accessToken, String quoteId, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException {
+		sm.addOpportunityLineItems(accessToken, quoteId, OpportunityLineItemFactory.serialize(opportunityLineItems));
+		return getQuoteById(accessToken, quoteId);
 	}
 
 	@Override
-	public void saveQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws QuoteBuilderException {
+	public void saveQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
         sm.saveQuoteLineItems(accessToken, QuoteLineItemFactory.serialize(quoteLineItemList));				
 	}
 
 	@Override
-	public void saveQuotePriceAdjustments(String accessToken, List<QuotePriceAdjustment> quotePriceAdjustmentList) throws QuoteBuilderException {
+	public void saveQuotePriceAdjustments(String accessToken, List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException {
 		sm.saveQuotePriceAdjustments(accessToken,QuotePriceAdjustmentFactory.serialize(quotePriceAdjustmentList));	
 	}
 
 	@Override
-	public void deleteQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws QuoteBuilderException {
+	public void deleteQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
 		sm.deleteQuoteLineItems(accessToken, QuoteLineItemFactory.serialize(quoteLineItemList));		
 	}
 }

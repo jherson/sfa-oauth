@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.redhat.sforce.qb.model.Contact;
 import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.User;
 
@@ -32,7 +31,7 @@ public interface QuoteController {
 	public void saveQuote();
 	public void saveQuoteLineItems();
 	public void reset();
-	public void addOpportunityLineItems(List<OpportunityLineItem> opportunityLineItems);
+	public void addOpportunityLineItems();
 	public void newQuoteLineItem();
 	public void deleteQuoteLineItems();
 	public void setQuoteContact(Contact contact);

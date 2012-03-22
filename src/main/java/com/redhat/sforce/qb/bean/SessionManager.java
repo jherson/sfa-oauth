@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.PricebookEntry;
@@ -20,16 +21,16 @@ public interface SessionManager {
 	public void setOpportunityId(String opportunityId);
 	public String getOpportunityId();
 	public Opportunity queryOpportunity() throws QuoteBuilderException, JSONException, ParseException;
-	public List<Quote> queryQuotes() throws QuoteBuilderException, JSONException, ParseException;
-	public Quote queryQuote(String quoteId) throws QuoteBuilderException, JSONException, ParseException;	
-	public Quote saveQuote(Quote quote) throws QuoteBuilderException;
-	public Quote activateQuote(Quote quote) throws QuoteBuilderException;
+	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException;
+	public Quote queryQuote(String quoteId) throws SalesforceServiceException, JSONException, ParseException;	
+	public Quote saveQuote(Quote quote) throws SalesforceServiceException;
+	public Quote activateQuote(Quote quote) throws SalesforceServiceException;
 	public void calculateQuote(String quoteId);
 	public void deleteQuote(Quote quote);
 	public void copyQuote(Quote quote);
-	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws QuoteBuilderException;
-	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws QuoteBuilderException;
-	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws QuoteBuilderException;
-	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws QuoteBuilderException;
-	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws QuoteBuilderException;
+	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException;
+	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException;
+	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException;
+	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException;
+	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException;
 }

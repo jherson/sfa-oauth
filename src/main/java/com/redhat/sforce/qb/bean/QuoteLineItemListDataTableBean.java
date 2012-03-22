@@ -1,5 +1,8 @@
 package com.redhat.sforce.qb.bean;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -7,8 +10,11 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.inject.Inject;
 
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import org.jboss.logging.Logger;
+
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 
@@ -16,6 +22,9 @@ import com.redhat.sforce.qb.model.QuoteLineItem;
 @RequestScoped
 
 public class QuoteLineItemListDataTableBean {
+	
+    @Inject
+    Logger log;
 	
 	@ManagedProperty(value="#{sessionManager}")
     private SessionManager sessionManager;
@@ -39,42 +48,34 @@ public class QuoteLineItemListDataTableBean {
 		this.quoteController = quoteController;
 	}
 	
-	private int rowIndex;
-	
-	public void setRowIndex(int rowIndex) {
-		this.rowIndex = rowIndex;
-	}
-	
-	public int getRowIndex() {
-		return rowIndex;
-	}
-	
 	public void validateProduct(AjaxBehaviorEvent event) {						
 		HtmlInputText inputText = (HtmlInputText) event.getComponent();
 		String productCode = inputText.getValue().toString();
 
 		int rowIndex = Integer.valueOf(event.getComponent().getAttributes().get("rowIndex").toString());
 		
+		QuoteLineItem quoteLineItem = quoteController.getSelectedQuote().getQuoteLineItems().get(rowIndex);
 		try {
-		    PricebookEntry pricebookEntry = queryPricebookEntry(quoteController.getSelectedQuote().getPricebookId(), productCode, quoteController.getSelectedQuote().getCurrencyIsoCode());
-		    
-		    QuoteLineItem quoteLineItem = quoteController.getSelectedQuote().getQuoteLineItems().get(rowIndex);
-		    quoteLineItem.setCurrencyIsoCode(pricebookEntry.getCurrencyIsoCode());
+			PricebookEntry pricebookEntry = queryPricebookEntry(quoteController.getSelectedQuote().getPricebookId(), productCode, quoteController.getSelectedQuote().getCurrencyIsoCode());		    		    
+			    
+		    quoteLineItem.setBasePrice(0.00);
 		    quoteLineItem.setListPrice(pricebookEntry.getUnitPrice());
 		    quoteLineItem.setDescription(pricebookEntry.getProduct().getDescription());
 		    quoteLineItem.setPricebookEntryId(pricebookEntry.getId());
 		    quoteLineItem.setProduct(pricebookEntry.getProduct());
 		    if (quoteLineItem.getProduct().getConfigurable()) {
 		    	quoteLineItem.setConfiguredSku(productCode);
-		    }		    
-		} catch (QuoteBuilderException e) {
-			System.out.println(e.getMessage());
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
+		    }		
+			    
+		} catch (SalesforceServiceException e) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			ResourceBundle resource = ResourceBundle.getBundle("com.redhat.sforce.qb.resources.messages", context.getViewRoot().getLocale());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageFormat.format(resource.getString("invalidSKU"),productCode));
+			FacesContext.getCurrentInstance().addMessage(inputText.getClientId(context), message);
 		}
 	}
 	
-	private PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws QuoteBuilderException {
+	private PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException {
 		return sessionManager.queryPricebookEntry(pricebookId, productCode, currencyIsoCode); 
 	}
 }

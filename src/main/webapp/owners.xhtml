@@ -9,7 +9,7 @@
 		border="1" resizeable="false" width="800" height="320">
 
 		<f:facet name="header">
-			<h:outputText value="Users" />
+			<h:outputText value="#{msgs.users}" />
 		</f:facet>
 		<f:facet name="controls">
 			<h:outputLink value="#"
@@ -29,7 +29,7 @@
 					<rich:column width="200px">
 						<f:facet name="header">#{msgs.name}</f:facet>
 						<a4j:commandLink value="#{user.name}"
-							render="quoteList, details" ajaxSingle="true"
+							render="viewQuotePanel" ajaxSingle="true"
 							action="#{quoteController.setQuoteOwner(user)}"
 							status="ajaxStatus"
 							oncomplete="#{rich:component('ownerPanel')}.hide(); return false;">

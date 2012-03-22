@@ -60,18 +60,18 @@ html {
 
 	<a4j:status id="waitstatus" forceId="false"
 		onstart="#{rich:component('quoteForm:statusPane')}.show()"
-		onstop="#{rich:component('quoteForm:statusPane')}.hide()" />
+		onstop="#{rich:component('quoteForm:statusPane')}.hide()" />		
 
 	<h:form id="quoteForm">
+	
+		<a4j:outputPanel id="messages" ajaxRendered="true">
+           <rich:messages />
+        </a4j:outputPanel>	
 
 		<rich:popupPanel id="statusPane" autosized="true">
 			<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
 		</rich:popupPanel>
-
-		<a4j:outputPanel id="messages" ajaxRendered="true">
-			<rich:messages />
-		</a4j:outputPanel>
-
+		            
 		<h:panelGroup id="content" layout="block">
 			<ui:insert name="body">Default content</ui:insert>
 		</h:panelGroup>

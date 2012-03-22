@@ -8,14 +8,15 @@
 
 
 <h:outputStylesheet>
+
 	.panel-body {
         color: #000000;
         font-family: Arial,Verdana,sans-serif;
         font-size: 11px;
         padding: 0px;
+        border: 1px;
     }
 
-    
 </h:outputStylesheet>
 
 <a4j:outputPanel id="quoteList">
@@ -31,7 +32,7 @@
 		</h:panelGroup>
 	</h:panelGrid>
 
-	<rich:toolbar height="20px" itemSeparator="grid">
+	<rich:toolbar height="20px" itemSeparator="grid" >
 
 		<rich:toolbarGroup location="right">
 
@@ -51,13 +52,12 @@
 		</rich:toolbarGroup>
 	</rich:toolbar>
 
-	<rich:dataTable id="quoteListDataTable" var="quote" style="width: 100%"
+	<rich:extendedDataTable id="quoteListDataTable" var="quote" style="height:300px; "
 		value="#{quoteController.quoteList}" noDataLabel="#{msgs.noRecords}"
-		iterationStatusVar="it" rows="10"
-		onRowMouseOver="this.style.backgroundColor='#B5F3FB'"
-		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowBackgroundColor}'">
+		iterationStatusVar="it" rows="10" selectionMode="none"
+		status="ajaxStatus">
 
-		<rich:column width="8%">
+		<rich:column width="80px">
 			<f:facet name="header">#{msgs.action}</f:facet>
 
 			<h:panelGroup>
@@ -91,7 +91,7 @@
 
 		</rich:column>
 
-		<rich:column width="8%" style="text-align: center;">
+		<rich:column width="80px" style="text-align: center;">
 			<f:facet name="header">#{msgs.number}</f:facet>
 			<a4j:commandLink value="#{quote.number}"
 				action="#{quoteController.editQuote(quote)}"
@@ -99,23 +99,23 @@
 			</a4j:commandLink>
 		</rich:column>
 
-		<rich:column>
+		<rich:column width="350px">
 			<f:facet name="header">#{msgs.name}</f:facet>
 			<h:outputText value="#{quote.name}" />
 		</rich:column>
 
-		<rich:column width="8%">
+		<rich:column width="80px">
 			<f:facet name="header">#{msgs.type}</f:facet>
 			<h:outputText value="#{quote.type}" />
 		</rich:column>
 
-		<rich:column width="8%" style="text-align: center;">
+		<rich:column width="80px" style="text-align: center;">
 			<f:facet name="header">#{msgs.active}</f:facet>
 			<h:graphicImage value="./images/active.png" styleClass="centered"
 				style="vertical-align: middle;" rendered="#{quote.isActive}" />
 		</rich:column>
 
-		<rich:column width="8%">
+		<rich:column width="100px">
 			<f:facet name="header">#{msgs.amount} </f:facet>
 			<h:outputText value="#{quote.currencyIsoCode}" />
 			<h:outputText value="  " escape="false" />
@@ -125,16 +125,16 @@
 			</h:outputText>
 		</rich:column>
 
-		<rich:column width="15%">
+		<rich:column width="150px">
 			<f:facet name="header">#{msgs.owner}</f:facet>
 			<h:outputText value="#{quote.ownerName}" />
 		</rich:column>
 
-		<rich:column width="15%">
+		<rich:column width="150px">
 			<f:facet name="header">#{msgs.contact}</f:facet>
 			<h:outputText value="#{quote.contactName}" />
 		</rich:column>
 
-	</rich:dataTable>
+	</rich:extendedDataTable>
 </a4j:outputPanel>
 </html>
