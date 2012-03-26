@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">	
+	
+<a4j:outputPanel rendered="#{not sessionUser.authorized}">
+
+    <h:outputText value="Authorizing" />
+
+</a4j:outputPanel>	
+	
+<a4j:outputPanel id="quoteManager" rendered="#{sessionUser.authorized}">
+
+	<h:panelGrid width="100%" columns="1" cellpadding="3">
+		<h:panelGroup layout="block">
+			<h:graphicImage value="./images/quote.png"
+				style="vertical-align: middle" />
+			<h:outputText value=" " escape="false" />
+			<h:outputText
+				value="#{msgs.headerTitle}: #{quoteController.opportunity.name}"
+				style="font-weight:bold; font-size: 18px;" />
+		</h:panelGroup>
+	</h:panelGrid>
+
+	<rich:toolbar height="20px" itemSeparator="grid">
+
+		<rich:toolbarGroup location="right">
+
+			<a4j:commandLink id="new" value="#{msgs.new}"
+				action="#{quoteController.newQuote()}"
+				rendered="#{not opportunityController.opportunity.isClosed}"
+				render="mainArea" ajaxSingle="true">
+				<f:setPropertyActionListener value="#{true}"
+					target="#{quoteForm.editMode}" />
+			</a4j:commandLink>
+
+			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="false"
+				immediate="false" render="quoteList"
+				action="#{quoteController.refresh()}">
+			</a4j:commandLink>
+
+		</rich:toolbarGroup>
+	</rich:toolbar>
+
+	<ui:include src="/WEB-INF/pages/quotelist.xhtml" />
+
+</a4j:outputPanel>
+</html>

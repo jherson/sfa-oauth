@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+
+<h:outputStylesheet>
+
+	.panel-body {
+        color: #000000;
+        font-family: Arial,Verdana,sans-serif;
+        font-size: 11px;
+        padding: 0px;
+        border: 1px;
+    }
+
+</h:outputStylesheet>
+
+<rich:extendedDataTable id="quoteList" var="quote"
+	style="height:300px; " value="#{quoteController.quoteList}"
+	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" rows="10"
+	selectionMode="none" status="ajaxStatus">
+
+	<rich:column width="80px">
+		<f:facet name="header">#{msgs.action}</f:facet>
+
+		<h:panelGroup>
+
+			<a4j:commandLink id="activate"
+				action="#{quoteController.activateQuote(quote)}" ajaxSingle="true"
+				render="quoteListDataTable">
+				<h:graphicImage value="./images/activate.png"
+					title="#{msgs.activate}" style="vertical-align: middle;" />
+			</a4j:commandLink>
+
+			<f:verbatim>&#32;&#124;&#32;</f:verbatim>
+
+			<a4j:commandLink id="copy"
+				action="#{quoteController.copyQuote(quote)}" ajaxSingle="true"
+				render="mainArea">
+				<h:graphicImage value="./images/copy.png" title="#{msgs.copy}"
+					style="vertical-align: middle;" />
+			</a4j:commandLink>
+
+			<f:verbatim>&#32;&#124;&#32;</f:verbatim>
+
+			<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
+				action="#{quoteController.deleteQuote(quote)}" ajaxSingle="true"
+				render="mainArea">
+				<h:graphicImage value="./images/delete.png" title="#{msgs.delete}"
+					style="vertical-align: middle;" />
+			</a4j:commandLink>
+
+		</h:panelGroup>
+
+	</rich:column>
+
+	<rich:column width="80px" style="text-align: center;">
+		<f:facet name="header">#{msgs.number}</f:facet>
+		<a4j:commandLink value="#{quote.number}"
+			action="#{quoteController.editQuote(quote)}" render="mainArea">
+		</a4j:commandLink>
+	</rich:column>
+
+	<rich:column width="350px">
+		<f:facet name="header">#{msgs.name}</f:facet>
+		<h:outputText value="#{quote.name}" />
+	</rich:column>
+
+	<rich:column width="80px">
+		<f:facet name="header">#{msgs.type}</f:facet>
+		<h:outputText value="#{quote.type}" />
+	</rich:column>
+
+	<rich:column width="80px" style="text-align: center;">
+		<f:facet name="header">#{msgs.active}</f:facet>
+		<h:graphicImage value="./images/active.png" styleClass="centered"
+			style="vertical-align: middle;" rendered="#{quote.isActive}" />
+	</rich:column>
+
+	<rich:column width="100px">
+		<f:facet name="header">#{msgs.amount} </f:facet>
+		<h:outputText value="#{quote.currencyIsoCode}" />
+		<h:outputText value="  " escape="false" />
+		<h:outputText value="#{quote.amount}">
+			<f:convertNumber locale="#{sessionUser.locale}"
+				pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+		</h:outputText>
+	</rich:column>
+
+	<rich:column width="150px">
+		<f:facet name="header">#{msgs.owner}</f:facet>
+		<h:outputText value="#{quote.ownerName}" />
+	</rich:column>
+
+	<rich:column width="150px">
+		<f:facet name="header">#{msgs.contact}</f:facet>
+		<h:outputText value="#{quote.contactName}" />
+	</rich:column>
+
+</rich:extendedDataTable>
+</html>

@@ -3,49 +3,58 @@ package com.redhat.sforce.qb.bean;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.text.ParseException;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.jboss.logging.Logger;
-import org.json.JSONException;
 
-import com.redhat.sforce.qb.bean.QuotebuilderProperties;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.CurrencyIsoCodes;
-import com.redhat.sforce.qb.model.factory.CurrencyIsoCodesFactory;
-import com.redhat.sforce.qb.services.ServicesManager;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.soap.partner.QueryResult;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
 @ManagedBean(name="quoteBuilder", eager=true)
 @ApplicationScoped
+@Singleton
 
 public class QuoteBuilder implements Serializable {
 
 	private static final long serialVersionUID = 643281191192553768L;
 	
 	@Inject
-	ServicesManager sm;
-	
-	@Inject
 	Logger log;
 	
-	@Inject 
-	QuotebuilderProperties properties;
+	private PartnerConnection partnerConnection;
 	
 	private String sessionId;
+	
+    private Locale locale;
+    
+	private String apiVersion;	
+	
+	private String apiEndpoint;
+	
+    private String redirectUri;
+    
+    private String clientId;
+    
+    private String clientSecret;
+    
+    private String environment;
 	
 	private CurrencyIsoCodes currencyIsoCodes;	
 
 	@PostConstruct
 	public void init() {
+		log.info("init");
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");		
         Properties propertiesFile = new Properties();
 		try {
@@ -59,31 +68,34 @@ public class QuoteBuilder implements Serializable {
 		config.setUsername(propertiesFile.getProperty("salesforce.username"));
 		config.setPassword(propertiesFile.getProperty("salesforce.password"));
 				
-		PartnerConnection partnerConnection = null;
 		try {
-			partnerConnection = Connector.newConnection(config);			
+			partnerConnection = Connector.newConnection(config);
+			
+			setSessionId(partnerConnection.getConfig().getSessionId());
+			setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));			
+			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
+			setClientId(propertiesFile.getProperty("salesforce.oauth.clientId"));
+			setClientSecret(propertiesFile.getProperty("salesforce.oauth.clientSecret"));
+			setRedirectUri(propertiesFile.getProperty("salesforce.oauth.redirectUri"));
+			setEnvironment(propertiesFile.getProperty("salesforce.oauth.environment"));		
+			
+			currencyIsoCodes = queryCurrencyIsoCodes();
+			
 		} catch (ConnectionException e) {
 			log.error(e);
+		} 						
+	}
+	
+	public CurrencyIsoCodes queryCurrencyIsoCodes() throws ConnectionException {
+		CurrencyIsoCodes currencyIsoCodes = new CurrencyIsoCodes();
+		QueryResult queryResult = partnerConnection.query("Select IsoCode from CurrencyType Where IsActive = true Order By IsoCode");
+		for (int i = 0; i < queryResult.getSize(); i++) {
+			currencyIsoCodes.add(queryResult.getRecords()[i].getField("IsoCode").toString());
+			log.info(currencyIsoCodes.get(i));
 		}
-			
-		setSessionId(partnerConnection.getConfig().getSessionId());		
 		
-		properties.setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-		properties.setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
-		properties.setClientId(propertiesFile.getProperty("salesforce.oauth.clientId"));
-		properties.setClientSecret(propertiesFile.getProperty("salesforce.oauth.clientSecret"));
-		properties.setRedirectUri(propertiesFile.getProperty("salesforce.oauth.redirectUri"));
-		properties.setEnvironment(propertiesFile.getProperty("salesforce.oauth.environment"));		
-		
-		try {
-			currencyIsoCodes = CurrencyIsoCodesFactory.deserialize(sm.queryCurrencies(getSessionId()));
-		} catch (JSONException e) {
-			log.error(e);
-		} catch (ParseException e) {
-			log.error(e);
-		} catch (SalesforceServiceException e) {
-			log.error(e);
-		}		
+		return currencyIsoCodes;
 	}
 
 	public String getSessionId() {
@@ -92,6 +104,62 @@ public class QuoteBuilder implements Serializable {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+	
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+	
+	public String getApiVersion() {
+		return apiVersion;
+	}
+
+	public void setApiVersion(String apiVersion) {
+		this.apiVersion = apiVersion;
+	}
+
+	public String getApiEndpoint() {
+		return apiEndpoint;
+	}
+
+	public void setApiEndpoint(String apiEndpoint) {
+		this.apiEndpoint = apiEndpoint;
+	}
+	
+	public String getRedirectUri() {
+		return redirectUri;
+	}
+
+	public void setRedirectUri(String redirectUri) {
+		this.redirectUri = redirectUri;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientSecret() {
+		return clientSecret;
+	}
+
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
+
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public void setEnvironment(String environment) {
+		this.environment = environment;
 	}
 	
 	public CurrencyIsoCodes getCurrencyIsoCodes() {

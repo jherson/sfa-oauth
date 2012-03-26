@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -16,7 +17,6 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.bean.QuoteController;
 import com.redhat.sforce.qb.bean.SessionManager;
-import com.redhat.sforce.qb.bean.TemplateEnum;
 import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Contact;
@@ -25,11 +25,15 @@ import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.util.Templates;
 
 @ManagedBean(name="quoteController")
 @ViewScoped
 
 public class QuoteControllerImpl implements QuoteController {
+	
+	@Inject
+	Logger log;
 	
 	@ManagedProperty(value="#{sessionManager}")
     private SessionManager sessionManager;
@@ -42,23 +46,25 @@ public class QuoteControllerImpl implements QuoteController {
 		this.sessionManager = sessionManager;
 	}
 	
-	@ManagedProperty(value="quotelist.xhtml")
-	private String template;
+	private String template;	
+	private Opportunity opportunity;
+	private List<Quote> quoteList;
+	private Quote selectedQuote;	
 	
+	@PostConstruct
+	public void init() {
+		setTemplate(Templates.QUOTE_MANAGER.getTemplate());		
+	}
+	
+	@Override
 	public String getTemplate() {
 		return template;
 	}
 
+	@Override
 	public void setTemplate(String template) {
 		this.template = template;
 	}
-	
-	private Opportunity opportunity;
-	private List<Quote> quoteList;
-	private Quote selectedQuote;	
-
-	@Inject
-	Logger log;
 
 	@Override
 	public Opportunity getOpportunity() {			
@@ -107,7 +113,7 @@ public class QuoteControllerImpl implements QuoteController {
 	
 	@Override
 	public void back() {
-		setTemplate(TemplateEnum.QUOTE_LIST.getTemplate());
+		setTemplate(Templates.QUOTE_MANAGER.getTemplate());
 	}
 	
 	@Override
@@ -140,7 +146,7 @@ public class QuoteControllerImpl implements QuoteController {
 	public void newQuote() {
 		Quote quote = new Quote(getOpportunity());
 		setSelectedQuote(quote);
-		setTemplate(TemplateEnum.VIEW_QUOTE.getTemplate());
+		setTemplate(Templates.VIEW_QUOTE.getTemplate());
 	}
 	
 	@Override
@@ -173,7 +179,7 @@ public class QuoteControllerImpl implements QuoteController {
 	@Override
 	public void editQuote(Quote quote) {
 		setSelectedQuote(quote);
-		setTemplate("quotedetails.xhtml");
+		setTemplate(Templates.VIEW_QUOTE.getTemplate());
 	}
 	
 	@Override
@@ -186,7 +192,7 @@ public class QuoteControllerImpl implements QuoteController {
 		sessionManager.deleteQuote(quote);				
 		setQuoteList(null);
 		setSelectedQuote(null);
-		setTemplate("quotelist.xhtml");
+		setTemplate(Templates.QUOTE_MANAGER.getTemplate());		
 	}
 	
 	@Override
@@ -256,11 +262,12 @@ public class QuoteControllerImpl implements QuoteController {
 			}			
 		} else {			
 			setSelectedQuote(null);
+			setTemplate(Templates.QUOTE_MANAGER.getTemplate());
 		}
 	}
 	
 	public void viewOpportunityLineItems() {
-		setTemplate(TemplateEnum.ADD_OPPORTUNITY_PRODUCTS.getTemplate());
+		setTemplate(Templates.ADD_OPPORTUNITY_PRODUCTS.getTemplate());
 	}
 	
 	
@@ -276,7 +283,7 @@ public class QuoteControllerImpl implements QuoteController {
 		
 		try {
 			setSelectedQuote(sessionManager.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList));
-			setTemplate(TemplateEnum.VIEW_QUOTE.getTemplate());
+			setTemplate(Templates.VIEW_QUOTE.toString());
 		} catch (SalesforceServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);

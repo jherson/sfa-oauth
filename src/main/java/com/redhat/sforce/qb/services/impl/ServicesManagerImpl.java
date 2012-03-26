@@ -21,7 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.qb.bean.QuotebuilderProperties;
+import com.redhat.sforce.qb.bean.QuoteBuilder;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.services.ServicesManager;
 
@@ -33,7 +33,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	Logger log;
 	
 	@Inject 
-	QuotebuilderProperties properties;				
+	QuoteBuilder properties;				
 			
 	@Override
 	public JSONObject getCurrentUserInfo(String accessToken) {
@@ -180,7 +180,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				queryResult = response.getJSONArray("records");						
 			} else {
 				log.error(getMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(getMethod.getResponseBodyAsStream());
+				throw new SalesforceServiceException(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);

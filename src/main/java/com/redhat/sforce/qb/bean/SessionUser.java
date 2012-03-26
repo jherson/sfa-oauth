@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.bean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 import org.json.JSONException;
@@ -39,11 +41,11 @@ public class SessionUser implements Serializable {
 	@Inject
 	Logger log;
 	
-	@Inject 
-	QuotebuilderProperties properties;	
-	
 	@Inject
-	SessionUserDAO sessionUserDAO;
+	QuoteBuilder quoteBuilder;
+		
+	@Inject
+	SessionUserDAO sessionUserDAO;	
 	
 	@ManagedProperty("#{sessionManager}")
 	private SessionManager sessionManager;
@@ -56,10 +58,24 @@ public class SessionUser implements Serializable {
 		this.sessionManager = sessionManager;
 	}	
 	
+	@ManagedProperty(value="false")
+	private Boolean authorized;
+	
+	public Boolean getAuthorized() {
+		return authorized;
+	}
+
+	public void setAuthorized(Boolean authorized) {
+		this.authorized = authorized;
+	}
+	
 	@PostConstruct
     public void init() {	
+
+		setLocale(quoteBuilder.getLocale());
 		
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();	
+		HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 		
 		if (request.getParameter("sessionId") != null) {			
 			sessionManager.setSessionId(request.getParameter("sessionId"));
@@ -69,6 +85,19 @@ public class SessionUser implements Serializable {
 			sessionManager.setOpportunityId(request.getParameter("opportunityId"));
 		}
 		
+		if (sessionManager.getSessionId() != null) {
+			queryUser();
+		} else {
+			try {
+				response.sendRedirect(request.getContextPath() + "/authorize");
+			} catch (IOException e) {
+				log.error("IOException", e);
+			}
+		}
+
+    }	
+	
+	public void queryUser() {
 		try {	
 		    user = sessionUserDAO.querySessionUser(sessionManager.getSessionId());
 		    
@@ -80,6 +109,8 @@ public class SessionUser implements Serializable {
 		    setDateFormatPattern(Util.formatPattern(dateFormat));
 		    setDateTimeFormatPattern(Util.formatPattern(dateTimeFormat));
 		    
+		    setAuthorized(Boolean.TRUE);
+		    
 		} catch (JSONException e) {
 			log.error(e);
 		} catch (QuoteBuilderException e) {
@@ -87,7 +118,7 @@ public class SessionUser implements Serializable {
 		}	
 		
 		FacesContext.getCurrentInstance().getViewRoot().setLocale(getLocale());
-    }	
+	}
 	
 	public String getDateFormatPattern() {
 		return dateFormatPattern;
