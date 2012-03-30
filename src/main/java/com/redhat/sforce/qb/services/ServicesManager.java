@@ -9,6 +9,7 @@ public interface ServicesManager {
 	
 	public JSONObject getCurrentUserInfo(String accessToken);
 	public JSONObject getOpportunity(String accessToken, String opportunityId);
+	public JSONArray queryQuotes(String accessToken) throws SalesforceServiceException;
 	public JSONArray getQuotesByOpportunityId(String accessToken, String opportunityId) throws SalesforceServiceException;
 	public String saveQuote(String accessToken, JSONObject jsonObject) throws SalesforceServiceException;
 	public JSONArray query(String accessToken, String query) throws SalesforceServiceException;

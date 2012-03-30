@@ -20,7 +20,20 @@ import com.redhat.sforce.qb.model.factory.QuotePriceAdjustmentFactory;
 
 public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {    
 	
-	private static final long serialVersionUID = 761677199610058917L;	
+	private static final long serialVersionUID = 761677199610058917L;
+	
+	@Override
+	public List<Quote> queryQuotes(String accessToken) throws SalesforceServiceException, JSONException, ParseException {		
+		try {					
+			return QuoteFactory.deserialize(sm.queryQuotes(accessToken));
+		} catch (JSONException e) {
+			log.error(e);
+			throw new SalesforceServiceException(e);
+		} catch (ParseException e) {
+			log.error(e);
+			throw new SalesforceServiceException(e);
+		}
+	}	
 	
 	@Override
 	public List<Quote> getQuotesByOpportunityId(String accessToken, String opportunityId) throws SalesforceServiceException {        

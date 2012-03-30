@@ -1,5 +1,7 @@
 package com.redhat.sforce.qb.model.factory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.Util;
 
 public class UserFactory {
 	
@@ -24,6 +27,9 @@ public class UserFactory {
 	}	
 	
 	public static User deserialize(JSONObject jsonObject) throws JSONException {
+		if (jsonObject == null)
+			return null;
+		
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 		
 		User user = new User();
@@ -49,11 +55,17 @@ public class UserFactory {
 		user.setExtension(wrapper.getString("Extension"));
 		user.setDepartment(wrapper.getString("Department"));
 		user.setRegion(wrapper.getString("Region__c"));
-		user.setLocaleSidKey(wrapper.getString("LocaleSidKey"));
 		user.setFullPhotoUrl(wrapper.getString("FullPhotoUrl"));
 		user.setSmallPhotoUrl(wrapper.getString("SmallPhotoUrl"));
 		user.setRoleName(wrapper.getString("UserRole", "Name"));
-		user.setProfileName(wrapper.getString("Profile", "Name"));
+		user.setProfileName(wrapper.getString("Profile", "Name"));	     
+	    user.setLocale(Util.stringToLocale(wrapper.getString("LocaleSidKey")));
+		
+		SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, user.getLocale());
+	    SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, user.getLocale());
+	    
+	    user.setDateFormatPattern(Util.formatPattern(dateFormat));
+	    user.setDateTimeFormatPattern(Util.formatPattern(dateTimeFormat));
 		
 		return user;
 	}	

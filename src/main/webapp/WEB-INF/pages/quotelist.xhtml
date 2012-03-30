@@ -20,7 +20,7 @@
 </h:outputStylesheet>
 
 <rich:extendedDataTable id="quoteList" var="quote"
-	style="height:300px; " value="#{quoteController.quoteList}"
+	style="height:300px; " value="#{quoteList}"
 	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" rows="10"
 	selectionMode="none" status="ajaxStatus">
 
@@ -86,7 +86,7 @@
 		<h:outputText value="#{quote.currencyIsoCode}" />
 		<h:outputText value="  " escape="false" />
 		<h:outputText value="#{quote.amount}">
-			<f:convertNumber locale="#{sessionUser.locale}"
+			<f:convertNumber locale="#{user.locale}"
 				pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 		</h:outputText>
 	</rich:column>

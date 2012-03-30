@@ -25,15 +25,15 @@
 		<rich:toolbarGroup location="left">
 
 			<a4j:commandLink value="#{msgs.delete}"
-				rendered="#{quoteForm.editMode}"
+				rendered="#{model.editMode}"
 				action="#{quoteController.deleteQuoteLineItems()}"
-				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
+				disabled="#{empty model.selectedQuote.quoteLineItems}"
 				render="quoteList, details" ajaxSingle="true" >
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true"
-				rendered="#{quoteForm.editMode}" status="ajaxStatus"
-				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
+				rendered="#{model.editMode}" status="ajaxStatus"
+				disabled="#{empty model.selectedQuote.quoteLineItems}"
 				action="#{quoteController.reset()}"
 				render="details" ajaxSingle="true" >				
 			</a4j:commandLink>
@@ -43,13 +43,13 @@
 		<rich:toolbarGroup location="right">
 		
 		    <a4j:commandLink id="addOpportunityProducts" value="#{msgs.addOpportunityProducts}"
-				rendered="#{not quoteForm.editMode and quoteController.selectedQuote.currencyIsoCode == quoteController.opportunity.currencyIsoCode}"
+				rendered="#{not model.editMode and model.selectedQuote.currencyIsoCode == quoteController.opportunity.currencyIsoCode}"
 				disabled="#{empty quoteController.opportunity.opportunityLineItems}"								 			
                 action="#{quoteController.viewOpportunityLineItems()}"
                 render="mainArea" status="ajaxStatus" />
 				
 			<a4j:commandLink value="#{msgs.addProduct}"
-				rendered="#{quoteForm.editMode}"
+				rendered="#{model.editMode}"
 				action="#{quoteController.newQuoteLineItem()}"
 				render="quoteList, details" ajaxSingle="true"		
 				status="ajaxStatus"/>
@@ -62,22 +62,22 @@
 		noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it"
 		status="ajaxStatus"
-		value="#{quoteController.selectedQuote.quoteLineItems}">
+		value="#{model.selectedQuote.quoteLineItems}">
 
 		<rich:column style="text-align: center; width: 3%;">
 			<f:facet name="header">#{msgs.select}</f:facet>
 			<h:outputText value="#{it.index}" 
-			    rendered="#{not quoteForm.editMode}" />
+			    rendered="#{not model.editMode}" />
 			<h:selectBooleanCheckbox value="#{lineItem.delete}" 
-			    rendered="#{quoteForm.editMode}"/>
+			    rendered="#{model.editMode}"/>
 		</rich:column>
 
 		<rich:column style="text-align: center; width: 7%;">
 			<f:facet name="header">#{msgs.productCode}</f:facet>
 			<h:outputText value="#{lineItem.product.productCode}"
-				rendered="#{not quoteForm.editMode}" />
+				rendered="#{not model.editMode}" />
 			<h:inputText id="productCode" value="#{lineItem.product.productCode}"
-				style="width: 75px;" rendered="#{quoteForm.editMode}"		
+				style="width: 75px;" rendered="#{model.editMode}"		
 				execute="immediate" ajaxSingle="true">				
 				<f:attribute name="rowIndex" value="#{it.index}"/>
 				<a4j:ajax execute="@this" event="valueChange"
@@ -102,16 +102,16 @@
 		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItem.startDate}"
-				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type == 'Standard'}">
-				<f:convertDateTime locale="#{sessionUser.locale}"
-					pattern="#{sessionUser.dateFormatPattern}"
+				rendered="#{not model.editMode or model.selectedQuote.type == 'Standard'}">
+				<f:convertDateTime locale="#{user.locale}"
+					pattern="#{user.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.startDate}"
-				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type != 'Standard'}"
-				id="lineStartDate" locale="#{sessionUser.locale}"
+				rendered="#{model.editMode and model.selectedQuote.type != 'Standard'}"
+				id="lineStartDate" locale="#{user.locale}"
 				popup="true" enableManualInput="true"
-				datePattern="#{sessionUser.dateFormatPattern}"
+				datePattern="#{user.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				inputStyle="width:68px" disabled="false">
 			</rich:calendar>
@@ -120,16 +120,16 @@
 		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItem.endDate}"
-				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Non Standard'}">
-				<f:convertDateTime locale="#{sessionUser.locale}"
-					pattern="#{sessionUser.dateFormatPattern}"
+				rendered="#{not model.editMode or model.selectedQuote.type != 'Non Standard'}">
+				<f:convertDateTime locale="#{user.locale}"
+					pattern="#{user.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.endDate}"
-				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Non Standard'}"
-				id="lineEndDate" locale="#{sessionUser.locale}"
+				rendered="#{model.editMode and model.selectedQuote.type == 'Non Standard'}"
+				id="lineEndDate" locale="#{user.locale}"
 				popup="true" enableManualInput="true"
-				datePattern="#{sessionUser.dateFormatPattern}"
+				datePattern="#{user.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				inputStyle="width:68px" disabled="false">
 			</rich:calendar>
@@ -138,10 +138,10 @@
 		<rich:column style="text-align: right; width: 5%;">
 			<f:facet name="header">#{msgs.quantity}</f:facet>
 			<h:outputText value="#{lineItem.quantity}"
-				rendered="#{not quoteForm.editMode}" />
+				rendered="#{not model.editMode}" />
 			<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0;(#,##0)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -149,13 +149,13 @@
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.listPrice}</f:facet>
 			<h:outputText value="#{lineItem.listPrice}"
-				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{not model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.listPrice}" style="width: 70px;"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -163,13 +163,13 @@
 		<rich:column style="text-align: right; width: 4%;">
 			<f:facet name="header">#{msgs.discountPercent}</f:facet>
 			<h:outputText value="#{lineItem.discountPercent}"
-				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{not model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.discountPercent}" style="width: 70px;"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -177,13 +177,13 @@
 		<rich:column style="text-align: right; width: 4%;">
 			<f:facet name="header">#{msgs.discountAmount}</f:facet>
 			<h:outputText value="#{lineItem.discountAmount}"
-				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{not model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.discountAmount}" style="width: 70px;"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -191,13 +191,13 @@
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.salesPrice}</f:facet>
 			<h:outputText value="#{lineItem.yearlySalesPrice}"
-				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{not model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.yearlySalesPrice}"
-				style="width: 70px;" rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				style="width: 70px;" rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -205,13 +205,13 @@
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItem.unitPrice}"
-				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{not model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>
@@ -219,13 +219,13 @@
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
 			<h:outputText value="#{lineItem.totalPrice}"
-				rendered="#{not quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{not model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
 			<h:inputText value="#{lineItem.totalPrice}" style="width: 78px;"
-				rendered="#{quoteForm.editMode}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				rendered="#{model.editMode}">
+				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" type="number" />
 			</h:inputText>
 		</rich:column>

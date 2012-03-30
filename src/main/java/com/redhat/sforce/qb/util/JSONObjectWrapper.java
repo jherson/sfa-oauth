@@ -56,7 +56,7 @@ public class JSONObjectWrapper {
 	}
 	
 	public JSONObject getJSONObject(String key) throws JSONException {
-		return jsonObject.getJSONObject(key);
+		return jsonObject.isNull(key) ? null : jsonObject.getJSONObject(key);
 	}
 	
 	public JSONArray getRecords(String object) throws JSONException {

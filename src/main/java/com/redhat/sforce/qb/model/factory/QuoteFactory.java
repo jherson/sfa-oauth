@@ -71,6 +71,7 @@ public class QuoteFactory {
 		quote.setYear4PaymentAmount(wrapper.getDouble("Year4PaymentAmount__c"));
 		quote.setYear5PaymentAmount(wrapper.getDouble("Year5PaymentAmount__c"));
 		quote.setYear6PaymentAmount(wrapper.getDouble("Year6PaymentAmount__c"));
+		quote.setOpportunity(OpportunityFactory.deserialize(wrapper.getJSONObject("OpportunityId__r")));
 		
 		JSONArray records = null;
 		

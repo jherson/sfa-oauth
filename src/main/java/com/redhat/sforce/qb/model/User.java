@@ -1,5 +1,7 @@
 package com.redhat.sforce.qb.model;
 
+import java.util.Locale;
+
 public class User extends SObject {
 	
 	private static final long serialVersionUID = -5495949651775917498L;
@@ -27,9 +29,11 @@ public class User extends SObject {
 	private String roleName;
 	private String profileName;
 	private String defaultCurrencyIsoCode;
-	private String localeSidKey;
 	private String fullPhotoUrl;
 	private String smallPhotoUrl;
+	private Locale locale;
+	private String dateFormatPattern;
+	private String dateTimeFormatPattern;
 
     public User() {
         super();
@@ -227,14 +231,6 @@ public class User extends SObject {
 		this.profileName = profileName;
 	}
 
-	public String getLocaleSidKey() {
-		return localeSidKey;
-	}
-
-	public void setLocaleSidKey(String localeSidKey) {
-		this.localeSidKey = localeSidKey;
-	}
-
 	public String getFullPhotoUrl() {
 		return fullPhotoUrl;
 	}
@@ -249,5 +245,29 @@ public class User extends SObject {
 
 	public void setSmallPhotoUrl(String smallPhotoUrl) {
 		this.smallPhotoUrl = smallPhotoUrl;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public String getDateFormatPattern() {
+		return dateFormatPattern;
+	}
+
+	public void setDateFormatPattern(String dateFormatPattern) {
+		this.dateFormatPattern = dateFormatPattern;
+	}
+
+	public String getDateTimeFormatPattern() {
+		return dateTimeFormatPattern;
+	}
+
+	public void setDateTimeFormatPattern(String dateTimeFormatPattern) {
+		this.dateTimeFormatPattern = dateTimeFormatPattern;
 	}
 }

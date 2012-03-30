@@ -49,20 +49,10 @@ public class Quote extends SObject {
 	private Boolean aprvlRqstPriceDiscnt;
 	private Boolean hasApprovalRequests;
 	private Date lastCalculatedDate;
+	private Opportunity opportunity;
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
-	private Boolean selectAll;
-	
-	
-
-    public Boolean getSelectAll() {
-		return selectAll;
-	}
-
-	public void setSelectAll(Boolean selectAll) {
-		this.selectAll = selectAll;
-	}
 
 	public Quote() {
         super();
@@ -411,6 +401,14 @@ public class Quote extends SObject {
 	
 	public void setLastCalculatedDate(Date lastCalculatedDate) {
 		this.lastCalculatedDate = lastCalculatedDate;
+	}
+	
+	public Opportunity getOpportunity() {
+		return opportunity;
+	}
+	
+	public void setOpportunity(Opportunity opportunity) {
+		this.opportunity = opportunity;
 	}
 	
 	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {

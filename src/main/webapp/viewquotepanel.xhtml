@@ -10,62 +10,62 @@
 
     <rich:toolbarGroup location="left" >
         <a4j:commandLink value="#{msgs.back}" 
-            disabled="#{quoteForm.editMode}"
+            disabled="#{model.editMode}"
 		    immediate="false" render="mainArea" status="ajaxStatus"
-		    action="#{quoteController.back()}">
+		    action="#{quoteController.backToQuoteManager(model.opportunity, model.quoteList)}">
 	    </a4j:commandLink>		
     </rich:toolbarGroup>
 
 	<rich:toolbarGroup location="right">
 
 		<a4j:commandLink id="edit"		
-			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			disabled="#{empty quoteController.selectedQuote}" render="details"
-			oncomplete="#{rich:element('quoteForm:quoteName')}.focus()"
+			rendered="#{not model.editMode}" ajaxSingle="true"
+			disabled="#{empty model.selectedQuote}" render="details"
+			oncomplete="#{rich:element('model:quoteName')}.focus()"
 			status="ajaxStatus">			
-			<f:setPropertyActionListener value="#{true}" target="#{quoteForm.editMode}"/>
+			<f:setPropertyActionListener value="#{true}" target="#{model.editMode}"/>
 			<h:outputText value="#{msgs.edit}" />			
 		</a4j:commandLink>
 
 		<a4j:commandLink id="activate"
-			action="#{quoteController.activateQuote()}"
-			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			disabled="#{empty quoteController.selectedQuote}"
+			action="#{quoteController.activateQuote(model.opportunity, model.selectedQuote)}"
+			rendered="#{not model.editMode}" ajaxSingle="true"
+			disabled="#{empty model.selectedQuote}"
 			render="details">
 			<h:outputText value="#{msgs.activate}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="copy"
 			action="#{quoteController.copyQuote()}"
-			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			render="mainArea" disabled="#{empty quoteController.selectedQuote}">
+			rendered="#{not model.editMode}" ajaxSingle="true"
+			render="mainArea" disabled="#{empty model.selectedQuote}">
 			<h:outputText value="#{msgs.copy}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="delete"
 			action="#{quoteController.deleteQuote()}"
-			rendered="#{not quoteForm.editMode}" ajaxSingle="true"
-			disabled="#{empty quoteController.selectedQuote or quoteController.selectedQuote.isActive}"
+			rendered="#{not model.editMode}" ajaxSingle="true"
+			disabled="#{empty model.selectedQuote or model.selectedQuote.isActive}"
 			render="mainArea">
 			<h:outputText value="#{msgs.delete}" />
 		</a4j:commandLink>
 
 		<a4j:commandLink id="save" 
 			action="#{quoteController.save()}"
-			rendered="#{quoteForm.editMode}" render="mainArea"
+			rendered="#{model.editMode}" render="mainArea"
 			ajaxSingle="true" >
-			<f:setPropertyActionListener value="#{false}" target="#{quoteForm.editMode}"/>
+			<f:setPropertyActionListener value="#{false}" target="#{model.editMode}"/>
 			<h:outputText value="#{msgs.save}" />			
 		</a4j:commandLink>
 		
 		<a4j:commandLink id="reset" 
-			rendered="#{quoteForm.editMode}" 
+			rendered="#{model.editMode}" 
 			action="#{quoteController.reset()}"
 			render="mainArea" ajaxSingle="true" 
 			bypassUpdates="true"
 			type="reset"
 			immediate="true">
-			<f:setPropertyActionListener value="#{false}" target="#{quoteForm.editMode}"/>
+			<f:setPropertyActionListener value="#{false}" target="#{model.editMode}"/>
 			<h:outputText value="#{msgs.cancel}" />
 		</a4j:commandLink>
 
@@ -82,23 +82,23 @@
 		columns="4">
 
 		<h:outputText value="#{msgs.name}" />
-		<h:outputText value="#{quoteController.selectedQuote.name}"
-			rendered="#{not quoteForm.editMode}" />
+		<h:outputText value="#{model.selectedQuote.name}"
+			rendered="#{not model.editMode}" />
 		<h:inputText id="quoteName" required="true"
-			value="#{quoteController.selectedQuote.name}" style="width:300px"
-			rendered="#{quoteForm.editMode}"
+			value="#{model.selectedQuote.name}" style="width:300px"
+			rendered="#{model.editMode}"
 			requiredMessage="#{msgs.quoteNameRequiredMessage}">
 			<rich:validator />
 		</h:inputText>
 
 		<h:outputText value="#{msgs.number}" />
-		<h:outputText value="#{quoteController.selectedQuote.number}" />
+		<h:outputText value="#{model.selectedQuote.number}" />
 
 		<h:outputText value="#{msgs.type}" />
-		<h:outputText value="#{quoteController.selectedQuote.type}"
-			rendered="#{not quoteForm.editMode}" />
-		<h:selectOneMenu value="#{quoteController.selectedQuote.type}"
-			rendered="#{quoteForm.editMode}">
+		<h:outputText value="#{model.selectedQuote.type}"
+			rendered="#{not model.editMode}" />
+		<h:selectOneMenu value="#{model.selectedQuote.type}"
+			rendered="#{model.editMode}">
 			<f:selectItem itemValue="Standard" />
 			<f:selectItem itemValue="Co-Term" />
 			<f:selectItem itemValue="Non Standard" />
@@ -107,19 +107,19 @@
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.version}" />
-		<h:outputText value="#{quoteController.selectedQuote.version}" />
+		<h:outputText value="#{model.selectedQuote.version}" />
 
 		<h:outputText value="#{msgs.active}" />
 		<h:panelGroup>
 			<h:graphicImage value="./images/active.png"
-				rendered="#{quoteController.selectedQuote.isActive}" />
+				rendered="#{model.selectedQuote.isActive}" />
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.currency}" />
-		<h:outputText value="#{quoteController.selectedQuote.currencyIsoCode}"
-			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.hasQuoteLineItems}" />
-		<h:selectOneMenu value="#{quoteController.selectedQuote.currencyIsoCode}" style="width: 75px;"
-			rendered="#{quoteForm.editMode and not quoteController.selectedQuote.hasQuoteLineItems}"
+		<h:outputText value="#{model.selectedQuote.currencyIsoCode}"
+			rendered="#{not model.editMode or model.selectedQuote.hasQuoteLineItems}" />
+		<h:selectOneMenu value="#{model.selectedQuote.currencyIsoCode}" style="width: 75px;"
+			rendered="#{model.editMode and not model.selectedQuote.hasQuoteLineItems}"
 			status="ajaxStatus">
 			
 			<f:selectItems value="#{quoteBuilder.currencyIsoCodes}" />
@@ -131,27 +131,27 @@
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.payNow}" />
-		<h:outputText value="#{quoteController.selectedQuote.payNow}"
-			rendered="#{not quoteForm.editMode}" />
-		<h:selectOneMenu value="#{quoteController.selectedQuote.payNow}"
-			rendered="#{quoteForm.editMode}">
+		<h:outputText value="#{model.selectedQuote.payNow}"
+			rendered="#{not model.editMode}" />
+		<h:selectOneMenu value="#{model.selectedQuote.payNow}"
+			rendered="#{model.editMode}">
 			<f:selectItem itemValue="Yes" />
 			<f:selectItem itemValue="No" />
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.amount}" />
-		<h:outputText value="#{quoteController.selectedQuote.amount}">
+		<h:outputText value="#{model.selectedQuote.amount}">
 			<f:convertNumber locale="#{sessionUser.locale}"
 				pattern="#,##0.00;(#,##0.00)" />
 		</h:outputText>
 
 		<h:outputText value="#{msgs.owner}" />
-		<h:outputText value="#{quoteController.selectedQuote.ownerName}"
-			rendered="#{not quoteForm.editMode}" />
+		<h:outputText value="#{model.selectedQuote.ownerName}"
+			rendered="#{not model.editMode}" />
 
-		<h:panelGroup rendered="#{quoteForm.editMode}">
+		<h:panelGroup rendered="#{model.editMode}">
 			<h:outputText id="ownerName"
-				value="#{quoteController.selectedQuote.ownerName}" />
+				value="#{model.selectedQuote.ownerName}" />
 
 			<h:outputText value=" " />
 
@@ -167,10 +167,10 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.contact}" />
-		<h:outputText value="#{quoteController.selectedQuote.contactName}"
-			rendered="#{not quoteForm.editMode}" />
-		<h:panelGroup rendered="#{quoteForm.editMode}">
-			<h:outputText value="#{quoteController.selectedQuote.contactName}" />
+		<h:outputText value="#{model.selectedQuote.contactName}"
+			rendered="#{not model.editMode}" />
+		<h:panelGroup rendered="#{model.editMode}">
+			<h:outputText value="#{model.selectedQuote.contactName}" />
 
 			<h:outputText value=" " />
 
@@ -186,17 +186,17 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.effectiveDate}" />
-		<h:outputText value="#{quoteController.selectedQuote.effectiveDate}"
-			rendered="#{not quoteForm.editMode}">
+		<h:outputText value="#{model.selectedQuote.effectiveDate}"
+			rendered="#{not model.editMode}">
 			<f:convertDateTime locale="#{sessionUser.locale}"
 				pattern="#{sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
-		<h:panelGroup rendered="#{quoteForm.editMode}">
-			<h:outputText value="#{quoteController.selectedQuote.effectiveDate}"
-				rendered="#{quoteController.opportunity.isClosed or empty quoteController.selectedQuote}" />
+		<h:panelGroup rendered="#{model.editMode}">
+			<h:outputText value="#{model.selectedQuote.effectiveDate}"
+				rendered="#{model.opportunity.isClosed or empty model.selectedQuote}" />
 
-			<rich:calendar value="#{quoteController.selectedQuote.effectiveDate}"
+			<rich:calendar value="#{model.selectedQuote.effectiveDate}"
 				id="effectiveDate" locale="#{sessionUser.locale}"
 				popup="true"
 				datePattern="#{sessionUser.dateFormatPattern}"
@@ -207,17 +207,17 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.expirationDate}" />
-		<h:outputText value="#{quoteController.selectedQuote.expirationDate}"
-			rendered="#{not quoteForm.editMode}">
+		<h:outputText value="#{model.selectedQuote.expirationDate}"
+			rendered="#{not model.editMode}">
 			<f:convertDateTime locale="#{sessionUser.locale}"
 				pattern="#{sessionUser.dateFormatPattern}" type="date" />
 		</h:outputText>
 
-		<h:panelGroup rendered="#{quoteForm.editMode}">
-			<h:outputText value="#{quoteController.selectedQuote.expirationDate}"
-				rendered="#{not quoteForm.editMode}" />
+		<h:panelGroup rendered="#{model.editMode}">
+			<h:outputText value="#{model.selectedQuote.expirationDate}"
+				rendered="#{not model.editMode}" />
 
-			<rich:calendar value="#{quoteController.selectedQuote.expirationDate}"
+			<rich:calendar value="#{model.selectedQuote.expirationDate}"
 				id="expirationDate" locale="#{sessionUser.locale}"
 				popup="true"
 				datePattern="#{sessionUser.dateFormatPattern}"
@@ -227,93 +227,93 @@
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.referenceNumber}" />
-		<h:outputText value="#{quoteController.selectedQuote.referenceNumber}"
-			rendered="#{not quoteForm.editMode}" />
-		<h:inputText value="#{quoteController.selectedQuote.referenceNumber}"
-			rendered="#{quoteForm.editMode}" />
+		<h:outputText value="#{model.selectedQuote.referenceNumber}"
+			rendered="#{not model.editMode}" />
+		<h:inputText value="#{model.selectedQuote.referenceNumber}"
+			rendered="#{model.editMode}" />
 
 		<h:outputText value="#{msgs.term}" />
-		<h:outputText value="#{quoteController.selectedQuote.term}"
-			rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Standard'}">
+		<h:outputText value="#{model.selectedQuote.term}"
+			rendered="#{not model.editMode or model.selectedQuote.type != 'Standard'}">
 			<f:convertNumber locale="#{sessionUser.locale}"
 				pattern="#,##0" />
 		</h:outputText>
-		<h:selectOneMenu value="#{quoteController.selectedQuote.term}"
-			rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Standard'}">
+		<h:selectOneMenu value="#{model.selectedQuote.term}"
+			rendered="#{model.editMode and model.selectedQuote.type == 'Standard'}">
 			<f:selectItem itemLabel="1" itemValue="365" />
 			<f:selectItem itemLabel="3" itemValue="1095" />
 		</h:selectOneMenu>
 
 		<h:outputText value="#{msgs.startDate}" />
 		<h:panelGroup>
-			<h:outputText value="#{quoteController.selectedQuote.startDate}"
-				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Standard'}">
+			<h:outputText value="#{model.selectedQuote.startDate}"
+				rendered="#{not model.editMode or model.selectedQuote.type != 'Standard'}">
 				<f:convertDateTime locale="#{sessionUser.locale}"
 					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<rich:calendar value="#{quoteController.selectedQuote.startDate}"
+			<rich:calendar value="#{model.selectedQuote.startDate}"
 				id="startDate" locale="#{sessionUser.locale}"
 				popup="true"
 				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px"
-				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Standard'}"
+				rendered="#{model.editMode and model.selectedQuote.type == 'Standard'}"
 				disabled="false">
 			</rich:calendar>
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.endDate}" />
 		<h:panelGroup>
-			<h:outputText value="#{quoteController.selectedQuote.endDate}"
-				rendered="#{not quoteForm.editMode or quoteController.selectedQuote.type != 'Co-Term'}">
+			<h:outputText value="#{model.selectedQuote.endDate}"
+				rendered="#{not model.editMode or model.selectedQuote.type != 'Co-Term'}">
 				<f:convertDateTime locale="#{sessionUser.locale}"
 					pattern="#{sessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<rich:calendar value="#{quoteController.selectedQuote.endDate}"
+			<rich:calendar value="#{model.selectedQuote.endDate}"
 				id="endDate" locale="#{sessionUser.locale}"
 				popup="true"
 				datePattern="#{sessionUser.dateFormatPattern}"
 				showApplyButton="false" cellWidth="24px" cellHeight="22px"
 				style="width:200px"
-				rendered="#{quoteForm.editMode and quoteController.selectedQuote.type == 'Co-Term'}"
+				rendered="#{model.editMode and model.selectedQuote.type == 'Co-Term'}"
 				disabled="false">
 			</rich:calendar>
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.createdBy}"
-			rendered="#{not quoteForm.editMode}" />			
+			rendered="#{not model.editMode}" />			
 		<h:panelGroup>
-			<h:outputText value="#{quoteController.selectedQuote.createdByName}, "
-			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}"/>
-			<h:outputText value="#{quoteController.selectedQuote.createdDate}"
-			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}">
+			<h:outputText value="#{model.selectedQuote.createdByName}, "
+			    rendered="#{not model.editMode and not empty model.selectedQuote}"/>
+			<h:outputText value="#{model.selectedQuote.createdDate}"
+			    rendered="#{not model.editMode and not empty model.selectedQuote}">
 				<f:convertDateTime locale="#{sessionUser.locale}"
 					pattern="#{sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+			<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
 		</h:panelGroup>
 
 		<h:outputText value="#{msgs.lastModifiedBy}"
-			rendered="#{not quoteForm.editMode}" />
+			rendered="#{not model.editMode}" />
 		<h:panelGroup>
-			<h:outputText value="#{quoteController.selectedQuote.lastModifiedByName}, "
-			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}"/>
-			<h:outputText value="#{quoteController.selectedQuote.lastModifiedDate}"
-			    rendered="#{not quoteForm.editMode and not empty quoteController.selectedQuote}">
+			<h:outputText value="#{model.selectedQuote.lastModifiedByName}, "
+			    rendered="#{not model.editMode and not empty model.selectedQuote}"/>
+			<h:outputText value="#{model.selectedQuote.lastModifiedDate}"
+			    rendered="#{not model.editMode and not empty model.selectedQuote}">
 				<f:convertDateTime locale="#{sessionUser.locale}"
 					pattern="#{sessionUser.dateTimeFormatPattern}"
 					type="date" />
 			</h:outputText>
-			<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
+			<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
 		</h:panelGroup>
 		
-		<h:outputText value=" " rendered="#{quoteForm.editMode}" />
-		<h:outputText value=" " rendered="#{quoteForm.editMode}" />
-		<h:outputText value=" " rendered="#{quoteForm.editMode}" />
-		<h:outputText value=" " rendered="#{quoteForm.editMode}" />
+		<h:outputText value=" " rendered="#{model.editMode}" />
+		<h:outputText value=" " rendered="#{model.editMode}" />
+		<h:outputText value=" " rendered="#{model.editMode}" />
+		<h:outputText value=" " rendered="#{model.editMode}" />
 		
 
 	</h:panelGrid>
@@ -327,54 +327,54 @@
 		columns="4">
 
 		<h:outputText value="#{msgs.billingAddress}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.billingAddress}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.billingAddress}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingAddress}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.shippingAddress}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.shippingAddress}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingCity}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.billingCity}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.billingCity}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingCity}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.shippingCity}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.shippingCity}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingState}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.billingState}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.billingState}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingState}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.shippingState}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.shippingState}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingZipPostalCode}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.billingZipPostalCode}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.billingZipPostalCode}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingZipPostalCode}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.shippingZipPostalCode}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.shippingZipPostalCode}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.billingCountry}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.billingCountry}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.billingCountry}"
+			rendered="#{not empty model.selectedQuote}" />
 
 		<h:outputText value="#{msgs.shippingCountry}" />
-		<h:outputText value=" " rendered="#{empty quoteController.selectedQuote}" />
-		<h:outputText value="#{quoteController.opportunity.shippingCountry}"
-			rendered="#{not empty quoteController.selectedQuote}" />
+		<h:outputText value=" " rendered="#{empty model.selectedQuote}" />
+		<h:outputText value="#{model.opportunity.shippingCountry}"
+			rendered="#{not empty model.selectedQuote}" />
 
 	</h:panelGrid>
 

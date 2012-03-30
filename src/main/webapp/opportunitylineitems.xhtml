@@ -10,14 +10,14 @@
 		<rich:toolbarGroup location="left">
 			<a4j:commandLink value="#{msgs.back}"
 				disabled="#{quoteForm.editMode}" immediate="false" render="mainArea"
-				status="ajaxStatus" action="#{quoteController.back()}">
+				status="ajaxStatus" action="#{quoteController.backToViewQuote(model.opportunity, model.selectedQuote)}">
 			</a4j:commandLink>
 		</rich:toolbarGroup>
 
 		<rich:toolbarGroup location="right">
 
 			<a4j:commandButton value="#{msgs.add}" styleClass="commandButton"				
-				action="#{quoteController.addOpportunityLineItems()}"
+				action="#{quoteController.addOpportunityLineItems(model.opportunity, model.selectedQuote)}"
 				render="mainArea">
 			</a4j:commandButton>
 
@@ -29,7 +29,7 @@
 		bodyClass="panel-body">
 
 		<rich:dataTable id="opportunityProducts" var="lineItem"
-			value="#{quoteController.opportunity.opportunityLineItems}"
+			value="#{model.opportunity.opportunityLineItems}"
 			noDataLabel="#{msgs.noRecords}" style="width:100%;">
 
 			<rich:column style="text-align: center;">

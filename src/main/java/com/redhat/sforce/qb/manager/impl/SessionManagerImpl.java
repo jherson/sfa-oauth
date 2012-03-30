@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.manager.impl;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.List;
@@ -7,7 +8,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 import org.json.JSONException;
@@ -15,7 +19,9 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.dao.factory.SObjectDAOFactory;
+import com.redhat.sforce.qb.dao.SessionUserDAO;
+import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
@@ -23,10 +29,11 @@ import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
-import com.redhat.sforce.qb.service.exception.SforceServiceException;
+import com.redhat.sforce.qb.model.User;
 
 @ManagedBean(name="sessionManager")
 @SessionScoped
+@Singleton
 
 public class SessionManagerImpl implements Serializable, SessionManager {
 
@@ -36,30 +43,44 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private String opportunityId;
 			
+	@Inject 
 	private OpportunityDAO opportunityDAO;
 	
+	@Inject
 	private QuoteDAO quoteDAO;
 	
+	@Inject
 	private PricebookEntryDAO pricebookEntryDAO;
-
+	
+	@Inject
+	private SessionUserDAO sessionUserDAO;	
 			
 	@Inject 
-	Logger log;
+	private Logger log;
 	
 	@PostConstruct
 	public void init() {					
-		opportunityDAO = SObjectDAOFactory.getOpportunityDAO();
-		quoteDAO = SObjectDAOFactory.getQuoteDAO();		
-		pricebookEntryDAO = SObjectDAOFactory.getPricebookEntryDAO();		
-	}
-
+        log.info("init");				
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);	
+        if (session.getAttribute("SessionId") != null) {
+		    setSessionId(session.getAttribute("SessionId").toString());
+        } else {
+        	try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect("index.html");
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }        
+	}		
+	
 	@Override
 	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;		
+		this.sessionId = sessionId;				
 	}
 
-	@Override
-	public String getSessionId() {
+	public String getSessionId() {		
 		return sessionId;
 	}	
 	
@@ -68,34 +89,42 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		this.opportunityId = opportunityId;
 	}
 	
-	@Override
 	public String getOpportunityId() {
 		return opportunityId;
 	}
-	
+		
 	@Override
-	public List<Quote> queryQuotes() throws SforceServiceException, JSONException, ParseException {
+	public User queryUser() throws JSONException, QuoteBuilderException {
+        return sessionUserDAO.querySessionUser(getSessionId());
+	}	
+	
+	public List<Quote> queryQuotesByOpportunityId() throws SalesforceServiceException, JSONException, ParseException {
     	return quoteDAO.getQuotesByOpportunityId(getSessionId(), getOpportunityId());
 	}	
 	
 	@Override
-	public Opportunity queryOpportunity() throws SforceServiceException, JSONException, ParseException {
+	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException {
+    	return quoteDAO.queryQuotes(getSessionId());
+	}	
+	
+	@Override
+	public Opportunity queryOpportunity() throws QuoteBuilderException, JSONException, ParseException {
 		return opportunityDAO.getOpportunity(getSessionId(), getOpportunityId());
 	}
 	
 	@Override
-	public Quote queryQuote(String quoteId) throws SforceServiceException, JSONException, ParseException {
-		return quoteDAO.getQuote(getSessionId(), quoteId);
+	public Quote queryQuote(String quoteId) throws SalesforceServiceException, JSONException, ParseException {
+		return quoteDAO.getQuoteById(getSessionId(), quoteId);
 	}	
 
 	@Override
-	public void saveQuote(Quote quote) throws SforceServiceException {
-		quoteDAO.saveQuote(getSessionId(), quote);		
+	public Quote saveQuote(Quote quote) throws SalesforceServiceException {
+		return quoteDAO.saveQuote(getSessionId(), quote);		
 	}
 	
 	@Override
-	public void activateQuote(Quote quote) {
-		quoteDAO.activateQuote(getSessionId(), quote.getId());
+	public Quote activateQuote(Quote quote) throws SalesforceServiceException {
+		return quoteDAO.activateQuote(getSessionId(), quote.getId());
 	}
 	
 	@Override
@@ -114,27 +143,27 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	}
 	
 	@Override
-	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SforceServiceException {
-		quoteDAO.addOpportunityLineItems(getSessionId(), quote.getId(), opportunityLineItems);
+	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException {
+		return quoteDAO.addOpportunityLineItems(getSessionId(), quote.getId(), opportunityLineItems);
 	}
 	
 	@Override
-	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SforceServiceException {		
+	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException {
 		return pricebookEntryDAO.queryPricebookEntry(getSessionId(), pricebookId, productCode, currencyIsoCode);
 	}
 		
 	@Override
-	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {		
+	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {		
 		quoteDAO.saveQuoteLineItems(getSessionId(), quoteLineItemList);	
 	}
 	
 	@Override
-	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SforceServiceException {
+	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException {
 		quoteDAO.saveQuotePriceAdjustments(getSessionId(), quotePriceAdjustmentList);
 	}
 	
 	@Override
-	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SforceServiceException {
+	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
 		quoteDAO.deleteQuoteLineItems(getSessionId(), quoteLineItemList);
 	}
 }

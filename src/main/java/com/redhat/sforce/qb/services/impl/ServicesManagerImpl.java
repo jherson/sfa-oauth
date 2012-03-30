@@ -21,8 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.qb.bean.QuoteBuilder;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.QuoteBuilderManager;
 import com.redhat.sforce.qb.services.ServicesManager;
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {
@@ -33,7 +33,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	Logger log;
 	
 	@Inject 
-	QuoteBuilder properties;				
+	QuoteBuilderManager properties;				
 			
 	@Override
 	public JSONObject getCurrentUserInfo(String accessToken) {
@@ -97,6 +97,42 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		return jsonObject;		
 	}
+	
+
+	@Override
+	public JSONArray queryQuotes(String accessToken) throws SalesforceServiceException {		
+        String url = properties.getApiEndpoint() + "/apexrest/" + properties.getApiVersion() + "/QuoteRestService/get_quotes_for_opportunity";
+        
+        NameValuePair[] params = new NameValuePair[1];
+		params[0] = new NameValuePair("opportunityId", "006P0000003U4G1");
+		
+		JSONArray jsonArray = null;
+		GetMethod getMethod = null;
+		try {
+			getMethod = doGet(accessToken, url, params);
+			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {	
+				jsonArray = new JSONArray(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));	
+			} else {
+				log.error(getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());								
+			}
+
+		} catch (HttpException e) {
+			e.printStackTrace();
+			log.error(e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.error(e);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			log.error(e);
+		} finally {
+			getMethod.releaseConnection();
+		}
+		
+		return jsonArray;	
+	}
+	
 	
 	@Override
 	public JSONArray getQuotesByOpportunityId(String accessToken, String opportunityId) throws SalesforceServiceException {

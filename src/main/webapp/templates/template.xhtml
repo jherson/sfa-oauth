@@ -44,6 +44,18 @@ html {
 #footer {
 	clear: both;
 }
+
+.column1 {
+    width: 50%;
+    text-align: left;
+}
+
+.column2 {
+    width: 50%;
+    text-align: right;
+}
+
+
 </style>
 
 </h:head>
@@ -51,9 +63,15 @@ html {
 <h:panelGroup id="container">
 
 	<h:panelGroup id="header" layout="block">
-		<h:panelGrid width="100%">
+		<h:panelGrid width="100%" columns="2" cellspacing="10" columnClasses="column1,column2">
 			<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
+			<h:graphicImage id="exit" alt="logo" url="/images/exit.png"> 
+			    	<a4j:ajax execute="@this" event="click"
+					    listener="#{quoteController.logout}" render="mainArea">					  
+				</a4j:ajax>
+			</h:graphicImage>
 		</h:panelGrid>
+		
 	</h:panelGroup>
 
 	<h:panelGroup id="leftbar" layout="block"></h:panelGroup>

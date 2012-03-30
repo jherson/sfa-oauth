@@ -41,11 +41,13 @@ public class OpportunityFactory {
 		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
 		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
 		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));
-		opportunity.setOwner(UserFactory.deserialize(wrapper.getJSONObject("Owner")));
 		
 		List<User> ownerList = new ArrayList<User>();
-		ownerList.add(opportunity.getOwner());
-				
+		if (wrapper.getJSONObject("Owner") != null) {
+		    opportunity.setOwner(UserFactory.deserialize(wrapper.getJSONObject("Owner")));
+		    ownerList.add(opportunity.getOwner());
+		}
+										
 		JSONArray records = null;
 		
 		records = wrapper.getRecords("OpportunityLineItems");

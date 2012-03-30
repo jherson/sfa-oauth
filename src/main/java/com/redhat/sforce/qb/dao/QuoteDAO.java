@@ -13,6 +13,7 @@ import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 
 public interface QuoteDAO {
 
+	public List<Quote> queryQuotes(String accessToken) throws SalesforceServiceException, JSONException, ParseException;
 	public Quote saveQuote(String accessToken, Quote quote) throws SalesforceServiceException;
 	public Quote activateQuote(String accessToken, String quoteId) throws SalesforceServiceException;
 	public void calculateQuote(String accessToken, String quoteId);

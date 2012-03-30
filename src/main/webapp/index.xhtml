@@ -11,10 +11,10 @@
 	<ui:composition template="/templates/template.xhtml">
 
 		<ui:define name="body">
-			<h:panelGroup id="mainArea" layout="block">
-			    <h:inputHidden value="#{sessionUser.sessionManager.sessionId}" />			    
+			<h:panelGroup id="mainArea" layout="block">			    		
+			    <ui:include src="/WEB-INF/pages/errorpanel.xhtml"/>			    	    
 				<h:panelGroup layout="block">											                    																							
-					<ui:include src="#{quoteController.template}" />					
+					<ui:include src="#{model.mainArea.template}" />					
 				</h:panelGroup>
 			</h:panelGroup>
 		</ui:define>

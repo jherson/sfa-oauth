@@ -8,7 +8,7 @@
 
 <a4j:outputPanel id="details">
 
-	<rich:hotKey rendered="#{quoteForm.editMode}" enabledInInput="true"
+	<rich:hotKey rendered="#{model.editMode}" enabledInInput="true"
 		key="CTRL+s" preventDefault="true">
 		<rich:componentControl target="quoteForm:save" operation="click()" />
 	</rich:hotKey>
