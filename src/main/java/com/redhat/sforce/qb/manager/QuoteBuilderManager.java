@@ -7,14 +7,12 @@ import com.sforce.ws.ConnectionException;
 
 public interface QuoteBuilderManager {
 		
+	public String getOpportunityDetailUrl();
 	public String getSessionId();
 	public Locale getLocale();
 	public String getApiVersion();
 	public String getApiEndpoint();
-	public String getRedirectUri();
-	public String getClientId();
-	public String getClientSecret();
-	public String getEnvironment();
+    public String getServiceEndpoint();
 	public CurrencyIsoCodes getCurrencyIsoCodes();
 	public CurrencyIsoCodes queryCurrencyIsoCodes() throws ConnectionException;
 }

@@ -6,18 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.enterprise.event.Event;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import javax.enterprise.inject.Model;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.controller.Model;
+import com.redhat.sforce.qb.controller.MainArea;
 import com.redhat.sforce.qb.controller.PagesEnum;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
@@ -27,9 +25,11 @@ import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.util.FacesUtil;
+import com.redhat.sforce.qb.util.LoggedIn;
 
 @ManagedBean(name="quoteController")
-@RequestScoped
+@Model
 
 public class QuoteControllerImpl {
 	
@@ -37,7 +37,7 @@ public class QuoteControllerImpl {
 	private Logger log;
 	
 	@Inject
-	private Model model;
+	private MainArea mainArea;
 		
 	@Inject
     private SessionManager sessionManager;	
@@ -45,39 +45,43 @@ public class QuoteControllerImpl {
 	@Inject
 	private Event<Quote> quoteEvents;
 	
+	@Inject
+	private Event<User> userEvents;
+	
 	@PostConstruct
 	public void init() {
         log.info("init");
 	}
 	
 	public void refresh() {
-        model.setMainArea(PagesEnum.QUOTE_MANAGER);
+		quoteEvents.fire(new Quote());
+		userEvents.fire(new User());
 	}
 	
 	public void logout() {
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		HttpSession session = FacesUtil.getSession();
 		if (session != null) {
 		    session.removeAttribute("SessionId");		
-		    session.invalidate();		
+		    session.invalidate();		    
 		    try {
-			    FacesContext.getCurrentInstance().getExternalContext().redirect("logout.jsf");
+		    	FacesUtil.sendRedirect("logout.jsf");
 		    } catch (IOException e) {
-			    log.error("IOException", e);
+				FacesUtil.addErrorMessage(e.getMessage());
 		    }
 		}		
 	}
-	
+
 	public void backToQuoteManager() {
-		model.setMainArea(PagesEnum.QUOTE_MANAGER);
+		mainArea.setMainArea(PagesEnum.QUOTE_MANAGER);
 	}
 	
 	public void backToViewQuote(Opportunity opportunity, Quote quote) {
-		model.reset(PagesEnum.VIEW_QUOTE);
+		mainArea.reset(PagesEnum.VIEW_QUOTE);
 	}
 	
 	public void newQuote(Opportunity opportunity) {
 		Quote quote = new Quote(opportunity);
-		model.reset(PagesEnum.VIEW_QUOTE, quote, Boolean.TRUE);
+		mainArea.reset(PagesEnum.VIEW_QUOTE, quote, Boolean.TRUE);
 	}
 	
 	public void activateQuote(Quote quote) {		
@@ -85,46 +89,40 @@ public class QuoteControllerImpl {
 			quote = sessionManager.activateQuote(quote);
 			quoteEvents.fire(quote);
 		} catch (SalesforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesUtil.addErrorMessage(e.getMessage());
 		}				
 	}
 	
-	public void copyQuote(Opportunity opportunity, Quote quote) {
+	public void copyQuote(Quote quote) {
 		sessionManager.copyQuote(quote);
-		if (model.getMainArea().equals(PagesEnum.QUOTE_MANAGER)) {
-			model.reset(PagesEnum.QUOTE_MANAGER);
-		} else {
-			model.reset(PagesEnum.VIEW_QUOTE);
-		}
+		quoteEvents.fire(quote);
 	}
 	
 	public void editQuote(Quote quote) {
-		model.reset(PagesEnum.VIEW_QUOTE);
+		mainArea.reset(PagesEnum.VIEW_QUOTE);
 	}
 	
-	public void deleteQuote(Opportunity opportunity, Quote quote) {			
+	public void deleteQuote(Quote quote) {			
 		sessionManager.deleteQuote(quote);			
-		model.reset(PagesEnum.QUOTE_MANAGER);	
+		quoteEvents.fire(quote);
 	}
 
 	public void calculateQuote(Opportunity opportunity, Quote quote) {
 		sessionManager.calculateQuote(quote.getId());
-		model.reset(PagesEnum.VIEW_QUOTE);
+		mainArea.reset(PagesEnum.VIEW_QUOTE);
 	}
 	
 	public void save(Opportunity opportunity, Quote quote) {
 		saveQuote(opportunity, quote);
 		saveQuoteLineItems(quote);
-		model.reset(PagesEnum.VIEW_QUOTE);
+		mainArea.reset(PagesEnum.VIEW_QUOTE);
 	}
 	
 	public void saveQuote(Opportunity opportunity, Quote quote) {	
 		try {
 		    quote = sessionManager.saveQuote(quote);
 		} catch (SalesforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesUtil.addErrorMessage(e.getMessage());
 		} 		
 	}
 	
@@ -146,8 +144,7 @@ public class QuoteControllerImpl {
 		    sessionManager.saveQuoteLineItems(quote.getQuoteLineItems());
 			    
 		} catch (SalesforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesUtil.addErrorMessage(e.getMessage());
 		}
 	}
 	
@@ -156,25 +153,22 @@ public class QuoteControllerImpl {
 		if (quoteId != null) {
 			try {
 				quote = sessionManager.queryQuote(quoteId);
-				model.reset(PagesEnum.VIEW_QUOTE);
+				mainArea.reset(PagesEnum.VIEW_QUOTE);
 
 			} catch (SalesforceServiceException e) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-				FacesContext.getCurrentInstance().addMessage(null, message);
+				FacesUtil.addErrorMessage(e.getMessage());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				FacesUtil.addErrorMessage(e.getMessage());
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				FacesUtil.addErrorMessage(e.getMessage());
 			}			
 		} else {			
-			model.reset(PagesEnum.QUOTE_MANAGER);
+			mainArea.reset(PagesEnum.QUOTE_MANAGER);
 		}
 	}
 	
 	public void viewOpportunityLineItems(Opportunity opportunity, Quote quote) {
-		model.reset(PagesEnum.ADD_OPPORTUNITY_PRODUCTS);
+		mainArea.reset(PagesEnum.ADD_OPPORTUNITY_PRODUCTS);
 	}
 	
 	public void addOpportunityLineItems(Opportunity opportunity, Quote quote) {		
@@ -188,10 +182,9 @@ public class QuoteControllerImpl {
 		
 		try {
 			quote = sessionManager.addOpportunityLineItems(quote, opportunityLineItemList);
-			model.reset(PagesEnum.VIEW_QUOTE);
+			mainArea.reset(PagesEnum.VIEW_QUOTE);
 		} catch (SalesforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesUtil.addErrorMessage(e.getMessage());
 		}	
 	}
 	
@@ -215,11 +208,10 @@ public class QuoteControllerImpl {
 		
 		try {
 		    sessionManager.deleteQuoteLineItems(quoteLineItems);
-		    model.reset(PagesEnum.VIEW_QUOTE);
+		    mainArea.reset(PagesEnum.VIEW_QUOTE);
 		    
 		} catch (SalesforceServiceException e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesUtil.addErrorMessage(e.getMessage());
 		}
 	}
 	

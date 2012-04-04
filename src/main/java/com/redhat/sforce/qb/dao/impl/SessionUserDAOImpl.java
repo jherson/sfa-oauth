@@ -14,4 +14,10 @@ public class SessionUserDAOImpl extends SObjectDAO implements SessionUserDAO {
 	public User querySessionUser(String sessionId) throws JSONException, QuoteBuilderException {		
 		return UserFactory.deserialize(sm.getCurrentUserInfo(sessionId));
 	}
+
+	@Override
+	public User querySessionUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

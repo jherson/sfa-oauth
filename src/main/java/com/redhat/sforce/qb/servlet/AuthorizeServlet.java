@@ -44,7 +44,7 @@ public class AuthorizeServlet extends HttpServlet {
 		setClientId(System.getProperty("salesforce.oauth.clientId"));
 		setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
 		setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
-		setEnvironment(System.getProperty("salesforce.oauth.environment"));	   
+		setEnvironment(System.getProperty("salesforce.environment"));	   
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AuthorizeServlet extends HttpServlet {
 	            postMethod.addParameter("grant_type", "authorization_code");
 	            postMethod.addParameter("client_id", getClientId());
 	            postMethod.addParameter("client_secret", getClientSecret());
-	            postMethod.addParameter("redirect_uri", request.getRequestURL().toString());
+	            postMethod.addParameter("redirect_uri", getRedirectUri());
 	
 	            HttpClient httpClient = new HttpClient();
 	            httpClient.getParams().setSoTimeout(60000);

@@ -9,6 +9,7 @@ import com.redhat.sforce.qb.model.User;
 
 public interface QuoteController {
 
+	public void openOpportunity(String opportunityId);
 	public Opportunity getOpportunity();
 	public void setOpportunity(Opportunity opportunity);
 	public List<Quote> getQuoteList();

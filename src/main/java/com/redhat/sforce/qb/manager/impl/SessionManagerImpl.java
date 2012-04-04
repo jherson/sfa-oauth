@@ -6,22 +6,27 @@ import java.text.ParseException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Produces;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
+import com.redhat.sforce.qb.controller.MainArea;
+import com.redhat.sforce.qb.controller.PagesEnum;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.QuoteBuilderManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
@@ -30,6 +35,12 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.util.FacesUtil;
+import com.redhat.sforce.qb.util.SforceConnection;
+import com.sforce.soap.partner.Connector;
+import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.ws.ConnectionException;
+import com.sforce.ws.ConnectorConfig;
 
 @ManagedBean(name="sessionManager")
 @SessionScoped
@@ -42,6 +53,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private String sessionId;
 	
 	private String opportunityId;
+	
+	private PartnerConnection partnerConnection;
 			
 	@Inject 
 	private OpportunityDAO opportunityDAO;
@@ -58,12 +71,35 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Inject 
 	private Logger log;
 	
+	@Inject 
+	private QuoteBuilderManager properties;
+	
+	@Produces
+	@SforceConnection
+	@Named
+	public PartnerConnection getPartnerConnection() {
+		return partnerConnection;
+	}
+	
 	@PostConstruct
 	public void init() {					
         log.info("init");				
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);	
-        if (session.getAttribute("SessionId") != null) {
-		    setSessionId(session.getAttribute("SessionId").toString());
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        String sessionId = session.getAttribute("SessionId").toString();
+        if (sessionId != null) {
+		    setSessionId(sessionId);
+		    
+		    ConnectorConfig config = new ConnectorConfig();
+			config.setManualLogin(true);
+			config.setServiceEndpoint(properties.getServiceEndpoint());
+			config.setSessionId(sessionId);
+			try {
+				partnerConnection = Connector.newConnection(config);
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			
         } else {
         	try {
 				FacesContext.getCurrentInstance().getExternalContext().redirect("index.html");

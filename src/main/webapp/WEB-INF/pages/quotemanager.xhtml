@@ -4,8 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j">	
-	
+	xmlns:a4j="http://richfaces.org/a4j">
+
 <a4j:outputPanel id="quoteManager">
 
 	<h:panelGrid width="100%" columns="1" cellpadding="3">
@@ -13,9 +13,23 @@
 			<h:graphicImage value="./images/quote.png"
 				style="vertical-align: middle" />
 			<h:outputText value=" " escape="false" />
-			<h:outputText
-				value="#{msgs.headerTitle}"
+			<h:outputText value="#{msgs.headerTitle}"
 				style="font-weight:bold; font-size: 18px;" />
+		</h:panelGroup>
+		<h:panelGroup layout="block">
+			<h:selectOneMenu value="#{quoteReports.selectedReport}"
+				style="width: 250px;">
+
+				<f:selectItems value="#{quoteReports.quoteReportsList}" />
+
+				<a4j:ajax event="valueChange" render="@this" status="ajaxStatus" />
+			</h:selectOneMenu>
+
+			<a4j:commandButton value="#{msgs.go}"
+				action="#{quoteReports.runReport()}" render="quoteList"
+				ajaxSingle="true">
+			</a4j:commandButton>
+
 		</h:panelGroup>
 	</h:panelGrid>
 
@@ -24,10 +38,10 @@
 		<rich:toolbarGroup location="right">
 
 			<a4j:commandLink id="new" value="#{msgs.new}"
-				action="#{quoteController.newQuote(opportunity)}"
-				render="mainArea" ajaxSingle="true">
+				action="#{quoteController.newQuote(opportunity)}" render="mainArea"
+				ajaxSingle="true">
 				<f:setPropertyActionListener value="#{true}"
-					target="#{quoteForm.editMode}" />
+					target="#{model.editMode}" />
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="false"

@@ -3,6 +3,7 @@ package com.redhat.sforce.qb.manager.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -31,7 +32,7 @@ public class QuoteBuilderManagerImpl implements QuoteBuilderManager, Serializabl
 	private static final long serialVersionUID = 643281191192553768L;
 	
 	@Inject
-	Logger log;
+	private Logger log;
 	
 	private PartnerConnection partnerConnection;
 	
@@ -42,15 +43,28 @@ public class QuoteBuilderManagerImpl implements QuoteBuilderManager, Serializabl
 	private String apiVersion;	
 	
 	private String apiEndpoint;
+	    
+    private String serviceEndpoint; 
+    
+    private String opportunityDetailUrl;
 	
-    private String redirectUri;
-    
-    private String clientId;
-    
-    private String clientSecret;
-    
-    private String environment;
-	
+	public PartnerConnection getPartnerConnection() {
+		return partnerConnection;
+	}
+
+	public void setPartnerConnection(PartnerConnection partnerConnection) {
+		this.partnerConnection = partnerConnection;
+	}
+
+	@Override
+	public String getOpportunityDetailUrl() {
+		return opportunityDetailUrl;
+	}
+
+	public void setOpportunityDetailUrl(String opportunityDetailUrl) {
+		this.opportunityDetailUrl = opportunityDetailUrl;
+	}
+
 	private CurrencyIsoCodes currencyIsoCodes;	
 
 	@PostConstruct
@@ -66,7 +80,8 @@ public class QuoteBuilderManagerImpl implements QuoteBuilderManager, Serializabl
 		}				
 								
 		ConnectorConfig config = new ConnectorConfig();
-		config.setAuthEndpoint(propertiesFile.getProperty("salesforce.authEndpoint"));
+		log.info(MessageFormat.format(propertiesFile.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
+		config.setAuthEndpoint(MessageFormat.format(propertiesFile.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
 		config.setUsername(propertiesFile.getProperty("salesforce.username"));
 		config.setPassword(propertiesFile.getProperty("salesforce.password"));
 				
@@ -76,11 +91,9 @@ public class QuoteBuilderManagerImpl implements QuoteBuilderManager, Serializabl
 			setSessionId(partnerConnection.getConfig().getSessionId());
 			setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));			
 			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
-			setClientId(propertiesFile.getProperty("salesforce.oauth.clientId"));
-			setClientSecret(propertiesFile.getProperty("salesforce.oauth.clientSecret"));
-			setRedirectUri(propertiesFile.getProperty("salesforce.oauth.redirectUri"));
-			setEnvironment(propertiesFile.getProperty("salesforce.oauth.environment"));		
+			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
+			setOpportunityDetailUrl(partnerConnection.describeSObject("Opportunity").getUrlDetail());						
+			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));						
 			
 			currencyIsoCodes = queryCurrencyIsoCodes();
 			
@@ -138,39 +151,12 @@ public class QuoteBuilderManagerImpl implements QuoteBuilderManager, Serializabl
 	}
 	
 	@Override
-	public String getRedirectUri() {
-		return redirectUri;
+	public String getServiceEndpoint() {
+		return serviceEndpoint;
 	}
-
-	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
-	}
-
-	@Override
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	@Override
-	public String getClientSecret() {
-		return clientSecret;
-	}
-
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-
-	@Override
-	public String getEnvironment() {
-		return environment;
-	}
-
-	public void setEnvironment(String environment) {
-		this.environment = environment;
+	
+	public void setServiceEndpoint(String serviceEndpoint) {
+		this.serviceEndpoint = serviceEndpoint;
 	}
 	
 	@Override

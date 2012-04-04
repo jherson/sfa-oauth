@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
-import javax.faces.bean.SessionScoped;
+
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,7 +29,7 @@ public class UserProducer implements Serializable {
 	private Logger log;
 
 	@Inject
-    private SessionManager sessionManager;
+    private SessionManager sessionManager;		
 	
 	private User user;
 	
@@ -38,19 +40,23 @@ public class UserProducer implements Serializable {
 		return user;
 	}
 	
+	public void onQuoteListChanged(@Observes final User user) {
+		queryUser();
+	}
+	
 	@PostConstruct
 	public void queryUser() {
 		log.info("queryUser");
 		try {
 			user = sessionManager.queryUser();			
+			
 		} catch (JSONException e) {	
-			log.error("1JSONException", e);
+			log.error("JSONException", e);
 		} catch (QuoteBuilderException e) {
-			log.error("2QuoteBuilderException", e);
+			log.error("QuoteBuilderException", e);
 		} 
 		
 		if (user == null) {
-			log.info("3");
 			try {
 				FacesContext.getCurrentInstance().getExternalContext().redirect("index.html");
 			} catch (IOException e) {

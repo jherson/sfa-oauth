@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -37,8 +37,7 @@ public class QuoteListProducer implements Serializable {
 		return quoteList;
 	}
 	
-	public void onQuoteListChanged(@Observes final Quote quote) {
-		log.info("firing event observer");
+	public void onQuoteListChanged(@Observes Quote quote) {
 		queryQuotes();
 	}
 	
