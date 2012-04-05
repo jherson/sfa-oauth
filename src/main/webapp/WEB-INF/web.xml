@@ -34,19 +34,6 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
-	
-    <security-constraint>  
-        <display-name>Web Interface</display-name>  
-        <web-resource-collection>  
-            <web-resource-name>SSL Pages</web-resource-name>  
-            <description/>  
-            <url-pattern>/</url-pattern>  
-        </web-resource-collection>   
-        <user-data-constraint>  
-            <description>Secure connection is required</description>  
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>  
-        </user-data-constraint>  
-    </security-constraint>  
 
 	<welcome-file-list>
 		<welcome-file>authorize</welcome-file>

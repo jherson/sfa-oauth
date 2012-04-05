@@ -40,7 +40,8 @@ public class AuthorizeServlet extends HttpServlet {
     }
     
     @Override
-    public void init() {												
+    public void init() {	
+    	log.info("init");
 		setClientId(System.getProperty("salesforce.oauth.clientId"));
 		setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
 		setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
@@ -55,6 +56,8 @@ public class AuthorizeServlet extends HttpServlet {
     	if (sessionId == null) {
     		
     		response.setContentType("text/html");
+    		
+    		log.info("doGet");
 
 	        String code = request.getParameter("code");
 	        
