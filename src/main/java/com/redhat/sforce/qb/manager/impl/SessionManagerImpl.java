@@ -18,8 +18,6 @@ import javax.servlet.http.HttpSession;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.controller.MainArea;
-import com.redhat.sforce.qb.controller.PagesEnum;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
@@ -83,7 +81,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@PostConstruct
 	public void init() {					
-        log.info("init");				
+        log.info("init");		
+        
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         String sessionId = session.getAttribute("SessionId").toString();
         if (sessionId != null) {
@@ -102,7 +101,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			
         } else {
         	try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect("index.html");
+        		FacesUtil.sendRedirect("index.html");
 				return;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -95,7 +95,7 @@ public class QuoteBuilderManagerImpl implements QuoteBuilderManager, Serializabl
 			setOpportunityDetailUrl(partnerConnection.describeSObject("Opportunity").getUrlDetail());						
 			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));						
 			
-			currencyIsoCodes = queryCurrencyIsoCodes();
+			//currencyIsoCodes = queryCurrencyIsoCodes();
 			
 		} catch (ConnectionException e) {
 			log.error(e);

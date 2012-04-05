@@ -26,7 +26,6 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.FacesUtil;
-import com.redhat.sforce.qb.util.LoggedIn;
 
 @ManagedBean(name="quoteController")
 @Model
