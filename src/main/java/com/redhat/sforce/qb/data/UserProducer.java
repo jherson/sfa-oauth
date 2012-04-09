@@ -15,47 +15,48 @@ import javax.inject.Named;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
+import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.QuoteBuilderException;
-import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.LoggedIn;
 
 @SessionScoped
+
 public class UserProducer implements Serializable {
-	
+
 	private static final long serialVersionUID = 7525581840655605003L;
 
 	@Inject
 	private Logger log;
 
 	@Inject
-    private SessionManager sessionManager;		
-	
+	private SessionUserDAO sessionUserDAO;
+
 	private User user;
-	
+
 	@Produces
 	@LoggedIn
 	@Named
 	public User getUser() {
 		return user;
 	}
-	
+
 	public void onQuoteListChanged(@Observes final User user) {
-		queryUser();
+		querySessionUser();
 	}
-	
+
 	@PostConstruct
-	public void queryUser() {
+	public void querySessionUser() {
 		log.info("queryUser");
 		try {
-			user = sessionManager.queryUser();			
-			
-		} catch (JSONException e) {	
+			user = sessionUserDAO.querySessionUser();
+
+		} catch (JSONException e) {
 			log.error("JSONException", e);
 		} catch (QuoteBuilderException e) {
 			log.error("QuoteBuilderException", e);
-		} 
-		
+		}
+
 		if (user == null) {
 			try {
 				FacesContext.getCurrentInstance().getExternalContext().redirect("index.html");
@@ -64,5 +65,5 @@ public class UserProducer implements Serializable {
 				e.printStackTrace();
 			}
 		}
-	}		
+	}
 }

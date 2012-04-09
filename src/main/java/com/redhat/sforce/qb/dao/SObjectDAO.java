@@ -6,15 +6,15 @@ import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.services.ServicesManager;
 
-public class SObjectDAO {	
-	
+public class SObjectDAO {
+
 	@Inject
 	protected Logger log;
-		
-	@Inject 
-    protected ServicesManager sm;
-		
+
+	@Inject
+	protected ServicesManager sm;
+
 	public SObjectDAO() {
-		
-	}	
+
+	}
 }

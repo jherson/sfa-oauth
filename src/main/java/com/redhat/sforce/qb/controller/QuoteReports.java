@@ -14,15 +14,15 @@ import org.jboss.logging.Logger;
 @Named("quoteReports")
 @RequestScoped
 public class QuoteReports {
-	
+
 	@Inject
 	private Logger log;
 
 	private List<String> quoteReportsList;
-	
-	@ManagedProperty(value="Open Quotes (Owner)")
+
+	@ManagedProperty(value = "Open Quotes (Owner)")
 	private String selectedReport;
-	
+
 	@PostConstruct
 	public void init() {
 		quoteReportsList = new ArrayList<String>();
@@ -30,7 +30,7 @@ public class QuoteReports {
 		quoteReportsList.add("Open Quotes (Owner)");
 		quoteReportsList.add("Open Quotes (Created By)");
 	}
-	
+
 	public String getSelectedReport() {
 		return selectedReport;
 	}
@@ -46,7 +46,7 @@ public class QuoteReports {
 	public void setQuoteReportsList(List<String> quoteReportsList) {
 		this.quoteReportsList = quoteReportsList;
 	}
-	
+
 	public void runReport() {
 		log.info(selectedReport);
 	}

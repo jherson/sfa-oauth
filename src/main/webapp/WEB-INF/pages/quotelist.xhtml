@@ -7,18 +7,6 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 
-<h:outputStylesheet>
-
-	.panel-body {
-        color: #000000;
-        font-family: Arial,Verdana,sans-serif;
-        font-size: 11px;
-        padding: 0px;
-        border: 1px;
-    }
-
-</h:outputStylesheet>
-
 <rich:extendedDataTable id="quoteList" var="quote"
 	style="height:400px; " value="#{quoteList}"
 	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" 
@@ -58,7 +46,7 @@
 	<rich:column width="80px" style="text-align: center;">
 		<f:facet name="header">#{msgs.number}</f:facet>
 		<a4j:commandLink value="#{quote.number}"
-			action="#{quoteController.editQuote(quote)}" render="mainArea">
+			action="#{quoteController.viewQuote(quote)}" render="mainArea">
 		</a4j:commandLink>
 	</rich:column>
 
@@ -74,7 +62,7 @@
 	
 	<rich:column width="350px">
 		<f:facet name="header">#{msgs.opportunity}</f:facet>
-		<h:outputText value="#{quote.opportunity.name}" />     
+		<h:outputText value="#{quote.opportunityName}" />     
 	</rich:column>	
 
 	<rich:column width="80px" style="text-align: center;">

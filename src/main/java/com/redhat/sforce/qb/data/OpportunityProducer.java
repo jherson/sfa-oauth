@@ -3,7 +3,8 @@ package com.redhat.sforce.qb.data;
 import java.text.ParseException;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,28 +15,34 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
+import com.redhat.sforce.qb.util.SelectedOpportunity;
 
-@RequestScoped
-public class OpportunityProducer {
-	
+import java.io.Serializable;
+
+@SessionScoped
+public class OpportunityProducer implements Serializable {
+
+	private static final long serialVersionUID = -7426270322153805027L;
+
 	@Inject
-	Logger log;
-	
+	private Logger log;
+
 	@Inject
-    SessionManager sessionManager;
-			
+	private SessionManager sessionManager;
+
 	private Opportunity opportunity;
-	
+
 	@Produces
+	@SelectedOpportunity
 	@Named
 	public Opportunity getOpportunity() {
 		return opportunity;
 	}
-	
-//	public void onOpportunityChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Opportunity opportunity) {
-//		queryOpportunityById();
-//    }
-	
+
+	public void onOpportunityChanged(@Observes final Opportunity opportunity) {
+		queryOpportunityById();
+	}
+
 	@PostConstruct
 	public void queryOpportunityById() {
 		log.info("queryOpportunityById");
@@ -51,5 +58,5 @@ public class OpportunityProducer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
+	}
 }

@@ -6,9 +6,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-@ManagedBean(name="errorHandler")
+@ManagedBean(name = "errorHandler")
 @RequestScoped
-
 public class ErrorHandler {
 
 	private List<String> errors = new ArrayList<String>();
@@ -16,12 +15,12 @@ public class ErrorHandler {
 	public List<String> getErrors() {
 		return errors;
 	}
-	
-	public boolean isErrorExist(){
-		return errors.size() > 0 ;
+
+	public boolean isErrorExist() {
+		return errors.size() > 0;
 	}
-	
-	public void addToErrors(String e){
+
+	public void addToErrors(String e) {
 		errors.add(e);
 	}
 }

@@ -1,9 +1,4 @@
 <style>
-
-.rf-p {
-	background-color: #E4C6A7;
-	border-color: #C27E3A;	
-}
    
 .row1 {
 	background-color: #EDEBEB;
@@ -46,7 +41,7 @@
 }
 
 .commandButton {
-	cursor: hand;
+	cursor: pointer;
 }
 
 </style>

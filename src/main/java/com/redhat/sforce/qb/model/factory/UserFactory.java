@@ -14,24 +14,25 @@ import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 
 public class UserFactory {
-	
-	public static List<User> deserialize(JSONArray jsonArray) throws JSONException {
+
+	public static List<User> deserialize(JSONArray jsonArray)
+			throws JSONException {
 		List<User> userList = new ArrayList<User>();
-					
+
 		for (int i = 0; i < jsonArray.length(); i++) {
-			User user = deserialize(jsonArray.getJSONObject(i));			
-			userList.add(user);			
+			User user = deserialize(jsonArray.getJSONObject(i));
+			userList.add(user);
 		}
-		
-		return userList;		
-	}	
-	
+
+		return userList;
+	}
+
 	public static User deserialize(JSONObject jsonObject) throws JSONException {
 		if (jsonObject == null)
 			return null;
-		
+
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
-		
+
 		User user = new User();
 		user.setId(wrapper.getId());
 		user.setUserName(wrapper.getString("UserName"));
@@ -58,15 +59,20 @@ public class UserFactory {
 		user.setFullPhotoUrl(wrapper.getString("FullPhotoUrl"));
 		user.setSmallPhotoUrl(wrapper.getString("SmallPhotoUrl"));
 		user.setRoleName(wrapper.getString("UserRole", "Name"));
-		user.setProfileName(wrapper.getString("Profile", "Name"));	     
-	    user.setLocale(Util.stringToLocale(wrapper.getString("LocaleSidKey")));
-		
-		SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, user.getLocale());
-	    SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, user.getLocale());
-	    
-	    user.setDateFormatPattern(Util.formatPattern(dateFormat));
-	    user.setDateTimeFormatPattern(Util.formatPattern(dateTimeFormat));
-		
+		user.setProfileName(wrapper.getString("Profile", "Name"));
+		user.setLocale(Util.stringToLocale(wrapper.getString("LocaleSidKey")));
+
+		if (user.getLocale() != null) {
+			SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat
+					.getDateInstance(DateFormat.SHORT, user.getLocale());
+			SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat
+					.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
+							user.getLocale());
+
+			user.setDateFormatPattern(Util.formatPattern(dateFormat));
+			user.setDateTimeFormatPattern(Util.formatPattern(dateTimeFormat));
+		}
+
 		return user;
-	}	
+	}
 }

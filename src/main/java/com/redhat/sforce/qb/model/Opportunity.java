@@ -3,7 +3,7 @@ package com.redhat.sforce.qb.model;
 import java.util.Date;
 import java.util.List;
 
-public class Opportunity extends SObject {	
+public class Opportunity extends SObject {
 
 	private static final long serialVersionUID = 1L;
 	private String name;
@@ -21,42 +21,42 @@ public class Opportunity extends SObject {
 	private Boolean hasOpportunityLineItem;
 	private String pricebookId;
 	private String pricebookName;
-    private String fulfillmentChannel;
-    private String billingAddress;
-    private String billingCity;
-    private String billingCountry;
-    private String billingZipPostalCode;
-    private String billingState;
-    private String shippingAddress;
-    private String shippingCity;
-    private String shippingCountry;
-    private String shippingZipPostalCode;
-    private String shippingState;
-    private String opportunityNumber;
-    private String payNow;
-    private String countryOfOrder;
-    private String accountName;
-    private String oracleAccountNumber;
-    private String accountAliasName;
-    private User owner;
-    private List<CreditCheck> creditChecks;
-    private List<OpportunityLineItem> opportunityLineItems;
-    private List<Contact> contacts;
-    private List<User> salesTeam;
-    private List<User> owners;
+	private String fulfillmentChannel;
+	private String billingAddress;
+	private String billingCity;
+	private String billingCountry;
+	private String billingZipPostalCode;
+	private String billingState;
+	private String shippingAddress;
+	private String shippingCity;
+	private String shippingCountry;
+	private String shippingZipPostalCode;
+	private String shippingState;
+	private String opportunityNumber;
+	private String payNow;
+	private String countryOfOrder;
+	private String accountName;
+	private String oracleAccountNumber;
+	private String accountAliasName;
+	private User owner;
+	private List<CreditCheck> creditChecks;
+	private List<OpportunityLineItem> opportunityLineItems;
+	private List<Contact> contacts;
+	private List<User> salesTeam;
+	private List<User> owners;
 
-    public Opportunity() {
-        super();
-    }
-    
-    public String getName() {
-    	return name;
-    }
-    
-    public void setName(String name) {
-    	this.name = name;
-    }
-    
+	public Opportunity() {
+		super();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getAccountId() {
 		return accountId;
 	}
@@ -168,11 +168,11 @@ public class Opportunity extends SObject {
 	public void setPricebookName(String pricebookName) {
 		this.pricebookName = pricebookName;
 	}
-	
+
 	public User getOwner() {
 		return owner;
 	}
-	
+
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
@@ -320,14 +320,15 @@ public class Opportunity extends SObject {
 	public void setAccountAliasName(String accountAliasName) {
 		this.accountAliasName = accountAliasName;
 	}
-	
+
 	public List<OpportunityLineItem> getOpportunityLineItems() {
 		return opportunityLineItems;
 	}
 
-	public void setOpportunityLineItems(List<OpportunityLineItem> opportunityLineItems) {
+	public void setOpportunityLineItems(
+			List<OpportunityLineItem> opportunityLineItems) {
 		this.opportunityLineItems = opportunityLineItems;
-	}	
+	}
 
 	public List<Contact> getContacts() {
 		return contacts;
@@ -344,12 +345,12 @@ public class Opportunity extends SObject {
 	public void setSalesTeam(List<User> salesTeam) {
 		this.salesTeam = salesTeam;
 	}
-	
+
 	public void setOwners(List<User> owners) {
 		this.owners = owners;
 	}
 
 	public List<User> getOwners() {
 		return owners;
-	}	
+	}
 }

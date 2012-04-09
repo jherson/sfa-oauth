@@ -5,21 +5,21 @@ import java.util.Date;
 public class QuoteLineItemSchedule extends SObject {
 
 	private static final long serialVersionUID = 1L;
-    private String name;
-    private Double prorateUnitPrice;
-    private Double prorateTotalPrice;
-    private Double prorateYearTotalPrice;
-    private String quoteId;
-    private Date startDate;
-    private Double pricePerDay;
-    private Integer year;
-    private Date endDate;
-    private Double prorateYearUnitPrice;
-    private QuoteLineItem quoteLineItem;
-    
+	private String name;
+	private Double prorateUnitPrice;
+	private Double prorateTotalPrice;
+	private Double prorateYearTotalPrice;
+	private String quoteId;
+	private Date startDate;
+	private Double pricePerDay;
+	private Integer year;
+	private Date endDate;
+	private Double prorateYearUnitPrice;
+	private QuoteLineItem quoteLineItem;
+
 	public QuoteLineItemSchedule() {
-        super();
-    }
+		super();
+	}
 
 	public String getName() {
 		return name;
@@ -100,11 +100,11 @@ public class QuoteLineItemSchedule extends SObject {
 	public void setProrateYearUnitPrice(Double prorateYearUnitPrice) {
 		this.prorateYearUnitPrice = prorateYearUnitPrice;
 	}
-	
+
 	public QuoteLineItem getQuoteLineItem() {
 		return quoteLineItem;
 	}
-	
+
 	public void setQuoteLineItem(QuoteLineItem quoteLineItem) {
 		this.quoteLineItem = quoteLineItem;
 	}

@@ -19,28 +19,29 @@ import com.redhat.sforce.qb.model.Quote;
 import java.io.Serializable;
 
 @SessionScoped
+
 public class QuoteListProducer implements Serializable {
-	
+
 	private static final long serialVersionUID = -8899004949794324741L;
 
 	@Inject
 	Logger log;
 
 	@Inject
-    SessionManager sessionManager;	
-	
+	SessionManager sessionManager;
+
 	private List<Quote> quoteList;
-	
+
 	@Produces
 	@Named
 	public List<Quote> getQuoteList() {
 		return quoteList;
 	}
-	
-	public void onQuoteListChanged(@Observes Quote quote) {
+
+	public void onQuoteListChanged(@Observes final Quote quote) {
 		queryQuotes();
 	}
-	
+
 	@PostConstruct
 	public void queryQuotes() {
 		log.info("queryQuotes");

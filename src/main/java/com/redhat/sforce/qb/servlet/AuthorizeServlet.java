@@ -26,82 +26,85 @@ public class AuthorizeServlet extends HttpServlet {
 
 	@Inject
 	Logger log;
-	
-    private String redirectUri;
-    
-    private String clientId;
-    
-    private String clientSecret;
-    
-    private String environment;
-       
-    public AuthorizeServlet() {
-        super();     
-    }
-    
-    @Override
-    public void init() {	
+
+	private String redirectUri;
+
+	private String clientId;
+
+	private String clientSecret;
+
+	private String environment;
+
+	public AuthorizeServlet() {
+		super();
+	}
+
+	@Override
+	public void init() {
 		setClientId(System.getProperty("salesforce.oauth.clientId"));
 		setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
 		setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
-		setEnvironment(System.getProperty("salesforce.environment"));	   
-    }
+		setEnvironment(System.getProperty("salesforce.environment"));
+	}
 
-    @Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-    	String sessionId = request.getParameter("sessionId"); 
-    	
-    	if (sessionId == null) {
-    		
-    		response.setContentType("text/html");    		
+	@Override
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
-	        String code = request.getParameter("code");
-	        
-	        if (code == null) {
-	        	
-	        	String authUrl = null;
-	    		try {
-	    			authUrl = getEnvironment()
-	    			        + "/services/oauth2/authorize?response_type=code&client_id="
-	    			        + getClientId() + "&redirect_uri="
-	    			        + URLEncoder.encode(getRedirectUri(), "UTF-8");	    		
-	    			
-	    			response.sendRedirect(authUrl);
-	    			return;
-	    			
-	    		} catch (UnsupportedEncodingException e) {
-	                log.error("UnsupportedEncodingException", e);
-	    		}
-	    		
-	        } else {
-	                        	
-	        	String tokenUrl = getEnvironment() + "/services/oauth2/token";
-	        	            	
-	        	PostMethod postMethod = new PostMethod(tokenUrl);
-	            postMethod.addParameter("code", code);
-	            postMethod.addParameter("grant_type", "authorization_code");
-	            postMethod.addParameter("client_id", getClientId());
-	            postMethod.addParameter("client_secret", getClientSecret());
-	            postMethod.addParameter("redirect_uri", getRedirectUri());
-	
-	            HttpClient httpClient = new HttpClient();
-	            httpClient.getParams().setSoTimeout(60000);
-	
-	            try {
-	                httpClient.executeMethod(postMethod);
-	                JSONObject authResponse = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));                    
-	                sessionId = authResponse.getString("access_token");
-	            } catch (JSONException e) {
-	                log.error("JSONException", e);
-	            } catch (IOException e) {
-	                log.error("IOException", e);
-	            }	            
-	        }
-	        
-            request.getSession().setAttribute("SessionId", sessionId);
-            response.sendRedirect(request.getContextPath() + "/index.jsf");
-        }                
+		String sessionId = request.getParameter("sessionId");
+
+		if (sessionId == null) {
+
+			response.setContentType("text/html");
+
+			String code = request.getParameter("code");
+
+			if (code == null) {
+
+				String authUrl = null;
+				try {
+					authUrl = getEnvironment()
+							+ "/services/oauth2/authorize?response_type=code&client_id="
+							+ getClientId() + "&redirect_uri="
+							+ URLEncoder.encode(getRedirectUri(), "UTF-8");
+
+					response.sendRedirect(authUrl);
+					return;
+
+				} catch (UnsupportedEncodingException e) {
+					log.error("UnsupportedEncodingException", e);
+				}
+
+			} else {
+
+				String tokenUrl = getEnvironment() + "/services/oauth2/token";
+
+				PostMethod postMethod = new PostMethod(tokenUrl);
+				postMethod.addParameter("code", code);
+				postMethod.addParameter("grant_type", "authorization_code");
+				postMethod.addParameter("client_id", getClientId());
+				postMethod.addParameter("client_secret", getClientSecret());
+				postMethod.addParameter("redirect_uri", getRedirectUri());
+
+				HttpClient httpClient = new HttpClient();
+				httpClient.getParams().setSoTimeout(60000);
+
+				try {
+					httpClient.executeMethod(postMethod);
+					JSONObject authResponse = new JSONObject(new JSONTokener(
+							new InputStreamReader(
+									postMethod.getResponseBodyAsStream())));
+					sessionId = authResponse.getString("access_token");
+				} catch (JSONException e) {
+					log.error("JSONException", e);
+				} catch (IOException e) {
+					log.error("IOException", e);
+				}
+			}
+
+			request.getSession().setAttribute("SessionId", sessionId);
+			response.sendRedirect(request.getContextPath() + "/index.jsf");
+		}
 	}
 
 	private String getRedirectUri() {
