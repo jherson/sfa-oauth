@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+<h:outputStylesheet>
+	.panel-body {
+        color: #000000;
+        font-family: Arial,Verdana,sans-serif;
+        font-size: 11px;
+        padding: 0px;
+    }
+</h:outputStylesheet>	
+
+<rich:panel id="viewQuoteSchedules"
+	style="border: 0; background-color: #FCF9F5;" bodyClass="panel-body">
+
+	<rich:dataTable style="width: 100%" var="lineItemSchedule"
+		value="#{quoteController.selectedQuote.quoteLineItemSchedules}"
+		rendered="#{not empty quoteController.selectedQuote}">
+
+		<rich:column>
+			<f:facet name="header">#{msgs.productCode}</f:facet>
+			<h:outputText value="#{lineItemSchedule.quoteLineItem.contractNumbers}" />
+		</rich:column>
+
+		<rich:column>
+			<f:facet name="header">#{msgs.productCode}</f:facet>
+			<h:outputText value="#{lineItemSchedule.quoteLineItem.product.productCode}" />
+		</rich:column>
+
+		<rich:column>
+			<f:facet name="header">#{msgs.description}</f:facet>
+			<h:outputText value="#{lineItemSchedule.quoteLineItem.description}" />
+		</rich:column>
+
+		<rich:column style="text-align: center;">
+			<f:facet name="header">#{msgs.startDate}</f:facet>
+			<h:outputText value="#{lineItemSchedule.startDate}">
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
+					type="date" />
+			</h:outputText>
+		</rich:column>
+
+		<rich:column style="text-align: center;">
+			<f:facet name="header">#{msgs.endDate}</f:facet>
+			<h:outputText value="#{lineItemSchedule.endDate}">
+				<f:convertDateTime locale="#{sessionUser.locale}"
+					pattern="#{sessionUser.dateFormatPattern}"
+					type="date" />
+			</h:outputText>
+		</rich:column>
+
+		<rich:column style="text-align: right;">
+			<f:facet name="header">#{msgs.quantity}</f:facet>
+			<h:outputText value="#{lineItemSchedule.quoteLineItem.quantity}" />
+		</rich:column>
+
+		<rich:column style="text-align: right;">
+			<f:facet name="header">#{msgs.unitPrice}</f:facet>
+			<h:outputText value="#{lineItemSchedule.quoteLineItem.yearlySalesPrice}">
+				<f:convertNumber locale="#{sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+			</h:outputText>
+		</rich:column>
+
+		<rich:column style="text-align: right;">
+			<f:facet name="header">#{msgs.unitPrice}</f:facet>
+			<h:outputText value="#{lineItemSchedule.prorateYearUnitPrice}">
+				<f:convertNumber locale="#{sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+			</h:outputText>
+		</rich:column>
+
+		<rich:column style="text-align: right;">
+			<f:facet name="header">#{msgs.totalPrice}</f:facet>
+			<h:outputText value="#{lineItemSchedule.prorateYearTotalPrice}">
+				<f:convertNumber locale="#{sessionUser.locale}"
+					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+			</h:outputText>
+		</rich:column>
+		
+	</rich:dataTable>
+</rich:panel>
+</html>

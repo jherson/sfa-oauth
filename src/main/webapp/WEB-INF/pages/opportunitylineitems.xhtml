@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<rich:toolbar height="20" itemSeparator="grid" style="border: 1;">
+
+		<rich:toolbarGroup location="left">
+			<a4j:commandLink value="#{msgs.back}"
+			    action="#{quoteController.backToViewQuote()}"
+				render="mainArea"
+				status="waitStatus" >
+			</a4j:commandLink>
+		</rich:toolbarGroup>
+
+		<rich:toolbarGroup location="right">
+
+			<a4j:commandButton value="#{msgs.add}" styleClass="commandButton"				
+				action="#{quoteController.addOpportunityLineItems(opportunity)}"
+				render="mainArea">
+			</a4j:commandButton>
+
+		</rich:toolbarGroup>
+	</rich:toolbar>
+
+	<rich:panel id="viewOpportunityLineItems"
+		style="border: 0px; border-color: #C27E3A; background-color: #FCF9F5;"
+		bodyClass="panel-body">
+
+		<rich:dataTable id="opportunityProducts" var="lineItem"
+			value="#{opportunity.opportunityLineItems}"
+			noDataLabel="#{msgs.noRecords}" style="width:100%;">
+
+			<rich:column style="text-align: center;">
+				<f:facet name="header">
+					<h:selectBooleanCheckbox id="selectAll" 
+						value="#{opportunityProductsController.checkedValue}">
+
+						<f:ajax
+							listener="#{opportunityProductsController.toggleCheckboxes}"
+							render="opportunityProducts" />
+
+					</h:selectBooleanCheckbox>
+
+				</f:facet>
+				<h:selectBooleanCheckbox id="import" value="#{lineItem.selected}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.productCode}</f:facet>
+				<h:outputText value="#{lineItem.product.productCode}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.configuredSku}</f:facet>
+				<h:outputText value="#{lineItem.configuredSku}" />
+			</rich:column>
+
+			<rich:column width="100px">
+				<f:facet name="header">#{msgs.description}</f:facet>
+				<h:outputText value="#{lineItem.product.description}" />
+			</rich:column>
+
+			<rich:column style="text-align: right;">
+				<f:facet name="header">#{msgs.quantity}</f:facet>
+				<h:outputText value="#{lineItem.quantity}" />
+			</rich:column>
+
+			<rich:column style="text-align: right;">
+				<f:facet name="header">#{msgs.unitPrice}</f:facet>
+				<h:outputText value="#{lineItem.unitPrice}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+				</h:outputText>
+			</rich:column>
+
+			<rich:column style="text-align: right;">
+				<f:facet name="header">#{msgs.totalPrice}</f:facet>
+				<h:outputText value="#{lineItem.totalPrice}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+				</h:outputText>
+			</rich:column>
+
+		</rich:dataTable>
+
+	</rich:panel>
+
+</ui:composition>
