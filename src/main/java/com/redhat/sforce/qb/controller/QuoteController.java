@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
+import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Contact;
@@ -23,6 +24,8 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.FacesUtil;
+import com.sforce.soap.partner.SaveResult;
+import com.sforce.ws.ConnectionException;
 
 @Model
 
@@ -33,6 +36,9 @@ public class QuoteController {
 
 	@Inject
 	private SessionManager sessionManager;
+		
+	@Inject
+	private QuoteDAO quoteDAO;
 
 	@Inject
 	private Event<Quote> quoteEvents;
@@ -153,18 +159,35 @@ public class QuoteController {
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
-	public void save() {
+	public void save() {		
+		//saveQuoteLineItems();
 		saveQuote();
-		saveQuoteLineItems();
 		setEditMode(Boolean.FALSE);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
 	public void saveQuote() {
 		try {
-			setSelectedQuote(sessionManager.saveQuote(getSelectedQuote()));
-		} catch (SalesforceServiceException e) {
+			SaveResult saveResult = quoteDAO.saveQuote(getSelectedQuote()); 
+			if (saveResult.isSuccess() && saveResult.getId() != null) {
+				setSelectedQuote(quoteDAO.queryQuoteById(saveResult.getId()));	
+				FacesUtil.addInformationMessage("Record saved successfully");
+			} else {
+				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());
+				FacesUtil.addErrorMessage(saveResult.getErrors()[0].getMessage());
+			}
+			
+		} catch (ConnectionException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -173,8 +196,7 @@ public class QuoteController {
 			return;
 
 		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
-		for (QuoteLineItem quoteLineItem : getSelectedQuote()
-				.getQuoteLineItems()) {
+		for (QuoteLineItem quoteLineItem : getSelectedQuote().getQuoteLineItems()) {
 			if (quoteLineItem.getPricebookEntryId() != null) {
 				quoteLineItems.add(quoteLineItem);
 			}
@@ -184,8 +206,7 @@ public class QuoteController {
 			return;
 
 		try {
-			sessionManager.saveQuoteLineItems(getSelectedQuote()
-					.getQuoteLineItems());
+			sessionManager.saveQuoteLineItems(getSelectedQuote().getQuoteLineItems());
 
 		} catch (SalesforceServiceException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
@@ -195,8 +216,7 @@ public class QuoteController {
 	public void cancelEdit() {
 		if (getSelectedQuote().getId() != null) {
 			try {
-				setSelectedQuote(sessionManager.queryQuote(getSelectedQuote()
-						.getId()));
+				setSelectedQuote(quoteDAO.queryQuoteById(getSelectedQuote().getId()));
 				setMainArea(TemplatesEnum.QUOTE_DETAILS);
 
 			} catch (SalesforceServiceException e) {

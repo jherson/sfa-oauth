@@ -40,8 +40,6 @@
 			<a4j:commandLink id="new" value="#{msgs.new}"
 				action="#{quoteController.newQuote(opportunity)}" render="mainArea"
 				ajaxSingle="true">
-				<f:setPropertyActionListener value="#{true}"
-					target="#{model.editMode}" />
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="false"

@@ -47,9 +47,10 @@ public class UserProducer implements Serializable {
 
 	@PostConstruct
 	public void querySessionUser() {
-		log.info("queryUser");
+		log.info("querySessionUser");
 		try {
 			user = sessionUserDAO.querySessionUser();
+			FacesContext.getCurrentInstance().getViewRoot().setLocale(user.getLocale());
 
 		} catch (JSONException e) {
 			log.error("JSONException", e);

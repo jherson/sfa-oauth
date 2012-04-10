@@ -31,11 +31,9 @@ public class OpportunityProductsController {
 	}
 
 	public void toggleCheckboxes(AjaxBehaviorEvent event) {
-		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event
-				.getComponent();
+		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
 
-		for (OpportunityLineItem opportunityLineItem : opportunity
-				.getOpportunityLineItems()) {
+		for (OpportunityLineItem opportunityLineItem : opportunity.getOpportunityLineItems()) {
 			opportunityLineItem.setSelected(checkBox.isSelected());
 		}
 	}

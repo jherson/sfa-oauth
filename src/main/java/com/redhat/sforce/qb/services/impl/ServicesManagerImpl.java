@@ -26,6 +26,9 @@ import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.services.ServicesManager;
 import com.redhat.sforce.qb.util.SessionConnection;
 import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.soap.partner.SaveResult;
+import com.sforce.soap.partner.sobject.SObject;
+import com.sforce.ws.ConnectionException;
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {
 
@@ -57,13 +60,10 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			httpclient.executeMethod(getMethod);
 
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				response = new JSONObject(new JSONTokener(
-						new InputStreamReader(
-								getMethod.getResponseBodyAsStream())));
+				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 			} else {
 				log.error(getMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						getMethod.getResponseBodyAsStream());
+				new SalesforceServiceException(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -124,85 +124,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
-	public JSONArray queryQuotes(String accessToken) throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() + "/apexrest/"
-				+ applicationManager.getApiVersion()
-				+ "/QuoteRestService/get_quotes_for_opportunity";
-
-		NameValuePair[] params = new NameValuePair[1];
-		params[0] = new NameValuePair("opportunityId", "006P0000003U4G1");		
-
-		JSONArray jsonArray = null;
-		GetMethod getMethod = null;
-		try {
-			getMethod = doGet(accessToken, url, params);
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				jsonArray = new JSONArray(new JSONTokener(
-						new InputStreamReader(
-								getMethod.getResponseBodyAsStream())));
-			} else {
-				log.error(getMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						getMethod.getResponseBodyAsStream());
-			}
-
-		} catch (HttpException e) {
-			e.printStackTrace();
-			log.error(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			log.error(e);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			log.error(e);
-		} finally {
-			getMethod.releaseConnection();
-		}
-
-		return jsonArray;
-	}
-
-	@Override
-	public JSONArray getQuotesByOpportunityId(String accessToken,
-			String opportunityId) throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() + "/apexrest/"
-				+ applicationManager.getApiVersion()
-				+ "/QuoteRestService/get_quotes_for_opportunity";
-
-		NameValuePair[] params = new NameValuePair[1];
-		params[0] = new NameValuePair("opportunityId", opportunityId);
-
-		JSONArray jsonArray = null;
-		GetMethod getMethod = null;
-		try {
-			getMethod = doGet(accessToken, url, params);
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				jsonArray = new JSONArray(new JSONTokener(
-						new InputStreamReader(
-								getMethod.getResponseBodyAsStream())));
-			} else {
-				log.error(getMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						getMethod.getResponseBodyAsStream());
-			}
-
-		} catch (HttpException e) {
-			e.printStackTrace();
-			log.error(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			log.error(e);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			log.error(e);
-		} finally {
-			getMethod.releaseConnection();
-		}
-
-		return jsonArray;
-	}
-
-	@Override
 	public String saveQuote(String accessToken, JSONObject jsonObject)
 			throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() + "/apexrest/"
@@ -232,6 +153,26 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		return quoteId;
+	}
+	
+	@Override
+	public SaveResult create(SObject sobject) throws ConnectionException {
+		return partnerConnection.create(new SObject[] {sobject})[0];
+	}
+	
+	@Override
+	public SaveResult[] create(SObject[] sobjects) throws ConnectionException {
+		return partnerConnection.create(sobjects);
+	}
+	
+	@Override
+	public SaveResult update(SObject sobject) throws ConnectionException {
+		return partnerConnection.update(new SObject[] {sobject})[0];
+	}
+	
+	@Override
+	public SaveResult[] update(SObject[] sobjects) throws ConnectionException {
+		return partnerConnection.update(sobjects);
 	}
 
 	@Override
@@ -448,41 +389,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		} finally {
 			postMethod.releaseConnection();
 		}
-	}
-
-	@Override
-	public JSONObject getQuoteById(String accessToken, String quoteId)
-			throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() + "/apexrest/"
-				+ applicationManager.getApiVersion() + "/QuoteRestService/quote";
-
-		NameValuePair[] params = new NameValuePair[1];
-		params[0] = new NameValuePair("quoteId", quoteId);
-
-		JSONObject jsonObject = null;
-		GetMethod getMethod = null;
-		try {
-			getMethod = doGet(accessToken, url, params);
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				jsonObject = new JSONObject(new JSONTokener(
-						new InputStreamReader(
-								getMethod.getResponseBodyAsStream())));
-			} else {
-				log.error(getMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						getMethod.getResponseBodyAsStream());
-			}
-		} catch (JSONException e) {
-			log.error(e);
-		} catch (HttpException e) {
-			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} finally {
-			getMethod.releaseConnection();
-		}
-
-		return jsonObject;
 	}
 
 	@Override

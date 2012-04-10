@@ -11,94 +11,46 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="#{request.contextPath}/images/favicon.ico" />
 <link href="./css/style.css" rel="stylesheet" type="text/css" />
-
 <style type="text/css">
 html {
 	margin: 0px;
 	padding: 0px;
 	overflow-y: scroll;
 }
-
-#container {
-	margin: 0px;
-	padding: 0px;
-	width: 100%;	
-}
-
-#header {
-	width: 100%;
-	margin: 0px;
-	height: 75px;
-}
-
-#leftbar {
-	width: 200px;
-	float: left;
-}
-
-#content {
-	float: left;
-	margin: 3px;
-}
-
-#footer {
-	clear: both;
-}
-
-.column1 {
-    width: 50%;
-    text-align: left;
-}
-
-.column2 {
-    width: 50%;
-    text-align: right;
-}
-
-
 </style>
 
 </h:head>
 
-<h:panelGroup id="container">
+<body>
+<div id="page">
 
 	<h:panelGroup id="header" layout="block">
 		<h:panelGrid width="100%" columns="2" cellspacing="10" columnClasses="column1,column2">
 			<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
-			<h:graphicImage id="exit" alt="logo" url="/images/exit.png"> 
-			    	<a4j:ajax execute="@this" event="click"
-					    listener="#{quoteController.logout}" render="mainArea">					  
-				</a4j:ajax>
-			</h:graphicImage>
+			<h:panelGroup>
+					<h:outputText value="#{msgs.loggedInAs}: #{user.name}" style="font-weight:bold;"/>
+				    &nbsp;&nbsp;&nbsp;
+				    <h:graphicImage id="exit" alt="logo" url="/images/exit.png">
+						<a4j:ajax execute="@this" event="click"
+							listener="#{quoteController.logout}" render="mainArea">
+						</a4j:ajax>
+					</h:graphicImage>
+				</h:panelGroup>
 		</h:panelGrid>
 		
 	</h:panelGroup>
 
-	<h:panelGroup id="leftbar" layout="block"></h:panelGroup>
-
-	<a4j:status id="waitstatus" forceId="false"
-		onstart="#{rich:component('statusPane')}.show()"
-		onstop="#{rich:component('statusPane')}.hide()" />		
-
-	<h:form id="quoteForm">
+	<h:panelGroup id="leftbar" layout="block">
 	
-		<a4j:outputPanel id="messages" ajaxRendered="true">
-           <rich:messages />
-        </a4j:outputPanel>	
-
-		<rich:popupPanel id="statusPane" autosized="true">
-			<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
-		</rich:popupPanel>
-		            
-		<h:panelGroup id="content" layout="block">
-			<ui:insert name="body">Default content</ui:insert>
-		</h:panelGroup>
-
-	</h:form>
+	
+	</h:panelGroup>
+	
+	<ui:insert name="body"/>
 
 	<h:panelGroup id="footer" layout="block">
 
 	</h:panelGroup>
 
-</h:panelGroup>
+</div>
+</body>
 </html>

@@ -2,7 +2,6 @@ package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -20,8 +19,8 @@ import com.redhat.sforce.qb.model.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.model.factory.QuotePriceAdjustmentFactory;
-import com.redhat.sforce.qb.util.SObjectUtil;
-import com.sforce.soap.partner.QueryResult;
+import com.redhat.sforce.qb.util.Util;
+import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 
@@ -30,6 +29,11 @@ import com.sforce.ws.ConnectionException;
 public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
+	
+	@Override
+	public String getQueryString() {
+		return quoteQuery;
+	}
 
 	@Override
 	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException {
@@ -45,10 +49,10 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public List<Quote> getQuotesByOpportunityId(String accessToken, String opportunityId) throws SalesforceServiceException {
+	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws SalesforceServiceException {
+		String queryString = quoteQuery + "Where OpportunityId__c = '" + opportunityId + "'";
 		try {
-			return QuoteFactory.deserialize(sm.getQuotesByOpportunityId(
-					accessToken, opportunityId));
+			return QuoteFactory.deserialize(sm.query(queryString));
 		} catch (JSONException e) {
 			log.error(e);
 			throw new SalesforceServiceException(e);
@@ -59,19 +63,16 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote saveQuote(String accessToken, Quote quote)
-			throws SalesforceServiceException {
-		String quoteId = sm.saveQuote(accessToken,
-				QuoteFactory.serialize(quote));
-		return getQuoteById(accessToken, quoteId);
+	public Quote saveQuote(String accessToken, Quote quote) throws SalesforceServiceException {
+		String quoteId = sm.saveQuote(accessToken, QuoteFactory.serialize(quote));
+		return queryQuoteById(quoteId);
 	}
 
 	@Override
-	public Quote getQuoteById(String accessToken, String quoteId)
-			throws SalesforceServiceException {
+	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException {
+		String queryString = quoteQuery + "Where Id = '" + quoteId + "'";
 		try {
-			return QuoteFactory.deserialize(sm.getQuoteById(accessToken,
-					quoteId));
+			return QuoteFactory.deserialize(sm.query(queryString)).get(0);
 		} catch (JSONException e) {
 			throw new SalesforceServiceException(e);
 		} catch (ParseException e) {
@@ -80,10 +81,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote activateQuote(String accessToken, String quoteId)
-			throws SalesforceServiceException {
+	public Quote activateQuote(String accessToken, String quoteId) throws SalesforceServiceException {
 		sm.activateQuote(accessToken, quoteId);
-		return getQuoteById(accessToken, quoteId);
+		return queryQuoteById(quoteId);
 	}
 
 	@Override
@@ -102,46 +102,83 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote addOpportunityLineItems(String accessToken, String quoteId,
-			List<OpportunityLineItem> opportunityLineItems)
-			throws SalesforceServiceException {
-		sm.addOpportunityLineItems(accessToken, quoteId,
-				OpportunityLineItemFactory.serialize(opportunityLineItems));
-		return getQuoteById(accessToken, quoteId);
+	public Quote addOpportunityLineItems(String accessToken, String quoteId, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException {
+		sm.addOpportunityLineItems(accessToken, quoteId, OpportunityLineItemFactory.serialize(opportunityLineItems));
+		return queryQuoteById(quoteId);
 	}
 
 	@Override
-	public void saveQuoteLineItems(String accessToken,
-			List<QuoteLineItem> quoteLineItemList)
-			throws SalesforceServiceException {
-		sm.saveQuoteLineItems(accessToken,
-				QuoteLineItemFactory.serialize(quoteLineItemList));
+	public void saveQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
+		sm.saveQuoteLineItems(accessToken, QuoteLineItemFactory.serialize(quoteLineItemList));
 	}
 
 	@Override
-	public void saveQuotePriceAdjustments(String accessToken,
-			List<QuotePriceAdjustment> quotePriceAdjustmentList)
-			throws SalesforceServiceException {
-		sm.saveQuotePriceAdjustments(accessToken,
-				QuotePriceAdjustmentFactory.serialize(quotePriceAdjustmentList));
+	public void saveQuotePriceAdjustments(String accessToken, List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException {
+		sm.saveQuotePriceAdjustments(accessToken, QuotePriceAdjustmentFactory.serialize(quotePriceAdjustmentList));
 	}
 
 	@Override
-	public void deleteQuoteLineItems(String accessToken,
-			List<QuoteLineItem> quoteLineItemList)
-			throws SalesforceServiceException {
-		sm.deleteQuoteLineItems(accessToken,
-				QuoteLineItemFactory.serialize(quoteLineItemList));
+	public void deleteQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
+		sm.deleteQuoteLineItems(accessToken, QuoteLineItemFactory.serialize(quoteLineItemList));
+	}
+	
+	@Override
+	public SaveResult saveQuote(Quote quote) throws ConnectionException {
+		SaveResult saveResult = null;
+		if (quote.getId() != null) {
+			saveResult = sm.update(convertToSObject(quote));
+		} else {
+			saveResult = sm.create(convertToSObject(quote));
+		}
+		
+		return saveResult;		
+	}
+	
+	private SObject convertToSObject(Quote quote) {
+		SObject sobject = new SObject();		
+	    sobject.setType("Quote__c");	    
+	    if (quote.getId() != null) {
+	    	sobject.setField("Id", quote.getId());	
+	    } else {
+	    	sobject.setField("OpportunityId__c", quote.getOpportunityId());
+	    }	    	
+	    sobject.setField("Comments__c", quote.getComments());
+	    sobject.setField("ContactId__c", quote.getContactId());
+	    sobject.setField("CurrencyIsoCode", quote.getCurrencyIsoCode());
+	    sobject.setField("EffectiveDate__c", quote.getEffectiveDate());
+	    sobject.setField("EndDate__c", quote.getEndDate());
+	    sobject.setField("ExpirationDate__c", quote.getExpirationDate());
+	    sobject.setField("HasQuoteLineItems__c", quote.getHasQuoteLineItems());
+	    sobject.setField("IsActive__c", quote.getIsActive());
+	    sobject.setField("IsCalculated__c", quote.getIsCalculated());
+	    sobject.setField("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
+	    sobject.setField("Name", quote.getName());	    
+	    sobject.setField("QuoteOwnerId__c", quote.getOwnerId());
+	    sobject.setField("PayNow__c", quote.getPayNow());
+	    sobject.setField("PricebookId__c", quote.getPricebookId());
+	    sobject.setField("ReferenceNumber__c", quote.getReferenceNumber());
+	    sobject.setField("StartDate__c", quote.getStartDate());
+	    sobject.setField("Term__c", quote.getTerm());
+	    sobject.setField("Type__c", quote.getType());
+	    sobject.setField("Version__c", quote.getVersion());
+	    sobject.setField("Year1PaymentAmount__c", quote.getYear1PaymentAmount());
+	    sobject.setField("Year2PaymentAmount__c", quote.getYear2PaymentAmount());
+	    sobject.setField("Year3PaymentAmount__c", quote.getYear3PaymentAmount());
+	    sobject.setField("Year4PaymentAmount__c", quote.getYear4PaymentAmount());
+	    sobject.setField("Year5PaymentAmount__c", quote.getYear5PaymentAmount());
+	    sobject.setField("Year6PaymentAmount__c", quote.getYear6PaymentAmount());
+		
+		return sobject;
 	}
 	
 	@Override
 	public List<Quote> queryAllQuotes() throws ConnectionException {
-		QueryResult queryResult = query(quoteQuery);
-		List<Quote> quoteList = new ArrayList<Quote>();
-		for (SObject sobject : queryResult.getRecords()) {
-			Quote quote = new Quote();
-			quote.setId(sobject.getId());
-			quote.setAmount(SObjectUtil.doubleValue(sobject.getField("Amount__c")));
+//		QueryResult queryResult = query(quoteQuery);
+//		List<Quote> quoteList = new ArrayList<Quote>();
+//		for (SObject sobject : queryResult.getRecords()) {
+//			Quote quote = new Quote();
+//			quote.setId(sobject.getId());
+//			quote.setAmount(SObjectUtil.doubleValue(sobject.getField("Amount__c")));
 //			quote.setComments(SObjectUtil.stringValue("Comments__c"));
 //			quote.setContactId(SObjectUtil.stringValue("ContactId__r", "Id"));
 //			quote.setContactName(SObjectUtil.stringValue("ContactId__r", "Name"));
@@ -181,10 +218,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 //			quote.setYear5PaymentAmount(SObjectUtil.getDouble("Year5PaymentAmount__c"));
 //			quote.setYear6PaymentAmount(SObjectUtil.getDouble("Year6PaymentAmount__c"));
 			
-			quoteList.add(quote);
-		}
+//			quoteList.add(quote);
+//		}
 			
-		return quoteList;	
+//		return quoteList;
+		return null;
 	}
 	
 	private String quoteQuery = "Select Id, "

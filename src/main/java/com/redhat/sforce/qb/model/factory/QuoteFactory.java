@@ -29,8 +29,7 @@ public class QuoteFactory {
 		return quoteList;
 	}
 
-	public static Quote deserialize(JSONObject jsonObject)
-			throws JSONException, ParseException {
+	public static Quote deserialize(JSONObject jsonObject) throws JSONException, ParseException {
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 
 		Quote quote = new Quote();
@@ -83,13 +82,11 @@ public class QuoteFactory {
 
 		records = wrapper.getRecords("QuoteLineItemSchedule__r");
 		if (records != null)
-			quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory
-					.deserialize(records));
+			quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory.deserialize(records));
 
 		records = wrapper.getRecords("QuotePriceAdjustment__r");
 		if (records != null)
-			quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory
-					.deserialize(records));
+			quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.deserialize(records));
 
 		return quote;
 	}
@@ -103,40 +100,30 @@ public class QuoteFactory {
 			jsonObject.put("Comments__c", quote.getComments());
 			jsonObject.put("ContactId__c", quote.getContactId());
 			jsonObject.put("CurrencyIsoCode", quote.getCurrencyIsoCode());
-			jsonObject.put("EffectiveDate__c",
-					Util.dateFormat(quote.getEffectiveDate()));
+			jsonObject.put("EffectiveDate__c", Util.dateFormat(quote.getEffectiveDate()));
 			jsonObject.put("EndDate__c", Util.dateFormat(quote.getEndDate()));
-			jsonObject.put("ExpirationDate__c",
-					Util.dateFormat(quote.getExpirationDate()));
-			jsonObject
-					.put("HasQuoteLineItems__c", quote.getHasQuoteLineItems());
+			jsonObject.put("ExpirationDate__c", Util.dateFormat(quote.getExpirationDate()));
+			jsonObject.put("HasQuoteLineItems__c", quote.getHasQuoteLineItems());
 			jsonObject.put("IsActive__c", quote.getIsActive());
 			jsonObject.put("IsCalculated__c", quote.getIsCalculated());
-			jsonObject.put("IsNonStandardPayment__c",
-					quote.getIsNonStandardPayment());
+			jsonObject.put("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
 			jsonObject.put("Name", quote.getName());
 			jsonObject.put("OpportunityId__c", quote.getOpportunityId());
 			jsonObject.put("QuoteOwnerId__c", quote.getOwnerId());
 			jsonObject.put("PayNow__c", quote.getPayNow());
 			jsonObject.put("PricebookId__c", quote.getPricebookId());
 			jsonObject.put("ReferenceNumber__c", quote.getReferenceNumber());
-			jsonObject.put("StartDate__c",
-					Util.dateFormat(quote.getStartDate()));
+			jsonObject.put("StartDate__c", Util.dateFormat(quote.getStartDate()));
 			jsonObject.put("Term__c", quote.getTerm());
 			jsonObject.put("Type__c", quote.getType());
 			jsonObject.put("Version__c", quote.getVersion());
-			jsonObject.put("Year1PaymentAmount__c",
-					quote.getYear1PaymentAmount());
-			jsonObject.put("Year2PaymentAmount__c",
-					quote.getYear2PaymentAmount());
-			jsonObject.put("Year3PaymentAmount__c",
-					quote.getYear3PaymentAmount());
-			jsonObject.put("Year4PaymentAmount__c",
-					quote.getYear4PaymentAmount());
-			jsonObject.put("Year5PaymentAmount__c",
-					quote.getYear5PaymentAmount());
-			jsonObject.put("Year6PaymentAmount__c",
-					quote.getYear6PaymentAmount());
+			jsonObject.put("Year1PaymentAmount__c", quote.getYear1PaymentAmount());
+			jsonObject.put("Year2PaymentAmount__c", quote.getYear2PaymentAmount());
+			jsonObject.put("Year3PaymentAmount__c", quote.getYear3PaymentAmount());
+			jsonObject.put("Year4PaymentAmount__c", quote.getYear4PaymentAmount());
+			jsonObject.put("Year5PaymentAmount__c", quote.getYear5PaymentAmount());
+			jsonObject.put("Year6PaymentAmount__c", quote.getYear6PaymentAmount());
+			jsonObject.put("QuoteLineItem__r", QuoteLineItemFactory.serialize(quote.getQuoteLineItems()));
 
 		} catch (JSONException e) {
 			log.error(e);

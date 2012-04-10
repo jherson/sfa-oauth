@@ -15,6 +15,10 @@ public class SalesforceServiceException extends Exception {
 	public SalesforceServiceException(Exception exception) {
 		super(exception);
 	}
+	
+	public SalesforceServiceException(String error) {
+		super(error);
+	}
 
 	public SalesforceServiceException(String errorCode, String message) {
 		super(errorCode, new Throwable(message));

@@ -18,25 +18,26 @@ public class FacesUtil {
 		UIViewRoot uiRoot = ctx.getViewRoot();
 		Locale locale = uiRoot.getLocale();
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		ResourceBundle bundle = ResourceBundle.getBundle(ctx.getApplication()
-				.getMessageBundle(), locale, loader);
+		ResourceBundle bundle = ResourceBundle.getBundle(ctx.getApplication().getMessageBundle(), locale, loader);
 		return bundle.getString(key);
 	}
 
 	public static void addErrorMessage(String errorMessage) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-				null, errorMessage);
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, errorMessage);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	public static void addInformationMessage(String informationMessage) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, null, informationMessage);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
 	public static HttpServletRequest getRequest() {
-		return (HttpServletRequest) FacesContext.getCurrentInstance()
-				.getExternalContext().getRequest();
+		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	}
 
 	public static HttpServletResponse getResponse() {
-		return (HttpServletResponse) FacesContext.getCurrentInstance()
-				.getExternalContext().getResponse();
+		return (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 	}
 
 	public static String getRequestServerName() {

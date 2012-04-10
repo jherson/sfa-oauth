@@ -1,16 +1,16 @@
 package com.redhat.sforce.qb.dao;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.services.ServicesManager;
-import com.redhat.sforce.qb.util.SessionConnection;
-import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.soap.partner.QueryResult;
-import com.sforce.ws.ConnectionException;
 
-public class SObjectDAO {
+public class SObjectDAO implements Serializable {
+
+	private static final long serialVersionUID = -7799337206776609911L;
 
 	@Inject
 	protected Logger log;
@@ -18,15 +18,7 @@ public class SObjectDAO {
 	@Inject
 	protected ServicesManager sm;
 	
-	@Inject
-	@SessionConnection
-	private PartnerConnection partnerConnection;
-
 	public SObjectDAO() {
 
-	}
-	
-	public QueryResult query(String queryString) throws ConnectionException {
-		return partnerConnection.query(queryString);
 	}
 }

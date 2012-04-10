@@ -6,13 +6,12 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-
 <rich:extendedDataTable id="quoteList" var="quote"
 	style="height:400px; " value="#{quoteList}"
 	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" 
-	selectionMode="none" status="ajaxStatus">
+	selectionMode="none">
 
-	<rich:column width="80px">
+	<rich:column width="90px">
 		<f:facet name="header">#{msgs.action}</f:facet>
 
 		<h:panelGroup>
@@ -23,7 +22,7 @@
 					title="#{msgs.activate}" style="vertical-align: middle;" />
 			</a4j:commandLink>
 
-			<f:verbatim>&#32;&#124;&#32;</f:verbatim>
+			&nbsp;&#124;&nbsp;
 
 			<a4j:commandLink id="copy"
 				action="#{quoteController.copyQuote(quote)}" render="quoteList">
@@ -31,7 +30,7 @@
 					style="vertical-align: middle;" />
 			</a4j:commandLink>
 
-			<f:verbatim>&#32;&#124;&#32;</f:verbatim>
+			&nbsp;&#124;&nbsp;
 
 			<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
 				action="#{quoteController.deleteQuote(quote)}" render="quoteList">
