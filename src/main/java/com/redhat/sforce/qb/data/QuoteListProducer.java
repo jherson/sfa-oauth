@@ -13,8 +13,8 @@ import javax.inject.Named;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
+import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Quote;
 import java.io.Serializable;
 
@@ -25,10 +25,10 @@ public class QuoteListProducer implements Serializable {
 	private static final long serialVersionUID = -8899004949794324741L;
 
 	@Inject
-	Logger log;
-
+	private Logger log;
+	
 	@Inject
-	SessionManager sessionManager;
+	private QuoteDAO quoteDAO;
 
 	private List<Quote> quoteList;
 
@@ -46,7 +46,7 @@ public class QuoteListProducer implements Serializable {
 	public void queryQuotes() {
 		log.info("queryQuotes");
 		try {
-			quoteList = sessionManager.queryQuotes();
+			quoteList = quoteDAO.queryQuotes();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

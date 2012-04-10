@@ -6,11 +6,8 @@ import java.util.List;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
-import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
@@ -20,8 +17,9 @@ public interface SessionManager {
 	public void setSessionId(String sessionId);
 	public String getSessionId();
 	public void setOpportunityId(String opportunityId);
-	public Opportunity queryOpportunity() throws QuoteBuilderException, JSONException, ParseException;
-	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException;
+	public String getOpportunityId();
+
+
 	public Quote queryQuote(String quoteId) throws SalesforceServiceException, JSONException, ParseException;
 	public Quote saveQuote(Quote quote) throws SalesforceServiceException;
 	public Quote activateQuote(Quote quote) throws SalesforceServiceException;
@@ -32,7 +30,7 @@ public interface SessionManager {
 	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException;
 	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException;
 	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException;
-	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException;	
+		
 	public void setEditMode(Boolean editMode);
 	public Boolean getEditMode();	
 	public void setMainArea(TemplatesEnum mainArea);

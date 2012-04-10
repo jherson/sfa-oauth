@@ -17,7 +17,7 @@ public class PricebookEntryDAOImpl extends SObjectDAO implements PricebookEntryD
 	private static final long serialVersionUID = 7731570933466830064L;
 
 	@Override
-	public PricebookEntry queryPricebookEntry(String accessToken, String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException {
-		return PricebookEntryFactory.deserialize(sm.queryPricebookEntry(accessToken, pricebookId, productCode, currencyIsoCode));
+	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException {
+		return PricebookEntryFactory.deserialize(sm.queryPricebookEntry(pricebookId, productCode, currencyIsoCode));
 	}
 }

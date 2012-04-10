@@ -19,7 +19,7 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 	private static final long serialVersionUID = -7930084693877198927L;
 
 	@Override
-	public Opportunity getOpportunity(String accessToken, String opportunityId) throws JSONException, ParseException {
-		return OpportunityFactory.deserialize(sm.getOpportunity(accessToken, opportunityId));
+	public Opportunity getOpportunity(String opportunityId) throws JSONException, ParseException {
+		return OpportunityFactory.deserialize(sm.getOpportunity(opportunityId));
 	}
 }

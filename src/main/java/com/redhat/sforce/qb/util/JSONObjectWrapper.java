@@ -56,8 +56,7 @@ public class JSONObjectWrapper {
 	}
 
 	public Date getDate(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : Util.parseDate(jsonObject
-				.getString(key));
+		return jsonObject.isNull(key) ? null : Util.parseDate(jsonObject.getString(key));
 	}
 
 	public JSONObject getJSONObject(String key) throws JSONException {

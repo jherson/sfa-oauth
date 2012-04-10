@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.data;
 
+import java.io.Serializable;
 import java.text.ParseException;
 
 import javax.annotation.PostConstruct;
@@ -12,12 +13,10 @@ import javax.inject.Named;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.util.SelectedOpportunity;
-
-import java.io.Serializable;
 
 @SessionScoped
 public class OpportunityProducer implements Serializable {
@@ -29,6 +28,9 @@ public class OpportunityProducer implements Serializable {
 
 	@Inject
 	private SessionManager sessionManager;
+	
+	@Inject
+	private OpportunityDAO opportunityDAO;
 
 	private Opportunity opportunity;
 
@@ -40,17 +42,14 @@ public class OpportunityProducer implements Serializable {
 	}
 
 	public void onOpportunityChanged(@Observes final Opportunity opportunity) {
-		queryOpportunityById();
+		queryOpportunity();
 	}
 
 	@PostConstruct
-	public void queryOpportunityById() {
-		log.info("queryOpportunityById");
+	public void queryOpportunity() {
+		log.info("queryOpportunity");
 		try {
-			opportunity = sessionManager.queryOpportunity();
-		} catch (QuoteBuilderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			opportunity = opportunityDAO.getOpportunity(sessionManager.getOpportunityId());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

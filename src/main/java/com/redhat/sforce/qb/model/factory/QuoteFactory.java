@@ -49,10 +49,8 @@ public class QuoteFactory {
 		quote.setHasQuoteLineItems(wrapper.getBoolean("HasQuoteLineItems__c"));
 		quote.setIsActive(wrapper.getBoolean("IsActive__c"));
 		quote.setIsCalculated(wrapper.getBoolean("IsCalculated__c"));
-		quote.setIsNonStandardPayment(wrapper
-				.getBoolean("IsNonStandardPayment__c"));
-		quote.setLastCalculatedDate(wrapper
-				.getDateTime("LastCalculatedDate__c"));
+		quote.setIsNonStandardPayment(wrapper.getBoolean("IsNonStandardPayment__c"));
+		quote.setLastCalculatedDate(wrapper.getDateTime("LastCalculatedDate__c"));
 		quote.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
 		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
 		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));

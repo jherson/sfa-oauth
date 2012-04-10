@@ -117,10 +117,14 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 		return jsonObject;
 	}
+	
+	@Override
+	public JSONObject getOpportunity(String opportunityId) {
+		return getOpportunity(partnerConnection.getConfig().getSessionId(), opportunityId);
+	}
 
 	@Override
-	public JSONArray queryQuotes(String accessToken)
-			throws SalesforceServiceException {
+	public JSONArray queryQuotes(String accessToken) throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() + "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/get_quotes_for_opportunity";
@@ -231,8 +235,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
-	public JSONArray query(String accessToken, String query)
-			throws SalesforceServiceException {
+	public JSONArray query(String accessToken, String query) throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() + "/data/"
 				+ applicationManager.getApiVersion() + "/query";
 
@@ -249,14 +252,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		try {
 			httpclient.executeMethod(getMethod);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				JSONObject response = new JSONObject(new JSONTokener(
-						new InputStreamReader(
-								getMethod.getResponseBodyAsStream())));
+				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 				queryResult = response.getJSONArray("records");
 			} else {
 				log.error(getMethod.getResponseBodyAsStream());
-				throw new SalesforceServiceException(
-						getMethod.getResponseBodyAsStream());
+				throw new SalesforceServiceException(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -270,10 +270,14 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 		return queryResult;
 	}
+	
+	@Override
+	public JSONArray query(String query) throws SalesforceServiceException {
+		return query(partnerConnection.getConfig().getSessionId(), query);
+	}
 
 	@Override
-	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray)
-			throws SalesforceServiceException {
+	public void saveQuoteLineItems(String accessToken, JSONArray jsonArray) throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() + "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/saveQuoteLineItems";
@@ -344,6 +348,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		return jsonObject;
+	}
+	
+	@Override
+	public JSONObject queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws SalesforceServiceException {
+		return queryPricebookEntry(partnerConnection.getConfig().getSessionId(), pricebookId, productCode, currencyIsoCode);
 	}
 
 	@Override

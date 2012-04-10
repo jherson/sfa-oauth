@@ -10,11 +10,11 @@ import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.sforce.ws.ConnectionException;
 
 public interface QuoteDAO {
 
-	public List<Quote> queryQuotes(String accessToken)
-			throws SalesforceServiceException, JSONException, ParseException;
+	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException;
 
 	public Quote saveQuote(String accessToken, Quote quote)
 			throws SalesforceServiceException;
@@ -50,4 +50,6 @@ public interface QuoteDAO {
 	public void deleteQuoteLineItems(String accessToken,
 			List<QuoteLineItem> quoteLineItemList)
 			throws SalesforceServiceException;
+	
+	public List<Quote> queryAllQuotes() throws ConnectionException;
 }
