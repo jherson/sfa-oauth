@@ -22,8 +22,8 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.ServicesManager;
 import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.services.ServicesManager;
 
 @RequestScoped
 @ApplicationPath("/rest")

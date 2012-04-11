@@ -10,18 +10,9 @@
 
 	<ui:define name="body">
 
-		<a4j:status id="waitstatus" forceId="true"
-			onstart="#{rich:component('statusPane')}.show()"
-			onstop="#{rich:component('statusPane')}.hide()">
-		</a4j:status>
-
 		<rich:messages ajaxRendered="false" />
 
 		<h:form id="quoteForm">
-
-			<rich:popupPanel id="statusPane" autosized="true">
-				<h:graphicImage value="./images/ajax-loader.gif" alt="ajax-loader" />
-			</rich:popupPanel>
 
 			<h:panelGroup id="content" layout="block">
 				<h:panelGroup id="mainArea" layout="block">

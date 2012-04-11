@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.services.impl;
+package com.redhat.sforce.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,7 +23,7 @@ import org.json.JSONTokener;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
-import com.redhat.sforce.qb.services.ServicesManager;
+import com.redhat.sforce.qb.manager.ServicesManager;
 import com.redhat.sforce.qb.util.SessionConnection;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;

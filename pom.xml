@@ -228,7 +228,7 @@
 				<artifactId>jboss-as-maven-plugin</artifactId>
 				<version>${jboss-as-maven-plugin-version}</version>
 				<configuration>
-					<hostname>jherson.usersys.redhat.com</hostname>
+					<hostname>jherson-ws.devlab.phx1.redhat.com</hostname>
 					<port>9999</port>
 					<username>admin</username>
 					<password>admin_password</password>

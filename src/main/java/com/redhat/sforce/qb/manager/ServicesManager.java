@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.services;
+package com.redhat.sforce.qb.manager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
