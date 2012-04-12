@@ -1,20 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+	
+	<ui:include src="quoteproducts.xhtml" />
 
-<a4j:outputPanel id="quotedetails">
+<rich:panel id="quotedetails">
 
 	<rich:toolbar height="20" itemSeparator="grid" style="border: 1;">
 
 		<rich:toolbarGroup location="left">
 			<a4j:commandLink value="#{msgs.back}"
 				disabled="#{quoteController.editMode}" immediate="false"
-				render="mainArea" status="ajaxStatus"
-				action="#{quoteController.backToQuoteManager()}">
+				render="mainArea"	action="#{quoteController.backToQuoteManager()}">
 			</a4j:commandLink>
 		</rich:toolbarGroup>
 
@@ -115,8 +116,7 @@
 			<h:selectOneMenu
 				value="#{quoteController.selectedQuote.currencyIsoCode}"
 				style="width: 75px;"
-				rendered="#{quoteController.editMode and not quoteController.selectedQuote.hasQuoteLineItems}"
-				status="waitStatus">
+				rendered="#{quoteController.editMode and not quoteController.selectedQuote.hasQuoteLineItems}">
 
 				<f:selectItems value="#{currencyIsoCodes}" />
 
@@ -146,8 +146,6 @@
 				<h:outputText id="ownerName"
 					value="#{quoteController.selectedQuote.ownerName}" />
 
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 			<a4j:commandLink id="changeOwner" value="#{msgs.change}"
 					oncomplete="#{rich:component('ownerPanel')}.show()"
 					status="waitStatus" rendered="#{quoteController.editMode}"
@@ -161,11 +159,9 @@
 				<h:outputText id="contactName"
 					value="#{quoteController.selectedQuote.contactName}" />
 
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 			<a4j:commandLink id="changeContact" value="#{msgs.change}"
 					oncomplete="#{rich:component('contactPanel')}.show()"
-					status="waitStatus" rendered="#{quoteController.editMode}"
+                    rendered="#{quoteController.editMode}"
 					rerender="#{rich:clientId('contactPanel')}" ajaxSingle="true">
 				</a4j:commandLink>
 
@@ -264,10 +260,10 @@
 			<h:panelGroup>
 				<h:outputText
 					value="#{quoteController.selectedQuote.lastModifiedByName}, "
-					rendered="#{not quoteController.editMode and not empty quoteController.selectedQuote}" />
+					rendered="#{not quoteController.editMode}" />
 				<h:outputText
 					value="#{quoteController.selectedQuote.lastModifiedDate}"
-					rendered="#{not quoteController.editMode and not empty quoteController.selectedQuote}">
+					rendered="#{not quoteController.editMode}">
 					<f:convertDateTime locale="#{user.locale}"
 						pattern="#{user.dateTimeFormatPattern}" type="date" />
 				</h:outputText>
@@ -282,57 +278,18 @@
 
 
 		</h:panelGrid>
+		
+		<br />
 
-		<hr/>
-
-		<h:panelGrid styleClass="rf-dt" width="100%"
-			style="border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-			columnClasses="label-column,column-l-align,label-column,column-l-align"
-			columns="4">
-
-			<h:outputText value="#{msgs.billingAddress}" />
-			<h:outputText value="#{opportunity.billingAddress}" />
-
-			<h:outputText value="#{msgs.shippingAddress}" />
-			<h:outputText value="#{opportunity.shippingAddress}" />
-
-			<h:outputText value="#{msgs.billingCity}" />
-			<h:outputText value="#{opportunity.billingCity}" />
-
-			<h:outputText value="#{msgs.shippingCity}" />
-			<h:outputText value="#{opportunity.shippingCity}" />
-
-			<h:outputText value="#{msgs.billingState}" />
-			<h:outputText value="#{opportunity.billingState}" />
-
-			<h:outputText value="#{msgs.shippingState}" />
-			<h:outputText value="#{opportunity.shippingState}" />
-
-			<h:outputText value="#{msgs.billingZipPostalCode}" />
-			<h:outputText value="#{opportunity.billingZipPostalCode}" />
-
-			<h:outputText value="#{msgs.shippingZipPostalCode}" />
-			<h:outputText value="#{opportunity.shippingZipPostalCode}" />
-
-			<h:outputText value="#{msgs.billingCountry}" />
-			<h:outputText value="#{opportunity.billingCountry}" />
-
-			<h:outputText value="#{msgs.shippingCountry}" />
-			<h:outputText value="#{opportunity.shippingCountry}" />
-
-		</h:panelGrid>
-
-		<hr/>
-
-		<ui:include src="viewpriceadjustments.xhtml" />
+		<ui:include src="priceadjustments.xhtml" />
 
 		<br />
 
-		<ui:include src="viewquoteproducts.xhtml" />
+        
 
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
 
 	</rich:panel>
-</a4j:outputPanel>
-</html>
+</rich:panel>
+</ui:composition>

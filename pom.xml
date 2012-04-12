@@ -16,7 +16,7 @@
 		<jboss-as-maven-plugin-version>7.1.0.Final</jboss-as-maven-plugin-version>
 		<version.arquillian_core>1.0.0.CR4</version.arquillian_core>
 		<seam.solder.version>3.0.0.Final</seam.solder.version>
-        <force.api.version>24.0.0</force.api.version>
+                <force.api.version>24.0.0</force.api.version>
 	</properties>
 	
 	<repositories>
@@ -158,14 +158,6 @@
 		</dependency>
 		
 		<dependency>
-            <groupId>org.jboss.spec</groupId>
-            <artifactId>jboss-javaee-web-6.0</artifactId>
-            <version>2.0.0.CR1</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-
-		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<version>1.0-SP2</version>
@@ -228,7 +220,7 @@
 				<artifactId>jboss-as-maven-plugin</artifactId>
 				<version>${jboss-as-maven-plugin-version}</version>
 				<configuration>
-					<hostname>jherson-ws.devlab.phx1.redhat.com</hostname>
+					<hostname>jherson.usersys.redhat.com</hostname>
 					<port>9999</port>
 					<username>admin</username>
 					<password>admin_password</password>
@@ -236,7 +228,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>deploy</phase>
 						<goals>
 							<goal>deploy</goal>
 						</goals>						

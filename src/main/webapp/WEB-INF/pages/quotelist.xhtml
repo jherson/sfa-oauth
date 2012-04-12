@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -22,15 +22,11 @@
 					title="#{msgs.activate}" style="vertical-align: middle;" />
 			</a4j:commandLink>
 
-			&nbsp;&#124;&nbsp;
-
 			<a4j:commandLink id="copy"
 				action="#{quoteController.copyQuote(quote)}" render="quoteList">
 				<h:graphicImage value="./images/copy.png" title="#{msgs.copy}"
 					style="vertical-align: middle;" />
 			</a4j:commandLink>
-
-			&nbsp;&#124;&nbsp;
 
 			<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
 				action="#{quoteController.deleteQuote(quote)}" render="quoteList">
@@ -91,4 +87,4 @@
 	</rich:column>
 
 </rich:extendedDataTable>
-</html>
+</ui:composition>

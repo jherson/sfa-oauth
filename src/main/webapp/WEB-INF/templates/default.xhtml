@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>#{msgs.apptitle}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon"
+		href="#{request.contextPath}/images/favicon.ico" />
+	<h:outputStylesheet name="css/style.css" />
+
+	<style type="text/css">
+	
+        html {
+	        margin: 0px;
+	        padding: 0px;
+	        overflow-y: scroll;
+        }
+        
+    </style>
+
+</h:head>
+<h:body>
+	<div id="container">
+		<div id="content">
+
+			<div id="header">
+
+				<h:panelGrid width="100%" columns="2" cellspacing="10"
+					columnClasses="column1,column2">
+					<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
+					<h:panelGroup>
+						<h:outputText value="#{msgs.loggedInAs}: #{user.name}"
+							style="font-weight:bold;" />
+				    &nbsp;&nbsp;&nbsp;
+				    <h:graphicImage id="exit" alt="logo" url="/images/exit.png">
+							<a4j:ajax execute="@this" event="click"
+								listener="#{quoteController.logout}" render="mainArea">
+							</a4j:ajax>
+						</h:graphicImage>
+					</h:panelGroup>
+				</h:panelGrid>
+
+			</div>
+
+
+			<div id="sidebar"></div>
+
+			<ui:insert name="content">
+                    [Template content will be inserted here]
+          </ui:insert>
+
+		</div>
+
+		<div id="footer">
+
+		</div>
+
+	</div>
+</h:body>
+</html>

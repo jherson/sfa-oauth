@@ -1,12 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
 	
-
 <rich:panel id="viewQuoteProducts">
 
 	<rich:toolbar height="18" itemSeparator="grid">
@@ -51,7 +50,6 @@
 	<rich:dataTable id="quoteProductsTable" style="width: 100%" var="lineItem"
 		noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it"
-		status="ajaxStatus"
 		value="#{quoteController.selectedQuote.quoteLineItems}">
 
 		<rich:column style="text-align: center; width: 3%;">
@@ -222,4 +220,4 @@
 
 	</rich:dataTable>
 </rich:panel>
-</html>
+</ui:composition>
