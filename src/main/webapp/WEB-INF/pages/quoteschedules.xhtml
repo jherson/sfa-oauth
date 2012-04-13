@@ -6,7 +6,7 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">	
 
-<rich:panel id="viewQuoteSchedules" >
+<a4j:outputPanel id="viewQuoteSchedules" >
 
 	<rich:dataTable style="width: 100%" var="lineItemSchedule"
 		value="#{quoteController.selectedQuote.quoteLineItemSchedules}"
@@ -75,5 +75,5 @@
 		</rich:column>
 		
 	</rich:dataTable>
-</rich:panel>
+</a4j:outputPanel>
 </ui:composition>

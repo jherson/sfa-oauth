@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
+import javax.faces.FacesException;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -80,21 +81,28 @@ public class QuoteController {
 	}
 
 	public void refresh() {
-		quoteEvents.fire(new Quote());
 		userEvents.fire(new User());
+		quoteEvents.fire(new Quote());		
 	}
 
-	public void logout() {
+	public void logout()  {
 		HttpSession session = FacesUtil.getSession();
+				
 		if (session != null) {
 			session.removeAttribute("SessionId");
-			session.invalidate();
-			try {
-				FacesUtil.sendRedirect("index.html");
+			//session.invalidate();
+			
+			log.info("logging out");
+			
+	        try {
+		        sessionManager.getPartnerConnection().logout();
+		        FacesUtil.sendRedirect("index.html");
+	        } catch (ConnectionException e) {
+		        throw new FacesException(e);
 			} catch (IOException e) {
-				FacesUtil.addErrorMessage(e.getMessage());
+				throw new FacesException(e);
 			}
-		}
+		}		
 	}
 
 	public void backToQuoteManager() {
@@ -140,8 +148,10 @@ public class QuoteController {
 
 	public void viewQuote(Quote quote) {
 		sessionManager.setOpportunityId(quote.getOpportunityId());
+		log.info("before opp event");
 		opportunityEvent.fire(new Opportunity());
 		setSelectedQuote(quote);
+		log.info("after opp event");
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 

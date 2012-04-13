@@ -8,6 +8,23 @@
 
 <a4j:outputPanel id="quoteManager">
 
+    <rich:toolbar height="20px" itemSeparator="grid">
+
+		<rich:toolbarGroup location="left">
+
+			<a4j:commandLink id="new" value="#{msgs.new}"
+				action="#{quoteController.newQuote(opportunity)}" render="mainArea"
+				ajaxSingle="true">
+			</a4j:commandLink>
+
+			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="false"
+				immediate="false" render="quoteList"
+				action="#{quoteController.refresh()}">
+			</a4j:commandLink>
+
+		</rich:toolbarGroup>
+	</rich:toolbar>
+
 	<h:panelGrid width="100%" columns="1" cellpadding="3">
 		<h:panelGroup layout="block">
 			<h:graphicImage value="./images/quote.png"
@@ -31,24 +48,7 @@
 			</a4j:commandButton>
 
 		</h:panelGroup>
-	</h:panelGrid>
-
-	<rich:toolbar height="20px" itemSeparator="grid">
-
-		<rich:toolbarGroup location="right">
-
-			<a4j:commandLink id="new" value="#{msgs.new}"
-				action="#{quoteController.newQuote(opportunity)}" render="mainArea"
-				ajaxSingle="true">
-			</a4j:commandLink>
-
-			<a4j:commandLink value="#{msgs.refresh}" ajaxSingle="false"
-				immediate="false" render="quoteList"
-				action="#{quoteController.refresh()}">
-			</a4j:commandLink>
-
-		</rich:toolbarGroup>
-	</rich:toolbar>
+	</h:panelGrid>	
 
 	<ui:include src="quotelist.xhtml" />
 

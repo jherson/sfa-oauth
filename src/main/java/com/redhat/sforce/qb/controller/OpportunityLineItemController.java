@@ -11,9 +11,9 @@ import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.util.SelectedOpportunity;
 
-@ManagedBean(name = "opportunityProductsController")
+@ManagedBean(name = "opportunityLineItemController")
 @RequestScoped
-public class OpportunityProductsController {
+public class OpportunityLineItemController {
 
 	@Inject
 	@SelectedOpportunity

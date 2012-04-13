@@ -19,7 +19,6 @@ import com.redhat.sforce.qb.model.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.model.factory.QuotePriceAdjustmentFactory;
-import com.redhat.sforce.qb.util.Util;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -37,8 +36,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	@Override
 	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException {
+		String queryString = quoteQuery + "Order By Number__c";
 		try {
-			return QuoteFactory.deserialize(sm.query(quoteQuery));
+			return QuoteFactory.deserialize(sm.query(queryString));
 		} catch (JSONException e) {
 			log.error(e);
 			throw new SalesforceServiceException(e);

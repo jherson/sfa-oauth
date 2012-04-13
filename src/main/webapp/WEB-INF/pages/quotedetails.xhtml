@@ -4,13 +4,11 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j">
-	
-	<ui:include src="quoteproducts.xhtml" />
+	xmlns:a4j="http://richfaces.org/a4j">	
 
-<rich:panel id="quotedetails">
+<a4j:outputPanel id="quotedetails">
 
-	<rich:toolbar height="20" itemSeparator="grid" style="border: 1;">
+	<rich:toolbar height="20" itemSeparator="grid">
 
 		<rich:toolbarGroup location="left">
 			<a4j:commandLink value="#{msgs.back}"
@@ -285,11 +283,12 @@
 
 		<br />
 
-        
+        <ui:include src="quoteproducts.xhtml" />
 
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
 
 	</rich:panel>
-</rich:panel>
+	
+</a4j:outputPanel>
 </ui:composition>

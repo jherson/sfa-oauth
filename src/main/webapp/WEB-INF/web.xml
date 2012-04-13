@@ -10,18 +10,29 @@
 		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
 		<param-value>false</param-value>
 	</context-param>
+	
+	<context-param>
 
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+		
+    <context-param> 
+        <param-name>org.richfaces.resourceOptimization.enabled</param-name> 
+        <param-value>true</param-value>
+    </context-param>
+	
 	<session-config>
 		<session-timeout>0</session-timeout>
 	</session-config>
 
 	<error-page>
-		<location>/error.xhtml</location>
+		<location>/WEB-INF/pages/error.xhtml</location>
 	</error-page>
 
 	<context-param>
 		<param-name>org.richfaces.skin</param-name>
-		<param-value>quotebuilder</param-value>
+		<param-value>blueSky</param-value>
 	</context-param>
 
 	<servlet>

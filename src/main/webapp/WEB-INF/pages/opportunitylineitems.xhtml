@@ -36,10 +36,10 @@
 			<rich:column style="text-align: center;">
 				<f:facet name="header">
 					<h:selectBooleanCheckbox id="selectAll" 
-						value="#{opportunityProductsController.checkedValue}">
+						value="#{opportunityPLineItemController.checkedValue}">
 
 						<f:ajax
-							listener="#{opportunityProductsController.toggleCheckboxes}"
+							listener="#{opportunityLineItemController.toggleCheckboxes}"
 							render="opportunityProducts" />
 
 					</h:selectBooleanCheckbox>

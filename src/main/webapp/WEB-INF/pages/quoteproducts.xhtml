@@ -6,7 +6,7 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
 	
-<rich:panel id="viewQuoteProducts">
+<a4j:outputPanel id="viewQuoteProducts">
 
 	<rich:toolbar height="18" itemSeparator="grid">
 
@@ -20,7 +20,7 @@
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true"
-				rendered="#{quoteController.editMode}" status="ajaxStatus"
+				rendered="#{quoteController.editMode}" 
 				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
 				action="#{quoteController.cancelEdit()}"
 				render="quotedetails" ajaxSingle="true" >				
@@ -34,20 +34,20 @@
 				rendered="#{not quoteController.editMode and quoteController.selectedQuote.currencyIsoCode == opportunity.currencyIsoCode}"
 				disabled="#{empty opportunity.opportunityLineItems}"								 			
                 action="#{quoteController.viewOpportunityLineItems()}"
-                status="waitStatus"
                 render="mainArea" />
 				
 			<a4j:commandLink value="#{msgs.addProduct}"
 				rendered="#{quoteController.editMode}"
 				action="#{quoteController.newQuoteLineItem()}"
-				render="quotedetails" ajaxSingle="true"		
-				status="ajaxStatus"/>
+				render="quotedetails" ajaxSingle="true"	/>
 
 		</rich:toolbarGroup>
 
 	</rich:toolbar>
 
-	<rich:dataTable id="quoteProductsTable" style="width: 100%" var="lineItem"
+	<rich:dataTable id="quoteProductsTable" 
+	    style="width: 100%" 
+	    var="lineItem"
 		noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it"
 		value="#{quoteController.selectedQuote.quoteLineItems}">
@@ -219,5 +219,5 @@
 		</rich:column>
 
 	</rich:dataTable>
-</rich:panel>
+</a4j:outputPanel>
 </ui:composition>

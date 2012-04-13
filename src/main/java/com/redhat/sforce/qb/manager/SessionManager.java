@@ -8,10 +8,11 @@ import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.sforce.soap.partner.PartnerConnection;
 
 public interface SessionManager {
 
-
+    public PartnerConnection getPartnerConnection();
 	public void setOpportunityId(String opportunityId);
 	public String getOpportunityId();
 	public void setEditMode(Boolean editMode);
