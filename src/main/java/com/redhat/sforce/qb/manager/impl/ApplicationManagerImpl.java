@@ -50,6 +50,8 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 	private String apiEndpoint;
 
 	private String serviceEndpoint;
+	
+	private String frontDoorURL;
 
 	private String opportunityDetailUrl;
 
@@ -63,7 +65,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	@Override
 	public String getOpportunityDetailUrl() {
-		return opportunityDetailUrl;
+		return opportunityDetailUrl.replace("/{ID}", "/");
 	}
 
 	public void setOpportunityDetailUrl(String opportunityDetailUrl) {
@@ -76,8 +78,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 	public void init() {
 		log.info("init");
 
-		InputStream is = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("quotebuilder.properties");
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
 		Properties propertiesFile = new Properties();
 		try {
 			propertiesFile.load(is);
@@ -86,9 +87,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		}
 
 		ConnectorConfig config = new ConnectorConfig();
-		config.setAuthEndpoint(MessageFormat.format(
-				propertiesFile.getProperty("salesforce.authEndpoint"),
-				System.getProperty("salesforce.environment")));
+		config.setAuthEndpoint(MessageFormat.format(propertiesFile.getProperty("salesforce.authEndpoint"),System.getProperty("salesforce.environment")));
 		config.setUsername(propertiesFile.getProperty("salesforce.username"));
 		config.setPassword(propertiesFile.getProperty("salesforce.password"));
 
@@ -105,10 +104,8 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 							0,
 							partnerConnection.getConfig().getServiceEndpoint()
 									.indexOf("/Soap")));
-			setServiceEndpoint(partnerConnection.getConfig()
-					.getServiceEndpoint());
-			setOpportunityDetailUrl(partnerConnection.describeSObject(
-					"Opportunity").getUrlDetail());
+			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
+			setOpportunityDetailUrl(partnerConnection.describeSObject("Opportunity").getUrlDetail());
 			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
 
 			currencyIsoCodes = queryCurrencyIsoCodes();

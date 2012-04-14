@@ -19,6 +19,7 @@ import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.util.SelectedOpportunity;
 
 @SessionScoped
+
 public class OpportunityProducer implements Serializable {
 
 	private static final long serialVersionUID = -7426270322153805027L;

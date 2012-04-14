@@ -48,8 +48,7 @@ public class AuthorizeServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String sessionId = request.getParameter("sessionId");
 
@@ -66,7 +65,8 @@ public class AuthorizeServlet extends HttpServlet {
 					authUrl = getEnvironment()
 							+ "/services/oauth2/authorize?response_type=code&client_id="
 							+ getClientId() + "&redirect_uri="
-							+ URLEncoder.encode(getRedirectUri(), "UTF-8");
+							+ URLEncoder.encode(getRedirectUri(), "UTF-8")
+							+ "&scope=full id web";
 
 					response.sendRedirect(authUrl);
 					return;

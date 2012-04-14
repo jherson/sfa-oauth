@@ -17,6 +17,7 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Contact;
 import com.redhat.sforce.qb.model.Opportunity;
@@ -34,6 +35,9 @@ public class QuoteController {
 
 	@Inject
 	private Logger log;
+	
+	@Inject
+	private ApplicationManager applicationManager;
 
 	@Inject
 	private SessionManager sessionManager;
@@ -48,8 +52,21 @@ public class QuoteController {
 	private Event<User> userEvents;
 
 	@Inject
-	private Event<Opportunity> opportunityEvent;
+	private Event<Opportunity> opportunityEvent;	
+	
+	private String frontDoorURL;
 
+	public String getFrontDoorURL() {
+		frontDoorURL = System.getProperty("salesforce.environment");
+		frontDoorURL += "/secur/frontdoor.jsp?sid=" + sessionManager.getPartnerConnection().getConfig().getSessionId();
+		frontDoorURL += "&retURL=" + applicationManager.getOpportunityDetailUrl();
+		log.info(frontDoorURL);
+		return frontDoorURL;
+	}
+
+	public void setFrontDoorURL(String frontDoorURL) {
+		this.frontDoorURL = frontDoorURL;
+	}
 
 	@PostConstruct
 	public void init() {
@@ -86,13 +103,13 @@ public class QuoteController {
 	}
 
 	public void logout()  {
+		log.info("logging out");
+		
 		HttpSession session = FacesUtil.getSession();
 				
 		if (session != null) {
 			session.removeAttribute("SessionId");
-			//session.invalidate();
-			
-			log.info("logging out");
+			session.invalidate();					
 			
 	        try {
 		        sessionManager.getPartnerConnection().logout();
@@ -101,7 +118,7 @@ public class QuoteController {
 		        throw new FacesException(e);
 			} catch (IOException e) {
 				throw new FacesException(e);
-			}
+			}	        	       
 		}		
 	}
 
@@ -147,11 +164,9 @@ public class QuoteController {
 	}
 
 	public void viewQuote(Quote quote) {
-		sessionManager.setOpportunityId(quote.getOpportunityId());
-		log.info("before opp event");
-		opportunityEvent.fire(new Opportunity());
 		setSelectedQuote(quote);
-		log.info("after opp event");
+		sessionManager.setOpportunityId(quote.getOpportunityId());
+		opportunityEvent.fire(new Opportunity());		
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
@@ -257,8 +272,7 @@ public class QuoteController {
 		}
 
 		try {
-			setSelectedQuote(sessionManager.addOpportunityLineItems(
-					getSelectedQuote(), opportunityLineItemList));
+			setSelectedQuote(sessionManager.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList));
 			setMainArea(TemplatesEnum.QUOTE_DETAILS);
 		} catch (SalesforceServiceException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
@@ -266,8 +280,7 @@ public class QuoteController {
 	}
 
 	public void newQuoteLineItem() {
-		getSelectedQuote().getQuoteLineItems().add(
-				new QuoteLineItem(getSelectedQuote()));
+		getSelectedQuote().getQuoteLineItems().add(new QuoteLineItem(getSelectedQuote()));
 	}
 
 	public void deleteQuoteLineItems() {

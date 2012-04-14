@@ -57,7 +57,7 @@
 	
 	<rich:column width="350px">
 		<f:facet name="header">#{msgs.opportunity}</f:facet>
-		<h:outputText value="#{quote.opportunityName}" />     
+		<h:commandLink value="#{quote.opportunityName}" onclick="window.open('#{quoteController.frontDoorURL}#{quote.opportunityId}'); return;"/>     
 	</rich:column>	
 
 	<rich:column width="80px" style="text-align: center;">

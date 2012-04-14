@@ -13,7 +13,7 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 
-public class QuoteFactory {
+public class QuoteFactory {	
 	private static final Logger log = Logger.getLogger(QuoteFactory.class);
 
 	public static List<Quote> deserialize(JSONArray jsonArray)

@@ -50,6 +50,7 @@ public class Quote extends SObject {
 	private Boolean aprvlRqstPriceDiscnt;
 	private Boolean hasApprovalRequests;
 	private Date lastCalculatedDate;
+	private String opportuntiyUrl;
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
@@ -412,6 +413,14 @@ public class Quote extends SObject {
 
 	public void setLastCalculatedDate(Date lastCalculatedDate) {
 		this.lastCalculatedDate = lastCalculatedDate;
+	}
+
+	public String getOpportuntiyUrl() {
+		return opportuntiyUrl;
+	}
+
+	public void setOpportuntiyUrl(String opportuntiyUrl) {
+		this.opportuntiyUrl = opportuntiyUrl;
 	}
 
 	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {
