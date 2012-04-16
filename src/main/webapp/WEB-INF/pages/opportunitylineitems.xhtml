@@ -25,9 +25,7 @@
 		</rich:toolbarGroup>
 	</rich:toolbar>
 
-	<rich:panel id="viewOpportunityLineItems"
-		style="border: 0px; border-color: #C27E3A; background-color: #FCF9F5;"
-		bodyClass="panel-body">
+	<rich:panel id="viewOpportunityLineItems">
 
 		<rich:dataTable id="opportunityProducts" var="lineItem"
 			value="#{opportunity.opportunityLineItems}"
@@ -36,7 +34,7 @@
 			<rich:column style="text-align: center;">
 				<f:facet name="header">
 					<h:selectBooleanCheckbox id="selectAll" 
-						value="#{opportunityPLineItemController.checkedValue}">
+						value="#{opportunityLineItemController.checkedValue}">
 
 						<f:ajax
 							listener="#{opportunityLineItemController.toggleCheckboxes}"

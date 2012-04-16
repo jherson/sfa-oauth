@@ -51,9 +51,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	private String serviceEndpoint;
 	
-	private String frontDoorURL;
-
-	private String opportunityDetailUrl;
+	private String frontDoorUrl;
 
 	public PartnerConnection getPartnerConnection() {
 		return partnerConnection;
@@ -64,12 +62,12 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 	}
 
 	@Override
-	public String getOpportunityDetailUrl() {
-		return opportunityDetailUrl.replace("/{ID}", "/");
+	public String getFrontDoorUrl() {
+		return frontDoorUrl;
 	}
 
-	public void setOpportunityDetailUrl(String opportunityDetailUrl) {
-		this.opportunityDetailUrl = opportunityDetailUrl;
+	public void setFrontDoorUrl(String frontDoorUrl) {
+		this.frontDoorUrl = frontDoorUrl;
 	}
 
 	private List<String> currencyIsoCodes;
@@ -95,18 +93,11 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 			partnerConnection = Connector.newConnection(config);
 
 			setSessionId(partnerConnection.getConfig().getSessionId());
-			setLocale(new Locale(partnerConnection.getUserInfo()
-					.getUserLocale()));
-			setApiEndpoint(partnerConnection
-					.getConfig()
-					.getServiceEndpoint()
-					.substring(
-							0,
-							partnerConnection.getConfig().getServiceEndpoint()
-									.indexOf("/Soap")));
-			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
-			setOpportunityDetailUrl(partnerConnection.describeSObject("Opportunity").getUrlDetail());
-			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
+			setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
+			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());			
+			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));			
+			setFrontDoorUrl(System.getProperty("salesforce.environment") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
 
 			currencyIsoCodes = queryCurrencyIsoCodes();
 

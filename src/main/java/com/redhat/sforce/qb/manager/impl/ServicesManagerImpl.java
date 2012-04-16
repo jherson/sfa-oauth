@@ -11,7 +11,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -26,9 +25,6 @@ import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
 import com.redhat.sforce.qb.util.SessionConnection;
 import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.soap.partner.SaveResult;
-import com.sforce.soap.partner.sobject.SObject;
-import com.sforce.ws.ConnectionException;
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {
 
@@ -121,58 +117,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public JSONObject getOpportunity(String opportunityId) {
 		return getOpportunity(partnerConnection.getConfig().getSessionId(), opportunityId);
-	}
-
-	@Override
-	public String saveQuote(String accessToken, JSONObject jsonObject)
-			throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() + "/apexrest/"
-				+ applicationManager.getApiVersion() + "/QuoteRestService/save_quote";
-
-		String quoteId = null;
-		PostMethod postMethod = null;
-		try {
-			postMethod = doPost(accessToken, url, null, jsonObject.toString());
-			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
-				JSONObject response = new JSONObject(new JSONTokener(
-						new InputStreamReader(
-								postMethod.getResponseBodyAsStream())));
-				quoteId = response.getString("id");
-				log.info("saved quote id: " + quoteId);
-			} else {
-				log.error(postMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						postMethod.getResponseBodyAsStream());
-			}
-		} catch (HttpException e) {
-			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} catch (JSONException e) {
-			log.error(e);
-		}
-
-		return quoteId;
-	}
-	
-	@Override
-	public SaveResult create(SObject sobject) throws ConnectionException {
-		return partnerConnection.create(new SObject[] {sobject})[0];
-	}
-	
-	@Override
-	public SaveResult[] create(SObject[] sobjects) throws ConnectionException {
-		return partnerConnection.create(sobjects);
-	}
-	
-	@Override
-	public SaveResult update(SObject sobject) throws ConnectionException {
-		return partnerConnection.update(new SObject[] {sobject})[0];
-	}
-	
-	@Override
-	public SaveResult[] update(SObject[] sobjects) throws ConnectionException {
-		return partnerConnection.update(sobjects);
 	}
 
 	@Override
@@ -370,6 +314,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
+	public void activateQuote(String quoteId) throws SalesforceServiceException {
+		activateQuote(partnerConnection.getConfig().getSessionId());		
+	}
+
+	@Override
 	public void calculateQuote(String accessToken, String quoteId) {
 		String url = applicationManager.getApiEndpoint() + "/apexrest/"
 				+ applicationManager.getApiVersion()
@@ -389,6 +338,16 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		} finally {
 			postMethod.releaseConnection();
 		}
+	}
+	
+	@Override
+	public void copyQuote(String quoteId) throws SalesforceServiceException {
+		copyQuote(partnerConnection.getConfig().getSessionId());
+	}
+	
+	@Override
+	public void calculateQuote(String quoteId) {
+		calculateQuote(partnerConnection.getConfig().getSessionId());		
 	}
 
 	@Override
@@ -447,94 +406,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		} catch (IOException e) {
 			log.error(e);
 		}
-	}
-
-	@Override
-	public void deleteQuote(String accessToken, String quoteId) {
-		delete(accessToken, "Quote__c", quoteId);
-	}
-
-	@Override
-	public void addOpportunityLineItems(String accessToken, String quoteId,
-			JSONArray jsonArray) throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() + "/apexrest/"
-				+ applicationManager.getApiVersion()
-				+ "/QuoteRestService/addOpportunityLineItems?quoteId="
-				+ quoteId;
-		PostMethod postMethod = null;
-		try {
-
-			postMethod = doPost(accessToken, url, null, jsonArray.toString());
-
-			if (postMethod.getStatusCode() != HttpStatus.SC_OK) {
-				log.error(postMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						postMethod.getResponseBodyAsStream());
-			}
-		} catch (UnsupportedEncodingException e) {
-			log.error(e);
-		} catch (HttpException e) {
-			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} finally {
-			postMethod.releaseConnection();
-		}
-	}
-
-	// private void update(String accessToken, String sobject, String id,
-	// JSONObject jsonObject) throws QuoteBuilderException {
-	// String url = applicationManager.getApiEndpoint() + "/data/" +
-	// applicationManager.getApiVersion() + "/sobjects/" + sobject + "/" + id +
-	// "?_HttpMethod=PATCH";
-	//
-	// PostMethod postMethod = new PostMethod(url);
-	// postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
-	// postMethod.setRequestHeader("Content-type", "application/json");
-	//
-	// try {
-	// postMethod.setRequestEntity(new
-	// StringRequestEntity(jsonObject.toString(), "application/json", null));
-	//
-	// HttpClient httpclient = new HttpClient();
-	// httpclient.executeMethod(postMethod);
-	//
-	// if (postMethod.getStatusCode() == 400) {
-	// throw new
-	// QuoteBuilderException(parseErrorResponse(postMethod.getResponseBodyAsStream()));
-	// }
-	// } catch (UnsupportedEncodingException e) {
-	// log.error(e);
-	// } catch (HttpException e) {
-	// log.error(e);
-	// } catch (IOException e) {
-	// log.error(e);
-	// } finally {
-	// postMethod.releaseConnection();
-	// }
-	//
-	// }
-
-	private void delete(String accessToken, String sobject, String id) {
-		String url = applicationManager.getApiEndpoint() + "/data/"
-				+ applicationManager.getApiVersion() + "/sobjects/" + sobject + "/"
-				+ id;
-
-		DeleteMethod deleteMethod = new DeleteMethod(url);
-		deleteMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
-		deleteMethod.setRequestHeader("Content-type", "application/json");
-
-		try {
-			HttpClient httpclient = new HttpClient();
-			httpclient.executeMethod(deleteMethod);
-		} catch (HttpException e) {
-			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} finally {
-			deleteMethod.releaseConnection();
-		}
-
 	}
 
 	private PostMethod doPost(String accessToken, String url,

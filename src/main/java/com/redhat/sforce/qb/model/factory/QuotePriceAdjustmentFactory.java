@@ -13,8 +13,7 @@ import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class QuotePriceAdjustmentFactory {
 
-	public static List<QuotePriceAdjustment> deserialize(JSONArray jsonArray)
-			throws JSONException, ParseException {
+	public static List<QuotePriceAdjustment> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {

@@ -1,5 +1,10 @@
 package com.redhat.sforce.qb.manager.impl;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.redhat.sforce.qb.manager.EntityManager;
@@ -10,39 +15,88 @@ import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 
-public class EntityManagerImpl implements EntityManager {
+public class EntityManagerImpl implements EntityManager, Serializable{
 
+	private static final long serialVersionUID = 8472659225063158884L;
+	
 	@Inject
 	@SessionConnection
 	private PartnerConnection partnerConnection;
 	
 	@Override
-	public SaveResult create(SObject sobject) throws ConnectionException {
+	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException {
+		List<SObject> updateList = new ArrayList<SObject>();
+		List<SObject> createList = new ArrayList<SObject>();
+		
+		for (SObject sobject : sobjectList) {
+			if (sobject.getId() != null) {
+				updateList.add(sobject);
+			} else {
+				createList.add(sobject);
+			}
+		}
+		
+		List<SaveResult> saveResultList = new ArrayList<SaveResult>(); 	
+						
+		SaveResult[] updateResults = null; 
+		if (updateList.size() > 0) {
+			updateResults = update(updateList.toArray(new SObject[updateList.size()]));	
+			Collections.addAll(saveResultList, updateResults); 
+		}
+		
+		SaveResult[] createResults = null;
+		if (createList.size() > 0) {
+			createResults = create(createList.toArray(new SObject[createList.size()]));
+			Collections.addAll(saveResultList, createResults); 
+		}
+
+		return saveResultList.toArray(new SaveResult[saveResultList.size()]);
+	}
+	
+	@Override
+	public SaveResult persist(SObject sobject) throws ConnectionException {
+		SaveResult saveResult = null;
+		if (sobject.getId() != null) {
+			saveResult = update(sobject);
+		} else {
+			saveResult = create(sobject);
+		}
+		
+		return saveResult;
+	}
+	
+	@Override
+	public DeleteResult[] delete(List<SObject> sobjectList) throws ConnectionException {
+		List<String> idList = new ArrayList<String>();
+		for (SObject sobject : sobjectList) {
+			idList.add(sobject.getId());
+		}
+		return delete(idList.toArray(new String[idList.size()]));
+	}	
+	
+	@Override
+	public DeleteResult delete(SObject sobject) throws ConnectionException {
+		return delete(new String[] {sobject.getId()})[0];
+	}
+	
+	private DeleteResult[] delete(String[] ids) throws ConnectionException {
+		return partnerConnection.delete(ids);
+	}
+	
+	private SaveResult create(SObject sobject) throws ConnectionException {
 		return partnerConnection.create(new SObject[] {sobject})[0];
 	}
 	
-	@Override
-	public SaveResult[] create(SObject[] sobjects) throws ConnectionException {
+	private SaveResult[] create(SObject[] sobjects) throws ConnectionException {
 		return partnerConnection.create(sobjects);
 	}
 	
-	@Override
-	public SaveResult update(SObject sobject) throws ConnectionException {
+	private SaveResult update(SObject sobject) throws ConnectionException {
 		return partnerConnection.update(new SObject[] {sobject})[0];
 	}
 	
-	@Override
-	public SaveResult[] update(SObject[] sobjects) throws ConnectionException {
+	private SaveResult[] update(SObject[] sobjects) throws ConnectionException {
 		return partnerConnection.update(sobjects);
 	}
-	
-	@Override
-	public DeleteResult delete(String id) throws ConnectionException {
-		return partnerConnection.delete(new String[] {id})[0];
-	}
-	
-	@Override
-	public DeleteResult[] delete(String[] ids) throws ConnectionException {
-		return partnerConnection.delete(ids);
-	}
+
 }

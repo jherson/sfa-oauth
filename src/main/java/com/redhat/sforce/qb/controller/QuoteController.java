@@ -17,7 +17,6 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Contact;
 import com.redhat.sforce.qb.model.Opportunity;
@@ -26,6 +25,7 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.FacesUtil;
+import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.ws.ConnectionException;
 
@@ -35,9 +35,6 @@ public class QuoteController {
 
 	@Inject
 	private Logger log;
-	
-	@Inject
-	private ApplicationManager applicationManager;
 
 	@Inject
 	private SessionManager sessionManager;
@@ -53,24 +50,10 @@ public class QuoteController {
 
 	@Inject
 	private Event<Opportunity> opportunityEvent;	
-	
-	private String frontDoorURL;
-
-	public String getFrontDoorURL() {
-		frontDoorURL = System.getProperty("salesforce.environment");
-		frontDoorURL += "/secur/frontdoor.jsp?sid=" + sessionManager.getPartnerConnection().getConfig().getSessionId();
-		frontDoorURL += "&retURL=" + applicationManager.getOpportunityDetailUrl();
-		log.info(frontDoorURL);
-		return frontDoorURL;
-	}
-
-	public void setFrontDoorURL(String frontDoorURL) {
-		this.frontDoorURL = frontDoorURL;
-	}
 
 	@PostConstruct
 	public void init() {
-		log.info("init");
+		log.info("init");		 
 	}
 	
 	public void setEditMode(Boolean editMode) {
@@ -147,7 +130,7 @@ public class QuoteController {
 
 	public void activateQuote(Quote quote) {
 		try {
-			quote = sessionManager.activateQuote(quote);
+			quoteDAO.activateQuote(quote.getId());
 			quoteEvents.fire(quote);
 		} catch (SalesforceServiceException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
@@ -159,8 +142,13 @@ public class QuoteController {
 	}
 
 	public void copyQuote(Quote quote) {
-		sessionManager.copyQuote(quote);
-		quoteEvents.fire(quote);
+		try {
+			quoteDAO.copyQuote(quote.getId());
+			quoteEvents.fire(quote);
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	public void viewQuote(Quote quote) {
@@ -175,12 +163,28 @@ public class QuoteController {
 	}
 
 	public void deleteQuote(Quote quote) {
-		sessionManager.deleteQuote(quote);
-		quoteEvents.fire(quote);
+		DeleteResult deleteResult = null;
+		try {
+			deleteResult = quoteDAO.deleteQuote(quote);			
+			if (deleteResult.isSuccess()) {
+				quoteEvents.fire(quote);
+				log.info("Quote " + quote.getId() + " has been deleted");
+			} else {
+				log.error("Quote delete failed: " + deleteResult.getErrors()[0].getMessage());
+			}
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	public void calculateQuote(Opportunity opportunity, Quote quote) {
-		sessionManager.calculateQuote(quote.getId());
+		try {
+			setSelectedQuote(quoteDAO.calculateQuote(quote.getId()));
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
@@ -231,10 +235,10 @@ public class QuoteController {
 			return;
 
 		try {
-			sessionManager.saveQuoteLineItems(getSelectedQuote().getQuoteLineItems());
-
-		} catch (SalesforceServiceException e) {
-			FacesUtil.addErrorMessage(e.getMessage());
+			quoteDAO.saveQuoteLineItems(getSelectedQuote().getQuoteLineItems());
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -263,20 +267,15 @@ public class QuoteController {
 
 	public void addOpportunityLineItems(Opportunity opportunity) {
 		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
-		for (OpportunityLineItem opportunityLineItem : opportunity
-				.getOpportunityLineItems()) {
+		for (OpportunityLineItem opportunityLineItem : opportunity.getOpportunityLineItems()) {
 			if (opportunityLineItem.isSelected()) {
 				opportunityLineItemList.add(opportunityLineItem);
 				opportunityLineItem.setSelected(false);
 			}
 		}
 
-		try {
-			setSelectedQuote(sessionManager.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList));
-			setMainArea(TemplatesEnum.QUOTE_DETAILS);
-		} catch (SalesforceServiceException e) {
-			FacesUtil.addErrorMessage(e.getMessage());
-		}
+		quoteDAO.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList);
+		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
 	public void newQuoteLineItem() {
@@ -288,8 +287,7 @@ public class QuoteController {
 			return;
 
 		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
-		for (QuoteLineItem quoteLineItem : getSelectedQuote()
-				.getQuoteLineItems()) {
+		for (QuoteLineItem quoteLineItem : getSelectedQuote().getQuoteLineItems()) {
 			if (quoteLineItem.getDelete()) {
 				quoteLineItems.add(quoteLineItem);
 			}
@@ -299,10 +297,10 @@ public class QuoteController {
 			return;
 
 		try {
-			sessionManager.deleteQuoteLineItems(quoteLineItems);
-
-		} catch (SalesforceServiceException e) {
-			FacesUtil.addErrorMessage(e.getMessage());
+			quoteDAO.deleteQuoteLineItems(quoteLineItems);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

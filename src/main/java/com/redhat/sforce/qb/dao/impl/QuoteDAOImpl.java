@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -15,10 +16,8 @@ import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
-import com.redhat.sforce.qb.model.factory.OpportunityLineItemFactory;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
-import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
-import com.redhat.sforce.qb.model.factory.QuotePriceAdjustmentFactory;
+import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -29,11 +28,6 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
 	
-	@Override
-	public String getQueryString() {
-		return quoteQuery;
-	}
-
 	@Override
 	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException {
 		String queryString = quoteQuery + "Order By Number__c";
@@ -63,82 +57,103 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote saveQuote(String accessToken, Quote quote) throws SalesforceServiceException {
-		String quoteId = sm.saveQuote(accessToken, QuoteFactory.serialize(quote));
-		return queryQuoteById(quoteId);
-	}
-
-	@Override
 	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException {
 		String queryString = quoteQuery + "Where Id = '" + quoteId + "'";
 		try {
 			return QuoteFactory.deserialize(sm.query(queryString)).get(0);
 		} catch (JSONException e) {
+			log.error(e);
 			throw new SalesforceServiceException(e);
 		} catch (ParseException e) {
+			log.error(e);
 			throw new SalesforceServiceException(e);
 		}
 	}
 
 	@Override
-	public Quote activateQuote(String accessToken, String quoteId) throws SalesforceServiceException {
-		sm.activateQuote(accessToken, quoteId);
+	public Quote activateQuote(String quoteId) throws SalesforceServiceException {
+		sm.activateQuote(quoteId);
 		return queryQuoteById(quoteId);
 	}
 
 	@Override
-	public void calculateQuote(String accessToken, String quoteId) {
-		sm.calculateQuote(accessToken, quoteId);
-	}
-
-	@Override
-	public void deleteQuote(String accessToken, String quoteId) {
-		sm.deleteQuote(accessToken, quoteId);
-	}
-
-	@Override
-	public void copyQuote(String accessToken, String quoteId) {
-		sm.copyQuote(accessToken, quoteId);
-	}
-
-	@Override
-	public Quote addOpportunityLineItems(String accessToken, String quoteId, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException {
-		sm.addOpportunityLineItems(accessToken, quoteId, OpportunityLineItemFactory.serialize(opportunityLineItems));
+	public Quote calculateQuote(String quoteId) throws SalesforceServiceException {
+		sm.calculateQuote(quoteId);
 		return queryQuoteById(quoteId);
 	}
 
 	@Override
-	public void saveQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
-		sm.saveQuoteLineItems(accessToken, QuoteLineItemFactory.serialize(quoteLineItemList));
-	}
-
-	@Override
-	public void saveQuotePriceAdjustments(String accessToken, List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException {
-		sm.saveQuotePriceAdjustments(accessToken, QuotePriceAdjustmentFactory.serialize(quotePriceAdjustmentList));
-	}
-
-	@Override
-	public void deleteQuoteLineItems(String accessToken, List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
-		sm.deleteQuoteLineItems(accessToken, QuoteLineItemFactory.serialize(quoteLineItemList));
+	public Quote copyQuote(String quoteId) throws SalesforceServiceException {
+		sm.copyQuote(quoteId);
+		return queryQuoteById(quoteId);
 	}
 	
 	@Override
-	public SaveResult saveQuote(Quote quote) throws ConnectionException {
-		SaveResult saveResult = null;
-		if (quote.getId() != null) {
-			saveResult = sm.update(convertToSObject(quote));
-		} else {
-			saveResult = sm.create(convertToSObject(quote));
-		}
-		
-		return saveResult;		
+	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
+		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
+		    QuoteLineItem quoteLineItem = new QuoteLineItem();
+	        quoteLineItem.setQuoteId(quote.getId());
+	        quoteLineItem.setOpportunityId(opportunityLineItem.getOpportunityId());
+	        quoteLineItem.setDescription(opportunityLineItem.getDescription());
+	        quoteLineItem.setConfiguredSku(opportunityLineItem.getConfiguredSku());
+	        quoteLineItem.setContractNumbers(opportunityLineItem.getContractNumbers());
+	        quoteLineItem.setCurrencyIsoCode(opportunityLineItem.getCurrencyIsoCode());	                   
+	        quoteLineItem.setListPrice(opportunityLineItem.getBasePrice());
+	        quoteLineItem.setNewOrRenewal(opportunityLineItem.getNewOrRenewal());	        
+	        quoteLineItem.setPricebookEntryId(opportunityLineItem.getPricebookEntryId());
+	        quoteLineItem.setProduct(opportunityLineItem.getProduct());
+            quoteLineItem.setPricingAttributes(opportunityLineItem.getPricingAttributes());
+            quoteLineItem.setQuantity(opportunityLineItem.getQuantity());
+            quoteLineItem.setUnitPrice(opportunityLineItem.getUnitPrice());
+	        quoteLineItem.setTotalPrice(0.00);
+	        
+	        if (opportunityLineItem.getYearlySalesPrice() != null)
+	            quoteLineItem.setYearlySalesPrice(opportunityLineItem.getYearlySalesPrice());
+	        else
+	            quoteLineItem.setYearlySalesPrice(opportunityLineItem.getUnitPrice());
+	        
+	        if ("Standard".equals(quote.getType())) {
+	        	quoteLineItem.setStartDate(quote.getStartDate());
+	        	quoteLineItem.setEndDate(quote.getEndDate());
+	        	quoteLineItem.setTerm(quote.getTerm());
+	        } else if ("Co-Term".equals(quote.getType())) {
+	        	quoteLineItem.setEndDate(quote.getEndDate());
+	        }
+	         	             
+	        quote.getQuoteLineItems().add(quoteLineItem);
+		}		
+	}
+
+	@Override
+	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {		
+		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
 	}
 	
-	private SObject convertToSObject(Quote quote) {
+	@Override
+	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException {
+		return em.persist(convertQuotePriceAdjustmentsToSObjects(quotePriceAdjustmentList));
+	}
+
+	@Override
+	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
+		return em.delete(convertQuoteLineItemsToSObjects(quoteLineItemList));
+	}
+	
+	@Override
+	public SaveResult saveQuote(Quote quote) throws ConnectionException {		
+		return em.persist(convertQuoteToSObject(quote));		
+	}
+	
+	@Override
+	public DeleteResult deleteQuote(Quote quote) throws ConnectionException {		
+		return em.delete(convertQuoteToSObject(quote));				
+	}
+	
+	private SObject convertQuoteToSObject(Quote quote) {
 		SObject sobject = new SObject();		
 	    sobject.setType("Quote__c");	    
 	    if (quote.getId() != null) {
-	    	sobject.setField("Id", quote.getId());	
+	    	sobject.setId(quote.getId());	
 	    } else {
 	    	sobject.setField("OpportunityId__c", quote.getOpportunityId());
 	    }	    	
@@ -169,60 +184,65 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	    sobject.setField("Year6PaymentAmount__c", quote.getYear6PaymentAmount());
 		
 		return sobject;
+	}	
+	
+	private List<SObject> convertQuoteLineItemsToSObjects(List<QuoteLineItem> quoteLineItemList) {
+		List<SObject> sobjectList = new ArrayList<SObject>();
+		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
+		    SObject sobject = new SObject();
+		    sobject.setType("QuoteLineItem__c");
+		    if (quoteLineItem.getId() != null) {
+			    sobject.setId(quoteLineItem.getId());
+		    }		    
+		    sobject.setField("ProductDescription__c", quoteLineItem.getDescription());
+		    sobject.setField("Configured_SKU__c", quoteLineItem.getConfiguredSku());
+		    sobject.setField("ContractNumbers__c", quoteLineItem.getContractNumbers());
+		    sobject.setField("CurrencyIsoCode", quoteLineItem.getCurrencyIsoCode());
+		    sobject.setField("EndDate__c", quoteLineItem.getEndDate());
+		    sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
+		    sobject.setField("Name", quoteLineItem.getName());
+		    sobject.setField("NewOrRenewal__c", quoteLineItem.getNewOrRenewal());
+		    sobject.setField("OpportunityId__c", quoteLineItem.getOpportunityId());
+		    sobject.setField("OpportunityLineItemId__c", quoteLineItem.getOpportunityLineItemId());
+			sobject.setField("PricebookEntryId__c", quoteLineItem.getPricebookEntryId());
+			sobject.setField("Product__c", quoteLineItem.getProduct().getId());
+			sobject.setField("Pricing_Attributes__c", quoteLineItem.getPricingAttributes());
+			sobject.setField("Quantity__c", quoteLineItem.getQuantity());
+			sobject.setField("QuoteId__c", quoteLineItem.getQuoteId());
+			sobject.setField("SortOrder__c", quoteLineItem.getSortOrder());
+			sobject.setField("StartDate__c", quoteLineItem.getStartDate());
+			sobject.setField("Term__c", quoteLineItem.getTerm());
+			sobject.setField("TotalPrice__c", quoteLineItem.getTotalPrice());
+			sobject.setField("UnitPrice__c", quoteLineItem.getUnitPrice());
+			sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
+			sobject.setField("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());
+			
+			sobjectList.add(sobject);		    
+		}
+		
+		return sobjectList;
 	}
 	
-	@Override
-	public List<Quote> queryAllQuotes() throws ConnectionException {
-//		QueryResult queryResult = query(quoteQuery);
-//		List<Quote> quoteList = new ArrayList<Quote>();
-//		for (SObject sobject : queryResult.getRecords()) {
-//			Quote quote = new Quote();
-//			quote.setId(sobject.getId());
-//			quote.setAmount(SObjectUtil.doubleValue(sobject.getField("Amount__c")));
-//			quote.setComments(SObjectUtil.stringValue("Comments__c"));
-//			quote.setContactId(SObjectUtil.stringValue("ContactId__r", "Id"));
-//			quote.setContactName(SObjectUtil.stringValue("ContactId__r", "Name"));
-//			quote.setCreatedById(SObjectUtil.stringValue("CreatedBy", "Id"));
-//			quote.setCreatedByName(SObjectUtil.stringValue("CreatedBy", "Name"));
-//			quote.setCreatedDate(SObjectUtil.getDateTime("CreatedDate"));
-//			quote.setCurrencyIsoCode(SObjectUtil.stringValue("CurrencyIsoCode"));
-//			quote.setEffectiveDate(SObjectUtil.getDate("EffectiveDate__c"));
-//			quote.setEndDate(SObjectUtil.getDate("EndDate__c"));
-//			quote.setExpirationDate(SObjectUtil.getDate("ExpirationDate__c"));
-//			quote.setHasQuoteLineItems(SObjectUtil.getBoolean("HasQuoteLineItems__c"));
-//			quote.setIsActive(SObjectUtil.getBoolean("IsActive__c"));
-//			quote.setIsCalculated(SObjectUtil.getBoolean("IsCalculated__c"));
-//			quote.setIsNonStandardPayment(SObjectUtil.getBoolean("IsNonStandardPayment__c"));
-//			quote.setLastCalculatedDate(SObjectUtil.getDateTime("LastCalculatedDate__c"));
-//			quote.setLastModifiedById(SObjectUtil.stringValue("LastModifiedBy", "Id"));
-//			quote.setLastModifiedByName(SObjectUtil.stringValue("LastModifiedBy", "Name"));
-//			quote.setLastModifiedDate(SObjectUtil.getDateTime("LastModifiedDate"));
-//			quote.setLink(SObjectUtil.stringValue("Link__c"));
-//			quote.setName(SObjectUtil.stringValue("Name"));
-//			quote.setNumber(SObjectUtil.stringValue("Number__c"));
-//			quote.setOpportunityId(SObjectUtil.stringValue("OpportunityId__r", "Id"));
-//			quote.setOpportunityName(SObjectUtil.stringValue("OpportunityId__r", "Name"));
-//			quote.setOwnerId(SObjectUtil.stringValue("QuoteOwnerId__r", "Id"));
-//			quote.setOwnerName(SObjectUtil.stringValue("QuoteOwnerId__r", "Name"));
-//			quote.setPayNow(SObjectUtil.stringValue("PayNow__c"));
-//			quote.setPricebookId(SObjectUtil.stringValue("PricebookId__c"));
-//			quote.setReferenceNumber(SObjectUtil.stringValue("ReferenceNumber__c"));
-//			quote.setStartDate(SObjectUtil.getDate("StartDate__c"));
-//			quote.setTerm(SObjectUtil.getInteger("Term__c"));
-//			quote.setType(SObjectUtil.getString("Type__c"));
-//			quote.setVersion(SObjectUtil.getDouble("Version__c"));
-//			quote.setYear1PaymentAmount(SObjectUtil.getDouble("Year1PaymentAmount__c"));
-//			quote.setYear2PaymentAmount(SObjectUtil.getDouble("Year2PaymentAmount__c"));
-//			quote.setYear3PaymentAmount(SObjectUtil.getDouble("Year3PaymentAmount__c"));
-//			quote.setYear4PaymentAmount(SObjectUtil.getDouble("Year4PaymentAmount__c"));
-//			quote.setYear5PaymentAmount(SObjectUtil.getDouble("Year5PaymentAmount__c"));
-//			quote.setYear6PaymentAmount(SObjectUtil.getDouble("Year6PaymentAmount__c"));
+	private List<SObject> convertQuotePriceAdjustmentsToSObjects(List<QuotePriceAdjustment> quotePriceAdjustmentList) {
+		List<SObject> sobjectList = new ArrayList<SObject>();
+		for (QuotePriceAdjustment quotePriceAdjustment : quotePriceAdjustmentList) {
+			SObject sobject = new SObject();
+		    sobject.setType("QuotePriceAdjustment__c");
+		    if (quotePriceAdjustment.getId() != null) {
+		        sobject.setId(quotePriceAdjustment.getId());
+		    }
+			sobject.setField("QuoteId__c", quotePriceAdjustment.getQuoteId());
+			sobject.setField("AdjustmentAmount__c",quotePriceAdjustment.getAdjustmentAmount());
+			sobject.setField("Operator__c",quotePriceAdjustment.getOperator());
+			sobject.setField("Percent__c", quotePriceAdjustment.getPercent());
+			sobject.setField("Reason__c", quotePriceAdjustment.getReason());
+			sobject.setField("Type__c", quotePriceAdjustment.getType());
+			sobject.setField("AppliesTo__C",quotePriceAdjustment.getAppliesTo());
 			
-//			quoteList.add(quote);
-//		}
-			
-//		return quoteList;
-		return null;
+		    sobjectList.add(sobject);
+		}
+		
+		return sobjectList;		
 	}
 	
 	private String quoteQuery = "Select Id, "

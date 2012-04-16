@@ -2,7 +2,6 @@ package com.redhat.sforce.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -16,14 +15,9 @@ import javax.servlet.http.HttpSession;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.util.FacesUtil;
 import com.redhat.sforce.qb.util.SessionConnection;
 import com.sforce.soap.partner.Connector;
@@ -38,22 +32,21 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	private static final long serialVersionUID = 1L;
 
+	@Inject
+	private Logger log;
+
+	@Inject
+	private ApplicationManager applicationManager;
+	
 	private String opportunityId;
 	
 	private TemplatesEnum mainArea;
 
 	private Quote selectedQuote;
 	
-	private PartnerConnection partnerConnection;
-
-	@Inject
-	private QuoteDAO quoteDAO;
-
-	@Inject
-	private Logger log;
-
-	@Inject
-	private ApplicationManager applicationManager;
+	private String frontDoorUrl;
+	
+	private PartnerConnection partnerConnection;	
 	
 	@ManagedProperty(value = "false")
 	private Boolean editMode;
@@ -85,6 +78,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				e.printStackTrace();
 			}
 			
+			setFrontDoorUrl(applicationManager.getFrontDoorUrl().replace("#sid#", sessionId));
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);			
 
 		} else {
@@ -134,44 +128,14 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public String getOpportunityId() {
 		return opportunityId;
 	}
-
+	
 	@Override
-	public Quote activateQuote(Quote quote) throws SalesforceServiceException {
-		return quoteDAO.activateQuote(partnerConnection.getConfig().getSessionId(), quote.getId());
+	public String getFrontDoorUrl() {
+		return frontDoorUrl;
 	}
-
+	
 	@Override
-	public void calculateQuote(String quoteId) {
-		quoteDAO.calculateQuote(partnerConnection.getConfig().getSessionId(), quoteId);
-	}
-
-	@Override
-	public void deleteQuote(Quote quote) {
-		quoteDAO.deleteQuote(partnerConnection.getConfig().getSessionId(), quote.getId());
-	}
-
-	@Override
-	public void copyQuote(Quote quote) {
-		quoteDAO.copyQuote(partnerConnection.getConfig().getSessionId(), quote.getId());
-	}
-
-	@Override
-	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException {
-		return quoteDAO.addOpportunityLineItems(partnerConnection.getConfig().getSessionId(), quote.getId(), opportunityLineItems);
-	}
-
-	@Override
-	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
-		quoteDAO.saveQuoteLineItems(partnerConnection.getConfig().getSessionId(), quoteLineItemList);
-	}
-
-	@Override
-	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException {
-		quoteDAO.saveQuotePriceAdjustments(partnerConnection.getConfig().getSessionId(), quotePriceAdjustmentList);
-	}
-
-	@Override
-	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException {
-		quoteDAO.deleteQuoteLineItems(partnerConnection.getConfig().getSessionId(), quoteLineItemList);
+	public void setFrontDoorUrl(String frontDoorUrl) {
+		this.frontDoorUrl = frontDoorUrl;
 	}
 }

@@ -1,8 +1,7 @@
 package com.redhat.sforce.qb.controller;
 
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.inject.Model;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
@@ -11,8 +10,8 @@ import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.util.SelectedOpportunity;
 
-@ManagedBean(name = "opportunityLineItemController")
-@RequestScoped
+@Model
+
 public class OpportunityLineItemController {
 
 	@Inject

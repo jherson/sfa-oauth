@@ -66,7 +66,7 @@ public class AuthorizeServlet extends HttpServlet {
 							+ "/services/oauth2/authorize?response_type=code&client_id="
 							+ getClientId() + "&redirect_uri="
 							+ URLEncoder.encode(getRedirectUri(), "UTF-8")
-							+ "&scope=full id web";
+							+ "&scope=full";
 
 					response.sendRedirect(authUrl);
 					return;
@@ -91,9 +91,7 @@ public class AuthorizeServlet extends HttpServlet {
 
 				try {
 					httpClient.executeMethod(postMethod);
-					JSONObject authResponse = new JSONObject(new JSONTokener(
-							new InputStreamReader(
-									postMethod.getResponseBodyAsStream())));
+					JSONObject authResponse = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));
 					sessionId = authResponse.getString("access_token");
 				} catch (JSONException e) {
 					log.error("JSONException", e);

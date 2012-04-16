@@ -9,7 +9,7 @@ public interface ApplicationManager {
 
 	public PartnerConnection getPartnerConnection();
 
-	public String getOpportunityDetailUrl();
+	public String getFrontDoorUrl();
 
 	public String getSessionId();
 

@@ -1,19 +1,15 @@
 package com.redhat.sforce.qb.manager;
 
-import java.util.List;
-
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.sforce.soap.partner.PartnerConnection;
 
 public interface SessionManager {
 
     public PartnerConnection getPartnerConnection();
 	public void setOpportunityId(String opportunityId);
+	public String getFrontDoorUrl();
+	public void setFrontDoorUrl(String frontDoorUrl);
 	public String getOpportunityId();
 	public void setEditMode(Boolean editMode);
 	public Boolean getEditMode();	
@@ -21,15 +17,5 @@ public interface SessionManager {
 	public TemplatesEnum getMainArea();
 	public void setSelectedQuote(Quote selectedQuote);
 	public Quote getSelectedQuote();
-
-
-	public Quote activateQuote(Quote quote) throws SalesforceServiceException;
-	public void calculateQuote(String quoteId);
-	public void deleteQuote(Quote quote);
-	public void copyQuote(Quote quote);
-	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws SalesforceServiceException;
-	public void deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException;
-	public void saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws SalesforceServiceException;
-	public void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws SalesforceServiceException;
 		
 }
