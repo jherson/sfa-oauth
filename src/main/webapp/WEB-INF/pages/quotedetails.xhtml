@@ -27,6 +27,20 @@
 					status="ajaxStatus">
 					<h:outputText value="#{msgs.edit}" />
 				</a4j:commandLink>
+				
+				<a4j:commandLink id="price"
+					rendered="#{quoteController.editMode}"
+					action="#{quoteController.priceQuote()}" ajaxSingle="true"
+					render="quotedetails">
+					<h:outputText value="#{msgs.price}" />
+				</a4j:commandLink>		
+				
+				<a4j:commandLink id="calculate"
+					rendered="#{not quoteController.editMode}"
+					action="#{quoteController.calculateQuote()}" ajaxSingle="true"
+					render="quotedetails">
+					<h:outputText value="#{msgs.calculate}" />
+				</a4j:commandLink>	
 
 				<a4j:commandLink id="activate"
 					action="#{quoteController.activateQuote()}"
@@ -36,7 +50,8 @@
 					<h:outputText value="#{msgs.activate}" />
 				</a4j:commandLink>
 
-				<a4j:commandLink id="copy" action="#{quoteController.copyQuote()}"
+				<a4j:commandLink id="copy" 
+				    action="#{quoteController.copyQuote()}"
 					rendered="#{not quoteController.editMode}" ajaxSingle="true"
 					render="mainArea" disabled="#{empty quoteController.selectedQuote}">
 					<h:outputText value="#{msgs.copy}" />
@@ -253,12 +268,18 @@
 							rendered="#{not quoteController.editMode or quoteController.selectedQuote.type != 'Standard'}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText> <rich:calendar value="#{quoteController.selectedQuote.startDate}"
+						</h:outputText> 
+						<rich:calendar value="#{quoteController.selectedQuote.startDate}"
 							id="startDate" locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
 							rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Standard'}"
 							disabled="false">
+							<a4j:ajax event="onchanged"
+							    listener="#{quoteTypeController.changeStartDate()}"
+								render="viewQuoteProducts">
+							</a4j:ajax>
+							
 						</rich:calendar></td>
 
 					<th class="label-column"><h:outputText value="#{msgs.endDate}" /></th>
@@ -318,11 +339,7 @@
 
 			<br />
 
-			<ui:include src="priceadjustments.xhtml" />
-
-			<br />
-
-			<ui:include src="quoteproducts.xhtml" />
+			<ui:include src="quoteproductslist.xhtml" />
 
 			<ui:include src="owners.xhtml" />
 			<ui:include src="contacts.xhtml" />

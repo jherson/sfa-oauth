@@ -13,19 +13,28 @@ import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class OpportunityFactory {
+	
+	public static List<Opportunity> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
+		List<Opportunity> opportunityList = new ArrayList<Opportunity>();
 
-	public static Opportunity deserialize(JSONObject jsonObject)
-			throws JSONException, ParseException {
+		for (int i = 0; i < jsonArray.length(); i++) {
+			Opportunity opportunity = null;
+			opportunity = deserialize(jsonArray.getJSONObject(i));
+			opportunityList.add(opportunity);
+		}
+
+		return opportunityList;
+	}
+
+	public static Opportunity deserialize(JSONObject jsonObject) throws JSONException, ParseException {
 
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 
 		Opportunity opportunity = new Opportunity();
 		opportunity.setId(wrapper.getId());
 		opportunity.setName(wrapper.getString("Name"));
-		opportunity.setOpportunityNumber(wrapper
-				.getString("OpportunityNumber__c"));
-		opportunity.setFulfillmentChannel(wrapper
-				.getString("FulfillmentChannel__c"));
+		opportunity.setOpportunityNumber(wrapper.getString("OpportunityNumber__c"));
+		opportunity.setFulfillmentChannel(wrapper.getString("FulfillmentChannel__c"));
 		opportunity.setAmount(wrapper.getDouble("Amount"));
 		opportunity.setCloseDate(wrapper.getDate("CloseDate"));
 		opportunity.setIsClosed(wrapper.getBoolean("IsClosed"));
@@ -38,19 +47,16 @@ public class OpportunityFactory {
 		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));
 		opportunity.setBillingCountry(wrapper.getString("BillingCountry__c"));
 		opportunity.setBillingState(wrapper.getString("BillingState__c"));
-		opportunity.setBillingZipPostalCode(wrapper
-				.getString("BillingZipPostalCode__c"));
+		opportunity.setBillingZipPostalCode(wrapper.getString("BillingZipPostalCode__c"));
 		opportunity.setShippingAddress(wrapper.getString("ShippingAddress__c"));
 		opportunity.setShippingCity(wrapper.getString("ShippingCity__c"));
 		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
 		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
-		opportunity.setShippingZipPostalCode(wrapper
-				.getString("ShippingZipPostalCode__c"));
+		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));
 
 		List<User> ownerList = new ArrayList<User>();
 		if (wrapper.getJSONObject("Owner") != null) {
-			opportunity.setOwner(UserFactory.deserialize(wrapper
-					.getJSONObject("Owner")));
+			opportunity.setOwner(UserFactory.deserialize(wrapper.getJSONObject("Owner")));
 			ownerList.add(opportunity.getOwner());
 		}
 
@@ -58,8 +64,7 @@ public class OpportunityFactory {
 
 		records = wrapper.getRecords("OpportunityLineItems");
 		if (records != null) {
-			opportunity.setOpportunityLineItems(OpportunityLineItemFactory
-					.deserialize(records));
+			opportunity.setOpportunityLineItems(OpportunityLineItemFactory.deserialize(records));
 		}
 
 		records = wrapper.getRecords("OpportunityContactRoles");

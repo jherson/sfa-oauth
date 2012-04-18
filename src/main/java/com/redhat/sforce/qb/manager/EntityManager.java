@@ -11,6 +11,6 @@ public interface EntityManager {
 
 	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException;
 	public SaveResult persist(SObject sobject) throws ConnectionException;
-	public DeleteResult delete(SObject sobject) throws ConnectionException;
-	public DeleteResult[] delete(List<SObject> sobjectList) throws ConnectionException;		
+	public DeleteResult delete(String id) throws ConnectionException;
+	public DeleteResult[] delete(List<String> idList) throws ConnectionException;		
 }

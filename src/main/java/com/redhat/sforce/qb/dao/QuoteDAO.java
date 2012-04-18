@@ -1,9 +1,6 @@
 package com.redhat.sforce.qb.dao;
 
-import java.text.ParseException;
 import java.util.List;
-
-import org.json.JSONException;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
@@ -16,16 +13,18 @@ import com.sforce.ws.ConnectionException;
 
 public interface QuoteDAO {
 
-	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException;
-	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws JSONException, ParseException, SalesforceServiceException;
-	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException, JSONException, ParseException;
+	public List<Quote> queryQuotes() throws SalesforceServiceException;
+	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws SalesforceServiceException;
+	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException;
 	public SaveResult saveQuote(Quote quote) throws ConnectionException;
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException;
-	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
+	public Quote saveQuoteLineItems(Quote quote, List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException;
+	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException;
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
-	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems);
+	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws ConnectionException, SalesforceServiceException;
 	public Quote activateQuote(String quoteId) throws SalesforceServiceException;
 	public Quote calculateQuote(String quoteId) throws SalesforceServiceException;
 	public Quote copyQuote(String quoteId) throws SalesforceServiceException;	
+	public Quote priceQuote(String quoteId) throws SalesforceServiceException;
 }

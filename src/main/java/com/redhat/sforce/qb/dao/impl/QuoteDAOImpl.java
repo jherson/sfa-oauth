@@ -29,7 +29,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	private static final long serialVersionUID = 761677199610058917L;
 	
 	@Override
-	public List<Quote> queryQuotes() throws SalesforceServiceException, JSONException, ParseException {
+	public List<Quote> queryQuotes() throws SalesforceServiceException {
 		String queryString = quoteQuery + "Order By Number__c";
 		try {
 			return QuoteFactory.deserialize(sm.query(queryString));
@@ -89,7 +89,14 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public void addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
+	public Quote priceQuote(String quoteId) throws SalesforceServiceException {
+		sm.priceQuote(quoteId);
+		return null;
+	}
+	
+	@Override
+	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws ConnectionException, SalesforceServiceException {
+		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
 		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
 		    QuoteLineItem quoteLineItem = new QuoteLineItem();
 	        quoteLineItem.setQuoteId(quote.getId());
@@ -119,14 +126,24 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	        } else if ("Co-Term".equals(quote.getType())) {
 	        	quoteLineItem.setEndDate(quote.getEndDate());
 	        }
-	         	             
-	        quote.getQuoteLineItems().add(quoteLineItem);
-		}		
+	        
+	        quoteLineItemList.add(quoteLineItem);
+		}	
+		
+		return saveQuoteLineItems(quote, quoteLineItemList);
+		
 	}
 
 	@Override
-	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {		
-		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
+	public Quote saveQuoteLineItems(Quote quote, List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException {		
+		SaveResult[] saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
+		for (int i = 0; i < saveResult.length; i++) {
+			if (! (saveResult[i].isSuccess())) {
+				throw new ConnectionException(saveResult[i].getErrors()[0].getMessage());
+			}
+		}
+		
+		return queryQuoteById(quote.getId());
 	}
 	
 	@Override
@@ -136,7 +153,13 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	@Override
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
-		return em.delete(convertQuoteLineItemsToSObjects(quoteLineItemList));
+		//return em.delete(SObjectUtil.getSObjectIds(quoteLineItemList));
+		return null;
+	}
+	
+	@Override
+	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException {
+        return em.delete(quoteLineItem.getId());
 	}
 	
 	@Override
@@ -146,7 +169,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	
 	@Override
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException {		
-		return em.delete(convertQuoteToSObject(quote));				
+		return em.delete(quote.getId());				
 	}
 	
 	private SObject convertQuoteToSObject(Quote quote) {
@@ -193,7 +216,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		    sobject.setType("QuoteLineItem__c");
 		    if (quoteLineItem.getId() != null) {
 			    sobject.setId(quoteLineItem.getId());
-		    }		    
+		    } else {
+		    	sobject.setField("QuoteId__c", quoteLineItem.getQuoteId());
+		    }
 		    sobject.setField("ProductDescription__c", quoteLineItem.getDescription());
 		    sobject.setField("Configured_SKU__c", quoteLineItem.getConfiguredSku());
 		    sobject.setField("ContractNumbers__c", quoteLineItem.getContractNumbers());
@@ -207,8 +232,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			sobject.setField("PricebookEntryId__c", quoteLineItem.getPricebookEntryId());
 			sobject.setField("Product__c", quoteLineItem.getProduct().getId());
 			sobject.setField("Pricing_Attributes__c", quoteLineItem.getPricingAttributes());
-			sobject.setField("Quantity__c", quoteLineItem.getQuantity());
-			sobject.setField("QuoteId__c", quoteLineItem.getQuoteId());
+			sobject.setField("Quantity__c", quoteLineItem.getQuantity());			
 			sobject.setField("SortOrder__c", quoteLineItem.getSortOrder());
 			sobject.setField("StartDate__c", quoteLineItem.getStartDate());
 			sobject.setField("Term__c", quoteLineItem.getTerm());
@@ -327,50 +351,50 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "OpportunityId__r.Pricebook2.Id, "
 			+ "OpportunityId__r.Pricebook2.Name, "
 			+ "(Select Id, "
-			+ "Name, "
-			+ "CurrencyIsoCode, "
-			+ "CreatedDate, "
-			+ "CreatedBy.Id, "
-			+ "CreatedBy.Name, "
-			+ "LastModifiedDate, "
-			+ "LastModifiedBy.Id, "
-			+ "LastModifiedBy.Name, "
-			+ "OpportunityLineItemId__c, "
-			+ "Quantity__c, "
-			+ "EndDate__c, "
-			+ "ContractNumbers__c, "
-			+ "ListPrice__c, "
-			+ "OpportunityId__c, "
-			+ "Term__c, "
-			+ "UnitPrice__c, "
-			+ "SortOrder__c, "
-			+ "YearlySalesPrice__c, "
-			+ "NewOrRenewal__c, "
-			+ "QuoteId__c, "
-			+ "DiscountAmount__c, "
-			+ "DiscountPercent__c, "
-			+ "Product__r.Id, "
-			+ "Product__r.Description, "
-			+ "Product__r.Name, "
-			+ "Product__r.Family, "
-			+ "Product__r.ProductCode, "
-			+ "Product__r.Primary_Business_Unit__c, "
-			+ "Product__r.Product_Line__c, "
-			+ "Product__r.Unit_Of_Measure__c, "
-			+ "Product__r.Term__c, "
-			+ "TotalPrice__c, "
-			+ "StartDate__c, "
-			+ "PricebookEntryId__c, "
-			+ "Configured_SKU__c, "
-			+ "Pricing_Attributes__c "
-			+ "From   QuoteLineItem__r "
+			+ "        Name, "
+			+ "        CurrencyIsoCode, "
+			+ "        CreatedDate, "
+			+ "        CreatedBy.Id, "
+			+ "        CreatedBy.Name, "
+			+ "        LastModifiedDate, "
+			+ "        LastModifiedBy.Id, "
+			+ "        LastModifiedBy.Name, "
+			+ "        OpportunityLineItemId__c, "
+			+ "        Quantity__c, "
+			+ "        EndDate__c, "
+			+ "        ContractNumbers__c, "
+			+ "        ListPrice__c, "
+			+ "        OpportunityId__c, "
+			+ "        Term__c, "
+			+ "        UnitPrice__c, "
+			+ "        SortOrder__c, "
+			+ "        YearlySalesPrice__c, "
+			+ "        NewOrRenewal__c, "
+			+ "        QuoteId__c, "
+			+ "        DiscountAmount__c, "
+			+ "        DiscountPercent__c, "
+			+ "        Product__r.Id, "
+			+ "        Product__r.Description, "
+			+ "        Product__r.Name, "
+			+ "        Product__r.Family, "
+			+ "        Product__r.ProductCode, "
+			+ "        Product__r.Primary_Business_Unit__c, "
+			+ "        Product__r.Product_Line__c, "
+			+ "        Product__r.Unit_Of_Measure__c, "
+			+ "        Product__r.Term__c, "
+			+ "        TotalPrice__c, "
+			+ "        StartDate__c, "
+			+ "        PricebookEntryId__c, "
+			+ "        Configured_SKU__c, "
+			+ "        Pricing_Attributes__c "
+			+ " From   QuoteLineItem__r "
 			+ "Order By CreatedDate), "
 			+ "(Select Id, "
-			+ "QuoteId__c, "
-			+ "AdjustmentAmount__c, "
-			+ "Operator__c, "
-			+ "Percent__c, "
-			+ "Reason__c, "
+			+ "        QuoteId__c, "
+			+ "        AdjustmentAmount__c, "
+			+ "        Operator__c, "
+			+ "        Percent__c, "
+			+ "        Reason__c, "
 			+ "Type__c, "
 			+ "AppliesTo__c "
 			+ "From   QuotePriceAdjustment__r), "

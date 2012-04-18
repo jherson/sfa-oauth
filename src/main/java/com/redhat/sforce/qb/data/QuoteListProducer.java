@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.data;
 
-import java.text.ParseException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.logging.Logger;
-import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
@@ -47,12 +45,6 @@ public class QuoteListProducer implements Serializable {
 		log.info("queryQuotes");
 		try {
 			quoteList = quoteDAO.queryQuotes();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,28 +1,21 @@
 package com.redhat.sforce.qb.rest;
 
-import java.text.ParseException;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 
 import org.jboss.logging.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.ServicesManager;
 import com.redhat.sforce.qb.model.Quote;
 
 @RequestScoped
@@ -69,13 +62,7 @@ public class QuoteBuilderRestResources extends Application {
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		
 		return null;	
 	}
@@ -176,13 +163,7 @@ public class QuoteBuilderRestResources extends Application {
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		
 		return null;
 	}

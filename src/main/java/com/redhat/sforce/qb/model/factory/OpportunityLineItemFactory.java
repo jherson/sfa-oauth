@@ -14,78 +14,46 @@ import com.redhat.sforce.qb.util.Util;
 
 public class OpportunityLineItemFactory {
 
-	public static List<OpportunityLineItem> deserialize(JSONArray jsonArray)
-			throws JSONException, ParseException {
+	public static List<OpportunityLineItem> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObjectWrapper wrapper = new JSONObjectWrapper(
-					jsonArray.getJSONObject(i));
+			JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(i));
 
 			OpportunityLineItem opportunityLineItem = new OpportunityLineItem();
 			opportunityLineItem.setId(wrapper.getId());
-			opportunityLineItem.setOpportunityId(wrapper
-					.getString("OpportunityId"));
-			opportunityLineItem
-					.setDescription(wrapper.getString("Description"));
-			opportunityLineItem.setConfiguredSku(wrapper
-					.getString("Configured_SKU__c"));
-			opportunityLineItem.setContractNumbers(wrapper
-					.getString("Contract_Numbers__c"));
-			opportunityLineItem.setActualStartDate(wrapper
-					.getDate("ActualStartDate__c"));
-			opportunityLineItem.setActualEndDate(wrapper
-					.getDate("ActualEndDate__c"));
-			opportunityLineItem.setActualTerm(wrapper
-					.getInteger("ActualTerm__c"));
-			opportunityLineItem.setContractNumbers(wrapper
-					.getString("Contract_Numbers__c"));
-			opportunityLineItem
-					.setBasePrice(wrapper.getDouble("Base_Price__c"));
+			opportunityLineItem.setOpportunityId(wrapper.getString("OpportunityId"));
+			opportunityLineItem.setDescription(wrapper.getString("Description"));
+			opportunityLineItem.setConfiguredSku(wrapper.getString("Configured_SKU__c"));
+			opportunityLineItem.setContractNumbers(wrapper.getString("Contract_Numbers__c"));
+			opportunityLineItem.setActualStartDate(wrapper.getDate("ActualStartDate__c"));
+			opportunityLineItem.setActualEndDate(wrapper.getDate("ActualEndDate__c"));
+			opportunityLineItem.setActualTerm(wrapper.getInteger("ActualTerm__c"));
+			opportunityLineItem.setContractNumbers(wrapper.getString("Contract_Numbers__c"));
+			opportunityLineItem.setBasePrice(wrapper.getDouble("Base_Price__c"));
 			opportunityLineItem.setListPrice(wrapper.getDouble("ListPrice"));
-			opportunityLineItem.setNewOrRenewal(wrapper
-					.getString("NewOrRenewal__c"));
+			opportunityLineItem.setNewOrRenewal(wrapper.getString("NewOrRenewal__c"));
 			opportunityLineItem.setQuantity(wrapper.getInteger("Quantity"));
 			opportunityLineItem.setUnitPrice(wrapper.getDouble("UnitPrice"));
 			opportunityLineItem.setTotalPrice(wrapper.getDouble("TotalPrice"));
-			opportunityLineItem.setYearlySalesPrice(wrapper
-					.getDouble("YearlySalesPrice__c"));
-			opportunityLineItem.setYear1Amount(wrapper
-					.getDouble("Year1Amount__c"));
-			opportunityLineItem.setYear2Amount(wrapper
-					.getDouble("Year2Amount__c"));
-			opportunityLineItem.setYear3Amount(wrapper
-					.getDouble("Year3Amount__c"));
-			opportunityLineItem.setYear4Amount(wrapper
-					.getDouble("Year4Amount__c"));
-			opportunityLineItem.setYear5Amount(wrapper
-					.getDouble("Year5Amount__c"));
-			opportunityLineItem.setYear6Amount(wrapper
-					.getDouble("Year6Amount__c"));
-			opportunityLineItem.setCurrencyIsoCode(wrapper
-					.getString("CurrencyIsoCode"));
-			opportunityLineItem.setPricingAttributes(wrapper
-					.getString("Pricing_Attributes__c"));
-			opportunityLineItem.setPricebookEntryId(wrapper.getString(
-					"PricebookEntry", "Id"));
-			opportunityLineItem.setCreatedById(wrapper.getString("CreatedBy",
-					"Id"));
-			opportunityLineItem.setCreatedByName(wrapper.getString("CreatedBy",
-					"Name"));
-			opportunityLineItem.setCreatedDate(wrapper
-					.getDateTime("CreatedDate"));
-			opportunityLineItem.setCurrencyIsoCode(wrapper
-					.getString("CurrencyIsoCode"));
-			opportunityLineItem.setLastModifiedById(wrapper.getString(
-					"LastModifiedBy", "Id"));
-			opportunityLineItem.setLastModifiedByName(wrapper.getString(
-					"LastModifiedBy", "Name"));
-			opportunityLineItem.setLastModifiedDate(wrapper
-					.getDateTime("LastModifiedDate"));
-			opportunityLineItem
-					.setProduct(ProductFactory.parseProduct(wrapper
-							.getJSONObject("PricebookEntry").getJSONObject(
-									"Product2")));
+			opportunityLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
+			opportunityLineItem.setYear1Amount(wrapper.getDouble("Year1Amount__c"));
+			opportunityLineItem.setYear2Amount(wrapper.getDouble("Year2Amount__c"));
+			opportunityLineItem.setYear3Amount(wrapper.getDouble("Year3Amount__c"));
+			opportunityLineItem.setYear4Amount(wrapper.getDouble("Year4Amount__c"));
+			opportunityLineItem.setYear5Amount(wrapper.getDouble("Year5Amount__c"));
+			opportunityLineItem.setYear6Amount(wrapper.getDouble("Year6Amount__c"));
+			opportunityLineItem.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+			opportunityLineItem.setPricingAttributes(wrapper.getString("Pricing_Attributes__c"));
+			opportunityLineItem.setPricebookEntryId(wrapper.getString("PricebookEntry", "Id"));
+			opportunityLineItem.setCreatedById(wrapper.getString("CreatedBy", "Id"));
+			opportunityLineItem.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
+			opportunityLineItem.setCreatedDate(wrapper.getDateTime("CreatedDate"));
+			opportunityLineItem.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+			opportunityLineItem.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
+			opportunityLineItem.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
+			opportunityLineItem.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
+			opportunityLineItem.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("PricebookEntry").getJSONObject("Product2")));
 
 			opportunityLineItemList.add(opportunityLineItem);
 		}

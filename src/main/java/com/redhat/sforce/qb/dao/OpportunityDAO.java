@@ -1,12 +1,9 @@
 package com.redhat.sforce.qb.dao;
 
-import java.text.ParseException;
-
-import org.json.JSONException;
-
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Opportunity;
 
 public interface OpportunityDAO {
 
-	public Opportunity getOpportunity(String opportunityId) throws JSONException, ParseException;
+	public Opportunity queryOpportunityById(String opportunityId) throws SalesforceServiceException;
 }

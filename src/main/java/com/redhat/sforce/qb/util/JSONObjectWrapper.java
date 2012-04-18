@@ -36,23 +36,19 @@ public class JSONObjectWrapper {
 	}
 
 	public String getString(String object, String key) throws JSONException {
-		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(
-				object).getString(key);
+		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getString(key);
 	}
 
 	public Double getDouble(String object, String key) throws JSONException {
-		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(
-				object).getDouble(key);
+		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getDouble(key);
 	}
 
 	public Integer getInteger(String object, String key) throws JSONException {
-		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(
-				object).getInt(key);
+		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getInt(key);
 	}
 
 	public Date getDateTime(String key) throws ParseException, JSONException {
-		return jsonObject.isNull(key) ? null : Util.parseDateTime(jsonObject
-				.getString(key));
+		return jsonObject.isNull(key) ? null : Util.parseDateTime(jsonObject.getString(key));
 	}
 
 	public Date getDate(String key) throws ParseException, JSONException {
@@ -64,7 +60,6 @@ public class JSONObjectWrapper {
 	}
 
 	public JSONArray getRecords(String object) throws JSONException {
-		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(
-				object).getJSONArray("records");
+		return jsonObject.isNull(object) ? null : jsonObject.getJSONObject(object).getJSONArray("records");
 	}
 }

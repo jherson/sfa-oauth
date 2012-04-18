@@ -53,9 +53,13 @@
 		value="#{quoteController.selectedQuote.quoteLineItems}">
 
 		<rich:column style="text-align: center; width: 3%;">
-			<f:facet name="header">#{msgs.select}</f:facet>
-			<h:outputText value="#{it.index}" 
-			    rendered="#{not quoteController.editMode}" />
+			<f:facet name="header">#{msgs.action}</f:facet>
+			<a4j:commandLink id="deleteLineItem"
+			    value="#{msgs.delete}" 
+			    rendered="#{not quoteController.editMode}"
+				action="#{quoteController.deleteQuoteLineItem(lineItem)}" 
+				render="quotedetails">
+			</a4j:commandLink>
 			<h:selectBooleanCheckbox value="#{lineItem.delete}" 
 			    rendered="#{quoteController.editMode}"/>
 		</rich:column>
@@ -136,16 +140,10 @@
 
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.listPrice}</f:facet>
-			<h:outputText value="#{lineItem.listPrice}"
-				rendered="#{not quoteController.editMode}">
+			<h:outputText value="#{lineItem.listPrice}">
 				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
-			<h:inputText value="#{lineItem.listPrice}" style="width: 70px;"
-				rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" type="number" />
-			</h:inputText>
 		</rich:column>
 
 		<rich:column style="text-align: right; width: 4%;">
@@ -206,16 +204,10 @@
 
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
-			<h:outputText value="#{lineItem.totalPrice}"
-				rendered="#{not quoteController.editMode}">
+			<h:outputText value="#{lineItem.totalPrice}">
 				<f:convertNumber locale="#{user.locale}"
 					pattern="#,##0.00;(#,##0.00)" />
 			</h:outputText>
-			<h:inputText value="#{lineItem.totalPrice}" style="width: 78px;"
-				rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" type="number" />
-			</h:inputText>
 		</rich:column>
 
 	</rich:dataTable>

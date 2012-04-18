@@ -11,13 +11,13 @@ body {
 	height: 70px;
 }
 #container {
-    margin: 0 auto;
+    margin: 0;
     padding: 0 0px 0px 0px;
     width: 100%; 
     background: #FFFFFF;
-    padding-top: 3px;
-    padding-right: 2px;
+    padding-top: 2px;    
     padding-left: 2px;
+    padding-right: 2px;
 }
 #sidebar {
     font-size: 0.9em;
@@ -36,7 +36,7 @@ body {
     text-align: center;
     color: #666666;
     font-size: 0.85em;
-    padding: 0 0 0 0;
+    padding: 2 0 0 2;
 }
 code {
     font-size: 1.1em;

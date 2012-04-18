@@ -16,8 +16,7 @@ import com.redhat.sforce.qb.util.Util;
 public class QuoteFactory {	
 	private static final Logger log = Logger.getLogger(QuoteFactory.class);
 
-	public static List<Quote> deserialize(JSONArray jsonArray)
-			throws JSONException, ParseException {
+	public static List<Quote> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<Quote> quoteList = new ArrayList<Quote>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -77,16 +76,19 @@ public class QuoteFactory {
 		JSONArray records = null;
 
 		records = wrapper.getRecords("QuoteLineItem__r");
-		if (records != null)
+		if (records != null) {
 			quote.setQuoteLineItems(QuoteLineItemFactory.deserialize(records));
+		}
 
 		records = wrapper.getRecords("QuoteLineItemSchedule__r");
-		if (records != null)
+		if (records != null) {
 			quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory.deserialize(records));
+		}
 
 		records = wrapper.getRecords("QuotePriceAdjustment__r");
-		if (records != null)
+		if (records != null) {
 			quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.deserialize(records));
+		}
 
 		return quote;
 	}

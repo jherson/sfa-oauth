@@ -14,8 +14,7 @@ import com.redhat.sforce.qb.util.Util;
 
 public class QuoteLineItemFactory {
 
-	public static List<QuoteLineItem> deserialize(JSONArray jsonArray)
-			throws JSONException, ParseException {
+	public static List<QuoteLineItem> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -25,8 +24,7 @@ public class QuoteLineItemFactory {
 		return quoteLineItemList;
 	}
 
-	public static QuoteLineItem deserialize(JSONObject jsonObject)
-			throws JSONException, ParseException {
+	public static QuoteLineItem deserialize(JSONObject jsonObject) throws JSONException, ParseException {
 
 		JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonObject);
 

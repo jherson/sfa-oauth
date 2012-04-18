@@ -1,7 +1,6 @@
 package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
-import java.text.ParseException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -11,9 +10,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.logging.Logger;
-import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.OpportunityDAO;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.util.SelectedOpportunity;
@@ -50,11 +49,8 @@ public class OpportunityProducer implements Serializable {
 	public void queryOpportunity() {
 		log.info("queryOpportunity");
 		try {
-			opportunity = opportunityDAO.getOpportunity(sessionManager.getOpportunityId());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
+			opportunity = opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId());
+		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
