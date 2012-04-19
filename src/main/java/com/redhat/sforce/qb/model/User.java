@@ -32,6 +32,7 @@ public class User extends SObject {
 	private String fullPhotoUrl;
 	private String smallPhotoUrl;
 	private Locale locale;
+	private String timeZone;
 	private String dateFormatPattern;
 	private String dateTimeFormatPattern;
 
@@ -254,7 +255,15 @@ public class User extends SObject {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-
+	
+	public String getTimeZone() {
+		return timeZone;
+	}
+	
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
+	}
+	
 	public String getDateFormatPattern() {
 		return dateFormatPattern;
 	}

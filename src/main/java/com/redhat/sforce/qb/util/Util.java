@@ -8,10 +8,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 public class Util {
-	private static final DateFormat dateTimeFormat = new SimpleDateFormat(
-			"yyyy-MM-dd'T'kk:mm:ss'.000+0000'");
-	private static final DateFormat dateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd");
+	private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSSZ");
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static String dateFormat(Date value) {
 		if (value == null)
@@ -37,7 +35,7 @@ public class Util {
 	public static Date parseDateTime(String value) throws ParseException {
 		if (value == null)
 			return null;
-
+		
 		return value != null ? dateTimeFormat.parse(value) : null;
 	}
 

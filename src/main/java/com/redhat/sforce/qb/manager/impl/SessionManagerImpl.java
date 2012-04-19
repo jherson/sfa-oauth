@@ -70,7 +70,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			ConnectorConfig config = new ConnectorConfig();
 			config.setManualLogin(true);
 			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-			config.setSessionId(sessionId);					
+			config.setSessionId(sessionId);								
 			try {
 				partnerConnection = Connector.newConnection(config);
 			} catch (ConnectionException e) {

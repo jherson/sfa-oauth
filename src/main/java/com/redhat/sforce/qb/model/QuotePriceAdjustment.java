@@ -4,6 +4,8 @@ public class QuotePriceAdjustment extends SObject {
 
 	private static final long serialVersionUID = 1L;
 	private String quoteId;
+	private Double preAdjustedTotal;
+	private Double adjustedTotal;
 	private Double adjustmentAmount;
 	private String operator;
 	private Double percent;
@@ -80,5 +82,21 @@ public class QuotePriceAdjustment extends SObject {
 
 	public void setAppliesTo(String appliesTo) {
 		this.appliesTo = appliesTo;
+	}
+	
+	public Double getPreAdjustedTotal() {
+		return preAdjustedTotal;
+	}
+
+	public void setPreAdjustedTotal(Double preAdjustedTotal) {
+		this.preAdjustedTotal = preAdjustedTotal;
+	}
+
+	public Double getAdjustedTotal() {
+		return adjustedTotal;
+	}
+
+	public void setAdjustedTotal(Double adjustedTotal) {
+		this.adjustedTotal = adjustedTotal;
 	}
 }

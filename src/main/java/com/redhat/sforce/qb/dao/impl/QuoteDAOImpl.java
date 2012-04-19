@@ -17,6 +17,7 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
+import com.redhat.sforce.qb.util.SObjectUtil;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
@@ -34,10 +35,24 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		try {
 			return QuoteFactory.deserialize(sm.query(queryString));
 		} catch (JSONException e) {
-			log.error(e);
+			log.error(e.getStackTrace());
 			throw new SalesforceServiceException(e);
 		} catch (ParseException e) {
-			log.error(e);
+			log.error(e.getStackTrace());
+			throw new SalesforceServiceException(e);
+		}
+	}
+	
+	@Override
+	public List<Quote> queryQuotes(String whereClause) throws SalesforceServiceException {
+		String queryString = quoteQuery + "Where " + whereClause;
+		try {
+			return QuoteFactory.deserialize(sm.query(queryString));
+		} catch (JSONException e) {
+			log.error(e.getStackTrace());
+			throw new SalesforceServiceException(e);
+		} catch (ParseException e) {
+			log.error(e.getStackTrace());
 			throw new SalesforceServiceException(e);
 		}
 	}
@@ -48,10 +63,10 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		try {
 			return QuoteFactory.deserialize(sm.query(queryString));
 		} catch (JSONException e) {
-			log.error(e);
+			log.error(e.getStackTrace());
 			throw new SalesforceServiceException(e);
 		} catch (ParseException e) {
-			log.error(e);
+			log.error(e.getStackTrace());
 			throw new SalesforceServiceException(e);
 		}
 	}
@@ -153,8 +168,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	@Override
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
-		//return em.delete(SObjectUtil.getSObjectIds(quoteLineItemList));
-		return null;
+		List<String> ids = new ArrayList<String>();
+		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
+			ids.add(quoteLineItem.getId());
+		}
+		return em.delete(ids);
 	}
 	
 	@Override
@@ -185,10 +203,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	    sobject.setField("CurrencyIsoCode", quote.getCurrencyIsoCode());
 	    sobject.setField("EffectiveDate__c", quote.getEffectiveDate());
 	    sobject.setField("EndDate__c", quote.getEndDate());
-	    sobject.setField("ExpirationDate__c", quote.getExpirationDate());
-	    sobject.setField("HasQuoteLineItems__c", quote.getHasQuoteLineItems());
-	    sobject.setField("IsActive__c", quote.getIsActive());
-	    sobject.setField("IsCalculated__c", quote.getIsCalculated());
+	    sobject.setField("ExpirationDate__c", quote.getExpirationDate());	    
 	    sobject.setField("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
 	    sobject.setField("Name", quote.getName());	    
 	    sobject.setField("QuoteOwnerId__c", quote.getOwnerId());
@@ -199,12 +214,12 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	    sobject.setField("Term__c", quote.getTerm());
 	    sobject.setField("Type__c", quote.getType());
 	    sobject.setField("Version__c", quote.getVersion());
-	    sobject.setField("Year1PaymentAmount__c", quote.getYear1PaymentAmount());
-	    sobject.setField("Year2PaymentAmount__c", quote.getYear2PaymentAmount());
-	    sobject.setField("Year3PaymentAmount__c", quote.getYear3PaymentAmount());
-	    sobject.setField("Year4PaymentAmount__c", quote.getYear4PaymentAmount());
-	    sobject.setField("Year5PaymentAmount__c", quote.getYear5PaymentAmount());
-	    sobject.setField("Year6PaymentAmount__c", quote.getYear6PaymentAmount());
+	    
+	    if (quote.getQuoteLineItems() != null && quote.getQuoteLineItems().size() > 0) {
+	    	sobject.setField("HasQuoteLineItems__c", Boolean.TRUE);
+	    } else {
+	    	sobject.setField("HasQuoteLineItems__c", Boolean.FALSE);
+	    }
 		
 		return sobject;
 	}	
@@ -308,48 +323,6 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "LastModifiedBy.Name, "
 			+ "OpportunityId__r.Id, "
 			+ "OpportunityId__r.Name, "
-			+ "OpportunityId__r.IsClosed, "
-			+ "OpportunityId__r.IsWon, "
-			+ "OpportunityId__r.CurrencyIsoCode, "
-			+ "OpportunityId__r.HasOpportunityLineItem, "
-			+ "OpportunityId__r.BillingAddress__c, "
-			+ "OpportunityId__r.ShippingAddress__c, "
-			+ "OpportunityId__r.BillingCity__c, "
-			+ "OpportunityId__r.ShippingCity__c, "
-			+ "OpportunityId__r.BillingCountry__c, "
-			+ "OpportunityId__r.ShippingCountry__c, "
-			+ "OpportunityId__r.BillingZipPostalCode__c, "
-			+ "OpportunityId__r.ShippingZipPostalCode__c, "
-			+ "OpportunityId__r.BillingState__c, "
-			+ "OpportunityId__r.ShippingState__c, "
-			+ "OpportunityId__r.OpportunityNumber__c, "
-			+ "OpportunityId__r.Pay_Now__c, "
-			+ "OpportunityId__r.Country_of_Order__c, "
-			+ "OpportunityId__r.Account.Name, "
-			+ "OpportunityId__r.Account.OracleAccountNumber__c, "
-			+ "OpportunityId__r.Account.Account_Alias_Name__c, "
-			+ "OpportunityId__r.Owner.Id, "
-			+ "OpportunityId__r.Owner.Name, "
-			+ "OpportunityId__r.Owner.FirstName, "
-			+ "OpportunityId__r.Owner.LastName, "
-			+ "OpportunityId__r.Owner.ContactId, "
-			+ "OpportunityId__r.Owner.Email, "
-			+ "OpportunityId__r.Owner.Phone, "
-			+ "OpportunityId__r.Owner.Title, "
-			+ "OpportunityId__r.Owner.Department, "
-			+ "OpportunityId__r.Owner.UserRole.Name, "
-			+ "OpportunityId__r.Owner.Profile.Name, "
-			+ "OpportunityId__r.Owner.LocaleSidKey, "
-			+ "OpportunityId__r.CreatedBy.Id, "
-			+ "OpportunityId__r.CreatedBy.Name, "
-			+ "OpportunityId__r.CreatedBy.FirstName, "
-			+ "OpportunityId__r.CreatedBy.LastName, "
-			+ "OpportunityId__r.LastModifiedBy.Id, "
-			+ "OpportunityId__r.LastModifiedBy.Name, "
-			+ "OpportunityId__r.LastModifiedBy.FirstName, "
-			+ "OpportunityId__r.LastModifiedBy.LastName, "
-			+ "OpportunityId__r.Pricebook2.Id, "
-			+ "OpportunityId__r.Pricebook2.Name, "
 			+ "(Select Id, "
 			+ "        Name, "
 			+ "        CurrencyIsoCode, "
@@ -395,27 +368,27 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        Operator__c, "
 			+ "        Percent__c, "
 			+ "        Reason__c, "
-			+ "Type__c, "
-			+ "AppliesTo__c "
-			+ "From   QuotePriceAdjustment__r), "
+			+ "        Type__c, "
+			+ "        AppliesTo__c "
+			+ " From   QuotePriceAdjustment__r), "
 			+ "(Select Id, "
-			+ "Name, "
-			+ "CurrencyIsoCode, "
-			+ "CreatedDate, "
-			+ "CreatedById, "
-			+ "LastModifiedDate, "
-			+ "LastModifiedById, "
-			+ "ProrateUnitPrice__c, "
-			+ "Type__c, "
-			+ "ProrateTotalPrice__c, "
-			+ "ProrateYearTotalPrice__c, "
-			+ "QuoteId__c, "
-			+ "StartDate__c, "
-			+ "PricePerDay__c, "
-			+ "Year__c, "
-			+ "EndDate__c, "
-			+ "ProrateYearUnitPrice__c, "
-			+ "QuoteLineItemId__r.Id, "
+			+ "        Name, "
+			+ "        CurrencyIsoCode, "
+			+ "        CreatedDate, "
+			+ "        CreatedById, "
+			+ "        LastModifiedDate, "
+			+ "        LastModifiedById, "
+			+ "        ProrateUnitPrice__c, "
+			+ "        Type__c, "
+			+ "        ProrateTotalPrice__c, "
+			+ "        ProrateYearTotalPrice__c, "
+			+ "        QuoteId__c, "
+			+ "        StartDate__c, "
+			+ "        PricePerDay__c, "
+			+ "        Year__c, "
+			+ "        EndDate__c, "
+			+ "        ProrateYearUnitPrice__c, "
+			+ "        QuoteLineItemId__r.Id, "
 			+ "QuoteLineItemId__r.ProductDescription__c, "
 			+ "QuoteLineItemId__r.Product__r.Id, "
 			+ "QuoteLineItemId__r.Product__r.Description, "

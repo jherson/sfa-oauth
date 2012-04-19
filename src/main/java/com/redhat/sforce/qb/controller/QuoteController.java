@@ -110,7 +110,6 @@ public class QuoteController {
 		    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
 	    } catch (IOException e) {
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 	    } 
 	}

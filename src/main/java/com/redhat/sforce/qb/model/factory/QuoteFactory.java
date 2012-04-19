@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.model.factory;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 
@@ -85,10 +88,37 @@ public class QuoteFactory {
 			quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory.deserialize(records));
 		}
 
-		records = wrapper.getRecords("QuotePriceAdjustment__r");
-		if (records != null) {
-			quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.deserialize(records));
+		//records = wrapper.getRecords("QuotePriceAdjustment__r");
+		//if (records != null) {
+		//	quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.deserialize(records));
+		//}
+		
+		String[] primaryBusinessUnit = new String[] {"Middleware", "Management", "Platform", "Cloud"};
+		
+		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
+		
+		for (int i = 0; i < primaryBusinessUnit.length; i++) {
+			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment();
+			quotePriceAdjustment.setQuoteId(quote.getId());
+			quotePriceAdjustment.setType("Negotiated Discount");
+			quotePriceAdjustment.setAppliesTo("QUOTE_LINE_ITEM");
+			quotePriceAdjustment.setReason(primaryBusinessUnit[i]);
+			quotePriceAdjustment.setAdjustmentAmount(0.00);
+			quotePriceAdjustment.setPercent(0.00);
+			quotePriceAdjustment.setPreAdjustedTotal(0.00);
+			quotePriceAdjustment.setAdjustedTotal(0.00);
+			quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}
+		
+		for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
+			for (QuotePriceAdjustment quotePriceAdjustment : quotePriceAdjustmentList) {
+				if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
+					quotePriceAdjustment.setPreAdjustedTotal(new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getTotalPrice())).doubleValue());
+				}
+			}
+		}
+		
+		quote.setQuotePriceAdjustments(quotePriceAdjustmentList);
 
 		return quote;
 	}

@@ -11,8 +11,8 @@
 		<rich:toolbar height="20" itemSeparator="grid">
 
 			<rich:toolbarGroup location="left">
-				<a4j:commandLink value="#{msgs.back}"
-					disabled="#{quoteController.editMode}" immediate="false"
+				<a4j:commandLink value="#{msgs.back}"				
+					disabled="#{quoteController.editMode}" immediate="false" status="waitstatus"
 					render="mainArea" action="#{quoteController.backToQuoteManager()}">
 				</a4j:commandLink>
 			</rich:toolbarGroup>
@@ -23,8 +23,7 @@
 					rendered="#{not quoteController.editMode}" ajaxSingle="true"
 					disabled="#{empty quoteController.selectedQuote}"
 					render="quotedetails"
-					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()"
-					status="ajaxStatus">
+					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
 					<h:outputText value="#{msgs.edit}" />
 				</a4j:commandLink>
 				
@@ -278,7 +277,7 @@
 						<rich:calendar value="#{quoteController.selectedQuote.startDate}"
 							id="startDate" locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
-							cellWidth="24px" cellHeight="22px" style="width:200px"
+							cellWidth="24px" cellHeight="22px" style="width:200px"							
 							rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Standard'}"
 							status="waitstatus"
 							disabled="false">
@@ -317,6 +316,7 @@
 								value="#{quoteController.selectedQuote.createdDate}"
 								rendered="#{not quoteController.editMode and not empty quoteController.selectedQuote}">
 								<f:convertDateTime locale="#{user.locale}"
+								    timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
 							<h:outputText value=" "
@@ -335,6 +335,7 @@
 								value="#{quoteController.selectedQuote.lastModifiedDate}"
 								rendered="#{not quoteController.editMode}">
 								<f:convertDateTime locale="#{user.locale}"
+								    timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
 							<h:outputText value=" "
@@ -343,6 +344,9 @@
 				</tr>
 
 			</table>
+			
+			<br />
+			<ui:include src="priceadjustments.xhtml" />
 
 			<br />
 

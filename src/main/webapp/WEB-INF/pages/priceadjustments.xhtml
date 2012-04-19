@@ -20,7 +20,17 @@
 			<f:facet name="header">#{msgs.reason}</f:facet>
 			<h:outputText value="#{priceAdjustment.reason}" />
 		</rich:column>
-
+		
+		<rich:column style="text-align: right; width: 20%;">
+			<f:facet name="header">Pre-Adjustment Total</f:facet>
+			<h:outputText value="#{priceAdjustment.preAdjustedTotal}"
+			    rendered="#{not quoteController.editMode}" >
+			    <f:convertNumber locale="#{user.locale}"
+					pattern="#,##0.00;(#,##0.00)"
+					type="number"/>	
+				</h:outputText>
+		</rich:column>
+		
 		<rich:column style="text-align: right; width: 20%;">
 			<f:facet name="header">#{msgs.percent}</f:facet>
 			<h:outputText value="#{priceAdjustment.percent}"

@@ -49,7 +49,8 @@ public class UserProducer implements Serializable {
 	public void querySessionUser() {
 		log.info("querySessionUser");
 		try {
-			user = sessionUserDAO.querySessionUser();			
+			user = sessionUserDAO.querySessionUser();
+			//log.info(user.get)
 
 		} catch (JSONException e) {
 			log.error("JSONException", e); 

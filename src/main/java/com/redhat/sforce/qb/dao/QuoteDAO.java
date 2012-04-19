@@ -14,6 +14,7 @@ import com.sforce.ws.ConnectionException;
 public interface QuoteDAO {
 
 	public List<Quote> queryQuotes() throws SalesforceServiceException;
+	public List<Quote> queryQuotes(String whereClause) throws SalesforceServiceException;
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws SalesforceServiceException;
 	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException;
 	public SaveResult saveQuote(Quote quote) throws ConnectionException;

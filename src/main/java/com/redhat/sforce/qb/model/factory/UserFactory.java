@@ -61,13 +61,11 @@ public class UserFactory {
 		user.setRoleName(wrapper.getString("UserRole", "Name"));
 		user.setProfileName(wrapper.getString("Profile", "Name"));
 		user.setLocale(Util.stringToLocale(wrapper.getString("LocaleSidKey")));
+		user.setTimeZone(wrapper.getString("TimeZoneSidKey"));
 
 		if (user.getLocale() != null) {
-			SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat
-					.getDateInstance(DateFormat.SHORT, user.getLocale());
-			SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat
-					.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
-							user.getLocale());
+			SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, user.getLocale());
+			SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,user.getLocale());
 
 			user.setDateFormatPattern(Util.formatPattern(dateFormat));
 			user.setDateTimeFormatPattern(Util.formatPattern(dateTimeFormat));

@@ -8,14 +8,14 @@ import javax.inject.Inject;
 
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
-import com.redhat.sforce.qb.util.SelectedOpportunity;
+import com.redhat.sforce.qb.util.ViewedOpportunity;
 
 @Model
 
 public class OpportunityLineItemController {
 
 	@Inject
-	@SelectedOpportunity
+	@ViewedOpportunity
 	private Opportunity opportunity;
 
 	@ManagedProperty(value = "false")

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.event.Reception;
 import javax.enterprise.inject.Produces;
 import javax.faces.FacesException;
 import javax.inject.Inject;
@@ -16,7 +17,7 @@ import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.util.SelectedOpportunity;
+import com.redhat.sforce.qb.util.ViewedOpportunity;
 
 @SessionScoped
 
@@ -36,13 +37,13 @@ public class OpportunityProducer implements Serializable {
 	private Opportunity opportunity;
 
 	@Produces
-	@SelectedOpportunity
+	@ViewedOpportunity
 	@Named
 	public Opportunity getOpportunity() {
 		return opportunity;
 	}
 
-	public void onOpportunityChanged(@Observes final Opportunity opportunity) {
+	public void onOpportunityChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Opportunity opportunity) {
 		queryOpportunity();
 	}
 
