@@ -61,11 +61,10 @@ public class FacesUtil {
 	}
 
 	public static HttpSession getSession() {
-		return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		return getRequest().getSession();
 	}
 
 	public static void sendRedirect(String url) throws IOException {
-		HttpServletResponse response = getResponse();
-		response.sendRedirect(url);
+		getResponse().sendRedirect(getRequest().getContextPath() + url);
 	}
 }

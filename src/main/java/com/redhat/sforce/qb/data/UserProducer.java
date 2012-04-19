@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.data;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +15,9 @@ import org.jboss.logging.Logger;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.SessionUserDAO;
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.util.FacesUtil;
 import com.redhat.sforce.qb.util.LoggedIn;
 
 @SessionScoped
@@ -41,7 +41,7 @@ public class UserProducer implements Serializable {
 		return user;
 	}
 
-	public void onQuoteListChanged(@Observes final User user) {
+	public void onUserChanged(@Observes final User user) {
 		querySessionUser();
 	}
 
@@ -49,22 +49,18 @@ public class UserProducer implements Serializable {
 	public void querySessionUser() {
 		log.info("querySessionUser");
 		try {
-			user = sessionUserDAO.querySessionUser();
-			FacesContext.getCurrentInstance().getViewRoot().setLocale(user.getLocale());
+			user = sessionUserDAO.querySessionUser();			
 
 		} catch (JSONException e) {
-			log.error("JSONException", e);
-		} catch (QuoteBuilderException e) {
-			log.error("QuoteBuilderException", e);
-		}
-
+			log.error("JSONException", e); 
+		} catch (SalesforceServiceException e) {
+			e.printStackTrace();
+		}	
+		
 		if (user == null) {
-			try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect("index.html");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			FacesContext.getCurrentInstance().getViewRoot().setLocale(FacesUtil.getRequestLocale());
+		} else {		
+		    FacesContext.getCurrentInstance().getViewRoot().setLocale(user.getLocale());
 		}
 	}
 }

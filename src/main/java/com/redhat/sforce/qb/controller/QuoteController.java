@@ -2,6 +2,8 @@ package com.redhat.sforce.qb.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -85,28 +87,32 @@ public class QuoteController {
 		quoteEvents.fire(new Quote());		
 	}
 
-	public void logout()  {
-		log.info("logging out");		
+	public void logout() {	
 		
-		FacesContext context = FacesContext.getCurrentInstance();
-		ExternalContext externalContext = context.getExternalContext();
-		externalContext.getSessionMap().remove("SessionManager");
+		try {
+			sessionManager.getPartnerConnection().logout();
+		} catch (ConnectionException e) {
+			throw new FacesException(e);
+		}		
+							
+       	HttpSession session = FacesUtil.getSession();
+       	session.invalidate();
+       	
+       	setMainArea(TemplatesEnum.HOME);
+	}
+	
+	public void login() {
 		
 		HttpSession session = FacesUtil.getSession();
-				
-		if (session != null) {
-			session.removeAttribute("SessionId");
-			session.invalidate();					
-			
-	        try {
-		        sessionManager.getPartnerConnection().logout();
-		        FacesUtil.sendRedirect("index.html");
-	        } catch (ConnectionException e) {
-		        throw new FacesException(e);
-			} catch (IOException e) {
-				throw new FacesException(e);
-			}	        	       
-		}		
+       	session.invalidate();
+		
+	    try {
+		    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
+	    } catch (IOException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+	    } 
 	}
 
 	public void backToQuoteManager() {
@@ -244,7 +250,6 @@ public class QuoteController {
 		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
 		for (QuoteLineItem quoteLineItem : getSelectedQuote().getQuoteLineItems()) {
 			if (quoteLineItem.getPricebookEntryId() != null) {
-				log.info("pricebookentry is null");
 				quoteLineItems.add(quoteLineItem);
 			}
 		}
@@ -356,5 +361,46 @@ public class QuoteController {
 	public void setQuoteOwner(User user) {
 		getSelectedQuote().setOwnerId(user.getId());
 		getSelectedQuote().setOwnerName(user.getName());
+	}
+	
+	public void changeStartDate() {
+		log.info("new Start date: " + getSelectedQuote().getStartDate());
+		Quote quote = getSelectedQuote();
+		if ("Standard".equals(quote.getType())) {
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(quote.getStartDate());
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.add(Calendar.DATE, quote.getTerm());
+			quote.setEndDate(calendar.getTime());
+			log.info("new End date: " + quote.getEndDate());
+		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
+			    quoteLineItem.setStartDate(quote.getStartDate());
+			    quoteLineItem.setTerm(quote.getTerm());
+			    quoteLineItem.setEndDate(quote.getEndDate());
+		    }
+		}
+	}
+	
+	public void changeTerm() {
+		log.info("new term: " + getSelectedQuote().getTerm());
+		Quote quote = getSelectedQuote();
+		if ("Standard".equals(quote.getType())) {
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(quote.getStartDate());
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.add(Calendar.DATE, quote.getTerm());
+			quote.setEndDate(calendar.getTime());
+			log.info("new End date: " + quote.getEndDate());
+		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
+			    quoteLineItem.setStartDate(quote.getStartDate());
+			    quoteLineItem.setTerm(quote.getTerm());
+			    quoteLineItem.setEndDate(quote.getEndDate());
+		    }
+		}
+		
 	}
 }

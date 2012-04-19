@@ -26,10 +26,6 @@
 		<session-timeout>0</session-timeout>
 	</session-config>
 
-	<error-page>
-		<location>/WEB-INF/pages/error.xhtml</location>
-	</error-page>
-
 	<context-param>
 		<param-name>org.richfaces.skin</param-name>
 		<param-value>blueSky</param-value>

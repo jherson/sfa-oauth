@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.manager.impl;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
@@ -18,14 +17,13 @@ import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.util.FacesUtil;
 import com.redhat.sforce.qb.util.SessionConnection;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
-@Named(value = "sessionManager")
+@Named(value="sessionManager")
 @SessionScoped
 
 public class SessionManagerImpl implements Serializable, SessionManager {
@@ -64,17 +62,18 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		log.info("init");
 
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		String sessionId = session.getAttribute("SessionId").toString();
-		if (sessionId != null) {
+				
+		if (session.getAttribute("SessionId") != null) {
+			
+			String sessionId = session.getAttribute("SessionId").toString();
 									
 			ConnectorConfig config = new ConnectorConfig();
 			config.setManualLogin(true);
 			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-			config.setSessionId(sessionId);
+			config.setSessionId(sessionId);					
 			try {
 				partnerConnection = Connector.newConnection(config);
 			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -82,13 +81,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);			
 
 		} else {
-			try {
-				FacesUtil.sendRedirect("index.html");
-				return;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			setMainArea(TemplatesEnum.HOME);		 
 		}			
 	}
 	

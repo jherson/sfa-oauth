@@ -25,7 +25,7 @@ public class AuthorizeServlet extends HttpServlet {
 	private static final long serialVersionUID = -3102834362805354464L;
 
 	@Inject
-	Logger log;
+	private Logger log;
 
 	private String redirectUri;
 
@@ -51,7 +51,7 @@ public class AuthorizeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String sessionId = request.getParameter("sessionId");
-
+		
 		if (sessionId == null) {
 
 			response.setContentType("text/html");
@@ -99,10 +99,10 @@ public class AuthorizeServlet extends HttpServlet {
 					log.error("IOException", e);
 				}
 			}
-
-			request.getSession().setAttribute("SessionId", sessionId);
-			response.sendRedirect(request.getContextPath() + "/index.jsf");
 		}
+		
+		request.getSession().setAttribute("SessionId", sessionId);
+		response.sendRedirect(request.getContextPath() + "/index.jsf");
 	}
 
 	private String getRedirectUri() {

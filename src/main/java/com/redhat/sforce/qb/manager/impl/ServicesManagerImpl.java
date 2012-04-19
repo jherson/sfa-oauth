@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.manager.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -41,7 +42,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	private PartnerConnection partnerConnection;
 
 	@Override
-	public JSONObject getCurrentUserInfo(String accessToken) {
+	public JSONObject getCurrentUserInfo(String accessToken) throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() + "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/currentUserInfo";
@@ -58,8 +59,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 			} else {
-				log.error(getMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(getMethod.getResponseBodyAsStream());
+				parseErrorResponse(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -75,7 +75,10 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONObject getCurrentUserInfo() {
+	public JSONObject getCurrentUserInfo() throws SalesforceServiceException {
+		if (partnerConnection == null) 
+			return null;
+		
 		return getCurrentUserInfo(partnerConnection.getConfig().getSessionId());
 	}
 
@@ -100,8 +103,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 				queryResult = response.getJSONArray("records");
 			} else {
-				log.error(getMethod.getResponseBodyAsStream());
-				throw new SalesforceServiceException(getMethod.getResponseBodyAsStream());
+				parseErrorResponse(getMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {
 			log.error(e);
@@ -138,8 +140,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			getMethod = doGet(accessToken, url, params);
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-			} else {
-				throw new SalesforceServiceException(getMethod.getResponseBodyAsStream());
+			} else {	
+				parseErrorResponse(getMethod.getResponseBodyAsStream());
 			}
 		} catch (JSONException e) {
 			log.error(e);
@@ -175,9 +177,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			postMethod = doPost(accessToken, url, params, null);
 
 			if (postMethod.getStatusCode() != HttpStatus.SC_OK) {
-				log.error(postMethod.getResponseBodyAsStream());
-				new SalesforceServiceException(
-						postMethod.getResponseBodyAsStream());
+				parseErrorResponse(postMethod.getResponseBodyAsStream());
 			}
 		} catch (UnsupportedEncodingException e) {
 			log.error(e);
@@ -278,7 +278,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			//	jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
 				log.info(getMethod.getResponseBodyAsString());
 			} else {
-				throw new SalesforceServiceException(getMethod.getResponseBodyAsStream());
+				parseErrorResponse(getMethod.getResponseBodyAsStream());
 			}
 		} catch (JSONException e) {
 			log.error(e);
@@ -323,5 +323,19 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		httpclient.executeMethod(getMethod);
 
 		return getMethod;
+	}
+	
+	private void parseErrorResponse(InputStream is) throws SalesforceServiceException {
+		JSONArray jsonArray = null;
+		try {
+			jsonArray = new JSONArray(new JSONTokener(new InputStreamReader(is)));
+			log.info(jsonArray.getJSONObject(0).getString("errorCode"));
+			log.info(jsonArray.getJSONObject(0).getString("message"));
+			throw new SalesforceServiceException(jsonArray.getJSONObject(0).getString("errorCode"),jsonArray.getJSONObject(0).getString("message"));
+		} catch (JSONException e) {
+			log.info("Unable to parse the error response: " + jsonArray);
+			throw new SalesforceServiceException("Unable to parse the error response: " + jsonArray);
+		}
+					
 	}
 }

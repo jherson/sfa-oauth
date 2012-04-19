@@ -85,7 +85,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		}
 
 		ConnectorConfig config = new ConnectorConfig();
-		config.setAuthEndpoint(MessageFormat.format(propertiesFile.getProperty("salesforce.authEndpoint"),System.getProperty("salesforce.environment")));
+		config.setAuthEndpoint(MessageFormat.format(propertiesFile.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
 		config.setUsername(propertiesFile.getProperty("salesforce.username"));
 		config.setPassword(propertiesFile.getProperty("salesforce.password"));
 
@@ -95,10 +95,10 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 			setSessionId(partnerConnection.getConfig().getSessionId());
 			setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
 			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());			
+			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());		
 			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));			
-			setFrontDoorUrl(System.getProperty("salesforce.environment") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
-
+			setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
+			
 			currencyIsoCodes = queryCurrencyIsoCodes();
 
 		} catch (ConnectionException e) {

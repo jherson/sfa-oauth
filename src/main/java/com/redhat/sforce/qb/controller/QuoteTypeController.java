@@ -1,11 +1,16 @@
 package com.redhat.sforce.qb.controller;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.enterprise.inject.Model;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
+
+import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.QuoteLineItem;
 
 @Model
 
@@ -25,8 +30,6 @@ public class QuoteTypeController {
 		this.quoteController = quoteController;
 	}
 	
-	public void changeStartDate() {
-		log.info("fire change start date");
-	}
+
 
 }

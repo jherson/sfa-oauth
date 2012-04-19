@@ -6,7 +6,7 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
-import com.redhat.sforce.qb.exception.QuoteBuilderException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.model.factory.UserFactory;
 import java.io.Serializable;
@@ -18,7 +18,7 @@ public class SessionUserDAOImpl extends SObjectDAO implements Serializable, Sess
 	private static final long serialVersionUID = 7423661827733476923L;
 
 	@Override
-	public User querySessionUser() throws JSONException, QuoteBuilderException {
+	public User querySessionUser() throws SalesforceServiceException, JSONException {
 		return UserFactory.deserialize(sm.getCurrentUserInfo());
 	}
 }

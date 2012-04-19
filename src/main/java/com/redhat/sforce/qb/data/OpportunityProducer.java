@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
+import javax.faces.FacesException;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -51,8 +52,8 @@ public class OpportunityProducer implements Serializable {
 		try {
 			opportunity = opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId());
 		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("QueryOpportunityException: " + e.getMessage());
+			throw new FacesException(e);
 		}
 	}
 }

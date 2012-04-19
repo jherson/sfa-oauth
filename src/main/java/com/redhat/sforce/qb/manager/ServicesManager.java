@@ -7,8 +7,8 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 
 public interface ServicesManager {
 
-	public JSONObject getCurrentUserInfo();
-	public JSONObject getCurrentUserInfo(String accessToken);
+	public JSONObject getCurrentUserInfo() throws SalesforceServiceException;
+	public JSONObject getCurrentUserInfo(String accessToken) throws SalesforceServiceException;
 	
 	public JSONArray query(String accessToken, String query) throws SalesforceServiceException;
 	public JSONArray query(String query) throws SalesforceServiceException;
