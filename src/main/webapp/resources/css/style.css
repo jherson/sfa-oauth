@@ -8,7 +8,7 @@ body {
 #header {
 	width: 100%;
 	margin: 0px;
-	height: 70px;
+	height: 60px;
 }
 #container {
     margin: 0;
@@ -54,6 +54,14 @@ span.invalid {
 .column2 {
 	width: 50%;
 	text-align: right;
+}
+
+.column75 {
+	width: 75%
+}
+
+.column25 {
+	width: 25%
 }
 
 .label-column {

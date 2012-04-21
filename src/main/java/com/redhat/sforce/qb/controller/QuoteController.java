@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
+import org.joda.time.DateTime;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
@@ -25,6 +26,7 @@ import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.FacesUtil;
 import com.sforce.soap.partner.DeleteResult;
@@ -218,6 +220,7 @@ public class QuoteController {
 
 	public void save() {		
 		saveQuoteLineItems();
+		saveQuotePriceAdjustments();
 		saveQuote();
 		setEditMode(Boolean.FALSE);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
@@ -257,8 +260,8 @@ public class QuoteController {
 			return;
 
 		try {
-			Quote quote = quoteDAO.saveQuoteLineItems(getSelectedQuote(), getSelectedQuote().getQuoteLineItems());
-			setSelectedQuote(quote);	
+			quoteDAO.saveQuoteLineItems(getSelectedQuote(), getSelectedQuote().getQuoteLineItems());
+	
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -266,6 +269,24 @@ public class QuoteController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void saveQuotePriceAdjustments() {
+		if (getSelectedQuote().getQuotePriceAdjustments() == null)
+			return;
+		
+		for (QuotePriceAdjustment quotePriceAdjustment : getSelectedQuote().getQuotePriceAdjustments()) {
+			log.info(quotePriceAdjustment.getId());
+			log.info(quotePriceAdjustment.getPercent());
+			log.info(quotePriceAdjustment.getAmount());
+		}
+		
+		try {
+			quoteDAO.saveQuotePriceAdjustments(getSelectedQuote().getQuotePriceAdjustments());
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 
 	public void cancelEdit() {
@@ -297,8 +318,8 @@ public class QuoteController {
 		}
 
 		try {
-			Quote quote = quoteDAO.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList);
-			setSelectedQuote(quote);
+			quoteDAO.addOpportunityLineItems(getSelectedQuote(), opportunityLineItemList);
+			setSelectedQuote(quoteDAO.queryQuoteById(getSelectedQuote().getId()));
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -362,37 +383,12 @@ public class QuoteController {
 		getSelectedQuote().setOwnerName(user.getName());
 	}
 	
-	public void changeStartDate() {
+	public void setDates() {
 		log.info("new Start date: " + getSelectedQuote().getStartDate());
 		Quote quote = getSelectedQuote();
 		if ("Standard".equals(quote.getType())) {
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(quote.getStartDate());
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.HOUR, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.add(Calendar.DATE, quote.getTerm());
-			quote.setEndDate(calendar.getTime());
-			log.info("new End date: " + quote.getEndDate());
-		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
-			    quoteLineItem.setStartDate(quote.getStartDate());
-			    quoteLineItem.setTerm(quote.getTerm());
-			    quoteLineItem.setEndDate(quote.getEndDate());
-		    }
-		}
-	}
-	
-	public void changeTerm() {
-		log.info("new term: " + getSelectedQuote().getTerm());
-		Quote quote = getSelectedQuote();
-		if ("Standard".equals(quote.getType())) {
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(quote.getStartDate());
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.HOUR, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.add(Calendar.DATE, quote.getTerm());
-			quote.setEndDate(calendar.getTime());
+			DateTime dt = new DateTime(quote.getStartDate());			
+			quote.setEndDate(dt.plusDays(quote.getTerm()).minusDays(1).toDate());
 			log.info("new End date: " + quote.getEndDate());
 		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
 			    quoteLineItem.setStartDate(quote.getStartDate());
@@ -401,5 +397,16 @@ public class QuoteController {
 		    }
 		}
 		
+
+		
+	}
+		
+	public void applyDiscounts() {
+		try {
+			quoteDAO.saveQuotePriceAdjustments(getSelectedQuote().getQuotePriceAdjustments());
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 }

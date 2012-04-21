@@ -12,7 +12,7 @@
 
 			<rich:toolbarGroup location="left">
 				<a4j:commandLink value="#{msgs.back}"				
-					disabled="#{quoteController.editMode}" immediate="false" status="waitstatus"
+					disabled="#{quoteController.editMode}" status="waitstatus"
 					render="mainArea" action="#{quoteController.backToQuoteManager()}">
 				</a4j:commandLink>
 			</rich:toolbarGroup>
@@ -65,7 +65,7 @@
 				</a4j:commandLink>
 
 				<a4j:commandLink id="save" action="#{quoteController.save()}"
-					rendered="#{quoteController.editMode}" ajaxSingle="true"
+					rendered="#{quoteController.editMode}" execute="@form" 
 					render="quotedetails">
 					<h:outputText value="#{msgs.save}" />
 				</a4j:commandLink>
@@ -258,8 +258,8 @@
 							<f:selectItem itemLabel="1" itemValue="365" />
 							<f:selectItem itemLabel="3" itemValue="1095" />
 							<a4j:ajax event="valueChange"
-							    listener="#{quoteController.changeTerm()}"
-								render="viewQuoteProducts">
+							    listener="#{quoteController.setDates()}"
+								render="quotedetails">
 							</a4j:ajax>
 						</h:selectOneMenu></td>
 				</tr>
@@ -279,11 +279,10 @@
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"							
 							rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Standard'}"
-							status="waitstatus"
 							disabled="false">
 							<a4j:ajax event="change"
-							    listener="#{quoteController.changeStartDate()}"
-								render="viewQuoteProducts">
+							    listener="#{quoteController.setDates()}"
+								render="quotedetails">
 							</a4j:ajax>
 							
 						</rich:calendar></td>
@@ -346,7 +345,7 @@
 			</table>
 			
 			<br />
-			<ui:include src="priceadjustments.xhtml" />
+			<ui:include src="quotepriceadjustmentlist.xhtml" />
 
 			<br />
 

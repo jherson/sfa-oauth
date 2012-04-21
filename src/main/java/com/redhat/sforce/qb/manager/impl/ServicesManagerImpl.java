@@ -237,6 +237,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);
+		
+		log.info(url);
 
 		PostMethod postMethod = new PostMethod(url);
 		postMethod.setRequestHeader("Authorization", "OAuth " + accessToken);

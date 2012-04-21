@@ -91,16 +91,7 @@ public class Quote extends SObject {
 		setEndDate(calendar.getTime());
 
 		setQuoteLineItems(new ArrayList<QuoteLineItem>());
-
-		String[] reasons = new String[] { "Platform and Cloud", "Middleware",
-				"Services" };
-		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
-		for (int i = 0; i < reasons.length; i++) {
-			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment(
-					0.00, "Percent", 0.00, reasons[i], "Amount");
-			quotePriceAdjustmentList.add(quotePriceAdjustment);
-		}
-		setQuotePriceAdjustments(quotePriceAdjustmentList);
+		setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
 	}
 
 	public String getOpportunityId() {

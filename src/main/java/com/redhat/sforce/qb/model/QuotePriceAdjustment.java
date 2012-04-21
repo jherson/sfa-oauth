@@ -6,8 +6,7 @@ public class QuotePriceAdjustment extends SObject {
 	private String quoteId;
 	private Double preAdjustedTotal;
 	private Double adjustedTotal;
-	private Double adjustmentAmount;
-	private String operator;
+	private Double amount;
 	private Double percent;
 	private String reason;
 	private String type;
@@ -17,12 +16,10 @@ public class QuotePriceAdjustment extends SObject {
 		super();
 	}
 
-	public QuotePriceAdjustment(Double adjustmentAmount, String operator,
-			Double percent, String reason, String type) {
+	public QuotePriceAdjustment(Double amount, Double percent, String reason, String type) {
 
 		super();
-		setAdjustmentAmount(adjustmentAmount);
-		setOperator(operator);
+		setAmount(amount);
 		setPercent(percent);
 		setReason(reason);
 		setType(type);
@@ -36,20 +33,12 @@ public class QuotePriceAdjustment extends SObject {
 		this.quoteId = quoteId;
 	}
 
-	public Double getAdjustmentAmount() {
-		return adjustmentAmount;
+	public Double getAmount() {
+		return amount;
 	}
 
-	public void setAdjustmentAmount(Double adjustmentAmount) {
-		this.adjustmentAmount = adjustmentAmount;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
 	public Double getPercent() {

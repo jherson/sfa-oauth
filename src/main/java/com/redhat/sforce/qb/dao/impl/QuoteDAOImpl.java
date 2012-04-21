@@ -17,7 +17,6 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
-import com.redhat.sforce.qb.util.SObjectUtil;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
@@ -110,7 +109,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public Quote addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws ConnectionException, SalesforceServiceException {
+	public SaveResult[] addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws ConnectionException, SalesforceServiceException {
 		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
 		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
 		    QuoteLineItem quoteLineItem = new QuoteLineItem();
@@ -150,15 +149,8 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote saveQuoteLineItems(Quote quote, List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException {		
-		SaveResult[] saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
-		for (int i = 0; i < saveResult.length; i++) {
-			if (! (saveResult[i].isSuccess())) {
-				throw new ConnectionException(saveResult[i].getErrors()[0].getMessage());
-			}
-		}
-		
-		return queryQuoteById(quote.getId());
+	public SaveResult[] saveQuoteLineItems(Quote quote, List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException {		
+		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));                     
 	}
 	
 	@Override
@@ -271,8 +263,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		        sobject.setId(quotePriceAdjustment.getId());
 		    }
 			sobject.setField("QuoteId__c", quotePriceAdjustment.getQuoteId());
-			sobject.setField("AdjustmentAmount__c",quotePriceAdjustment.getAdjustmentAmount());
-			sobject.setField("Operator__c",quotePriceAdjustment.getOperator());
+			log.info("amount: " + quotePriceAdjustment.getAmount());
+			sobject.setField("Amount__c",quotePriceAdjustment.getAmount());
+			log.info("percent: " + quotePriceAdjustment.getPercent());
 			sobject.setField("Percent__c", quotePriceAdjustment.getPercent());
 			sobject.setField("Reason__c", quotePriceAdjustment.getReason());
 			sobject.setField("Type__c", quotePriceAdjustment.getType());
@@ -364,8 +357,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "Order By CreatedDate), "
 			+ "(Select Id, "
 			+ "        QuoteId__c, "
-			+ "        AdjustmentAmount__c, "
-			+ "        Operator__c, "
+			+ "        Amount__c, "
 			+ "        Percent__c, "
 			+ "        Reason__c, "
 			+ "        Type__c, "

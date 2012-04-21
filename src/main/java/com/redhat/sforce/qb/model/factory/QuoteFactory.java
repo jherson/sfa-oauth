@@ -88,37 +88,50 @@ public class QuoteFactory {
 			quote.setQuoteLineItemSchedules(QuoteLineItemScheduleFactory.deserialize(records));
 		}
 
-		//records = wrapper.getRecords("QuotePriceAdjustment__r");
-		//if (records != null) {
-		//	quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.deserialize(records));
-		//}
+		records = wrapper.getRecords("QuotePriceAdjustment__r");
+		if (records != null) {
+			quote.setQuotePriceAdjustments(QuotePriceAdjustmentFactory.deserialize(records));
+		} else {
+			quote.setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
+		}
 		
 		String[] primaryBusinessUnit = new String[] {"Middleware", "Management", "Platform", "Cloud"};
 		
-		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
-		
 		for (int i = 0; i < primaryBusinessUnit.length; i++) {
-			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment();
-			quotePriceAdjustment.setQuoteId(quote.getId());
-			quotePriceAdjustment.setType("Negotiated Discount");
-			quotePriceAdjustment.setAppliesTo("QUOTE_LINE_ITEM");
-			quotePriceAdjustment.setReason(primaryBusinessUnit[i]);
-			quotePriceAdjustment.setAdjustmentAmount(0.00);
-			quotePriceAdjustment.setPercent(0.00);
-			quotePriceAdjustment.setPreAdjustedTotal(0.00);
-			quotePriceAdjustment.setAdjustedTotal(0.00);
-			quotePriceAdjustmentList.add(quotePriceAdjustment);
+			boolean addDiscountToQuote = Boolean.TRUE;
+		    for (int j = 0; j < quote.getQuotePriceAdjustments().size(); j++) {
+		        QuotePriceAdjustment quotePriceAdjustment = quote.getQuotePriceAdjustments().get(j);
+		        if (primaryBusinessUnit[i].equals(quotePriceAdjustment.getReason())) {
+		        	addDiscountToQuote = Boolean.FALSE; 		    	
+		        }
+			}
+		    
+		    if (addDiscountToQuote) {			       
+			    QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment();
+			    quotePriceAdjustment.setQuoteId(quote.getId());
+			    quotePriceAdjustment.setType("Negotiated Discount");
+			    quotePriceAdjustment.setAppliesTo("QUOTE_LINE_ITEM");
+			    quotePriceAdjustment.setReason(primaryBusinessUnit[i]);
+			    quotePriceAdjustment.setAmount(0.00);
+			    quotePriceAdjustment.setPercent(0.00);			    
+			    quote.getQuotePriceAdjustments().add(quotePriceAdjustment);
+		    }
 		}
-		
-		for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
-			for (QuotePriceAdjustment quotePriceAdjustment : quotePriceAdjustmentList) {
+				
+		for (QuotePriceAdjustment quotePriceAdjustment : quote.getQuotePriceAdjustments()) {
+			quotePriceAdjustment.setPreAdjustedTotal(0.00);
+		    quotePriceAdjustment.setAdjustedTotal(0.00);
+			
+			BigDecimal amount = new BigDecimal(0.00);
+		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {			
 				if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
-					quotePriceAdjustment.setPreAdjustedTotal(new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getTotalPrice())).doubleValue());
+					amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getTotalPrice()));
+					quotePriceAdjustment.setPreAdjustedTotal(amount.doubleValue());
+					amount = amount.subtract(new BigDecimal(quotePriceAdjustment.getAmount()));
+					quotePriceAdjustment.setAdjustedTotal(amount.doubleValue());
 				}
 			}
 		}
-		
-		quote.setQuotePriceAdjustments(quotePriceAdjustmentList);
 
 		return quote;
 	}

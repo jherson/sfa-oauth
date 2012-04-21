@@ -16,42 +16,42 @@
 		<jboss-as-maven-plugin-version>7.1.0.Final</jboss-as-maven-plugin-version>
 		<version.arquillian_core>1.0.0.CR4</version.arquillian_core>
 		<seam.solder.version>3.0.0.Final</seam.solder.version>
-                <force.api.version>24.0.0</force.api.version>
+		<force.api.version>24.0.0</force.api.version>
 	</properties>
-	
-	<repositories>
-      <!-- The JBoss Community public repository is a composite repository 
-         of several major repositories -->
-      <!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
-      <repository>
-         <id>jboss-public-repository</id>
-         <name>JBoss Repository</name>
-         <url>http://repository.jboss.org/nexus/content/groups/public</url>
-         <!-- These optional flags are designed to speed up your builds by 
-            reducing remote server calls -->
-         <releases>
-            <enabled>true</enabled>
-         </releases>
-         <snapshots>
-            <enabled>false</enabled>
-         </snapshots>
-      </repository>
-   </repositories>
 
-   <pluginRepositories>
-      <pluginRepository>
-         <id>jboss-public-repository</id>
-         <name>JBoss Repository</name>
-         <url>http://repository.jboss.org/nexus/content/groups/public</url>
-         <releases>
-            <enabled>true</enabled>
-         </releases>
-         <snapshots>
-            <enabled>false</enabled>
-         </snapshots>
-      </pluginRepository>
-   </pluginRepositories>
-	
+	<repositories>
+		<!-- The JBoss Community public repository is a composite repository of 
+			several major repositories -->
+		<!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
+		<repository>
+			<id>jboss-public-repository</id>
+			<name>JBoss Repository</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<!-- These optional flags are designed to speed up your builds by reducing 
+				remote server calls -->
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jboss-public-repository</id>
+			<name>JBoss Repository</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
 
 	<dependencyManagement>
 		<dependencies>
@@ -66,7 +66,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<dependencies>            
+	<dependencies>
 
 		<dependency>
 			<groupId>org.jboss.seam.solder</groupId>
@@ -83,12 +83,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>${resteasy.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-cdi</artifactId>
@@ -156,7 +162,7 @@
 			<artifactId>javaee-web-api</artifactId>
 			<version>6.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
@@ -231,7 +237,7 @@
 						<phase>deploy</phase>
 						<goals>
 							<goal>deploy</goal>
-						</goals>						
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
