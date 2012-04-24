@@ -1,23 +1,21 @@
 package com.redhat.sforce.qb.model;
 
-public class QuotePriceAdjustment extends SObject {
+public class QuoteLineItemPriceAdjustment extends SObject {
 
 	private static final long serialVersionUID = 1L;
+	private String quoteLineItemId;
 	private String quoteId;
-	private Double preAdjustedTotal;
-	private Double adjustedTotal;
 	private Double amount;
 	private Double percent;
 	private String reason;
 	private String type;
-	private String appliesTo;
 	private String operator;
 
-	public QuotePriceAdjustment() {
+	public QuoteLineItemPriceAdjustment() {
 		super();
 	}
 
-	public QuotePriceAdjustment(Double amount, Double percent, String reason, String type) {
+	public QuoteLineItemPriceAdjustment(Double amount, Double percent, String reason, String type) {
 
 		super();
 		setAmount(amount);
@@ -26,10 +24,18 @@ public class QuotePriceAdjustment extends SObject {
 		setType(type);
 	}
 
+	public String getQuoteLineItemId() {
+		return quoteLineItemId;
+	}
+
+	public void setQuoteLineItemId(String quoteLineItemId) {
+		this.quoteLineItemId = quoteLineItemId;
+	}
+	
 	public String getQuoteId() {
 		return quoteId;
 	}
-
+	
 	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
 	}
@@ -64,30 +70,6 @@ public class QuotePriceAdjustment extends SObject {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getAppliesTo() {
-		return appliesTo;
-	}
-
-	public void setAppliesTo(String appliesTo) {
-		this.appliesTo = appliesTo;
-	}
-	
-	public Double getPreAdjustedTotal() {
-		return preAdjustedTotal;
-	}
-
-	public void setPreAdjustedTotal(Double preAdjustedTotal) {
-		this.preAdjustedTotal = preAdjustedTotal;
-	}
-
-	public Double getAdjustedTotal() {
-		return adjustedTotal;
-	}
-
-	public void setAdjustedTotal(Double adjustedTotal) {
-		this.adjustedTotal = adjustedTotal;
 	}
 
 	public String getOperator() {

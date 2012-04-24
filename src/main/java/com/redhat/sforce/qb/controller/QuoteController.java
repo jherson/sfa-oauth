@@ -1,9 +1,9 @@
 package com.redhat.sforce.qb.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +26,7 @@ import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.util.FacesUtil;
@@ -218,9 +219,10 @@ public class QuoteController {
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
-	public void save() {		
-		saveQuoteLineItems();
+	public void save() {				
 		saveQuotePriceAdjustments();
+		saveQuoteLineItemPriceAdjustments();
+		saveQuoteLineItems();
 		saveQuote();
 		setEditMode(Boolean.FALSE);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
@@ -275,14 +277,45 @@ public class QuoteController {
 		if (getSelectedQuote().getQuotePriceAdjustments() == null)
 			return;
 		
+		try {
+			quoteDAO.saveQuotePriceAdjustments(getSelectedQuote().getQuotePriceAdjustments());
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+	public void saveQuoteLineItemPriceAdjustments() {
+		if (getSelectedQuote().getQuotePriceAdjustments() == null || getSelectedQuote().getQuoteLineItems() == null)
+			return;
+		
+		List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList = new ArrayList<QuoteLineItemPriceAdjustment>();
 		for (QuotePriceAdjustment quotePriceAdjustment : getSelectedQuote().getQuotePriceAdjustments()) {
-			log.info(quotePriceAdjustment.getId());
-			log.info(quotePriceAdjustment.getPercent());
-			log.info(quotePriceAdjustment.getAmount());
+		    for (QuoteLineItem quoteLineItem : getSelectedQuote().getQuoteLineItems()) {
+		    	if (quotePriceAdjustment.getReason().equals(quoteLineItem.getProduct().getPrimaryBusinessUnit())) {
+		    		QuoteLineItemPriceAdjustment quoteLineItemPriceAdjustment = new QuoteLineItemPriceAdjustment();
+		    		quoteLineItemPriceAdjustment.setQuoteLineItemId(quoteLineItem.getId());
+		    		quoteLineItemPriceAdjustment.setQuoteId(getSelectedQuote().getId());		    		
+		    		quoteLineItemPriceAdjustment.setOperator(quotePriceAdjustment.getOperator());
+		    		quoteLineItemPriceAdjustment.setPercent(quotePriceAdjustment.getPercent());
+		    		quoteLineItemPriceAdjustment.setReason(quotePriceAdjustment.getReason());
+		    		quoteLineItemPriceAdjustment.setType(quotePriceAdjustment.getType());		    		
+		    		
+		    		BigDecimal amount = new BigDecimal(0.00);
+		    		amount = new BigDecimal(quoteLineItemPriceAdjustment.getPercent()).multiply(new BigDecimal(.01));
+				    amount = amount.multiply(new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal())).setScale(2, RoundingMode.HALF_EVEN);
+				    quoteLineItemPriceAdjustment.setAmount(amount.doubleValue());				    
+		    		
+		    		quoteLineItemPriceAdjustmentList.add(quoteLineItemPriceAdjustment);
+		    		break;
+		    	}
+		    	
+		    }
+		    	
 		}
 		
 		try {
-			quoteDAO.saveQuotePriceAdjustments(getSelectedQuote().getQuotePriceAdjustments());
+			quoteDAO.saveQuoteLineItemPriceAdjustments(quoteLineItemPriceAdjustmentList);
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

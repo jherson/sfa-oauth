@@ -8,20 +8,28 @@
 	
 <a4j:outputPanel id="viewQuoteProducts">
 
+    <hr />
+    
+    <h:outputText value="#{msgs.quoteLineItems}" style="color:#{a4jSkin.generalTextColor};" />
+    
+    <a4j:outputPanel align="center" >
+    
+        <a4j:commandButton value="Manage Products" styleClass="commandButton"/>
+    
+    </a4j:outputPanel>
+
 	<rich:toolbar height="18" itemSeparator="grid">
 
 		<rich:toolbarGroup location="left">
 
 			<a4j:commandLink value="#{msgs.delete}"
-				rendered="#{quoteController.editMode}"
 				action="#{quoteController.deleteQuoteLineItems()}"
-				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
+				disabled="#{not quoteController.editMode or empty quoteController.selectedQuote.quoteLineItems}"
 				render="quotedetails" ajaxSingle="true" >
 			</a4j:commandLink>
 
-			<a4j:commandLink value="#{msgs.reset}" immediate="true"
-				rendered="#{quoteController.editMode}" 
-				disabled="#{empty quoteController.selectedQuote.quoteLineItems}"
+			<a4j:commandLink value="#{msgs.reset}" immediate="true" 
+				disabled="#{not quoteController.editMode or empty quoteController.selectedQuote.quoteLineItems}"
 				action="#{quoteController.cancelEdit()}"
 				render="quotedetails" ajaxSingle="true" >				
 			</a4j:commandLink>
@@ -31,13 +39,12 @@
 		<rich:toolbarGroup location="right">
 		
 		    <a4j:commandLink id="addOpportunityProducts" value="#{msgs.addOpportunityProducts}"
-				rendered="#{not quoteController.editMode and quoteController.selectedQuote.currencyIsoCode == opportunity.currencyIsoCode}"
-				disabled="#{empty opportunity.opportunityLineItems}"								 			
+				disabled="#{quoteController.editMode or quoteController.selectedQuote.currencyIsoCode != opportunity.currencyIsoCode or empty opportunity.opportunityLineItems}"								 			
                 action="#{quoteController.viewOpportunityLineItems()}"
                 render="mainArea" />
 				
 			<a4j:commandLink value="#{msgs.addProduct}"
-				rendered="#{quoteController.editMode}"
+				disabled="#{not quoteController.editMode}"
 				action="#{quoteController.newQuoteLineItem()}"
 				render="quotedetails" ajaxSingle="true"	/>
 

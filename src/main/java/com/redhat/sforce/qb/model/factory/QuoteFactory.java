@@ -111,6 +111,7 @@ public class QuoteFactory {
 			    quotePriceAdjustment.setQuoteId(quote.getId());
 			    quotePriceAdjustment.setType("Negotiated Discount");
 			    quotePriceAdjustment.setAppliesTo("QUOTE_LINE_ITEM");
+			    quotePriceAdjustment.setOperator("Percent");
 			    quotePriceAdjustment.setReason(primaryBusinessUnit[i]);
 			    quotePriceAdjustment.setAmount(0.00);
 			    quotePriceAdjustment.setPercent(0.00);			    

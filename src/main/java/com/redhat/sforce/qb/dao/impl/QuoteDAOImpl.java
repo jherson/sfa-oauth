@@ -15,6 +15,7 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.sforce.soap.partner.DeleteResult;
@@ -157,6 +158,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException {
 		return em.persist(convertQuotePriceAdjustmentsToSObjects(quotePriceAdjustmentList));
 	}
+	
+	@Override
+	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) throws ConnectionException {
+		return em.persist(convertQuoteLineItemPriceAdjustmentsToSObjects(quoteLineItemPriceAdjustmentList));
+	}
 
 	@Override
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
@@ -261,14 +267,14 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		    sobject.setType("QuotePriceAdjustment__c");
 		    if (quotePriceAdjustment.getId() != null) {
 		        sobject.setId(quotePriceAdjustment.getId());
-		    }
-			sobject.setField("QuoteId__c", quotePriceAdjustment.getQuoteId());
-			log.info("amount: " + quotePriceAdjustment.getAmount());
+		    } else {
+		    	sobject.setField("QuoteId__c", quotePriceAdjustment.getQuoteId());	
+		    }			
 			sobject.setField("Amount__c",quotePriceAdjustment.getAmount());
-			log.info("percent: " + quotePriceAdjustment.getPercent());
 			sobject.setField("Percent__c", quotePriceAdjustment.getPercent());
 			sobject.setField("Reason__c", quotePriceAdjustment.getReason());
 			sobject.setField("Type__c", quotePriceAdjustment.getType());
+			sobject.setField("Operator__c", quotePriceAdjustment.getOperator());
 			sobject.setField("AppliesTo__C",quotePriceAdjustment.getAppliesTo());
 			
 		    sobjectList.add(sobject);
@@ -276,6 +282,30 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		
 		return sobjectList;		
 	}
+	
+	
+	private List<SObject> convertQuoteLineItemPriceAdjustmentsToSObjects(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) {
+		List<SObject> sobjectList = new ArrayList<SObject>();
+		for (QuoteLineItemPriceAdjustment quoteLineItemPriceAdjustment : quoteLineItemPriceAdjustmentList) {
+			SObject sobject = new SObject();
+		    sobject.setType("QuoteLineItemPriceAdjustment__c");
+		    if (quoteLineItemPriceAdjustment.getId() != null) {
+		        sobject.setId(quoteLineItemPriceAdjustment.getId());
+		    } else {
+		    	sobject.setField("QuoteLineItemId__c", quoteLineItemPriceAdjustment.getQuoteLineItemId());
+		    	sobject.setField("QuoteId__c", quoteLineItemPriceAdjustment.getQuoteId());	
+		    }			
+			sobject.setField("Amount__c",quoteLineItemPriceAdjustment.getAmount());
+			sobject.setField("Percent__c", quoteLineItemPriceAdjustment.getPercent());
+			sobject.setField("Reason__c", quoteLineItemPriceAdjustment.getReason());
+			sobject.setField("Type__c", quoteLineItemPriceAdjustment.getType());
+			sobject.setField("Operator__c", quoteLineItemPriceAdjustment.getOperator());
+			
+		    sobjectList.add(sobject);
+		}
+		
+		return sobjectList;		
+	}	
 	
 	private String quoteQuery = "Select Id, "
 			+ "Name, "
@@ -361,7 +391,8 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        Percent__c, "
 			+ "        Reason__c, "
 			+ "        Type__c, "
-			+ "        AppliesTo__c "
+			+ "        AppliesTo__c, "
+			+ "        Operator__c "
 			+ " From   QuotePriceAdjustment__r), "
 			+ "(Select Id, "
 			+ "        Name, "
