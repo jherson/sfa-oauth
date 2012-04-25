@@ -17,7 +17,6 @@ import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.util.ViewedOpportunity;
 
 @SessionScoped
 
@@ -36,8 +35,6 @@ public class OpportunityProducer implements Serializable {
 
 	private Opportunity opportunity;
 
-	@Produces
-	@ViewedOpportunity
 	@Named
 	public Opportunity getOpportunity() {
 		return opportunity;

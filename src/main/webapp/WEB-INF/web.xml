@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.0">
 
 	<display-name>Quote Builder</display-name>
-
+	
 	<context-param>
 		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
 		<param-value>false</param-value>
@@ -24,8 +24,11 @@
 	
 	<session-config>
 		<session-timeout>0</session-timeout>
+		<cookie-config>
+            <secure>true</secure>
+        </cookie-config>
 	</session-config>
-
+	
 	<context-param>
 		<param-name>org.richfaces.skin</param-name>
 		<param-value>blueSky</param-value>

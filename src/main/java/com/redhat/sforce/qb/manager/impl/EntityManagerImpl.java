@@ -11,6 +11,7 @@ import com.redhat.sforce.qb.manager.EntityManager;
 import com.redhat.sforce.qb.util.SessionConnection;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -73,6 +74,11 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	@Override
 	public DeleteResult delete(String id) throws ConnectionException {
 		return delete(new String[] {id})[0];
+	}
+	
+	@Override
+	public QueryResult query(String queryString) throws ConnectionException {
+		return partnerConnection.query(queryString);
 	}
 	
 	private DeleteResult[] delete(String[] ids) throws ConnectionException {

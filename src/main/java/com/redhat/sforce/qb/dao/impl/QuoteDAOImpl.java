@@ -84,6 +84,233 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			throw new SalesforceServiceException(e);
 		}
 	}
+	
+	public void priceQuote() {
+//	 	Quote__c quote = [
+//	 	     	 	    SELECT Id
+//	 	     	 	         , Number__c
+//	 	     	 	         , OpportunityId__c
+//	 	     	 	         , CurrencyIsoCode
+//	 	     	 	         , QuoteOwnerId__r.Id
+//	 	     			     , QuoteOwnerId__r.Name
+//	 	     			     , QuoteOwnerId__r.Email
+//	 	                      , (SELECT Id
+//	 	                              , Quantity__c
+//	 	                              , EndDate__c
+//	 	                              , Term__c
+//	 	                              , UnitPrice__c
+//	 	                              , YearlySalesPrice__c
+//	 	                              , Product__r.Id
+//	 	                              , Product__r.Description
+//	 	                              , Product__r.Name
+//	 	                              , Product__r.Family
+//	 	                              , Product__r.ProductCode
+//	 	                              , Product__r.Primary_Business_Unit__c
+//	 	                              , Product__r.Product_Line__c
+//	 	                              , Product__r.Unit_Of_Measure__c
+//	 	                              , Product__r.Term__c
+//	 	                              , TotalPrice__c
+//	 	                              , StartDate__c
+//	 	                              , Configured_SKU__c
+//	 	                              , Pricing_Attributes__c  
+//	 	                                FROM   QuoteLineItem__r)
+//	 	                 FROM Quote__c              
+//	 	                 WHERE Id = :quoteId     
+//	 	                 LIMIT 1	 	    
+//	 	     	 	];	 		 	
+//	 	     	 	
+//	 	     	 	Opportunity opportunity = [
+//	 	                 SELECT Id
+//	 	                      , CurrencyIsoCode
+//	 	                      , Country_Of_Order__c
+//	 	                      , OpportunityNumber__c
+//	 	                      , OpportunityType__c
+//	 	                      , Owner.Name
+//	 	                      , Owner.Email
+//	 	                      , PaymentType__c
+//	 	                      , Super_Region__c           
+//	 	                      , Account.BillingCity
+//	 	                      , Account.BillingCountry
+//	 	                      , Account.BillingPostalCode
+//	 	                      , Account.BillingState
+//	 	                      , Account.BillingStreet
+//	 	                      , Account.Name
+//	 	                      , Account.OracleAccountNumber__c
+//	 	                      , Account.ShippingCity
+//	 	                      , Account.ShippingCountry
+//	 	                      , Account.ShippingPostalCode
+//	 	                      , Account.ShippingState
+//	 	                      , Account.ShippingStreet
+//	 	                      , Account.VATNumber__c      
+//	 	                      , (SELECT Id
+//	 	                              , Partner__r.BillingCity
+//	 	                              , Partner__r.BillingCountry
+//	 	                              , Partner__r.BillingPostalCode
+//	 	                              , Partner__r.BillingState
+//	 	                              , Partner__r.BillingStreet
+//	 	                              , Partner__r.Name
+//	 	                              , Partner__r.OracleAccountNumber__c
+//	 	                              , Partner__r.ShippingCity
+//	 	                              , Partner__r.ShippingCountry
+//	 	                              , Partner__r.ShippingPostalCode
+//	 	                              , Partner__r.ShippingState
+//	 	                              , Partner__r.ShippingStreet
+//	 	                              , Partner__r.VATNumber__c
+//	 	                              , RelationshipType__c
+//	 	                           FROM OpportunityPartners2__r
+//	 	                          WHERE Partner__r.OracleAccountNumber__c != '')                 
+//	 	                   FROM Opportunity
+//	 	                  WHERE Id = :quote.OpportunityId__c
+//	 	                  LIMIT 1
+//	 	             ];
+//	 	     	 	
+//	 	     	 	System.debug('generating pricing service request XML');
+//	 	             
+//	 	             DOM.Document doc = new DOM.Document();
+//	 	             DOM.xmlNode quoteBuilderMsg = doc.createRootElement('QuotebuilderMessage', '', '');
+//	 	         
+//	 	             //
+//	 	             // generate header node
+//	 	             //
+//	 	             
+//	 	             DOM.xmlNode header = quoteBuilderMsg.addChildElement('Header', '', '');
+//	 	             header.addChildElement('System', '', '').addTextNode('SFDC');
+//	 	             header.addChildElement('Operation', '', '').addTextNode('Sync');
+//	 	             header.addChildElement('Type', '', '').addTextNode('Quote');
+//	 	             header.addChildElement('InstanceId', '', '').addTextNode( quote.id  + '_' + system.now().format('yyyy-MM-dd\'T\'HH:mm:ss'));
+//	 	             header.addChildElement('Timestamp', '', '').addTextNode(system.now().format('yyyy-MM-dd\'T\'HH:mm:ss'));
+//	 	             
+//	 	             //
+//	 	             // generate payload node
+//	 	             //
+//	 	             
+//	 	             DOM.xmlNode payload = quoteBuilderMsg.addChildElement('Payload', '', '');
+//	 	         
+//	 	             //
+//	 	             // generate Quote node
+//	 	             //
+//	 	         
+//	 	             DOM.XmlNode quoteNode = payload.addChildElement('Quote', '', '');
+//	 	         
+//	 	             //
+//	 	             // generate the quoteHeader node
+//	 	             //
+//	 	             
+//	 	             DOM.XmlNode quoteHeader = quoteNode.addChildElement('QuoteHeader', '', '');
+//	 	             quoteHeader.addChildElement('QuoteNumber', '', '').addTextNode( quote.number__c );
+//	 	             quoteHeader.addChildElement('QuoteSource', '', '').addTextNode('QuoteBuilder');      
+//	 	             quoteHeader.addChildElement('SuperRegion', '', '').addTextNode( isNull(opportunity.Super_Region__c) );  
+//	 	             quoteHeader.addChildElement('CountryOfOrder', '', '').addTextNode( isNull( opportunity.Country_Of_Order__c) );   
+//	 	             quoteHeader.addChildElement('CurrencyIso3Code', '', '').addTextNode( isNull(quote.currencyIsoCode) );
+//	 	             
+//	 	             // generate sales rep email node
+//	 	             DOM.XmlNode salesRepEmail = quoteHeader.addChildElement('SalesRepEmail', '', '');
+//	 	             salesRepEmail.setAttribute('type', 'WORK');
+//	 	             salesRepEmail.setAttribute('recipient-type', 'TO');
+//	 	             salesRepEmail.addChildElement('Name', '', '').addTextNode( isNull(quote.QuoteOwnerId__r.Name) );
+//	 	             salesRepEmail.addChildElement('EmailAddress', '', '').addTextNode ( isNull(quote.QuoteOwnerId__r.Email) );
+//	 	             
+//	 	             quoteHeader.addChildElement('OpportunityType', '', '').addTextNode( isNull(opportunity.OpportunityType__c) );
+//	 	             quoteHeader.addChildElement('OpportunityNumber', '', '').addTextNode( isNull(opportunity.OpportunityNumber__c) );       
+//	 	             
+//	 	             //
+//	 	             // generate the quote line item nodes
+//	 	             //
+//	 	             
+//	 	             for (QuoteLineItem__c line: quote.QuoteLineItem__r) {
+//	 	                     
+//	 	                 DOM.XmlNode quoteLineItem = quoteNode.addChildElement( 'QuoteLineItem', '', '' );
+//	 	                 quoteLineItem.addChildElement('LineNumber', '', '').addTextNode(line.Id);
+//	 	                 
+//	 	                 //
+//	 	                 // generate the product node
+//	 	                 //
+//	 	                 
+//	 	                 DOM.XmlNode product = quoteLineItem.addChildElement('Product', '', '');
+//	 	                 product.addChildElement('Sku', '', '').addTextNode( isNull(line.Product__r.ProductCode) );
+//	 	                 
+//	 	                 //
+//	 	                 // generate xml nodes for configSku, configSkuDescription if we have a configured sku
+//	 	                 //
+//	 	                     
+//	 	                 product.addChildElement('ConfigSku', '', '').addTextNode( isNull(line.Configured_SKU__c) );
+//	 	                     
+//	 	                 //
+//	 	                 // generate product contraint nodes
+//	 	                 //
+//	 	                     
+//	 	                 if (line.Pricing_Attributes__c != null) {
+//	 	                     List<String> attributes = line.Pricing_Attributes__c.split(',');
+//	 	                     for (String nameValuePair : attributes) {
+//	 	                         List<String> attribute = nameValuePair.split('=');
+//	 	                       
+//	 	                         DOM.XmlNode constraint = product.addChildElement('ProductConstraint', '', '');
+//	 	                         constraint.addChildElement('Code', '', '').addTextNode( isNull(attribute[0]) );
+//	 	                         constraint.addChildElement('Value', '', '').addTextNode( isNull(attribute[1]) );
+//	 	                       }
+//	 	                 }
+//	 	                 
+//	 	                 Dom.XMLNode Quantity = quoteLineItem.addChildElement('Quantity', '', '');
+//	 	                 Quantity.setAttribute('uom', 'EA');
+//	 	                 Quantity.addTextNode(  isNull((line.Quantity__c).toPlainString()) );            
+//	 	                 
+//	 	                 if (line.Term__c != null) {  
+//	 	                   String duration = '1'; 
+//	 	                   
+//	 	                   if (line.Term__c >= 1095)
+//	 	                     duration = '3';
+//	 	                     
+//	 	                   quoteLineItem.addChildElement('ServiceDuration', '', '').addTextNode( isNull(duration) );
+//	 	                 }
+//	 	                 
+//	 	                 quoteLineItem.addChildElement('ServicePeriod', '', '').addTextNode('YR');  
+//	 	                 quoteLineItem.addChildElement('PricingEffectiveDate', '', '').addTextNode('');
+//	 	             }
+//	 	             
+//	 	             //
+//	 	             // generate the account node
+//	 	             //
+//	 	             
+//	 	             DOM.XmlNode account = quoteNode.addChildElement('Account', '', '');
+//	 	             account.addChildElement('AccountTransactionRole', '', '').addTextNode('END_CUSTOMER');
+//	 	             account.addChildElement('PartyName', '', '').addTextNode( isNull(opportunity.Account.Name) );
+//	 	             account.addChildElement('AccountNumber', '', '').addTextNode( isNull(opportunity.Account.OracleAccountNumber__c) );
+//
+//	 	             DOM.XMLNode billingAddress = account.addChildElement('Address', '', '');
+//	 	             billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.BillingStreet) );
+//	 	             billingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.BillingCity) );
+//	 	             billingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.BillingState) );
+//	 	             billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.BillingPostalCode) );
+//	 	             billingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.BillingCountry) );
+//	 	             
+//	 	             DOM.XMLNode shippingAddress = account.addChildElement('Address', '', '');
+//	 	             shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.ShippingStreet) );
+//	 	             shippingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.ShippingCity) );
+//	 	             shippingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.ShippingState) );
+//	 	             shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.ShippingPostalCode) );
+//	 	             shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.ShippingCountry) );
+//	 	                             
+//	 	             for (Partner partner: opportunity.partners) {
+//	 	                 account = quoteNode.addChildElement('Account', '', '');
+//	 	                 account.addChildElement('AccountTransactionRole', '', '').addTextNode( isNull(partner.Role) );
+//	 	                 account.addChildElement('PartyName', '', '').addTextNode( isNull(partner.AccountTo.Name) );
+//	 	                 account.addChildElement('AccountNumber', '', '').addTextNode( isNull(partner.AccountTo.OracleAccountNumber__c) );
+//	 	         
+//	 	                 billingAddress = account.addChildElement('Address', '', '');
+//	 	                 billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.BillingStreet) );
+//	 	                 billingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.BillingCity) );
+//	 	                 billingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.BillingState) );
+//	 	                 billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.BillingPostalCode) );
+//	 	                 billingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.BillingCountry) );
+//	 	                 
+//	 	                 shippingAddress = account.addChildElement('Address', '', '');
+//	 	                 shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.ShippingStreet) );
+//	 	                 shippingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.ShippingCity) );
+//	 	                 shippingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.ShippingState) );
+//	 	                 shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.ShippingPostalCode) );
+//	 	                 shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.ShippingCountry) );    
+//	 	             }
+	}
 
 	@Override
 	public Quote activateQuote(String quoteId) throws SalesforceServiceException {

@@ -44,13 +44,8 @@ public class Quote extends SObject {
 	private Date effectiveDate;
 	private String referenceNumber;
 	private Boolean isNonStandardPayment;
-	private String approvalsRequested;
-	private Boolean aprvlRqstNonStd;
-	private Boolean aprvlRqstPaymentTerms;
-	private Boolean aprvlRqstPriceDiscnt;
-	private Boolean hasApprovalRequests;
 	private Date lastCalculatedDate;
-	private String opportuntiyUrl;
+	private Opportunity opportunity;
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
@@ -74,7 +69,6 @@ public class Quote extends SObject {
 		setTerm(365);
 		setEffectiveDate(new Date());
 		setHasQuoteLineItems(Boolean.FALSE);
-		setHasApprovalRequests(Boolean.FALSE);
 
 		GregorianCalendar calendar = new GregorianCalendar();
 
@@ -358,46 +352,6 @@ public class Quote extends SObject {
 		this.isNonStandardPayment = isNonStandardPayment;
 	}
 
-	public String getApprovalsRequested() {
-		return approvalsRequested;
-	}
-
-	public void setApprovalsRequested(String approvalsRequested) {
-		this.approvalsRequested = approvalsRequested;
-	}
-
-	public Boolean getAprvlRqstNonStd() {
-		return aprvlRqstNonStd;
-	}
-
-	public void setAprvlRqstNonStd(Boolean aprvlRqstNonStd) {
-		this.aprvlRqstNonStd = aprvlRqstNonStd;
-	}
-
-	public Boolean getAprvlRqstPaymentTerms() {
-		return aprvlRqstPaymentTerms;
-	}
-
-	public void setAprvlRqstPaymentTerms(Boolean aprvlRqstPaymentTerms) {
-		this.aprvlRqstPaymentTerms = aprvlRqstPaymentTerms;
-	}
-
-	public Boolean getAprvlRqstPriceDiscnt() {
-		return aprvlRqstPriceDiscnt;
-	}
-
-	public void setAprvlRqstPriceDiscnt(Boolean aprvlRqstPriceDiscnt) {
-		this.aprvlRqstPriceDiscnt = aprvlRqstPriceDiscnt;
-	}
-
-	public Boolean getHasApprovalRequests() {
-		return hasApprovalRequests;
-	}
-
-	public void setHasApprovalRequests(Boolean hasApprovalRequests) {
-		this.hasApprovalRequests = hasApprovalRequests;
-	}
-
 	public Date getLastCalculatedDate() {
 		return lastCalculatedDate;
 	}
@@ -405,21 +359,20 @@ public class Quote extends SObject {
 	public void setLastCalculatedDate(Date lastCalculatedDate) {
 		this.lastCalculatedDate = lastCalculatedDate;
 	}
-
-	public String getOpportuntiyUrl() {
-		return opportuntiyUrl;
+		
+	public Opportunity getOpportunity() {
+		return opportunity;
 	}
 
-	public void setOpportuntiyUrl(String opportuntiyUrl) {
-		this.opportuntiyUrl = opportuntiyUrl;
+	public void setOpportunity(Opportunity opportunity) {
+		this.opportunity = opportunity;
 	}
 
 	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {
 		return quotePriceAdjustments;
 	}
 
-	public void setQuotePriceAdjustments(
-			List<QuotePriceAdjustment> quotePriceAdjustments) {
+	public void setQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {
 		this.quotePriceAdjustments = quotePriceAdjustments;
 	}
 
@@ -435,8 +388,7 @@ public class Quote extends SObject {
 		return quoteLineItemSchedules;
 	}
 
-	public void setQuoteLineItemSchedules(
-			List<QuoteLineItemSchedule> quoteLineItemSchedules) {
+	public void setQuoteLineItemSchedules(List<QuoteLineItemSchedule> quoteLineItemSchedules) {
 		this.quoteLineItemSchedules = quoteLineItemSchedules;
 	}
 }

@@ -14,13 +14,11 @@ import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class PricebookEntryFactory {
 
-	public static List<PricebookEntry> deserialize(JSONArray jsonArray)
-			throws JSONException, ParseException {
+	public static List<PricebookEntry> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<PricebookEntry> pricebookEntryList = new ArrayList<PricebookEntry>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
-			PricebookEntry pricebookEntry = deserialize(jsonArray
-					.getJSONObject(i));
+			PricebookEntry pricebookEntry = deserialize(jsonArray.getJSONObject(i));
 			pricebookEntryList.add(pricebookEntry);
 		}
 
@@ -34,11 +32,9 @@ public class PricebookEntryFactory {
 		try {
 			pricebookEntry = new PricebookEntry();
 			pricebookEntry.setId(wrapper.getId());
-			pricebookEntry.setCurrencyIsoCode(wrapper
-					.getString("CurrencyIsoCode"));
+			pricebookEntry.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 			pricebookEntry.setUnitPrice(wrapper.getDouble("UnitPrice"));
-			pricebookEntry.setProduct(ProductFactory.parseProduct(wrapper
-					.getJSONObject("Product2")));
+			pricebookEntry.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product2")));
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -52,8 +48,7 @@ public class PricebookEntryFactory {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put("Id", opportunityLineItem.getPricebookEntryId());
-			jsonObject.put("Product2",
-					ProductFactory.serialize(opportunityLineItem));
+			jsonObject.put("Product2", ProductFactory.serialize(opportunityLineItem));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

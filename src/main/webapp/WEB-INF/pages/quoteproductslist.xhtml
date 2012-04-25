@@ -24,12 +24,12 @@
 
 			<a4j:commandLink value="#{msgs.delete}"
 				action="#{quoteController.deleteQuoteLineItems()}"
-				disabled="#{not quoteController.editMode or empty quoteController.selectedQuote.quoteLineItems}"
+				disabled="#{not quoteController.editMode or empty selectedQuote.quoteLineItems}"
 				render="quotedetails" ajaxSingle="true" >
 			</a4j:commandLink>
 
 			<a4j:commandLink value="#{msgs.reset}" immediate="true" 
-				disabled="#{not quoteController.editMode or empty quoteController.selectedQuote.quoteLineItems}"
+				disabled="#{not quoteController.editMode or empty selectedQuote.quoteLineItems}"
 				action="#{quoteController.cancelEdit()}"
 				render="quotedetails" ajaxSingle="true" >				
 			</a4j:commandLink>
@@ -39,7 +39,7 @@
 		<rich:toolbarGroup location="right">
 		
 		    <a4j:commandLink id="addOpportunityProducts" value="#{msgs.addOpportunityProducts}"
-				disabled="#{quoteController.editMode or quoteController.selectedQuote.currencyIsoCode != opportunity.currencyIsoCode or empty opportunity.opportunityLineItems}"								 			
+				disabled="#{quoteController.editMode or selectedQuote.currencyIsoCode != selectedQuote.opportunity.currencyIsoCode or empty selectedQuote.opportunity.opportunityLineItems}"								 			
                 action="#{quoteController.viewOpportunityLineItems()}"
                 render="mainArea" />
 				
@@ -57,7 +57,7 @@
 	    var="lineItem"
 		noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it"
-		value="#{quoteController.selectedQuote.quoteLineItems}">
+		value="#{selectedQuote.quoteLineItems}">
 
 		<rich:column style="text-align: center; width: 3%;">
 			<f:facet name="header">#{msgs.action}</f:facet>
@@ -101,13 +101,13 @@
 		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItem.startDate}"
-				rendered="#{not quoteController.editMode or quoteController.selectedQuote.type == 'Standard'}">
+				rendered="#{not quoteController.editMode or selectedQuote.type == 'Standard'}">
 				<f:convertDateTime locale="#{user.locale}"
 					pattern="#{user.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.startDate}"
-				rendered="#{quoteController.editMode and quoteController.selectedQuote.type != 'Standard'}"
+				rendered="#{quoteController.editMode and selectedQuote.type != 'Standard'}"
 				id="lineStartDate" locale="#{user.locale}"
 				popup="true" enableManualInput="true"
 				datePattern="#{user.dateFormatPattern}"
@@ -119,13 +119,13 @@
 		<rich:column style="text-align: center; width: 8%;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItem.endDate}"
-				rendered="#{not quoteController.editMode or quoteController.selectedQuote.type != 'Non Standard'}">
+				rendered="#{not quoteController.editMode or selectedQuote.type != 'Non Standard'}">
 				<f:convertDateTime locale="#{user.locale}"
 					pattern="#{user.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 			<rich:calendar value="#{lineItem.endDate}"
-				rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Non Standard'}"
+				rendered="#{quoteController.editMode and selectedQuote.type == 'Non Standard'}"
 				id="lineEndDate" locale="#{user.locale}"
 				popup="true" enableManualInput="true"
 				datePattern="#{user.dateFormatPattern}"

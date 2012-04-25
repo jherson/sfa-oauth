@@ -1,23 +1,34 @@
 package com.redhat.sforce.qb.controller;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
-import com.redhat.sforce.qb.model.Opportunity;
+import org.jboss.logging.Logger;
+
 import com.redhat.sforce.qb.model.OpportunityLineItem;
-import com.redhat.sforce.qb.util.ViewedOpportunity;
+import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.util.SelectedQuote;
 
 @Model
 
 public class OpportunityLineItemController {
-
+	
 	@Inject
-	@ViewedOpportunity
-	private Opportunity opportunity;
-
+	private Logger log;	
+	
+	@Inject
+	@SelectedQuote
+	private Quote quote;
+	
+	@PostConstruct
+	public void init() {
+		log.info("init");
+	}
+	
 	@ManagedProperty(value = "false")
 	private Boolean checkedValue;
 
@@ -31,9 +42,10 @@ public class OpportunityLineItemController {
 
 	public void toggleCheckboxes(AjaxBehaviorEvent event) {
 		HtmlSelectBooleanCheckbox checkBox = (HtmlSelectBooleanCheckbox) event.getComponent();
-
-		for (OpportunityLineItem opportunityLineItem : opportunity.getOpportunityLineItems()) {
+				
+		for (OpportunityLineItem opportunityLineItem : quote.getOpportunity().getOpportunityLineItems()) {
 			opportunityLineItem.setSelected(checkBox.isSelected());
 		}
-	}
+		
+	}	
 }

@@ -119,17 +119,19 @@ public class QuoteFactory {
 		    }
 		}
 				
-		for (QuotePriceAdjustment quotePriceAdjustment : quote.getQuotePriceAdjustments()) {
-			quotePriceAdjustment.setPreAdjustedTotal(0.00);
-		    quotePriceAdjustment.setAdjustedTotal(0.00);
-			
-			BigDecimal amount = new BigDecimal(0.00);
-		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {			
-				if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
-					amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getTotalPrice()));
-					quotePriceAdjustment.setPreAdjustedTotal(amount.doubleValue());
-					amount = amount.subtract(new BigDecimal(quotePriceAdjustment.getAmount()));
-					quotePriceAdjustment.setAdjustedTotal(amount.doubleValue());
+		if (quote.getQuoteLineItems() != null) {
+			for (QuotePriceAdjustment quotePriceAdjustment : quote.getQuotePriceAdjustments()) {
+				quotePriceAdjustment.setPreAdjustedTotal(0.00);
+			    quotePriceAdjustment.setAdjustedTotal(0.00);
+				
+				BigDecimal amount = new BigDecimal(0.00);
+			    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {			
+					if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
+						amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getTotalPrice()));
+						quotePriceAdjustment.setPreAdjustedTotal(amount.doubleValue());
+						amount = amount.subtract(new BigDecimal(quotePriceAdjustment.getAmount()));
+						quotePriceAdjustment.setAdjustedTotal(amount.doubleValue());
+					}
 				}
 			}
 		}

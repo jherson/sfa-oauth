@@ -27,13 +27,14 @@
 	<rich:panel id="viewOpportunityLineItems">
 
 		<rich:dataTable id="opportunityProducts" var="lineItem"
-			value="#{opportunity.opportunityLineItems}"
+			value="#{selectedQuote.opportunity.opportunityLineItems}"
 			noDataLabel="#{msgs.noRecords}" style="width:100%;">
 
 			<rich:column style="text-align: center;">
 				<f:facet name="header">
 					<h:selectBooleanCheckbox id="selectAll" 
-						value="#{opportunityLineItemController.checkedValue}">
+						value="#{opportunityLineItemController.checkedValue}"
+						status="waitstatus">
 
 						<f:ajax
 							listener="#{opportunityLineItemController.toggleCheckboxes}"

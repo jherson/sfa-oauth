@@ -14,6 +14,8 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.util.ListQuotes;
+
 import java.io.Serializable;
 
 @SessionScoped
@@ -36,7 +38,7 @@ public class QuoteListProducer implements Serializable {
 		return quoteList;
 	}
 
-	public void onQuoteListChanged(@Observes final Quote quote) {
+	public void onQuoteListChanged(@Observes final @ListQuotes Quote quote) {
 		queryQuotes();
 	}
 

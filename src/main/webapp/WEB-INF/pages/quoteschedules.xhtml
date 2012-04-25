@@ -9,8 +9,8 @@
 <a4j:outputPanel id="viewQuoteSchedules" >
 
 	<rich:dataTable style="width: 100%" var="lineItemSchedule"
-		value="#{quoteController.selectedQuote.quoteLineItemSchedules}"
-		rendered="#{not empty quoteController.selectedQuote}">
+		value="#{selectedQuote.quoteLineItemSchedules}"
+		rendered="#{not empty selectedQuote}">
 
 		<rich:column>
 			<f:facet name="header">#{msgs.productCode}</f:facet>

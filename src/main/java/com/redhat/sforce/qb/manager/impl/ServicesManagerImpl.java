@@ -248,10 +248,18 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		HttpClient httpclient = new HttpClient();
 		try {
 			httpclient.executeMethod(postMethod);
+			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
+				log.info(postMethod.getResponseBodyAsString());
+			} else {
+				parseErrorResponse(postMethod.getResponseBodyAsStream());
+			}			
 		} catch (HttpException e) {
 			log.error(e);
 		} catch (IOException e) {
 			log.error(e);
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -266,8 +274,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				+ "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/price_quote";
-		
-		log.info(url);
 
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("quoteId", quoteId);

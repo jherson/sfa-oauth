@@ -12,7 +12,9 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.util.SelectedQuote;
 
 @ManagedBean(name = "quotePriceAdjustmentListDataTableBean")
 @RequestScoped
@@ -22,17 +24,10 @@ public class QuotePriceAdjustmentListDataTableBean {
 	@Inject
 	private Logger log;
 	
-	@ManagedProperty(value = "#{quoteController}")
-	private QuoteController quoteController;
-
-	public QuoteController getQuoteController() {
-		return quoteController;
-	}
-
-	public void setQuoteController(QuoteController quoteController) {
-		this.quoteController = quoteController;
-	}
-	
+	@Inject
+	@SelectedQuote
+	private Quote selectedQuote;
+		
 	public void valueChangeEvent(AjaxBehaviorEvent event) {
 		HtmlInputText inputText = (HtmlInputText) event.getComponent();
 		String value = inputText.getValue().toString();
@@ -44,7 +39,7 @@ public class QuotePriceAdjustmentListDataTableBean {
 						
 		int rowIndex = Integer.valueOf(event.getComponent().getAttributes().get("rowIndex").toString());
 
-		QuotePriceAdjustment quotePriceAdjustment = quoteController.getSelectedQuote().getQuotePriceAdjustments().get(rowIndex);
+		QuotePriceAdjustment quotePriceAdjustment = selectedQuote.getQuotePriceAdjustments().get(rowIndex);
 		
 		if ("adjustmentPercent".equals(inputText.getId())) {
 			percentChangedEvent(value, quotePriceAdjustment);

@@ -21,7 +21,7 @@
 
 				<a4j:commandLink id="edit" action="#{quoteController.editQuote()}"
 					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					disabled="#{empty quoteController.selectedQuote}"
+					disabled="#{empty selectedQuote}"
 					render="quotedetails"
 					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
 					<h:outputText value="#{msgs.edit}" />
@@ -44,7 +44,7 @@
 				<a4j:commandLink id="activate"
 					action="#{quoteController.activateQuote()}"
 					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					disabled="#{empty quoteController.selectedQuote}"
+					disabled="#{empty selectedQuote}"
 					render="quotedetails">
 					<h:outputText value="#{msgs.activate}" />
 				</a4j:commandLink>
@@ -52,14 +52,14 @@
 				<a4j:commandLink id="copy" 
 				    action="#{quoteController.copyQuote()}"
 					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					render="mainArea" disabled="#{empty quoteController.selectedQuote}">
+					render="mainArea" disabled="#{empty selectedQuote}">
 					<h:outputText value="#{msgs.copy}" />
 				</a4j:commandLink>
 
 				<a4j:commandLink id="delete"
 					action="#{quoteController.deleteQuote()}"
 					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					disabled="#{empty quoteController.selectedQuote or quoteController.selectedQuote.isActive}"
+					disabled="#{empty selectedQuote or selectedQuote.isActive}"
 					render="mainArea">
 					<h:outputText value="#{msgs.delete}" />
 				</a4j:commandLink>
@@ -86,17 +86,17 @@
 				<tr>
 					<th class="label-column"><h:outputText value="#{msgs.name}" /></th>
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.name}"
+							value="#{selectedQuote.name}"
 							rendered="#{not quoteController.editMode}" /> <h:inputText
 							id="quoteName" required="true"
-							value="#{quoteController.selectedQuote.name}" style="width:300px"
+							value="#{selectedQuote.name}" style="width:300px"
 							rendered="#{quoteController.editMode}"
 							requiredMessage="#{msgs.quoteNameRequiredMessage}">
 							<rich:validator />
 						</h:inputText></td>
 					<th class="label-column"><h:outputText value="#{msgs.number}" /></th>
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.number}" /></td>
+							value="#{selectedQuote.number}" /></td>
 				</tr>
 
 				<tr>
@@ -104,10 +104,10 @@
 
 					<td class="column-l-align">
 					    <h:outputText
-							value="#{quoteController.selectedQuote.type}"
+							value="#{selectedQuote.type}"
 							rendered="#{not quoteController.editMode}" /> 
 						<h:selectOneMenu style="width: 150px;"
-							value="#{quoteController.selectedQuote.type}"
+							value="#{selectedQuote.type}"
 							rendered="#{quoteController.editMode}">
 							<f:selectItem itemValue="Standard" />
 							<f:selectItem itemValue="Co-Term" />
@@ -120,7 +120,7 @@
 
 					<th class="label-column"><h:outputText value="#{msgs.version}" /></th>
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.version}" /></td>
+							value="#{selectedQuote.version}" /></td>
 				</tr>
 
 				<tr>
@@ -128,18 +128,18 @@
 
 					<td class="column-l-align"><h:graphicImage
 							value="./images/active.png"
-							rendered="#{quoteController.selectedQuote.isActive}" /></td>
+							rendered="#{selectedQuote.isActive}" /></td>
 
 					<th class="label-column"><h:outputText
 							value="#{msgs.currency}" /></th>
 
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.currencyIsoCode}"
-							rendered="#{not quoteController.editMode or quoteController.selectedQuote.hasQuoteLineItems}" />
+							value="#{selectedQuote.currencyIsoCode}"
+							rendered="#{not quoteController.editMode or selectedQuote.hasQuoteLineItems}" />
 						<h:selectOneMenu
-							value="#{quoteController.selectedQuote.currencyIsoCode}"
+							value="#{selectedQuote.currencyIsoCode}"
 							style="width: 75px;"
-							rendered="#{quoteController.editMode and not quoteController.selectedQuote.hasQuoteLineItems}">
+							rendered="#{quoteController.editMode and not selectedQuote.hasQuoteLineItems}">
 
 							<f:selectItems value="#{currencyIsoCodes}" />
 
@@ -155,11 +155,11 @@
 
 					<td class="column-l-align">
 					    <h:outputText
-							value="#{quoteController.selectedQuote.payNow}"
+							value="#{selectedQuote.payNow}"
 							rendered="#{not quoteController.editMode}" /> 
 						<h:selectOneMenu
 						    style="width: 75px;"
-							value="#{quoteController.selectedQuote.payNow}"
+							value="#{selectedQuote.payNow}"
 							rendered="#{quoteController.editMode}">
 							<f:selectItem itemValue="Yes" />
 							<f:selectItem itemValue="No" />
@@ -169,7 +169,7 @@
 
 					<td class="column-l-align">
 					    <h:outputText
-							value="#{quoteController.selectedQuote.amount}">
+							value="#{selectedQuote.amount}">
 							<f:convertNumber locale="#{user.locale}"
 								pattern="#,##0.00;(#,##0.00)" />
 						</h:outputText></td>
@@ -180,7 +180,7 @@
 
 					<td class="column-l-align">
 							<h:outputText id="ownerName"
-								value="#{quoteController.selectedQuote.ownerName}" />
+								value="#{selectedQuote.ownerName}" />
 
 							<a4j:commandLink id="changeOwner" value="#{msgs.change}"
 								oncomplete="#{rich:component('ownerPanel')}.show()"
@@ -193,7 +193,7 @@
 					<th class="label-column"><h:outputText value="#{msgs.contact}" /></th>
 					<td class="column-l-align">
 							<h:outputText id="contactName"
-								value="#{quoteController.selectedQuote.contactName}" />
+								value="#{selectedQuote.contactName}" />
 
 							<a4j:commandLink id="changeContact" value="#{msgs.change}"
 								oncomplete="#{rich:component('contactPanel')}.show()"
@@ -208,12 +208,12 @@
 					<th class="label-column"><h:outputText
 							value="#{msgs.effectiveDate}" /></th>
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.effectiveDate}"
+							value="#{selectedQuote.effectiveDate}"
 							rendered="#{not quoteController.editMode}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
 						</h:outputText> <rich:calendar
-							value="#{quoteController.selectedQuote.effectiveDate}"
+							value="#{selectedQuote.effectiveDate}"
 							id="effectiveDate" locale="en_US" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
@@ -223,12 +223,12 @@
 					<th class="label-column"><h:outputText
 							value="#{msgs.expirationDate}" /></th>
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.expirationDate}"
+							value="#{selectedQuote.expirationDate}"
 							rendered="#{not quoteController.editMode}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
 						</h:outputText> <rich:calendar
-							value="#{quoteController.selectedQuote.expirationDate}"
+							value="#{selectedQuote.expirationDate}"
 							id="expirationDate" locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
@@ -241,19 +241,19 @@
 							value="#{msgs.referenceNumber}" /></th>
 
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.referenceNumber}"
+							value="#{selectedQuote.referenceNumber}"
 							rendered="#{not quoteController.editMode}" /> <h:inputText
-							value="#{quoteController.selectedQuote.referenceNumber}"
+							value="#{selectedQuote.referenceNumber}"
 							rendered="#{quoteController.editMode}" /></td>
 
 					<th class="label-column"><h:outputText value="#{msgs.term}" /></th>
 
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.term}"
-							rendered="#{not quoteController.editMode or quoteController.selectedQuote.type != 'Standard'}">
+							value="#{selectedQuote.term}"
+							rendered="#{not quoteController.editMode or selectedQuote.type != 'Standard'}">
 							<f:convertNumber locale="#{user.locale}" pattern="#,##0" />
-						</h:outputText> <h:selectOneMenu value="#{quoteController.selectedQuote.term}"
-							rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Standard'}"
+						</h:outputText> <h:selectOneMenu value="#{selectedQuote.term}"
+							rendered="#{quoteController.editMode and selectedQuote.type == 'Standard'}"
 							style="width: 75px">
 							<f:selectItem itemLabel="1" itemValue="365" />
 							<f:selectItem itemLabel="3" itemValue="1095" />
@@ -269,16 +269,16 @@
 							value="#{msgs.startDate}" /></th>
 
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.startDate}"
-							rendered="#{not quoteController.editMode or quoteController.selectedQuote.type != 'Standard'}">
+							value="#{selectedQuote.startDate}"
+							rendered="#{not quoteController.editMode or selectedQuote.type != 'Standard'}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
 						</h:outputText> 
-						<rich:calendar value="#{quoteController.selectedQuote.startDate}"
+						<rich:calendar value="#{selectedQuote.startDate}"
 							id="startDate" locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"							
-							rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Standard'}"
+							rendered="#{quoteController.editMode and selectedQuote.type == 'Standard'}"
 							disabled="false">
 							<a4j:ajax event="change"
 							    listener="#{quoteController.setDates()}"
@@ -289,15 +289,15 @@
 
 					<th class="label-column"><h:outputText value="#{msgs.endDate}" /></th>
 					<td class="column-l-align"><h:outputText
-							value="#{quoteController.selectedQuote.endDate}"
-							rendered="#{not quoteController.editMode or quoteController.selectedQuote.type != 'Co-Term'}">
+							value="#{selectedQuote.endDate}"
+							rendered="#{not quoteController.editMode or selectedQuote.type != 'Co-Term'}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText> <rich:calendar value="#{quoteController.selectedQuote.endDate}"
+						</h:outputText> <rich:calendar value="#{selectedQuote.endDate}"
 							id="endDate" locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
-							rendered="#{quoteController.editMode and quoteController.selectedQuote.type == 'Co-Term'}"
+							rendered="#{quoteController.editMode and selectedQuote.type == 'Co-Term'}"
 							disabled="false">
 						</rich:calendar></td>
 				</tr>
@@ -309,17 +309,17 @@
 
 					<td class="column-l-align"><h:panelGroup>
 							<h:outputText
-								value="#{quoteController.selectedQuote.createdByName}, "
-								rendered="#{not quoteController.editMode and not empty quoteController.selectedQuote}" />
+								value="#{selectedQuote.createdByName}, "
+								rendered="#{not quoteController.editMode and not empty selectedQuote}" />
 							<h:outputText
-								value="#{quoteController.selectedQuote.createdDate}"
-								rendered="#{not quoteController.editMode and not empty quoteController.selectedQuote}">
+								value="#{selectedQuote.createdDate}"
+								rendered="#{not quoteController.editMode and not empty selectedQuote}">
 								<f:convertDateTime locale="#{user.locale}"
 								    timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
 							<h:outputText value=" "
-								rendered="#{empty quoteController.selectedQuote}" />
+								rendered="#{empty selectedQuote}" />
 						</h:panelGroup></td>
 
 					<th class="label-column"><h:outputText
@@ -328,17 +328,17 @@
 
 					<td class="column-l-align"><h:panelGroup>
 							<h:outputText
-								value="#{quoteController.selectedQuote.lastModifiedByName}, "
+								value="#{selectedQuote.lastModifiedByName}, "
 								rendered="#{not quoteController.editMode}" />
 							<h:outputText
-								value="#{quoteController.selectedQuote.lastModifiedDate}"
+								value="#{selectedQuote.lastModifiedDate}"
 								rendered="#{not quoteController.editMode}">
 								<f:convertDateTime locale="#{user.locale}"
 								    timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
 							<h:outputText value=" "
-								rendered="#{empty quoteController.selectedQuote}" />
+								rendered="#{empty selectedQuote}" />
 						</h:panelGroup></td>
 				</tr>
 

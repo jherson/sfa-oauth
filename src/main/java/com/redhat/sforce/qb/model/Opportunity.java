@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Opportunity extends SObject {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1577960793119757037L;
 	private String name;
 	private String accountId;
 	private String description;
@@ -13,7 +13,7 @@ public class Opportunity extends SObject {
 	private Double amount;
 	private String probability;
 	private Date closeDate;
-	private String type;
+	private String opportunityType;
 	private Boolean isClosed;
 	private Boolean isWon;
 	private String forecastCategory;
@@ -35,12 +35,15 @@ public class Opportunity extends SObject {
 	private String opportunityNumber;
 	private String payNow;
 	private String countryOfOrder;
+	private String superRegion;
+	private String paymentType;
 	private String accountName;
 	private String oracleAccountNumber;
 	private String accountAliasName;
 	private User owner;
 	private List<CreditCheck> creditChecks;
 	private List<OpportunityLineItem> opportunityLineItems;
+	private List<OpportunityPartner> opportunityPartners;
 	private List<Contact> contacts;
 	private List<User> salesTeam;
 	private List<User> owners;
@@ -105,12 +108,12 @@ public class Opportunity extends SObject {
 		this.closeDate = closeDate;
 	}
 
-	public String getType() {
-		return type;
+	public String getOpportunityType() {
+		return opportunityType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setOpportunityType(String opportunityType) {
+		this.opportunityType = opportunityType;
 	}
 
 	public Boolean getIsClosed() {
@@ -297,6 +300,22 @@ public class Opportunity extends SObject {
 		this.countryOfOrder = countryOfOrder;
 	}
 
+	public String getSuperRegion() {
+		return superRegion;
+	}
+
+	public void setSuperRegion(String superRegion) {
+		this.superRegion = superRegion;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+
 	public String getAccountName() {
 		return accountName;
 	}
@@ -325,9 +344,16 @@ public class Opportunity extends SObject {
 		return opportunityLineItems;
 	}
 
-	public void setOpportunityLineItems(
-			List<OpportunityLineItem> opportunityLineItems) {
+	public void setOpportunityLineItems(List<OpportunityLineItem> opportunityLineItems) {
 		this.opportunityLineItems = opportunityLineItems;
+	}
+		
+	public List<OpportunityPartner> getOpportunityPartners() {
+		return opportunityPartners;
+	}
+
+	public void setOpportunityPartners(List<OpportunityPartner> opportunityPartners) {
+		this.opportunityPartners = opportunityPartners;
 	}
 
 	public List<Contact> getContacts() {

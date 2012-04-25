@@ -17,7 +17,7 @@
         <a4j:commandLink value="#{msgs.delete}"
 			rendered="#{quoteController.editMode}"
 			action="#{quoteController.saveQuotePriceAdjustments()}"
-			disabled="#{empty quoteController.selectedQuote.quotePriceAdjustments}"
+			disabled="#{empty selectedQuote.quotePriceAdjustments}"
 			render="quotedetails" ajaxSingle="true" >
 		</a4j:commandLink>
 
@@ -28,7 +28,7 @@
 	    style="width: 100%"
 		noDataLabel="#{msgs.noRecords}"
 		iterationStatusVar="it"
-		value="#{quoteController.selectedQuote.quotePriceAdjustments}">
+		value="#{selectedQuote.quotePriceAdjustments}">
 
 		<rich:column style="width: 16%;">
 			<f:facet name="header">#{msgs.reason}</f:facet>

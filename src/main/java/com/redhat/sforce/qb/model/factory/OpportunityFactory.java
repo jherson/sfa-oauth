@@ -53,6 +53,27 @@ public class OpportunityFactory {
 		opportunity.setShippingCountry(wrapper.getString("ShippingCountry__c"));
 		opportunity.setShippingState(wrapper.getString("ShippingState__c"));
 		opportunity.setShippingZipPostalCode(wrapper.getString("ShippingZipPostalCode__c"));
+		opportunity.setCountryOfOrder(wrapper.getString("Country_of_Order__c"));
+		opportunity.setSuperRegion(wrapper.getString("Super_Region__c"));
+		opportunity.setPaymentType(wrapper.getString("PaymentType__c"));
+		opportunity.setOpportunityType(wrapper.getString("OpportunityType__c"));
+		
+/*           
+        + "Account.BillingCity, "
+        + "Account.BillingCountry, "
+        + "Account.BillingPostalCode, " 
+        + "Account.BillingState, "
+        + "Account.BillingStreet, "
+        + "Account.ShippingCity, "
+        + "Account.ShippingCountry, "
+        + "Account.ShippingPostalCode, "
+        + "Account.ShippingState, "
+        + "Account.ShippingStreet, "
+        + "Account.VATNumber__c, "  			
+		+ "Account.Name, "
+		+ "Account.OracleAccountNumber__c, "
+		+ "Account.Account_Alias_Name__c, "
+*/ 
 
 		List<User> ownerList = new ArrayList<User>();
 		if (wrapper.getJSONObject("Owner") != null) {
@@ -82,8 +103,12 @@ public class OpportunityFactory {
 
 		records = wrapper.getRecords("CreditChecks__r");
 		if (records != null) {
-			opportunity
-					.setCreditChecks(CreditCheckFactory.deserialize(records));
+			opportunity.setCreditChecks(CreditCheckFactory.deserialize(records));
+		}
+		
+		records = wrapper.getRecords("OpportunityPartners2__r");
+		if (records != null) {
+			opportunity.setOpportunityPartners(OpportunityPartnerFactory.deserialize(records));
 		}
 
 		return opportunity;
