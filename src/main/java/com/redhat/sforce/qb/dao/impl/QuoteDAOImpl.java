@@ -372,12 +372,12 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	        quoteLineItemList.add(quoteLineItem);
 		}	
 		
-		return saveQuoteLineItems(quote, quoteLineItemList);
+		return saveQuoteLineItems(quoteLineItemList);
 		
 	}
 
 	@Override
-	public SaveResult[] saveQuoteLineItems(Quote quote, List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException {		
+	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException {		
 		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));                     
 	}
 	

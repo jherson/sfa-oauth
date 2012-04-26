@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.util;
+package com.redhat.sforce.qb.qualifiers;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -16,6 +16,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Documented
-public @interface ViewQuote {
+public @interface LoggedIn {
 
 }

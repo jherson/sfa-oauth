@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class FacesUtil {
+public class JsfUtil {
 
 	public static String getStringFromBundle(String key) {
 		FacesContext ctx = FacesContext.getCurrentInstance();

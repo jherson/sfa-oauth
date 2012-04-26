@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.manager.ApplicationManager;
+import com.redhat.sforce.qb.qualifiers.CurrencyIsoCodes;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
@@ -164,6 +165,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	@Override
 	@Produces
+	@CurrencyIsoCodes
 	@Named
 	public List<String> getCurrencyIsoCodes() {
 		return currencyIsoCodes;

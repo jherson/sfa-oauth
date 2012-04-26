@@ -328,11 +328,11 @@
 
 					<td class="column-l-align"><h:panelGroup>
 							<h:outputText
-								value="#{selectedQuote.lastModifiedByName}, "
+								value="#{selectedQuote.lastModifiedByName and not empty selectedQuote}, "
 								rendered="#{not quoteController.editMode}" />
 							<h:outputText
 								value="#{selectedQuote.lastModifiedDate}"
-								rendered="#{not quoteController.editMode}">
+								rendered="#{not quoteController.editMode and not empty selectedQuote}">
 								<f:convertDateTime locale="#{user.locale}"
 								    timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />

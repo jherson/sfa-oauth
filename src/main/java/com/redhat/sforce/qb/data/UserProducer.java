@@ -17,8 +17,8 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.User;
-import com.redhat.sforce.qb.util.FacesUtil;
-import com.redhat.sforce.qb.util.LoggedIn;
+import com.redhat.sforce.qb.qualifiers.LoggedIn;
+import com.redhat.sforce.qb.util.JsfUtil;
 
 @SessionScoped
 
@@ -59,7 +59,7 @@ public class UserProducer implements Serializable {
 		}	
 		
 		if (user == null) {
-			FacesContext.getCurrentInstance().getViewRoot().setLocale(FacesUtil.getRequestLocale());
+			FacesContext.getCurrentInstance().getViewRoot().setLocale(JsfUtil.getRequestLocale());
 		} else {		
 		    FacesContext.getCurrentInstance().getViewRoot().setLocale(user.getLocale());
 		}

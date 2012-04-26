@@ -1,7 +1,6 @@
 package com.redhat.sforce.qb.manager;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.redhat.sforce.qb.model.Quote;
 import com.sforce.soap.partner.PartnerConnection;
 
 public interface SessionManager {
@@ -15,7 +14,5 @@ public interface SessionManager {
 	public Boolean getEditMode();	
 	public void setMainArea(TemplatesEnum mainArea);
 	public TemplatesEnum getMainArea();
-	public void setSelectedQuote(Quote selectedQuote);
-	public Quote getSelectedQuote();
 		
 }

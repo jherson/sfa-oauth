@@ -16,9 +16,9 @@ import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.util.QueryQuote;
-import com.redhat.sforce.qb.util.SelectedQuote;
-import com.redhat.sforce.qb.util.ViewQuote;
+import com.redhat.sforce.qb.qualifiers.QueryQuote;
+import com.redhat.sforce.qb.qualifiers.SelectedQuote;
+import com.redhat.sforce.qb.qualifiers.ViewQuote;
 
 @SessionScoped
 

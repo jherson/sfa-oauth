@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.util;
+package com.redhat.sforce.qb.qualifiers;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

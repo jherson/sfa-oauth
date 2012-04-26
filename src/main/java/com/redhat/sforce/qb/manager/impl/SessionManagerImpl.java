@@ -16,8 +16,7 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.util.SessionConnection;
+import com.redhat.sforce.qb.qualifiers.SessionConnection;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
@@ -39,8 +38,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private String opportunityId;
 	
 	private TemplatesEnum mainArea;
-
-	private Quote selectedQuote;
 	
 	private String frontDoorUrl;
 	
@@ -100,16 +97,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public TemplatesEnum getMainArea() {
 		return mainArea;
-	}
-
-	@Override
-	public Quote getSelectedQuote() {
-		return selectedQuote;
-	}
-
-	@Override
-	public void setSelectedQuote(Quote selectedQuote) {
-		this.selectedQuote = selectedQuote;
 	}
 
 	@Override

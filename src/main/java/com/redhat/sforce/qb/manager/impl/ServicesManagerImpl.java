@@ -24,7 +24,7 @@ import org.json.JSONTokener;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
-import com.redhat.sforce.qb.util.SessionConnection;
+import com.redhat.sforce.qb.qualifiers.SessionConnection;
 import com.sforce.soap.partner.PartnerConnection;
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {

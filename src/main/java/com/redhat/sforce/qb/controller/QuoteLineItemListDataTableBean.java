@@ -18,7 +18,7 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.util.SelectedQuote;
+import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 
 @ManagedBean(name = "quoteLineItemListDataTableBean")
 @RequestScoped

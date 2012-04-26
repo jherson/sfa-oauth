@@ -125,13 +125,15 @@ public class QuoteFactory {
 			    quotePriceAdjustment.setAdjustedTotal(0.00);
 				
 				BigDecimal amount = new BigDecimal(0.00);
-			    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {			
-					if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
-						amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getTotalPrice()));
-						quotePriceAdjustment.setPreAdjustedTotal(amount.doubleValue());
-						amount = amount.subtract(new BigDecimal(quotePriceAdjustment.getAmount()));
-						quotePriceAdjustment.setAdjustedTotal(amount.doubleValue());
-					}
+			    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
+			    	if (quoteLineItem.getListPrice() != null) {
+					    if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
+						    amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getListPrice()).multiply(new BigDecimal(quoteLineItem.getQuantity())));
+						    quotePriceAdjustment.setPreAdjustedTotal(amount.doubleValue());
+						    amount = amount.subtract(new BigDecimal(quotePriceAdjustment.getAmount()));
+						    quotePriceAdjustment.setAdjustedTotal(amount.doubleValue());
+					    }
+			    	}
 				}
 			}
 		}

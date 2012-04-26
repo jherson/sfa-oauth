@@ -8,7 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.redhat.sforce.qb.manager.EntityManager;
-import com.redhat.sforce.qb.util.SessionConnection;
+import com.redhat.sforce.qb.qualifiers.SessionConnection;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
