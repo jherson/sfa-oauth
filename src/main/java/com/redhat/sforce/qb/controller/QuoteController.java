@@ -1,8 +1,6 @@
 package com.redhat.sforce.qb.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +23,16 @@ import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Contact;
 import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.qualifiers.CreateQuote;
+import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
-import com.redhat.sforce.qb.qualifiers.QueryQuote;
+import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
 import com.redhat.sforce.qb.util.JsfUtil;
-import com.sforce.soap.partner.DeleteResult;
-import com.sforce.soap.partner.SaveResult;
 import com.sforce.ws.ConnectionException;
 
 @Model
@@ -51,7 +46,13 @@ public class QuoteController {
 	private static final AnnotationLiteral<ViewQuote> VIEW_QUOTE = new AnnotationLiteral<ViewQuote>() {};
 	
 	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<QueryQuote> QUERY_QUOTE = new AnnotationLiteral<QueryQuote>() {};
+	private static final AnnotationLiteral<UpdateQuote> UPDATE_QUOTE = new AnnotationLiteral<UpdateQuote>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<DeleteQuote> DELETE_QUOTE = new AnnotationLiteral<DeleteQuote>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<CreateQuote> CREATE_QUOTE = new AnnotationLiteral<CreateQuote>() {};	
 
 	@Inject
 	private Logger log;
@@ -152,12 +153,8 @@ public class QuoteController {
 	}
 	
 	public void priceQuote(Quote quote) {
-		try {
-			quoteDAO.priceQuote(quote.getId());
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteManager.price(quote);
+		quoteEvent.select(UPDATE_QUOTE).fire(quote);
 	}
 
 	public void activateQuote() {
@@ -165,12 +162,8 @@ public class QuoteController {
 	}
 
 	public void activateQuote(Quote quote) {
-		try {
-			quoteDAO.activateQuote(quote.getId());
-			quoteEvent.select(LIST_QUOTES).fire(quote);
-		} catch (SalesforceServiceException e) {
-			JsfUtil.addErrorMessage(e.getMessage());
-		}
+		quoteManager.activate(quote);
+		quoteEvent.select(LIST_QUOTES).fire(quote);
 	}
 
 	public void copyQuote() {
@@ -178,13 +171,8 @@ public class QuoteController {
 	}
 
 	public void copyQuote(Quote quote) {
-		try {
-			quoteDAO.copyQuote(quote.getId());
-			quoteEvent.select(LIST_QUOTES).fire(new Quote());
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		quoteManager.copy(quote);
+		quoteEvent.select(LIST_QUOTES).fire(new Quote());			
 	}
 
 	public void viewQuote(Quote quote) {
@@ -198,19 +186,8 @@ public class QuoteController {
 	}
 
 	public void deleteQuote(Quote quote) {
-		DeleteResult deleteResult = null;
-		try {
-			deleteResult = quoteDAO.deleteQuote(quote);			
-			if (deleteResult.isSuccess()) {
-				log.info("Quote " + quote.getId() + " has been deleted");
-				quoteEvent.select(LIST_QUOTES).fire(quote);				
-			} else {
-				log.error("Quote delete failed: " + deleteResult.getErrors()[0].getMessage());
-			}
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		quoteManager.delete(quote);
+		quoteEvent.select(DELETE_QUOTE).fire(quote);
 	}
 	
 	public void calculateQuote() {
@@ -218,122 +195,27 @@ public class QuoteController {
 	}
 
 	public void calculateQuote(Quote quote) {
-		try {
-			quoteDAO.calculateQuote(quote.getId());
-			quoteEvent.select(QUERY_QUOTE).fire(quote);
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteManager.calculate(quote);
+		quoteEvent.select(UPDATE_QUOTE).fire(quote);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
 	public void save() {	
-		quoteManager.save(selectedQuote);
-		//saveQuotePriceAdjustments();
-		//saveQuoteLineItemPriceAdjustments();
-		//saveQuoteLineItems();
-		//saveQuote();
+		if (selectedQuote.getId() != null) {
+			quoteManager.update(selectedQuote);
+			quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
+		} else {
+			quoteManager.create(selectedQuote);
+			quoteEvent.select(CREATE_QUOTE).fire(selectedQuote);
+		}
+
 		setEditMode(Boolean.FALSE);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
-//	public void saveQuote() {
-//		try {
-//			SaveResult saveResult = quoteDAO.saveQuote(selectedQuote); 
-//			if (saveResult.isSuccess() && saveResult.getId() != null) {
-//				selectedQuote.setId(saveResult.getId());
-//				quoteEvent.select(QUERY_QUOTE).fire(selectedQuote);	
-//				JsfUtil.addInformationMessage("Record saved successfully");
-//			} else {
-//				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());
-//				JsfUtil.addErrorMessage(saveResult.getErrors()[0].getMessage());
-//			}
-//			
-//		} catch (ConnectionException e) {
-//			JsfUtil.addErrorMessage(e.getMessage());
-//		} 
-//	}
-
-//	public void saveQuoteLineItems() {
-//		if (selectedQuote.getQuoteLineItems() == null)
-//			return;
-//
-//		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
-//		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
-//			if (quoteLineItem.getPricebookEntryId() != null) {
-//				quoteLineItems.add(quoteLineItem);
-//			}
-//		}
-//
-//		if (quoteLineItems.size() == 0)
-//			return;
-//
-//		try {
-//			quoteDAO.saveQuoteLineItems(selectedQuote, selectedQuote.getQuoteLineItems());
-//	
-//		} catch (ConnectionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SalesforceServiceException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	public void saveQuotePriceAdjustments() {
-//		if (selectedQuote.getQuotePriceAdjustments() == null)
-//			return;
-//		
-//		try {
-//			quoteDAO.saveQuotePriceAdjustments(selectedQuote.getQuotePriceAdjustments());
-//		} catch (ConnectionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
-//	}
-	
-//	public void saveQuoteLineItemPriceAdjustments() {
-//		if (selectedQuote.getQuotePriceAdjustments() == null || selectedQuote.getQuoteLineItems() == null)
-//			return;
-//		
-//		List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList = new ArrayList<QuoteLineItemPriceAdjustment>();
-//		
-//		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
-//		    for (QuotePriceAdjustment quotePriceAdjustment : selectedQuote.getQuotePriceAdjustments()) {		    
-//		    	if (quotePriceAdjustment.getReason().equals(quoteLineItem.getProduct().getPrimaryBusinessUnit())) {
-//		    		QuoteLineItemPriceAdjustment quoteLineItemPriceAdjustment = new QuoteLineItemPriceAdjustment();
-//		    		quoteLineItemPriceAdjustment.setQuoteLineItemId(quoteLineItem.getId());
-//		    		quoteLineItemPriceAdjustment.setQuoteId(selectedQuote.getId());		    		
-//		    		quoteLineItemPriceAdjustment.setOperator(quotePriceAdjustment.getOperator());
-//		    		quoteLineItemPriceAdjustment.setPercent(quotePriceAdjustment.getPercent());
-//		    		quoteLineItemPriceAdjustment.setReason(quotePriceAdjustment.getReason());
-//		    		quoteLineItemPriceAdjustment.setType(quotePriceAdjustment.getType());		    		
-//		    		
-//		    		BigDecimal amount = new BigDecimal(0.00);
-//		    		amount = new BigDecimal(quoteLineItemPriceAdjustment.getPercent()).multiply(new BigDecimal(.01));
-//				    amount = amount.multiply(new BigDecimal(quoteLineItem.getYearlySalesPrice())).setScale(2, RoundingMode.HALF_EVEN);
-//				    quoteLineItemPriceAdjustment.setAmount(amount.doubleValue());		
-//				    
-//				    quoteLineItem.setYearlySalesPrice(new BigDecimal(quoteLineItem.getYearlySalesPrice()).subtract(amount).doubleValue());
-//		    		
-//		    		quoteLineItemPriceAdjustmentList.add(quoteLineItemPriceAdjustment);
-//		    		continue;
-//		    	}		    
-//		    }		    	
-//		}
-//		
-//		try {
-//			quoteDAO.saveQuoteLineItemPriceAdjustments(quoteLineItemPriceAdjustmentList);
-//		} catch (ConnectionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
-//	}
-
 	public void cancelEdit() {
 		if (selectedQuote.getId() != null) {
-			quoteEvent.select(QUERY_QUOTE).fire(selectedQuote);
+			quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
 			setMainArea(TemplatesEnum.QUOTE_DETAILS);
 		} else {
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);
@@ -346,24 +228,8 @@ public class QuoteController {
 	}
 
 	public void addOpportunityLineItems(Opportunity opportunity) {
-		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
-		for (OpportunityLineItem opportunityLineItem : opportunity.getOpportunityLineItems()) {
-			if (opportunityLineItem.isSelected()) {
-				opportunityLineItemList.add(opportunityLineItem);
-				opportunityLineItem.setSelected(false);
-			}
-		}
-
-		try {
-			quoteDAO.addOpportunityLineItems(selectedQuote, opportunityLineItemList);
-			quoteEvent.select(QUERY_QUOTE).fire(selectedQuote);
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        quoteManager.add(selectedQuote, opportunity.getOpportunityLineItems());
+		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
@@ -372,19 +238,14 @@ public class QuoteController {
 	}
 	
 	public void deleteQuoteLineItem(QuoteLineItem quoteLineItem) {
-		try {
-			quoteDAO.deleteQuoteLineItem(quoteLineItem);
-			quoteEvent.select(QUERY_QUOTE).fire(selectedQuote);
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteManager.delete(quoteLineItem);
+		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
 	}
 
-	public void deleteQuoteLineItems() {
+	public void deleteQuoteLineItems() {				
 		if (selectedQuote.getQuoteLineItems() == null)
 			return;
-
+		
 		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
 		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
 			if (quoteLineItem.getDelete()) {
@@ -394,14 +255,9 @@ public class QuoteController {
 
 		if (quoteLineItems.size() == 0)
 			return;
-
-		try {
-			quoteDAO.deleteQuoteLineItems(quoteLineItems);
-			quoteEvent.select(QUERY_QUOTE).fire(selectedQuote);
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		
+		quoteManager.delete(quoteLineItems);
+		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
 	}
 
 	public void setQuoteContact(Contact contact) {
@@ -430,14 +286,5 @@ public class QuoteController {
 		
 
 		
-	}
-		
-	public void applyDiscounts() {
-		try {
-			quoteDAO.saveQuotePriceAdjustments(selectedQuote.getQuotePriceAdjustments());
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
 	}
 }

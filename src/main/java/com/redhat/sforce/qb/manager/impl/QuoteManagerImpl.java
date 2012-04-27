@@ -5,8 +5,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.event.Event;
-import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -14,19 +12,17 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.QuoteManager;
+import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
-import com.redhat.sforce.qb.qualifiers.QueryQuote;
 import com.redhat.sforce.qb.util.JsfUtil;
+import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.ws.ConnectionException;
 
 public class QuoteManagerImpl implements QuoteManager {
-	
-	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<QueryQuote> QUERY_QUOTE = new AnnotationLiteral<QueryQuote>() {};
 	
 	@Inject
 	private Logger log;
@@ -34,22 +30,60 @@ public class QuoteManagerImpl implements QuoteManager {
 	@Inject
 	private QuoteDAO quoteDAO;
 	
-	@Inject
-	private Event<Quote> quoteEvent;
-	
 	@Override
-	public void save(Quote quote) {
-		
-
-		
-		if (quote != null)
-		    saveQuote(quote);
+	public void delete(Quote quote) {
+		doDelete(quote);					
 	}
 	
-	private void saveQuote(Quote quote) {
-										
+	@Override
+	public void update(Quote quote) {
+		doSaveQuote(quote);		
+	}
+	
+	@Override
+	public void create(Quote quote) {
+		doSaveQuote(quote);
+	}
+	
+	@Override
+	public void calculate(Quote quote) {
+		doCalcualate(quote);
+	}
+	
+	@Override
+	public void delete(QuoteLineItem quoteLineItem) {
+		doDelete(quoteLineItem);		
+	}
+	
+	@Override
+	public void price(Quote quote) {
+		doPrice(quote);
+	}
+	
+	@Override
+	public void add(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
+		doAdd(quote, opportunityLineItems);
+	}
+	
+	@Override
+	public void copy(Quote quote) {
+		doCopy(quote);
+	}
+	
+	@Override
+	public void activate(Quote quote) {
+		doActivate(quote);
+	}
+	
+	@Override
+	public void delete(List<QuoteLineItem> quoteLineItems) {
+		doDelete(quoteLineItems);
+	}
+	
+	private void doSaveQuote(Quote quote) {
+		SaveResult saveResult = null;								
 		try {
-			SaveResult saveResult = quoteDAO.saveQuote(quote); 
+			saveResult = quoteDAO.saveQuote(quote); 
 			if (saveResult.isSuccess() && saveResult.getId() != null) {
 				quote.setId(saveResult.getId());								
 				
@@ -71,7 +105,7 @@ public class QuoteManagerImpl implements QuoteManager {
 				return;
 			}
 			
-			quoteEvent.select(QUERY_QUOTE).fire(quote);
+			
 			
 		} catch (ConnectionException e) {
 			JsfUtil.addErrorMessage(e.getMessage());
@@ -109,8 +143,9 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void saveQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
+		SaveResult[] saveResult = null;
 		try {
-			SaveResult[] saveResult = quoteDAO.saveQuoteLineItems(quoteLineItems);
+			saveResult = quoteDAO.saveQuoteLineItems(quoteLineItems);
 	
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -121,9 +156,10 @@ public class QuoteManagerImpl implements QuoteManager {
 		}
 	}
 	
-	private void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {		
+	private void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {
+		SaveResult[] saveResult = null;
 		try {
-			SaveResult[] saveResult = quoteDAO.saveQuotePriceAdjustments(quotePriceAdjustments);
+			saveResult = quoteDAO.saveQuotePriceAdjustments(quotePriceAdjustments);
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -131,15 +167,108 @@ public class QuoteManagerImpl implements QuoteManager {
 		} 
 	}
 	
-	private void saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) {		
-		
+	private void saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) {
+		SaveResult[] saveResult = null;
 		try {
-			SaveResult[] saveResult = quoteDAO.saveQuoteLineItemPriceAdjustments(quoteLineItemPriceAdjustmentList);
+			saveResult = quoteDAO.saveQuoteLineItemPriceAdjustments(quoteLineItemPriceAdjustmentList);
+			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
+	
+	private void doDelete(Quote quote) {
+		DeleteResult deleteResult = null;
+		try {
+			deleteResult = quoteDAO.deleteQuote(quote);			
+			if (deleteResult.isSuccess()) {
+				log.info("Quote " + quote.getId() + " has been deleted");				
+			} else {
+				log.error("Quote delete failed: " + deleteResult.getErrors()[0].getMessage());
+			}
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	private void doCalcualate(Quote quote) {
+		try {
+			quoteDAO.calculateQuote(quote.getId());			
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void doDelete(QuoteLineItem quoteLineItem) {
+		try {
+			quoteDAO.deleteQuoteLineItem(quoteLineItem);			
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	private void doPrice(Quote quote) {
+		try {
+			quoteDAO.priceQuote(quote.getId());
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void doCopy(Quote quote) {
+		try {
+			quoteDAO.copyQuote(quote.getId());
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
+		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
+		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
+			if (opportunityLineItem.isSelected()) {
+				opportunityLineItemList.add(opportunityLineItem);
+				opportunityLineItem.setSelected(false);
+			}
+		}
+
+		try {
+			quoteDAO.addOpportunityLineItems(quote, opportunityLineItemList);
+			
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void doActivate(Quote quote) {
+		try {
+			quoteDAO.activateQuote(quote.getId());
+			
+		} catch (SalesforceServiceException e) {
+			JsfUtil.addErrorMessage(e.getMessage());
+		}
+
+	}
+	
+	private void doDelete(List<QuoteLineItem> quoteLineItems) {
+		try {
+			quoteDAO.deleteQuoteLineItems(quoteLineItems);
+			
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+	}
 
 }
