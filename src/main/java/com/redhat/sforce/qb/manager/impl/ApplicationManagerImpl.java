@@ -54,23 +54,6 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 	
 	private String frontDoorUrl;
 
-	public PartnerConnection getPartnerConnection() {
-		return partnerConnection;
-	}
-
-	public void setPartnerConnection(PartnerConnection partnerConnection) {
-		this.partnerConnection = partnerConnection;
-	}
-
-	@Override
-	public String getFrontDoorUrl() {
-		return frontDoorUrl;
-	}
-
-	public void setFrontDoorUrl(String frontDoorUrl) {
-		this.frontDoorUrl = frontDoorUrl;
-	}
-
 	private List<String> currencyIsoCodes;
 
 	@PostConstruct
@@ -105,6 +88,24 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		} catch (ConnectionException e) {
 			log.error(e);
 		}
+	}
+	
+
+	public PartnerConnection getPartnerConnection() {
+		return partnerConnection;
+	}
+
+	public void setPartnerConnection(PartnerConnection partnerConnection) {
+		this.partnerConnection = partnerConnection;
+	}
+	
+	@Override
+	public String getFrontDoorUrl() {
+		return frontDoorUrl;
+	}
+
+	public void setFrontDoorUrl(String frontDoorUrl) {
+		this.frontDoorUrl = frontDoorUrl;
 	}
 
 	public List<String> queryCurrencyIsoCodes() throws ConnectionException {

@@ -41,10 +41,12 @@ public class Quote extends SObject {
 	private Date startDate;
 	private Date endDate;
 	private Integer term;
+	private String status;
 	private Date effectiveDate;
 	private String referenceNumber;
 	private Boolean isNonStandardPayment;
 	private Date lastCalculatedDate;
+	private Date lastPricedDate;
 	private Opportunity opportunity;
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
@@ -69,6 +71,7 @@ public class Quote extends SObject {
 		setTerm(365);
 		setEffectiveDate(new Date());
 		setHasQuoteLineItems(Boolean.FALSE);
+		setStatus("New");
 
 		GregorianCalendar calendar = new GregorianCalendar();
 
@@ -322,6 +325,14 @@ public class Quote extends SObject {
 
 	public Integer getTerm() {
 		return term;
+	}		
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public void setTerm(Integer term) {
@@ -358,6 +369,14 @@ public class Quote extends SObject {
 
 	public void setLastCalculatedDate(Date lastCalculatedDate) {
 		this.lastCalculatedDate = lastCalculatedDate;
+	}
+	
+	public Date getLastPricedDate() {
+		return lastPricedDate;
+	}
+
+	public void setLastPricedDate(Date lastPricedDate) {
+		this.lastPricedDate = lastPricedDate;
 	}
 		
 	public Opportunity getOpportunity() {

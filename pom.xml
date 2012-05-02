@@ -18,7 +18,7 @@
 		<seam.solder.version>3.0.0.Final</seam.solder.version>
 		<force.api.version>24.0.0</force.api.version>
 	</properties>
-
+	
 	<repositories>
 		<!-- The JBoss Community public repository is a composite repository of 
 			several major repositories -->
@@ -205,6 +205,16 @@
 	<build>
 		<finalName>quotebuilder</finalName>
 		<plugins>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>

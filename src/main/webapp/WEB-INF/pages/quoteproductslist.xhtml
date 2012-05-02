@@ -5,218 +5,217 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
-	
-<a4j:outputPanel id="viewQuoteProducts">
 
-    <hr />
-    
-    <h:outputText value="#{msgs.quoteLineItems}" style="color:#{a4jSkin.generalTextColor};" />
-    
-    <a4j:outputPanel align="center" >
-    
-        <a4j:commandButton value="Manage Products" styleClass="commandButton"/>
-    
-    </a4j:outputPanel>
+	<a4j:outputPanel id="viewQuoteProducts">
 
-	<rich:toolbar height="18" itemSeparator="grid">
+		<hr />
 
-		<rich:toolbarGroup location="left">
+		<h:outputText value="#{msgs.quoteLineItems}" style="font-weight: bold" />
 
-			<a4j:commandLink value="#{msgs.delete}"
-				action="#{quoteController.deleteQuoteLineItems()}"
-				disabled="#{not quoteController.editMode or empty selectedQuote.quoteLineItems}"
-				render="quotedetails" ajaxSingle="true" >
-			</a4j:commandLink>
+		<br />
 
-			<a4j:commandLink value="#{msgs.reset}" immediate="true" 
-				disabled="#{not quoteController.editMode or empty selectedQuote.quoteLineItems}"
-				action="#{quoteController.cancelEdit()}"
-				render="quotedetails" ajaxSingle="true" >				
-			</a4j:commandLink>
-
-		</rich:toolbarGroup>
-
-		<rich:toolbarGroup location="right">
+		<rich:panel style="text-align: center; border: 0px;">
 		
-		    <a4j:commandLink id="addOpportunityProducts" value="#{msgs.addOpportunityProducts}"
-				disabled="#{quoteController.editMode or selectedQuote.currencyIsoCode != selectedQuote.opportunity.currencyIsoCode or empty selectedQuote.opportunity.opportunityLineItems}"								 			
-                action="#{quoteController.viewOpportunityLineItems()}"
-                render="mainArea" />
+			<a4j:commandButton value="#{msgs.getPrice}" 
+			    styleClass="commandButton"
+				rendered="#{quoteController.editMode}"
+				action="#{quoteController.priceQuote()}" ajaxSingle="true"
+				render="quotedetails" />
 				
-			<a4j:commandLink value="#{msgs.addProduct}"
-				disabled="#{not quoteController.editMode}"
-				action="#{quoteController.newQuoteLineItem()}"
-				render="quotedetails" ajaxSingle="true"	/>
+			<a4j:commandButton value="#{msgs.deleteSelected}"
+			    styleClass="commandButton"
+			    rendered="#{quoteController.editMode}"
+				action="#{quoteController.deleteQuoteLineItems()}"
+				disabled="#{empty selectedQuote.quoteLineItems}"
+				render="quotedetails" ajaxSingle="true" />	
+				
+			<a4j:commandButton value="#{msgs.reset}"
+			    styleClass="commandButton" 
+			    immediate="true"
+			    rendered="#{quoteController.editMode}"
+				disabled="#{empty selectedQuote.quoteLineItems}"
+				action="#{quoteController.cancelEdit()}" render="quotedetails"
+				ajaxSingle="true" />
 
-		</rich:toolbarGroup>
+			<a4j:commandButton value="#{msgs.addOpportunityProducts}"
+				styleClass="commandButton"
+				rendered="#{not quoteController.editMode}"
+				disabled="#{selectedQuote.currencyIsoCode != selectedQuote.opportunity.currencyIsoCode or empty selectedQuote.opportunity.opportunityLineItems}"
+				action="#{quoteController.viewOpportunityLineItems()}"
+				render="mainArea" />
 
-	</rich:toolbar>
+			<a4j:commandButton value="#{msgs.addProduct}"
+				styleClass="commandButton"
+				rendered="#{not quoteController.editMode}"
+				action="#{quoteController.newQuoteLineItem()}" render="quotedetails"
+				ajaxSingle="true" />
 
-	<rich:dataTable id="quoteProductsTable" 
-	    style="width: 100%" 
-	    var="lineItem"
-		noDataLabel="#{msgs.noRecords}"
-		iterationStatusVar="it"
-		value="#{selectedQuote.quoteLineItems}">
+			<a4j:commandButton value="#{msgs.goalSeek}"
+				styleClass="commandButton"
+				rendered="#{not quoteController.editMode}"
+				disabled="#{not selectedQuote.isCalculated}" />
 
-		<rich:column style="text-align: center; width: 3%;">
-			<f:facet name="header">#{msgs.action}</f:facet>
-			<a4j:commandLink id="deleteLineItem"
-			    value="#{msgs.delete}" 
-			    rendered="#{not quoteController.editMode}"
-				action="#{quoteController.deleteQuoteLineItem(lineItem)}" 
-				render="quotedetails">
-			</a4j:commandLink>
-			<h:selectBooleanCheckbox value="#{lineItem.delete}" 
-			    rendered="#{quoteController.editMode}"/>
-		</rich:column>
+		</rich:panel>
 
-		<rich:column style="text-align: center; width: 7%;">
-			<f:facet name="header">#{msgs.productCode}</f:facet>
-			<h:outputText value="#{lineItem.product.productCode}"
-				rendered="#{not quoteController.editMode}" />
-			<h:inputText id="productCode" value="#{lineItem.product.productCode}"
-				style="width: 75px;" rendered="#{quoteController.editMode}"		
-				execute="immediate" ajaxSingle="true">				
-				<f:attribute name="rowIndex" value="#{it.index}"/>
-				<a4j:ajax execute="@this" event="valueChange"
-					listener="#{quoteLineItemListDataTableBean.validateProduct}" render="viewQuoteProducts">					  
-				</a4j:ajax>
+		<rich:dataTable id="quoteProductsTable" style="width: 100%"
+			var="lineItem" noDataLabel="#{msgs.noRecords}"
+			iterationStatusVar="it" value="#{selectedQuote.quoteLineItems}">
 
-			</h:inputText>
-			<rich:message for="productCode" />
+			<rich:column style="text-align: center; width: 3%;">
+				<f:facet name="header">#{msgs.action}</f:facet>
+				<a4j:commandLink id="deleteLineItem" value="#{msgs.delete}"
+					rendered="#{not quoteController.editMode}"
+					action="#{quoteController.deleteQuoteLineItem(lineItem)}"
+					render="quotedetails">
+				</a4j:commandLink>
+				<h:selectBooleanCheckbox value="#{lineItem.delete}"
+					rendered="#{quoteController.editMode}" />
+			</rich:column>
 
-		</rich:column>
+			<rich:column style="text-align: center; width: 7%;">
+				<f:facet name="header">#{msgs.productCode}</f:facet>
+				<h:outputText value="#{lineItem.product.productCode}"
+					rendered="#{not quoteController.editMode}" />
+				<h:inputText id="productCode"
+					value="#{lineItem.product.productCode}" style="width: 75px;"
+					rendered="#{quoteController.editMode}" execute="immediate"
+					ajaxSingle="true">
+					<f:attribute name="rowIndex" value="#{it.index}" />
+					<a4j:ajax execute="@this" event="valueChange"
+						listener="#{quoteLineItemListDataTableBean.validateProduct}"
+						render="viewQuoteProducts">
+					</a4j:ajax>
 
-		<rich:column style="text-align: center; width: 7%;">
-			<f:facet name="header">#{msgs.configuredSku}</f:facet>
-			<h:outputText value="#{lineItem.configuredSku}" />
-		</rich:column>
+				</h:inputText>
+				<rich:message for="productCode" />
 
-		<rich:column>
-			<f:facet name="header">#{msgs.description}</f:facet>
-			<h:outputText value="#{lineItem.product.description}" />
-		</rich:column>
+			</rich:column>
 
-		<rich:column style="text-align: center; width: 8%;">
-			<f:facet name="header">#{msgs.startDate}</f:facet>
-			<h:outputText value="#{lineItem.startDate}"
-				rendered="#{not quoteController.editMode or selectedQuote.type == 'Standard'}">
-				<f:convertDateTime locale="#{user.locale}"
-					pattern="#{user.dateFormatPattern}"
-					type="date" />
-			</h:outputText>
-			<rich:calendar value="#{lineItem.startDate}"
-				rendered="#{quoteController.editMode and selectedQuote.type != 'Standard'}"
-				id="lineStartDate" locale="#{user.locale}"
-				popup="true" enableManualInput="true"
-				datePattern="#{user.dateFormatPattern}"
-				showApplyButton="false" cellWidth="24px" cellHeight="22px"
-				inputStyle="width:68px" disabled="false">
-			</rich:calendar>
-		</rich:column>
+			<rich:column style="text-align: center; width: 7%;">
+				<f:facet name="header">#{msgs.configuredSku}</f:facet>
+				<h:outputText value="#{lineItem.configuredSku}" />
+			</rich:column>
 
-		<rich:column style="text-align: center; width: 8%;">
-			<f:facet name="header">#{msgs.endDate}</f:facet>
-			<h:outputText value="#{lineItem.endDate}"
-				rendered="#{not quoteController.editMode or selectedQuote.type != 'Non Standard'}">
-				<f:convertDateTime locale="#{user.locale}"
-					pattern="#{user.dateFormatPattern}"
-					type="date" />
-			</h:outputText>
-			<rich:calendar value="#{lineItem.endDate}"
-				rendered="#{quoteController.editMode and selectedQuote.type == 'Non Standard'}"
-				id="lineEndDate" locale="#{user.locale}"
-				popup="true" enableManualInput="true"
-				datePattern="#{user.dateFormatPattern}"
-				showApplyButton="false" cellWidth="24px" cellHeight="22px"
-				inputStyle="width:68px" disabled="false">
-			</rich:calendar>
-		</rich:column>
+			<rich:column>
+				<f:facet name="header">#{msgs.description}</f:facet>
+				<h:outputText value="#{lineItem.product.description}" />
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 5%;">
-			<f:facet name="header">#{msgs.quantity}</f:facet>
-			<h:outputText value="#{lineItem.quantity}"
-				rendered="#{not quoteController.editMode}" />
-			<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
-				rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0;(#,##0)" type="number" />
-			</h:inputText>
-		</rich:column>
+			<rich:column style="text-align: center; width: 8%;">
+				<f:facet name="header">#{msgs.startDate}</f:facet>
+				<h:outputText value="#{lineItem.startDate}"
+					rendered="#{not quoteController.editMode or selectedQuote.type == 'Standard'}">
+					<f:convertDateTime locale="#{user.locale}"
+						pattern="#{user.dateFormatPattern}" type="date" />
+				</h:outputText>
+				<rich:calendar value="#{lineItem.startDate}"
+					rendered="#{quoteController.editMode and selectedQuote.type != 'Standard'}"
+					id="lineStartDate" locale="#{user.locale}" popup="true"
+					enableManualInput="true" datePattern="#{user.dateFormatPattern}"
+					showApplyButton="false" cellWidth="24px" cellHeight="22px"
+					inputStyle="width:68px" disabled="false">
+				</rich:calendar>
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 6%;">
-			<f:facet name="header">#{msgs.listPrice}</f:facet>
-			<h:outputText value="#{lineItem.listPrice}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" />
-			</h:outputText>
-		</rich:column>
+			<rich:column style="text-align: center; width: 8%;">
+				<f:facet name="header">#{msgs.endDate}</f:facet>
+				<h:outputText value="#{lineItem.endDate}"
+					rendered="#{not quoteController.editMode or selectedQuote.type != 'Non Standard'}">
+					<f:convertDateTime locale="#{user.locale}"
+						pattern="#{user.dateFormatPattern}" type="date" />
+				</h:outputText>
+				<rich:calendar value="#{lineItem.endDate}"
+					rendered="#{quoteController.editMode and selectedQuote.type == 'Non Standard'}"
+					id="lineEndDate" locale="#{user.locale}" popup="true"
+					enableManualInput="true" datePattern="#{user.dateFormatPattern}"
+					showApplyButton="false" cellWidth="24px" cellHeight="22px"
+					inputStyle="width:68px" disabled="false">
+				</rich:calendar>
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 4%;">
-			<f:facet name="header">#{msgs.discountPercent}</f:facet>
-			<h:outputText value="#{lineItem.discountPercent}"
-				rendered="#{not quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" />
-			</h:outputText>
-			<h:inputText value="#{lineItem.discountPercent}" style="width: 70px;"
-				rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" type="number" />
-			</h:inputText>
-		</rich:column>
+			<rich:column style="text-align: right; width: 5%;">
+				<f:facet name="header">#{msgs.quantity}</f:facet>
+				<h:outputText value="#{lineItem.quantity}"
+					rendered="#{not quoteController.editMode}" />
+				<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
+					rendered="#{quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}" pattern="#,##0;(#,##0)"
+						type="number" />
+				</h:inputText>
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 4%;">
-			<f:facet name="header">#{msgs.discountAmount}</f:facet>
-			<h:outputText value="#{lineItem.discountAmount}"
-				rendered="#{not quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" />
-			</h:outputText>
-			<h:inputText value="#{lineItem.discountAmount}" style="width: 70px;"
-				rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" type="number" />
-			</h:inputText>
-		</rich:column>
+			<rich:column style="text-align: right; width: 6%;">
+				<f:facet name="header">#{msgs.listPrice}</f:facet>
+				<h:outputText value="#{lineItem.listPrice}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 6%;">
-			<f:facet name="header">#{msgs.salesPrice}</f:facet>
-			<h:outputText value="#{lineItem.yearlySalesPrice}"
-				rendered="#{not quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" />
-			</h:outputText>
-			<h:inputText value="#{lineItem.yearlySalesPrice}"
-				style="width: 70px;" rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" type="number" />
-			</h:inputText>
-		</rich:column>
+			<rich:column style="text-align: right; width: 4%;">
+				<f:facet name="header">#{msgs.discountPercent}</f:facet>
+				<h:outputText value="#{lineItem.discountPercent}"
+					rendered="#{not quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+				<h:inputText value="#{lineItem.discountPercent}"
+					style="width: 70px;" rendered="#{quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" type="number" />
+				</h:inputText>
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 6%;">
-			<f:facet name="header">#{msgs.unitPrice}</f:facet>
-			<h:outputText value="#{lineItem.unitPrice}"
-				rendered="#{not quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" />
-			</h:outputText>
-			<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
-				rendered="#{quoteController.editMode}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" type="number" />
-			</h:inputText>
-		</rich:column>
+			<rich:column style="text-align: right; width: 4%;">
+				<f:facet name="header">#{msgs.discountAmount}</f:facet>
+				<h:outputText value="#{lineItem.discountAmount}"
+					rendered="#{not quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+				<h:inputText value="#{lineItem.discountAmount}" style="width: 70px;"
+					rendered="#{quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" type="number" />
+				</h:inputText>
+			</rich:column>
 
-		<rich:column style="text-align: right; width: 6%;">
-			<f:facet name="header">#{msgs.totalPrice}</f:facet>
-			<h:outputText value="#{lineItem.totalPrice}">
-				<f:convertNumber locale="#{user.locale}"
-					pattern="#,##0.00;(#,##0.00)" />
-			</h:outputText>
-		</rich:column>
+			<rich:column style="text-align: right; width: 6%;">
+				<f:facet name="header">#{msgs.salesPrice}</f:facet>
+				<h:outputText value="#{lineItem.yearlySalesPrice}"
+					rendered="#{not quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+				<h:inputText value="#{lineItem.yearlySalesPrice}"
+					style="width: 70px;" rendered="#{quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" type="number" />
+				</h:inputText>
+			</rich:column>
 
-	</rich:dataTable>
-</a4j:outputPanel>
+			<rich:column style="text-align: right; width: 6%;">
+				<f:facet name="header">#{msgs.unitPrice}</f:facet>
+				<h:outputText value="#{lineItem.unitPrice}"
+					rendered="#{not quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+				<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
+					rendered="#{quoteController.editMode}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" type="number" />
+				</h:inputText>
+			</rich:column>
+
+			<rich:column style="text-align: right; width: 6%;">
+				<f:facet name="header">#{msgs.totalPrice}</f:facet>
+				<h:outputText value="#{lineItem.totalPrice}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+			</rich:column>
+
+		</rich:dataTable>
+	</a4j:outputPanel>
 </ui:composition>

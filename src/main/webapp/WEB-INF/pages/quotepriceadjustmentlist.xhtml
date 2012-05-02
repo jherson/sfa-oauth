@@ -14,12 +14,6 @@
 	
 	<rich:toolbar height="20px" itemSeparator="grid">
 
-        <a4j:commandLink value="#{msgs.delete}"
-			rendered="#{quoteController.editMode}"
-			action="#{quoteController.saveQuotePriceAdjustments()}"
-			disabled="#{empty selectedQuote.quotePriceAdjustments}"
-			render="quotedetails" ajaxSingle="true" >
-		</a4j:commandLink>
 
 	</rich:toolbar>
 

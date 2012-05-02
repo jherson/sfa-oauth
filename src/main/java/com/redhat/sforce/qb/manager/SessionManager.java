@@ -1,11 +1,11 @@
 package com.redhat.sforce.qb.manager;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.sforce.soap.partner.PartnerConnection;
+//import com.sforce.soap.partner.PartnerConnection;
 
 public interface SessionManager {
 
-    public PartnerConnection getPartnerConnection();
+    //public PartnerConnection getPartnerConnection();
 	public void setOpportunityId(String opportunityId);
 	public String getFrontDoorUrl();
 	public void setFrontDoorUrl(String frontDoorUrl);

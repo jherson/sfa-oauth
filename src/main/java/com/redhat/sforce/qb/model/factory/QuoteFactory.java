@@ -52,6 +52,7 @@ public class QuoteFactory {
 		quote.setIsCalculated(wrapper.getBoolean("IsCalculated__c"));
 		quote.setIsNonStandardPayment(wrapper.getBoolean("IsNonStandardPayment__c"));
 		quote.setLastCalculatedDate(wrapper.getDateTime("LastCalculatedDate__c"));
+		quote.setLastPricedDate(wrapper.getDateTime("LastPricedDate__c"));
 		quote.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
 		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
 		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
@@ -68,6 +69,7 @@ public class QuoteFactory {
 		quote.setStartDate(wrapper.getDate("StartDate__c"));
 		quote.setTerm(wrapper.getInteger("Term__c"));
 		quote.setType(wrapper.getString("Type__c"));
+		quote.setStatus(wrapper.getString("Status__c"));
 		quote.setVersion(wrapper.getDouble("Version__c"));
 		quote.setYear1PaymentAmount(wrapper.getDouble("Year1PaymentAmount__c"));
 		quote.setYear2PaymentAmount(wrapper.getDouble("Year2PaymentAmount__c"));
@@ -81,6 +83,10 @@ public class QuoteFactory {
 		records = wrapper.getRecords("QuoteLineItem__r");
 		if (records != null) {
 			quote.setQuoteLineItems(QuoteLineItemFactory.deserialize(records));
+		}
+		
+		if (quote.getQuoteLineItems() == null || quote.getQuoteLineItems().size() == 0) {
+			quote.setHasQuoteLineItems(Boolean.FALSE);
 		}
 
 		records = wrapper.getRecords("QuoteLineItemSchedule__r");

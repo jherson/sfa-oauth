@@ -101,8 +101,6 @@ public class AuthorizeServlet extends HttpServlet {
 			}
 		}
 		
-		SecurityContext securityContext = new SecurityContext();
-		
 		request.getSession().setAttribute("SessionId", sessionId);
 		response.sendRedirect(request.getContextPath() + "/index.jsf");
 	}

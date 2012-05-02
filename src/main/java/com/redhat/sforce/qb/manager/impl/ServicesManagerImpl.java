@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
+import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -24,22 +27,42 @@ import org.json.JSONTokener;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
-import com.redhat.sforce.qb.qualifiers.SessionConnection;
+import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.ws.ConnectionException;
+import com.sforce.ws.ConnectorConfig;
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 	private static final long serialVersionUID = 6709733022603934113L;
 
 	@Inject
-	Logger log;
+	private Logger log;
 
 	@Inject
-	ApplicationManager applicationManager;
+	private ApplicationManager applicationManager;
 	
-	@Inject
-	@SessionConnection
 	private PartnerConnection partnerConnection;
+	
+	@PostConstruct
+	public void init() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		
+		if (session.getAttribute("SessionId") != null) {
+			
+			String sessionId = session.getAttribute("SessionId").toString();
+			
+			ConnectorConfig config = new ConnectorConfig();
+			config.setManualLogin(true);
+			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
+			config.setSessionId(sessionId);								
+			try {
+				partnerConnection = Connector.newConnection(config);
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
+		}	
+	}
 
 	@Override
 	public JSONObject getCurrentUserInfo(String accessToken) throws SalesforceServiceException {

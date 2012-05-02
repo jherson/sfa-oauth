@@ -81,7 +81,13 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void doSaveQuote(Quote quote) {
-		SaveResult saveResult = null;								
+		SaveResult saveResult = null;					
+		
+		quote.setIsCalculated(Boolean.FALSE);
+		if (quote.getQuoteLineItems() != null && quote.getQuoteLineItems().size() > 0) {
+			quote.setHasQuoteLineItems(Boolean.TRUE);
+		} 
+		
 		try {
 			saveResult = quoteDAO.saveQuote(quote); 
 			if (saveResult.isSuccess() && saveResult.getId() != null) {

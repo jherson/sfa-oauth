@@ -25,13 +25,6 @@
 					render="quotedetails"
 					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
 					<h:outputText value="#{msgs.edit}" />
-				</a4j:commandLink>
-				
-				<a4j:commandLink id="price"
-					rendered="#{quoteController.editMode}"
-					action="#{quoteController.priceQuote()}" ajaxSingle="true"
-					render="quotedetails">
-					<h:outputText value="#{msgs.price}" />
 				</a4j:commandLink>		
 				
 				<a4j:commandLink id="calculate"
@@ -258,7 +251,7 @@
 							<f:selectItem itemLabel="1" itemValue="365" />
 							<f:selectItem itemLabel="3" itemValue="1095" />
 							<a4j:ajax event="valueChange"
-							    listener="#{quoteController.setDates()}"
+							    listener="#{quoteDateController.setDates()}"
 								render="quotedetails">
 							</a4j:ajax>
 						</h:selectOneMenu></td>
@@ -281,7 +274,7 @@
 							rendered="#{quoteController.editMode and selectedQuote.type == 'Standard'}"
 							disabled="false">
 							<a4j:ajax event="change"
-							    listener="#{quoteController.setDates()}"
+							    listener="#{quoteDateController.setDates()}"
 								render="quotedetails">
 							</a4j:ajax>
 							

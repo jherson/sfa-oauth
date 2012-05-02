@@ -76,14 +76,9 @@
 		</h:outputText>
 	</rich:column>
 
-	<rich:column width="150px">
-		<f:facet name="header">#{msgs.owner}</f:facet>
-		<h:outputText value="#{quote.ownerName}" />
-	</rich:column>
-
-	<rich:column width="150px">
-		<f:facet name="header">#{msgs.contact}</f:facet>
-		<h:outputText value="#{quote.contactName}" />
+	<rich:column width="100px" style="text-align: center;">
+		<f:facet name="header">#{msgs.status}</f:facet>
+		<h:outputText value="#{quote.status}" />
 	</rich:column>
 
 </rich:extendedDataTable>

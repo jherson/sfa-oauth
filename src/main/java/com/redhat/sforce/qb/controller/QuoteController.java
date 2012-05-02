@@ -8,17 +8,14 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
-import org.joda.time.DateTime;
 
-import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.EntityManager;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Contact;
@@ -29,11 +26,10 @@ import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
-import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
+import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
 import com.redhat.sforce.qb.util.JsfUtil;
-import com.sforce.ws.ConnectionException;
 
 @Model
 
@@ -56,15 +52,15 @@ public class QuoteController {
 
 	@Inject
 	private Logger log;
+	
+	@Inject
+	protected EntityManager entityManager;
 
 	@Inject
 	private SessionManager sessionManager;
 	
 	@Inject
 	private QuoteManager quoteManager;
-		
-	@Inject
-	private QuoteDAO quoteDAO;
 	
 	@Inject
 	@SelectedQuote
@@ -102,13 +98,7 @@ public class QuoteController {
 		quoteEvent.select(LIST_QUOTES).fire(new Quote());		
 	}
 
-	public void logout() {	
-		
-		try {
-			sessionManager.getPartnerConnection().logout();
-		} catch (ConnectionException e) {
-			throw new FacesException(e);
-		}		
+	public void logout() {			
 							
        	HttpSession session = JsfUtil.getSession();
        	session.invalidate();
@@ -207,7 +197,7 @@ public class QuoteController {
 		} else {
 			quoteManager.create(selectedQuote);
 			quoteEvent.select(CREATE_QUOTE).fire(selectedQuote);
-		}
+		}	
 
 		setEditMode(Boolean.FALSE);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
@@ -227,9 +217,9 @@ public class QuoteController {
 		setMainArea(TemplatesEnum.OPPORTUNITY_LINE_ITEMS);
 	}
 
-	public void addOpportunityLineItems(Opportunity opportunity) {
-        quoteManager.add(selectedQuote, opportunity.getOpportunityLineItems());
-		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
+	public void addOpportunityLineItems() {
+        quoteManager.add(selectedQuote, selectedQuote.getOpportunity().getOpportunityLineItems());
+		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);	
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
@@ -268,23 +258,5 @@ public class QuoteController {
 	public void setQuoteOwner(User user) {
 		selectedQuote.setOwnerId(user.getId());
 		selectedQuote.setOwnerName(user.getName());
-	}
-	
-	public void setDates() {
-		log.info("new Start date: " + selectedQuote.getStartDate());
-		Quote quote = selectedQuote;
-		if ("Standard".equals(quote.getType())) {
-			DateTime dt = new DateTime(quote.getStartDate());			
-			quote.setEndDate(dt.plusDays(quote.getTerm()).minusDays(1).toDate());
-			log.info("new End date: " + quote.getEndDate());
-		    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
-			    quoteLineItem.setStartDate(quote.getStartDate());
-			    quoteLineItem.setTerm(quote.getTerm());
-			    quoteLineItem.setEndDate(quote.getEndDate());
-		    }
-		}
-		
-
-		
 	}
 }

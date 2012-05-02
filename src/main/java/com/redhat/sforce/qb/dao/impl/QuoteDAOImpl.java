@@ -435,9 +435,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	    sobject.setField("PayNow__c", quote.getPayNow());
 	    sobject.setField("PricebookId__c", quote.getPricebookId());
 	    sobject.setField("ReferenceNumber__c", quote.getReferenceNumber());
+	    sobject.setField("LastPricedDate__c", quote.getLastPricedDate());
 	    sobject.setField("StartDate__c", quote.getStartDate());
 	    sobject.setField("Term__c", quote.getTerm());
 	    sobject.setField("Type__c", quote.getType());
+	    sobject.setField("Status__c", quote.getStatus());
 	    sobject.setField("Version__c", quote.getVersion());
 	    
 	    if (quote.getQuoteLineItems() != null && quote.getQuoteLineItems().size() > 0) {
@@ -560,7 +562,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "EndDate__c, "
 			+ "Amount__c, "
 			+ "PayNow__c, "
+			+ "Status__c, "
 			+ "LastCalculatedDate__c, "
+			+ "LastPricedDate__c, "
 			+ "QuoteOwnerId__r.Id, "
 			+ "QuoteOwnerId__r.Name, "
 			+ "ContactId__r.Id, "

@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -16,11 +15,6 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.qualifiers.SessionConnection;
-import com.sforce.soap.partner.Connector;
-import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.ws.ConnectionException;
-import com.sforce.ws.ConnectorConfig;
 
 @Named(value="sessionManager")
 @SessionScoped
@@ -40,8 +34,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private TemplatesEnum mainArea;
 	
 	private String frontDoorUrl;
-	
-	private PartnerConnection partnerConnection;	
 	
 	@ManagedProperty(value = "false")
 	private Boolean editMode;
@@ -63,30 +55,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		if (session.getAttribute("SessionId") != null) {
 			
 			String sessionId = session.getAttribute("SessionId").toString();
-									
-			ConnectorConfig config = new ConnectorConfig();
-			config.setManualLogin(true);
-			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-			config.setSessionId(sessionId);								
-			try {
-				partnerConnection = Connector.newConnection(config);
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
-			
+											
 			setFrontDoorUrl(applicationManager.getFrontDoorUrl().replace("#sid#", sessionId));
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);			
 
 		} else {
 			setMainArea(TemplatesEnum.HOME);		 
 		}			
-	}
-	
-	@Produces
-	@SessionConnection
-	@Named
-	public PartnerConnection getPartnerConnection() {
-		return partnerConnection;
 	}
 	
 	@Override
