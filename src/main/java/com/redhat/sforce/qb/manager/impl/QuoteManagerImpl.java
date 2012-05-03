@@ -107,14 +107,14 @@ public class QuoteManagerImpl implements QuoteManager {
 				
 			} else {
 				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());
-				JsfUtil.addErrorMessage(saveResult.getErrors()[0].getMessage());
 				return;
 			}
 			
 			
 			
 		} catch (ConnectionException e) {
-			JsfUtil.addErrorMessage(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} 
 	}
 	
@@ -219,7 +219,7 @@ public class QuoteManagerImpl implements QuoteManager {
 
 	private void doPrice(Quote quote) {
 		try {
-			quoteDAO.priceQuote(quote.getId());
+			quoteDAO.priceQuote(quote);
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -235,17 +235,47 @@ public class QuoteManagerImpl implements QuoteManager {
 		}
 	}
 	
-	private void doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
-		List<OpportunityLineItem> opportunityLineItemList = new ArrayList<OpportunityLineItem>();
+	private void doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {		
+		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
 		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
 			if (opportunityLineItem.isSelected()) {
-				opportunityLineItemList.add(opportunityLineItem);
+				QuoteLineItem quoteLineItem = new QuoteLineItem();
+		        quoteLineItem.setQuoteId(quote.getId());
+		        quoteLineItem.setOpportunityId(opportunityLineItem.getOpportunityId());
+		        quoteLineItem.setDescription(opportunityLineItem.getDescription());
+		        quoteLineItem.setConfiguredSku(opportunityLineItem.getConfiguredSku());
+		        quoteLineItem.setContractNumbers(opportunityLineItem.getContractNumbers());
+		        quoteLineItem.setCurrencyIsoCode(opportunityLineItem.getCurrencyIsoCode());	                   
+		        quoteLineItem.setListPrice(opportunityLineItem.getBasePrice());
+		        quoteLineItem.setNewOrRenewal(opportunityLineItem.getNewOrRenewal());	        
+		        quoteLineItem.setPricebookEntryId(opportunityLineItem.getPricebookEntryId());
+		        quoteLineItem.setProduct(opportunityLineItem.getProduct());
+	            quoteLineItem.setPricingAttributes(opportunityLineItem.getPricingAttributes());
+	            quoteLineItem.setQuantity(opportunityLineItem.getQuantity());
+	            quoteLineItem.setUnitPrice(opportunityLineItem.getUnitPrice());
+		        quoteLineItem.setTotalPrice(0.00);
+		        
+		        if (opportunityLineItem.getYearlySalesPrice() != null)
+		            quoteLineItem.setYearlySalesPrice(opportunityLineItem.getYearlySalesPrice());
+		        else
+		            quoteLineItem.setYearlySalesPrice(opportunityLineItem.getUnitPrice());
+		        
+		        if ("Standard".equals(quote.getType())) {
+		        	quoteLineItem.setStartDate(quote.getStartDate());
+		        	quoteLineItem.setEndDate(quote.getEndDate());
+		        	quoteLineItem.setTerm(quote.getTerm());
+		        } else if ("Co-Term".equals(quote.getType())) {
+		        	quoteLineItem.setEndDate(quote.getEndDate());
+		        }
+		        
+		        quoteLineItemList.add(quoteLineItem);
+		        
 				opportunityLineItem.setSelected(false);
 			}
-		}
+		}	
 
 		try {
-			quoteDAO.addOpportunityLineItems(quote, opportunityLineItemList);
+			quoteDAO.saveQuoteLineItems(quoteLineItemList);
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -261,7 +291,8 @@ public class QuoteManagerImpl implements QuoteManager {
 			quoteDAO.activateQuote(quote.getId());
 			
 		} catch (SalesforceServiceException e) {
-			JsfUtil.addErrorMessage(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

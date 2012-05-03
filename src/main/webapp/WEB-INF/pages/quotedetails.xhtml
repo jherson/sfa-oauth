@@ -5,7 +5,11 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-
+		
+    <rich:hotKey key="ctrl+s" enabledInInput="true">
+        <a4j:ajax listener="#{quoteController.save()}" render="quotedetails"/>
+    </rich:hotKey>
+         
 	<a4j:outputPanel id="quotedetails">
 
 		<rich:toolbar height="20" itemSeparator="grid">
@@ -25,14 +29,7 @@
 					render="quotedetails"
 					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
 					<h:outputText value="#{msgs.edit}" />
-				</a4j:commandLink>		
-				
-				<a4j:commandLink id="calculate"
-					rendered="#{not quoteController.editMode}"
-					action="#{quoteController.calculateQuote()}" ajaxSingle="true"
-					render="quotedetails">
-					<h:outputText value="#{msgs.calculate}" />
-				</a4j:commandLink>	
+				</a4j:commandLink>			
 
 				<a4j:commandLink id="activate"
 					action="#{quoteController.activateQuote()}"
@@ -321,8 +318,8 @@
 
 					<td class="column-l-align"><h:panelGroup>
 							<h:outputText
-								value="#{selectedQuote.lastModifiedByName and not empty selectedQuote}, "
-								rendered="#{not quoteController.editMode}" />
+								value="#{selectedQuote.lastModifiedByName}, "
+								rendered="#{not quoteController.editMode and not empty selectedQuote}" />
 							<h:outputText
 								value="#{selectedQuote.lastModifiedDate}"
 								rendered="#{not quoteController.editMode and not empty selectedQuote}">
@@ -338,11 +335,11 @@
 			</table>
 			
 			<br />
-			<ui:include src="quotepriceadjustmentlist.xhtml" />
+			<ui:include src="quotepriceadjustments.xhtml" />
 
 			<br />
 
-			<ui:include src="quoteproductslist.xhtml" />
+			<ui:include src="quotelineitems.xhtml" />
 
 			<ui:include src="owners.xhtml" />
 			<ui:include src="contacts.xhtml" />

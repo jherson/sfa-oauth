@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Product;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.sforce.ws.bind.XmlObject;
 
 public class ProductFactory {
 
@@ -39,5 +40,21 @@ public class ProductFactory {
 		}
 
 		return jsonObject;
+	}
+	
+	public static Product toProduct(XmlObject xmlObject) {
+		Product product = new Product();
+		product.setId(xmlObject.getField("Id").toString());
+		product.setDescription(xmlObject.getField("Description").toString());
+		product.setName(xmlObject.getField("Name").toString());
+		product.setFamily(xmlObject.getField("Family").toString());
+		product.setProductCode(xmlObject.getField("ProductCode").toString());
+		product.setPrimaryBusinessUnit(xmlObject.getField("Primary_Business_Unit__c").toString());
+		product.setProductLine(xmlObject.getField("Product_Line__c").toString());
+		product.setUnitOfMeasure(xmlObject.getField("Unit_Of_Measure__c").toString());
+		product.setTerm(Double.valueOf(xmlObject.getField("Term__c").toString()).intValue());
+		product.setConfigurable(Boolean.valueOf(xmlObject.getField("Configurable__c").toString()));
+		
+		return product;
 	}
 }

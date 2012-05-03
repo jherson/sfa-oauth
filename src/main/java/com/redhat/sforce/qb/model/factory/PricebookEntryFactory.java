@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.sforce.soap.partner.QueryResult;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class PricebookEntryFactory {
 
@@ -56,5 +58,19 @@ public class PricebookEntryFactory {
 		}
 
 		return jsonObject;
+	}
+	
+	public static PricebookEntry toPricebookEntry(QueryResult queryResult) {
+		PricebookEntry pricebookEntry = null;
+		if (queryResult != null && queryResult.getSize() > 0) {
+			SObject sobject = queryResult.getRecords()[0];
+			pricebookEntry = new PricebookEntry();
+			pricebookEntry.setId(sobject.getField("Id").toString());
+			pricebookEntry.setCurrencyIsoCode(sobject.getField("CurrencyIsoCode").toString());
+			pricebookEntry.setUnitPrice(Double.valueOf(sobject.getField("UnitPrice").toString()));
+			pricebookEntry.setProduct(ProductFactory.toProduct(sobject.getChild("Product2")));														
+		}
+		
+		return pricebookEntry;
 	}
 }

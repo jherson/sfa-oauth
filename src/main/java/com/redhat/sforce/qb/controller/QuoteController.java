@@ -25,6 +25,7 @@ import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
+import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
@@ -49,6 +50,9 @@ public class QuoteController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<CreateQuote> CREATE_QUOTE = new AnnotationLiteral<CreateQuote>() {};	
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<DeleteQuoteLineItem> DELETE_QUOTE_LINE_ITEM = new AnnotationLiteral<DeleteQuoteLineItem>() {};
 
 	@Inject
 	private Logger log;
@@ -229,7 +233,8 @@ public class QuoteController {
 	
 	public void deleteQuoteLineItem(QuoteLineItem quoteLineItem) {
 		quoteManager.delete(quoteLineItem);
-		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
+		selectedQuote.getQuoteLineItems().remove(quoteLineItem);
+		quoteEvent.select(DELETE_QUOTE_LINE_ITEM).fire(selectedQuote);
 	}
 
 	public void deleteQuoteLineItems() {				
@@ -247,7 +252,12 @@ public class QuoteController {
 			return;
 		
 		quoteManager.delete(quoteLineItems);
-		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
+		
+		for (QuoteLineItem quoteLineItem : quoteLineItems) {
+			selectedQuote.getQuoteLineItems().remove(quoteLineItem);
+		}
+		
+		quoteEvent.select(DELETE_QUOTE_LINE_ITEM).fire(selectedQuote);		
 	}
 
 	public void setQuoteContact(Contact contact) {

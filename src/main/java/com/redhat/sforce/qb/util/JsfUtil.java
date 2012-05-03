@@ -1,11 +1,12 @@
 package com.redhat.sforce.qb.util;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,18 +14,17 @@ import javax.servlet.http.HttpSession;
 
 public class JsfUtil {
 
-	public static String getStringFromBundle(String key) {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot uiRoot = ctx.getViewRoot();
-		Locale locale = uiRoot.getLocale();
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		ResourceBundle bundle = ResourceBundle.getBundle(ctx.getApplication().getMessageBundle(), locale, loader);
-		return bundle.getString(key);
-	}
-
 	public static void addErrorMessage(String errorMessage) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, errorMessage);
 		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	public static void addErrorMessage(UIComponent component, String key, String param) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceBundle resource = ResourceBundle.getBundle("com.redhat.sforce.qb.resources.messages", context.getViewRoot().getLocale());
+		String text = MessageFormat.format(resource.getString(key), param);		
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, text);
+		FacesContext.getCurrentInstance().addMessage(component.getClientId(context), message);
 	}
 	
 	public static void addInformationMessage(String informationMessage) {

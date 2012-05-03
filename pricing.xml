@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PricingMessage>
+	<Header>
+		<System>SFDC</System>
+		<Operation>Sync</Operation>
+		<Type>Quote</Type>
+		<InstanceId>a0QP0000001IFg7MAG_2012-05-02T22:53:59</InstanceId>
+		<Timestamp>2012-05-02T22:53:59</Timestamp>
+	</Header>
+	<Payload>
+		<Quote>
+			<QuoteHeader>
+				219585QuoteBuildernoneUnited StatesUSD
+				<SalesRepEmail recipient-type="TO" type="WORK">John
+					HersonJohn Herson</SalesRepEmail>
+				Standard1079008
+			</QuoteHeader>
+			<QuoteLineItem>a0EP0000003PUO6MAO</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PUO5MAO</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PUO7MAO</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PwyOMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PxHpMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyVoMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyVnMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyVpMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyVqMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyXeMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyXjMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyXkMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyXlMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyXmMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PyXnMAK</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003PydiMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0z5MAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zKMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0z7MAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0z8MAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0z9MAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zAMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zBMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zCMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zDMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zEMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zFMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zGMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zHMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zIMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zJMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0z6MAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zLMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zNMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zOMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zPMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zQMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zRMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zSMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zTMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zUMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zVMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zWMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zXMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zYMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zZMAS</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zaMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zbMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zcMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zdMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zeMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zfMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q0zgMAC</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q9CBMA0</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q9CDMA0</QuoteLineItem>
+			<QuoteLineItem>a0EP0000003Q9CCMA0</QuoteLineItem>
+		</Quote>
+	</Payload>
+</PricingMessage>

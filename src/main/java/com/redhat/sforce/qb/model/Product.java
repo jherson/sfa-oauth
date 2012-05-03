@@ -97,4 +97,19 @@ public class Product extends SObject {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
+	
+	@Override
+	public String toString() {
+	    return "Id: " + getId() +
+	    		" Name: " + getName() +
+	    		" Description: " + getDescription() +
+	    		" Family: " + getFamily() +
+	    		" ProductCode: " + getProductCode() +
+	    		" PrimaryBusinessUnit: " + getPrimaryBusinessUnit() +
+	    		" ProductLine: " + getProductLine() +
+	    		" UnitOfMeasure: " + getUnitOfMeasure() +
+	    		" Term: " + getTerm() +
+	            " Configurable: " + getConfigurable() +
+	            " IsActive: " + getIsActive();	    
+	}
 }

@@ -36,7 +36,14 @@
 				disabled="#{empty selectedQuote.quoteLineItems}"
 				action="#{quoteController.cancelEdit()}" render="quotedetails"
 				ajaxSingle="true" />
-
+								
+			<a4j:commandButton value="#{msgs.calculate}"
+			    styleClass="commandButton" 
+				rendered="#{not quoteController.editMode}"
+				disabled="#{empty selectedQuote.quoteLineItems}"
+				action="#{quoteController.calculateQuote()}" ajaxSingle="true"
+				render="quotedetails"/>
+            				
 			<a4j:commandButton value="#{msgs.addOpportunityProducts}"
 				styleClass="commandButton"
 				rendered="#{not quoteController.editMode}"
@@ -57,9 +64,12 @@
 
 		</rich:panel>
 
-		<rich:dataTable id="quoteProductsTable" style="width: 100%"
-			var="lineItem" noDataLabel="#{msgs.noRecords}"
-			iterationStatusVar="it" value="#{selectedQuote.quoteLineItems}">
+		<rich:dataTable id="quoteProductsTable" 
+		    style="width: 100%"
+			var="lineItem" 
+			noDataLabel="#{msgs.noRecords}"
+			iterationStatusVar="it" 
+			value="#{selectedQuote.quoteLineItems}">
 
 			<rich:column style="text-align: center; width: 3%;">
 				<f:facet name="header">#{msgs.action}</f:facet>
@@ -88,7 +98,6 @@
 
 				</h:inputText>
 				<rich:message for="productCode" />
-
 			</rich:column>
 
 			<rich:column style="text-align: center; width: 7%;">
@@ -213,8 +222,16 @@
 				<h:outputText value="#{lineItem.totalPrice}">
 					<f:convertNumber locale="#{user.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
-				</h:outputText>
-			</rich:column>
+				</h:outputText>			
+			</rich:column>			
+						
+			<f:facet name="footer">
+			    <h:outputText value="#{msgs.lineCount}: #{selectedQuote.quoteLineItems.size()}, #{msgs.amount}: (#{selectedQuote.currencyIsoCode}) "/>
+			    <h:outputText value="#{selectedQuote.amount}">
+                    <f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" />
+                    </h:outputText>
+			</f:facet>
 
 		</rich:dataTable>
 	</a4j:outputPanel>

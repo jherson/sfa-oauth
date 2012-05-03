@@ -30,4 +30,12 @@ public class PricebookEntry extends SObject {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+	
+	@Override
+	public String toString() {
+	    return "Id: " + getId() +
+	    		" CurrencyIsoCode: " + getCurrencyIsoCode() +
+	    		" UnitPrice: " + getUnitPrice() +
+	    		" Product (" + product.toString() + ")";
+	}
 }

@@ -1,24 +1,38 @@
 package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.json.JSONException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.sforce.soap.partner.DeleteResult;
+import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -85,231 +99,12 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		}
 	}
 	
-	public void priceQuote() {
-//	 	Quote__c quote = [
-//	 	     	 	    SELECT Id
-//	 	     	 	         , Number__c
-//	 	     	 	         , OpportunityId__c
-//	 	     	 	         , CurrencyIsoCode
-//	 	     	 	         , QuoteOwnerId__r.Id
-//	 	     			     , QuoteOwnerId__r.Name
-//	 	     			     , QuoteOwnerId__r.Email
-//	 	                      , (SELECT Id
-//	 	                              , Quantity__c
-//	 	                              , EndDate__c
-//	 	                              , Term__c
-//	 	                              , UnitPrice__c
-//	 	                              , YearlySalesPrice__c
-//	 	                              , Product__r.Id
-//	 	                              , Product__r.Description
-//	 	                              , Product__r.Name
-//	 	                              , Product__r.Family
-//	 	                              , Product__r.ProductCode
-//	 	                              , Product__r.Primary_Business_Unit__c
-//	 	                              , Product__r.Product_Line__c
-//	 	                              , Product__r.Unit_Of_Measure__c
-//	 	                              , Product__r.Term__c
-//	 	                              , TotalPrice__c
-//	 	                              , StartDate__c
-//	 	                              , Configured_SKU__c
-//	 	                              , Pricing_Attributes__c  
-//	 	                                FROM   QuoteLineItem__r)
-//	 	                 FROM Quote__c              
-//	 	                 WHERE Id = :quoteId     
-//	 	                 LIMIT 1	 	    
-//	 	     	 	];	 		 	
-//	 	     	 	
-//	 	     	 	Opportunity opportunity = [
-//	 	                 SELECT Id
-//	 	                      , CurrencyIsoCode
-//	 	                      , Country_Of_Order__c
-//	 	                      , OpportunityNumber__c
-//	 	                      , OpportunityType__c
-//	 	                      , Owner.Name
-//	 	                      , Owner.Email
-//	 	                      , PaymentType__c
-//	 	                      , Super_Region__c           
-//	 	                      , Account.BillingCity
-//	 	                      , Account.BillingCountry
-//	 	                      , Account.BillingPostalCode
-//	 	                      , Account.BillingState
-//	 	                      , Account.BillingStreet
-//	 	                      , Account.Name
-//	 	                      , Account.OracleAccountNumber__c
-//	 	                      , Account.ShippingCity
-//	 	                      , Account.ShippingCountry
-//	 	                      , Account.ShippingPostalCode
-//	 	                      , Account.ShippingState
-//	 	                      , Account.ShippingStreet
-//	 	                      , Account.VATNumber__c      
-//	 	                      , (SELECT Id
-//	 	                              , Partner__r.BillingCity
-//	 	                              , Partner__r.BillingCountry
-//	 	                              , Partner__r.BillingPostalCode
-//	 	                              , Partner__r.BillingState
-//	 	                              , Partner__r.BillingStreet
-//	 	                              , Partner__r.Name
-//	 	                              , Partner__r.OracleAccountNumber__c
-//	 	                              , Partner__r.ShippingCity
-//	 	                              , Partner__r.ShippingCountry
-//	 	                              , Partner__r.ShippingPostalCode
-//	 	                              , Partner__r.ShippingState
-//	 	                              , Partner__r.ShippingStreet
-//	 	                              , Partner__r.VATNumber__c
-//	 	                              , RelationshipType__c
-//	 	                           FROM OpportunityPartners2__r
-//	 	                          WHERE Partner__r.OracleAccountNumber__c != '')                 
-//	 	                   FROM Opportunity
-//	 	                  WHERE Id = :quote.OpportunityId__c
-//	 	                  LIMIT 1
-//	 	             ];
-//	 	     	 	
-//	 	     	 	System.debug('generating pricing service request XML');
-//	 	             
-//	 	             DOM.Document doc = new DOM.Document();
-//	 	             DOM.xmlNode quoteBuilderMsg = doc.createRootElement('QuotebuilderMessage', '', '');
-//	 	         
-//	 	             //
-//	 	             // generate header node
-//	 	             //
-//	 	             
-//	 	             DOM.xmlNode header = quoteBuilderMsg.addChildElement('Header', '', '');
-//	 	             header.addChildElement('System', '', '').addTextNode('SFDC');
-//	 	             header.addChildElement('Operation', '', '').addTextNode('Sync');
-//	 	             header.addChildElement('Type', '', '').addTextNode('Quote');
-//	 	             header.addChildElement('InstanceId', '', '').addTextNode( quote.id  + '_' + system.now().format('yyyy-MM-dd\'T\'HH:mm:ss'));
-//	 	             header.addChildElement('Timestamp', '', '').addTextNode(system.now().format('yyyy-MM-dd\'T\'HH:mm:ss'));
-//	 	             
-//	 	             //
-//	 	             // generate payload node
-//	 	             //
-//	 	             
-//	 	             DOM.xmlNode payload = quoteBuilderMsg.addChildElement('Payload', '', '');
-//	 	         
-//	 	             //
-//	 	             // generate Quote node
-//	 	             //
-//	 	         
-//	 	             DOM.XmlNode quoteNode = payload.addChildElement('Quote', '', '');
-//	 	         
-//	 	             //
-//	 	             // generate the quoteHeader node
-//	 	             //
-//	 	             
-//	 	             DOM.XmlNode quoteHeader = quoteNode.addChildElement('QuoteHeader', '', '');
-//	 	             quoteHeader.addChildElement('QuoteNumber', '', '').addTextNode( quote.number__c );
-//	 	             quoteHeader.addChildElement('QuoteSource', '', '').addTextNode('QuoteBuilder');      
-//	 	             quoteHeader.addChildElement('SuperRegion', '', '').addTextNode( isNull(opportunity.Super_Region__c) );  
-//	 	             quoteHeader.addChildElement('CountryOfOrder', '', '').addTextNode( isNull( opportunity.Country_Of_Order__c) );   
-//	 	             quoteHeader.addChildElement('CurrencyIso3Code', '', '').addTextNode( isNull(quote.currencyIsoCode) );
-//	 	             
-//	 	             // generate sales rep email node
-//	 	             DOM.XmlNode salesRepEmail = quoteHeader.addChildElement('SalesRepEmail', '', '');
-//	 	             salesRepEmail.setAttribute('type', 'WORK');
-//	 	             salesRepEmail.setAttribute('recipient-type', 'TO');
-//	 	             salesRepEmail.addChildElement('Name', '', '').addTextNode( isNull(quote.QuoteOwnerId__r.Name) );
-//	 	             salesRepEmail.addChildElement('EmailAddress', '', '').addTextNode ( isNull(quote.QuoteOwnerId__r.Email) );
-//	 	             
-//	 	             quoteHeader.addChildElement('OpportunityType', '', '').addTextNode( isNull(opportunity.OpportunityType__c) );
-//	 	             quoteHeader.addChildElement('OpportunityNumber', '', '').addTextNode( isNull(opportunity.OpportunityNumber__c) );       
-//	 	             
-//	 	             //
-//	 	             // generate the quote line item nodes
-//	 	             //
-//	 	             
-//	 	             for (QuoteLineItem__c line: quote.QuoteLineItem__r) {
-//	 	                     
-//	 	                 DOM.XmlNode quoteLineItem = quoteNode.addChildElement( 'QuoteLineItem', '', '' );
-//	 	                 quoteLineItem.addChildElement('LineNumber', '', '').addTextNode(line.Id);
-//	 	                 
-//	 	                 //
-//	 	                 // generate the product node
-//	 	                 //
-//	 	                 
-//	 	                 DOM.XmlNode product = quoteLineItem.addChildElement('Product', '', '');
-//	 	                 product.addChildElement('Sku', '', '').addTextNode( isNull(line.Product__r.ProductCode) );
-//	 	                 
-//	 	                 //
-//	 	                 // generate xml nodes for configSku, configSkuDescription if we have a configured sku
-//	 	                 //
-//	 	                     
-//	 	                 product.addChildElement('ConfigSku', '', '').addTextNode( isNull(line.Configured_SKU__c) );
-//	 	                     
-//	 	                 //
-//	 	                 // generate product contraint nodes
-//	 	                 //
-//	 	                     
-//	 	                 if (line.Pricing_Attributes__c != null) {
-//	 	                     List<String> attributes = line.Pricing_Attributes__c.split(',');
-//	 	                     for (String nameValuePair : attributes) {
-//	 	                         List<String> attribute = nameValuePair.split('=');
-//	 	                       
-//	 	                         DOM.XmlNode constraint = product.addChildElement('ProductConstraint', '', '');
-//	 	                         constraint.addChildElement('Code', '', '').addTextNode( isNull(attribute[0]) );
-//	 	                         constraint.addChildElement('Value', '', '').addTextNode( isNull(attribute[1]) );
-//	 	                       }
-//	 	                 }
-//	 	                 
-//	 	                 Dom.XMLNode Quantity = quoteLineItem.addChildElement('Quantity', '', '');
-//	 	                 Quantity.setAttribute('uom', 'EA');
-//	 	                 Quantity.addTextNode(  isNull((line.Quantity__c).toPlainString()) );            
-//	 	                 
-//	 	                 if (line.Term__c != null) {  
-//	 	                   String duration = '1'; 
-//	 	                   
-//	 	                   if (line.Term__c >= 1095)
-//	 	                     duration = '3';
-//	 	                     
-//	 	                   quoteLineItem.addChildElement('ServiceDuration', '', '').addTextNode( isNull(duration) );
-//	 	                 }
-//	 	                 
-//	 	                 quoteLineItem.addChildElement('ServicePeriod', '', '').addTextNode('YR');  
-//	 	                 quoteLineItem.addChildElement('PricingEffectiveDate', '', '').addTextNode('');
-//	 	             }
-//	 	             
-//	 	             //
-//	 	             // generate the account node
-//	 	             //
-//	 	             
-//	 	             DOM.XmlNode account = quoteNode.addChildElement('Account', '', '');
-//	 	             account.addChildElement('AccountTransactionRole', '', '').addTextNode('END_CUSTOMER');
-//	 	             account.addChildElement('PartyName', '', '').addTextNode( isNull(opportunity.Account.Name) );
-//	 	             account.addChildElement('AccountNumber', '', '').addTextNode( isNull(opportunity.Account.OracleAccountNumber__c) );
-//
-//	 	             DOM.XMLNode billingAddress = account.addChildElement('Address', '', '');
-//	 	             billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.BillingStreet) );
-//	 	             billingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.BillingCity) );
-//	 	             billingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.BillingState) );
-//	 	             billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.BillingPostalCode) );
-//	 	             billingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.BillingCountry) );
-//	 	             
-//	 	             DOM.XMLNode shippingAddress = account.addChildElement('Address', '', '');
-//	 	             shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.ShippingStreet) );
-//	 	             shippingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.ShippingCity) );
-//	 	             shippingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.ShippingState) );
-//	 	             shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.ShippingPostalCode) );
-//	 	             shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.ShippingCountry) );
-//	 	                             
-//	 	             for (Partner partner: opportunity.partners) {
-//	 	                 account = quoteNode.addChildElement('Account', '', '');
-//	 	                 account.addChildElement('AccountTransactionRole', '', '').addTextNode( isNull(partner.Role) );
-//	 	                 account.addChildElement('PartyName', '', '').addTextNode( isNull(partner.AccountTo.Name) );
-//	 	                 account.addChildElement('AccountNumber', '', '').addTextNode( isNull(partner.AccountTo.OracleAccountNumber__c) );
-//	 	         
-//	 	                 billingAddress = account.addChildElement('Address', '', '');
-//	 	                 billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.BillingStreet) );
-//	 	                 billingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.BillingCity) );
-//	 	                 billingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.BillingState) );
-//	 	                 billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.BillingPostalCode) );
-//	 	                 billingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.BillingCountry) );
-//	 	                 
-//	 	                 shippingAddress = account.addChildElement('Address', '', '');
-//	 	                 shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.ShippingStreet) );
-//	 	                 shippingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.ShippingCity) );
-//	 	                 shippingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.ShippingState) );
-//	 	                 shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.ShippingPostalCode) );
-//	 	                 shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.ShippingCountry) );    
-//	 	             }
+	@Override
+	public Double getQuoteAmount(String quoteId) throws ConnectionException {
+		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
+		QueryResult queryResult = em.query(queryString);
+		SObject sobject = queryResult.getRecords()[0];
+		return Double.valueOf(sobject.getField("Amount__c").toString());
 	}
 
 	@Override
@@ -331,49 +126,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public Quote priceQuote(String quoteId) throws SalesforceServiceException {
-		sm.priceQuote(quoteId);
-		return null;
-	}
-	
-	@Override
-	public SaveResult[] addOpportunityLineItems(Quote quote, List<OpportunityLineItem> opportunityLineItems) throws ConnectionException, SalesforceServiceException {
-		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
-		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
-		    QuoteLineItem quoteLineItem = new QuoteLineItem();
-	        quoteLineItem.setQuoteId(quote.getId());
-	        quoteLineItem.setOpportunityId(opportunityLineItem.getOpportunityId());
-	        quoteLineItem.setDescription(opportunityLineItem.getDescription());
-	        quoteLineItem.setConfiguredSku(opportunityLineItem.getConfiguredSku());
-	        quoteLineItem.setContractNumbers(opportunityLineItem.getContractNumbers());
-	        quoteLineItem.setCurrencyIsoCode(opportunityLineItem.getCurrencyIsoCode());	                   
-	        quoteLineItem.setListPrice(opportunityLineItem.getBasePrice());
-	        quoteLineItem.setNewOrRenewal(opportunityLineItem.getNewOrRenewal());	        
-	        quoteLineItem.setPricebookEntryId(opportunityLineItem.getPricebookEntryId());
-	        quoteLineItem.setProduct(opportunityLineItem.getProduct());
-            quoteLineItem.setPricingAttributes(opportunityLineItem.getPricingAttributes());
-            quoteLineItem.setQuantity(opportunityLineItem.getQuantity());
-            quoteLineItem.setUnitPrice(opportunityLineItem.getUnitPrice());
-	        quoteLineItem.setTotalPrice(0.00);
-	        
-	        if (opportunityLineItem.getYearlySalesPrice() != null)
-	            quoteLineItem.setYearlySalesPrice(opportunityLineItem.getYearlySalesPrice());
-	        else
-	            quoteLineItem.setYearlySalesPrice(opportunityLineItem.getUnitPrice());
-	        
-	        if ("Standard".equals(quote.getType())) {
-	        	quoteLineItem.setStartDate(quote.getStartDate());
-	        	quoteLineItem.setEndDate(quote.getEndDate());
-	        	quoteLineItem.setTerm(quote.getTerm());
-	        } else if ("Co-Term".equals(quote.getType())) {
-	        	quoteLineItem.setEndDate(quote.getEndDate());
-	        }
-	        
-	        quoteLineItemList.add(quoteLineItem);
-		}	
-		
-		return saveQuoteLineItems(quoteLineItemList);
-		
+	public Quote priceQuote(Quote quote) throws SalesforceServiceException {
+		//sm.priceQuote(quoteId);
+		String xml = convertQuoteToXml(quote);
+		log.info(xml);
+        return null;
 	}
 
 	@Override
@@ -536,6 +293,195 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		return sobjectList;		
 	}	
 	
+	private String convertQuoteToXml(Quote quote) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = null;;
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Document doc = docBuilder.newDocument();
+		
+        //
+        // generate root node
+        //
+		
+		Element root = doc.createElement("PricingMessage");
+		doc.appendChild(root);
+		
+        //
+        // generate header node
+        //
+		
+		Element header = doc.createElement("Header");						
+		header.appendChild(addNode(doc, "System", "SFDC"));
+		header.appendChild(addNode(doc, "Operation", "Sync"));
+		header.appendChild(addNode(doc, "Type", "Quote"));
+		header.appendChild(addNode(doc, "InstanceId", quote.getId() + "_" + dateFormat.format(new Date())));
+		header.appendChild(addNode(doc, "Timestamp", dateFormat.format(new Date())));		
+		root.appendChild(header);
+		
+        //
+        // generate payload node
+        //
+		
+		Element payload = doc.createElement("Payload");		
+		root.appendChild(payload);
+		
+        //
+        // generate quote node
+        //
+		
+		Element quoteNode = doc.createElement("Quote");		
+		payload.appendChild(quoteNode);
+		
+        //
+        // generate quoteHeader node
+        //
+		
+		Element quoteHeader = doc.createElement("QuoteHeader");
+        quoteHeader.appendChild(doc.createElement("QuoteNumber").appendChild(doc.createTextNode(quote.getNumber())));
+        quoteHeader.appendChild(doc.createElement("QuoteSource").appendChild(doc.createTextNode("QuoteBuilder")));      
+        quoteHeader.appendChild(doc.createElement("SuperRegion").appendChild(doc.createTextNode(quote.getOpportunity().getSuperRegion())));  
+        quoteHeader.appendChild(doc.createElement("CountryOfOrder").appendChild(doc.createTextNode(quote.getOpportunity().getCountryOfOrder())));   
+        quoteHeader.appendChild(doc.createElement("CurrencyIso3Code").appendChild(doc.createTextNode(quote.getCurrencyIsoCode())));		
+		quoteNode.appendChild(quoteHeader);
+		
+		//
+		// generate the sales rep node
+		
+		Element salesRepEmail = doc.createElement("SalesRepEmail");
+		salesRepEmail.setAttribute("type", "WORK");
+		salesRepEmail.setAttribute("recipient-type", "TO");
+		salesRepEmail.appendChild(doc.createElement("Name").appendChild(doc.createTextNode(quote.getOwnerName())));
+		salesRepEmail.appendChild(doc.createElement("EmailAddress").appendChild(doc.createTextNode(quote.getOwnerName())));		
+		quoteHeader.appendChild(salesRepEmail);
+		
+		quoteHeader.appendChild(doc.createElement("OpportunityType").appendChild(doc.createTextNode(quote.getOpportunity().getOpportunityType())));
+		quoteHeader.appendChild(doc.createElement("OpportunityNumber").appendChild(doc.createTextNode(quote.getOpportunity().getOpportunityNumber())));		    
+      
+        //
+        // generate the quote line item nodes
+        //
+      
+        for (QuoteLineItem quoteLineItem: quote.getQuoteLineItems()) {
+        	
+        	Element quoteLine = doc.createElement("QuoteLineItem");
+        	quoteLine.appendChild(doc.createElement("LineNumber").appendChild(doc.createTextNode(quoteLineItem.getId())));
+        	quoteNode.appendChild(quoteLine);
+                        
+            //
+            // generate the product node
+            //
+//          
+//          DOM.XmlNode product = quoteLineItem.addChildElement('Product', '', '');
+//          product.addChildElement('Sku', '', '').addTextNode( isNull(line.Product__r.ProductCode) );
+//          
+//          //
+//          // generate xml nodes for configSku, configSkuDescription if we have a configured sku
+//          //
+//              
+//          product.addChildElement('ConfigSku', '', '').addTextNode( isNull(line.Configured_SKU__c) );
+//              
+//          //
+//          // generate product contraint nodes
+//          //
+//              
+//          if (line.Pricing_Attributes__c != null) {
+//              List<String> attributes = line.Pricing_Attributes__c.split(',');
+//              for (String nameValuePair : attributes) {
+//                  List<String> attribute = nameValuePair.split('=');
+//                
+//                  DOM.XmlNode constraint = product.addChildElement('ProductConstraint', '', '');
+//                  constraint.addChildElement('Code', '', '').addTextNode( isNull(attribute[0]) );
+//                  constraint.addChildElement('Value', '', '').addTextNode( isNull(attribute[1]) );
+//                }
+//          }
+//          
+//          Dom.XMLNode Quantity = quoteLineItem.addChildElement('Quantity', '', '');
+//          Quantity.setAttribute('uom', 'EA');
+//          Quantity.addTextNode(  isNull((line.Quantity__c).toPlainString()) );            
+//          
+//          if (line.Term__c != null) {  
+//            String duration = '1'; 
+//            
+//            if (line.Term__c >= 1095)
+//              duration = '3';
+//              
+//            quoteLineItem.addChildElement('ServiceDuration', '', '').addTextNode( isNull(duration) );
+//          }
+//          
+//          quoteLineItem.addChildElement('ServicePeriod', '', '').addTextNode('YR');  
+//          quoteLineItem.addChildElement('PricingEffectiveDate', '', '').addTextNode('');
+        }
+//      
+//      //
+//      // generate the account node
+//      //
+//      
+//      DOM.XmlNode account = quoteNode.addChildElement('Account', '', '');
+//      account.addChildElement('AccountTransactionRole', '', '').addTextNode('END_CUSTOMER');
+//      account.addChildElement('PartyName', '', '').addTextNode( isNull(opportunity.Account.Name) );
+//      account.addChildElement('AccountNumber', '', '').addTextNode( isNull(opportunity.Account.OracleAccountNumber__c) );
+//
+//      DOM.XMLNode billingAddress = account.addChildElement('Address', '', '');
+//      billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.BillingStreet) );
+//      billingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.BillingCity) );
+//      billingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.BillingState) );
+//      billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.BillingPostalCode) );
+//      billingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.BillingCountry) );
+//      
+//      DOM.XMLNode shippingAddress = account.addChildElement('Address', '', '');
+//      shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.ShippingStreet) );
+//      shippingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.ShippingCity) );
+//      shippingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.ShippingState) );
+//      shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.ShippingPostalCode) );
+//      shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.ShippingCountry) );
+//                      
+//      for (Partner partner: opportunity.partners) {
+//          account = quoteNode.addChildElement('Account', '', '');
+//          account.addChildElement('AccountTransactionRole', '', '').addTextNode( isNull(partner.Role) );
+//          account.addChildElement('PartyName', '', '').addTextNode( isNull(partner.AccountTo.Name) );
+//          account.addChildElement('AccountNumber', '', '').addTextNode( isNull(partner.AccountTo.OracleAccountNumber__c) );
+//  
+//          billingAddress = account.addChildElement('Address', '', '');
+//          billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.BillingStreet) );
+//          billingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.BillingCity) );
+//          billingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.BillingState) );
+//          billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.BillingPostalCode) );
+//          billingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.BillingCountry) );
+//          
+//          shippingAddress = account.addChildElement('Address', '', '');
+//          shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.ShippingStreet) );
+//          shippingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.ShippingCity) );
+//          shippingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.ShippingState) );
+//          shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.ShippingPostalCode) );
+//          shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.ShippingCountry) );    
+//      }
+        
+        try {
+        	  Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        	  StreamResult result = new StreamResult(new StringWriter());
+        	  DOMSource source = new DOMSource(doc);
+        	  transformer.transform(source, result);
+        	  return result.getWriter().toString();
+        } catch(TransformerException ex) {
+        	  ex.printStackTrace();
+        	  return null;
+        }
+	}	
+	
+	private Element addNode(Document doc, String name, String value) {
+        Element node = doc.createElement(name);
+		node.appendChild(doc.createTextNode(value));
+		return node;
+	}
+	
 	private String quoteQuery = "Select Id, "
 			+ "Name, "
 			+ "CurrencyIsoCode, "
@@ -643,9 +589,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        EndDate__c, "
 			+ "        ProrateYearUnitPrice__c, "
 			+ "        QuoteLineItemId__r.Id, "
-			+ "QuoteLineItemId__r.ProductDescription__c, "
-			+ "QuoteLineItemId__r.Product__r.Id, "
-			+ "QuoteLineItemId__r.Product__r.Description, "
+			+ "        QuoteLineItemId__r.ProductDescription__c, "
+			+ "        QuoteLineItemId__r.Product__r.Id, "
+			+ "        QuoteLineItemId__r.Product__r.Description, "
 			+ "QuoteLineItemId__r.Product__r.Name, "
 			+ "QuoteLineItemId__r.Product__r.Family, "
 			+ "QuoteLineItemId__r.Product__r.ProductCode, "
