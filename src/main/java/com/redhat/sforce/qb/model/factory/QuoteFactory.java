@@ -40,6 +40,7 @@ public class QuoteFactory {
 		quote.setComments(wrapper.getString("Comments__c"));
 		quote.setContactId(wrapper.getString("ContactId__r", "Id"));
 		quote.setContactName(wrapper.getString("ContactId__r", "Name"));
+		quote.setContactEmail(wrapper.getString("ContactId__r", "Email"));
 		quote.setCreatedById(wrapper.getString("CreatedBy", "Id"));
 		quote.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
 		quote.setCreatedDate(wrapper.getDateTime("CreatedDate"));
@@ -63,6 +64,7 @@ public class QuoteFactory {
 		quote.setOpportunityName(wrapper.getString("OpportunityId__r", "Name"));
 		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));
 		quote.setOwnerName(wrapper.getString("QuoteOwnerId__r", "Name"));
+		quote.setOwnerEmail(wrapper.getString("QuoteOwnerId__r", "Email"));
 		quote.setPayNow(wrapper.getString("PayNow__c"));
 		quote.setPricebookId(wrapper.getString("PricebookId__c"));
 		quote.setReferenceNumber(wrapper.getString("ReferenceNumber__c"));

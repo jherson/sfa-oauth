@@ -1,27 +1,13 @@
 package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.json.JSONException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
@@ -31,6 +17,7 @@ import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
+import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
@@ -110,7 +97,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	@Override
 	public Quote activateQuote(String quoteId) throws SalesforceServiceException {
 		sm.activateQuote(quoteId);
-		return queryQuoteById(quoteId);
+		return null;
 	}
 
 	@Override
@@ -122,14 +109,12 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	@Override
 	public Quote copyQuote(String quoteId) throws SalesforceServiceException {
 		sm.copyQuote(quoteId);
-		return queryQuoteById(quoteId);
+		return null;
 	}
 	
 	@Override
 	public Quote priceQuote(Quote quote) throws SalesforceServiceException {
-		//sm.priceQuote(quoteId);
-		String xml = convertQuoteToXml(quote);
-		log.info(xml);
+        sm.priceQuote(MessageFactory.createPricingMessage(quote));
         return null;
 	}
 
@@ -293,195 +278,6 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		return sobjectList;		
 	}	
 	
-	private String convertQuoteToXml(Quote quote) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
-		
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = null;;
-		try {
-			docBuilder = docFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		Document doc = docBuilder.newDocument();
-		
-        //
-        // generate root node
-        //
-		
-		Element root = doc.createElement("PricingMessage");
-		doc.appendChild(root);
-		
-        //
-        // generate header node
-        //
-		
-		Element header = doc.createElement("Header");						
-		header.appendChild(addNode(doc, "System", "SFDC"));
-		header.appendChild(addNode(doc, "Operation", "Sync"));
-		header.appendChild(addNode(doc, "Type", "Quote"));
-		header.appendChild(addNode(doc, "InstanceId", quote.getId() + "_" + dateFormat.format(new Date())));
-		header.appendChild(addNode(doc, "Timestamp", dateFormat.format(new Date())));		
-		root.appendChild(header);
-		
-        //
-        // generate payload node
-        //
-		
-		Element payload = doc.createElement("Payload");		
-		root.appendChild(payload);
-		
-        //
-        // generate quote node
-        //
-		
-		Element quoteNode = doc.createElement("Quote");		
-		payload.appendChild(quoteNode);
-		
-        //
-        // generate quoteHeader node
-        //
-		
-		Element quoteHeader = doc.createElement("QuoteHeader");
-        quoteHeader.appendChild(doc.createElement("QuoteNumber").appendChild(doc.createTextNode(quote.getNumber())));
-        quoteHeader.appendChild(doc.createElement("QuoteSource").appendChild(doc.createTextNode("QuoteBuilder")));      
-        quoteHeader.appendChild(doc.createElement("SuperRegion").appendChild(doc.createTextNode(quote.getOpportunity().getSuperRegion())));  
-        quoteHeader.appendChild(doc.createElement("CountryOfOrder").appendChild(doc.createTextNode(quote.getOpportunity().getCountryOfOrder())));   
-        quoteHeader.appendChild(doc.createElement("CurrencyIso3Code").appendChild(doc.createTextNode(quote.getCurrencyIsoCode())));		
-		quoteNode.appendChild(quoteHeader);
-		
-		//
-		// generate the sales rep node
-		
-		Element salesRepEmail = doc.createElement("SalesRepEmail");
-		salesRepEmail.setAttribute("type", "WORK");
-		salesRepEmail.setAttribute("recipient-type", "TO");
-		salesRepEmail.appendChild(doc.createElement("Name").appendChild(doc.createTextNode(quote.getOwnerName())));
-		salesRepEmail.appendChild(doc.createElement("EmailAddress").appendChild(doc.createTextNode(quote.getOwnerName())));		
-		quoteHeader.appendChild(salesRepEmail);
-		
-		quoteHeader.appendChild(doc.createElement("OpportunityType").appendChild(doc.createTextNode(quote.getOpportunity().getOpportunityType())));
-		quoteHeader.appendChild(doc.createElement("OpportunityNumber").appendChild(doc.createTextNode(quote.getOpportunity().getOpportunityNumber())));		    
-      
-        //
-        // generate the quote line item nodes
-        //
-      
-        for (QuoteLineItem quoteLineItem: quote.getQuoteLineItems()) {
-        	
-        	Element quoteLine = doc.createElement("QuoteLineItem");
-        	quoteLine.appendChild(doc.createElement("LineNumber").appendChild(doc.createTextNode(quoteLineItem.getId())));
-        	quoteNode.appendChild(quoteLine);
-                        
-            //
-            // generate the product node
-            //
-//          
-//          DOM.XmlNode product = quoteLineItem.addChildElement('Product', '', '');
-//          product.addChildElement('Sku', '', '').addTextNode( isNull(line.Product__r.ProductCode) );
-//          
-//          //
-//          // generate xml nodes for configSku, configSkuDescription if we have a configured sku
-//          //
-//              
-//          product.addChildElement('ConfigSku', '', '').addTextNode( isNull(line.Configured_SKU__c) );
-//              
-//          //
-//          // generate product contraint nodes
-//          //
-//              
-//          if (line.Pricing_Attributes__c != null) {
-//              List<String> attributes = line.Pricing_Attributes__c.split(',');
-//              for (String nameValuePair : attributes) {
-//                  List<String> attribute = nameValuePair.split('=');
-//                
-//                  DOM.XmlNode constraint = product.addChildElement('ProductConstraint', '', '');
-//                  constraint.addChildElement('Code', '', '').addTextNode( isNull(attribute[0]) );
-//                  constraint.addChildElement('Value', '', '').addTextNode( isNull(attribute[1]) );
-//                }
-//          }
-//          
-//          Dom.XMLNode Quantity = quoteLineItem.addChildElement('Quantity', '', '');
-//          Quantity.setAttribute('uom', 'EA');
-//          Quantity.addTextNode(  isNull((line.Quantity__c).toPlainString()) );            
-//          
-//          if (line.Term__c != null) {  
-//            String duration = '1'; 
-//            
-//            if (line.Term__c >= 1095)
-//              duration = '3';
-//              
-//            quoteLineItem.addChildElement('ServiceDuration', '', '').addTextNode( isNull(duration) );
-//          }
-//          
-//          quoteLineItem.addChildElement('ServicePeriod', '', '').addTextNode('YR');  
-//          quoteLineItem.addChildElement('PricingEffectiveDate', '', '').addTextNode('');
-        }
-//      
-//      //
-//      // generate the account node
-//      //
-//      
-//      DOM.XmlNode account = quoteNode.addChildElement('Account', '', '');
-//      account.addChildElement('AccountTransactionRole', '', '').addTextNode('END_CUSTOMER');
-//      account.addChildElement('PartyName', '', '').addTextNode( isNull(opportunity.Account.Name) );
-//      account.addChildElement('AccountNumber', '', '').addTextNode( isNull(opportunity.Account.OracleAccountNumber__c) );
-//
-//      DOM.XMLNode billingAddress = account.addChildElement('Address', '', '');
-//      billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.BillingStreet) );
-//      billingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.BillingCity) );
-//      billingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.BillingState) );
-//      billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.BillingPostalCode) );
-//      billingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.BillingCountry) );
-//      
-//      DOM.XMLNode shippingAddress = account.addChildElement('Address', '', '');
-//      shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(opportunity.Account.ShippingStreet) );
-//      shippingAddress.addChildElement('City', '', '').addTextNode( isNull(opportunity.Account.ShippingCity) );
-//      shippingAddress.addChildElement('State', '', '').addTextNode( isNull(opportunity.Account.ShippingState) );
-//      shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(opportunity.Account.ShippingPostalCode) );
-//      shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( opportunity.Account.ShippingCountry) );
-//                      
-//      for (Partner partner: opportunity.partners) {
-//          account = quoteNode.addChildElement('Account', '', '');
-//          account.addChildElement('AccountTransactionRole', '', '').addTextNode( isNull(partner.Role) );
-//          account.addChildElement('PartyName', '', '').addTextNode( isNull(partner.AccountTo.Name) );
-//          account.addChildElement('AccountNumber', '', '').addTextNode( isNull(partner.AccountTo.OracleAccountNumber__c) );
-//  
-//          billingAddress = account.addChildElement('Address', '', '');
-//          billingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.BillingStreet) );
-//          billingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.BillingCity) );
-//          billingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.BillingState) );
-//          billingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.BillingPostalCode) );
-//          billingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.BillingCountry) );
-//          
-//          shippingAddress = account.addChildElement('Address', '', '');
-//          shippingAddress.addChildElement('Address1', '', '').addTextNode( isNull(partner.AccountTo.ShippingStreet) );
-//          shippingAddress.addChildElement('City', '', '').addTextNode( isNull(partner.AccountTo.ShippingCity) );
-//          shippingAddress.addChildElement('State', '', '').addTextNode( isNull(partner.AccountTo.ShippingState) );
-//          shippingAddress.addChildElement('PostalCode', '', '').addTextNode( isNull(partner.AccountTo.ShippingPostalCode) );
-//          shippingAddress.addChildElement('Country', '', '').addTextNode( isNull( partner.AccountTo.ShippingCountry) );    
-//      }
-        
-        try {
-        	  Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        	  StreamResult result = new StreamResult(new StringWriter());
-        	  DOMSource source = new DOMSource(doc);
-        	  transformer.transform(source, result);
-        	  return result.getWriter().toString();
-        } catch(TransformerException ex) {
-        	  ex.printStackTrace();
-        	  return null;
-        }
-	}	
-	
-	private Element addNode(Document doc, String name, String value) {
-        Element node = doc.createElement(name);
-		node.appendChild(doc.createTextNode(value));
-		return node;
-	}
-	
 	private String quoteQuery = "Select Id, "
 			+ "Name, "
 			+ "CurrencyIsoCode, "
@@ -513,8 +309,10 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "LastPricedDate__c, "
 			+ "QuoteOwnerId__r.Id, "
 			+ "QuoteOwnerId__r.Name, "
+			+ "QuoteOwnerId__r.Email, "
 			+ "ContactId__r.Id, "
 			+ "ContactId__r.Name, "
+			+ "ContactId__r.Email, "			
 			+ "CreatedDate, "
 			+ "CreatedBy.Id, "
 			+ "CreatedBy.Name, "
@@ -559,6 +357,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        StartDate__c, "
 			+ "        PricebookEntryId__c, "
 			+ "        Configured_SKU__c, "
+			+ "        ProductDescription__c, "
 			+ "        Pricing_Attributes__c "
 			+ " From   QuoteLineItem__r "
 			+ "Order By CreatedDate), "

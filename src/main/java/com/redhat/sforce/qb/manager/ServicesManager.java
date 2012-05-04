@@ -12,5 +12,5 @@ public interface ServicesManager {
 	public void calculateQuote(String quoteId);			
 	public void activateQuote(String quoteId) throws SalesforceServiceException;	
 	public void copyQuote(String quoteId) throws SalesforceServiceException;
-	public void priceQuote(String quoteId) throws SalesforceServiceException;	
+	public String priceQuote(String xml) throws SalesforceServiceException;	
 }

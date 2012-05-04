@@ -7,8 +7,10 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -27,10 +29,9 @@ import org.json.JSONTokener;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
-import com.sforce.soap.partner.Connector;
-import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.ws.ConnectionException;
-import com.sforce.ws.ConnectorConfig;
+
+@Named(value="servicesManager")
+@SessionScoped
 
 public class ServicesManagerImpl implements Serializable, ServicesManager {
 
@@ -42,36 +43,30 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Inject
 	private ApplicationManager applicationManager;
 	
-	private PartnerConnection partnerConnection;
+	private String sessionId;
 	
 	@PostConstruct
 	public void init() {
+		log.info("init");
+		
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		
 		if (session.getAttribute("SessionId") != null) {
 			
-			String sessionId = session.getAttribute("SessionId").toString();
+			sessionId = session.getAttribute("SessionId").toString();
 			
-			ConnectorConfig config = new ConnectorConfig();
-			config.setManualLogin(true);
-			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-			config.setSessionId(sessionId);								
-			try {
-				partnerConnection = Connector.newConnection(config);
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
 		}	
 	}
 
 	@Override
 	public JSONObject getCurrentUserInfo() throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() + "/apexrest/"
+		String url = applicationManager.getApiEndpoint() 
+				+ "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/currentUserInfo";
 
 		GetMethod getMethod = new GetMethod(url);
-		getMethod.setRequestHeader("Authorization", "OAuth " + partnerConnection.getConfig().getSessionId());
+		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
 		getMethod.setRequestHeader("Content-type", "application/json");
 
 		JSONObject response = null;
@@ -106,7 +101,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		params[0] = new NameValuePair("q", query);
 
 		GetMethod getMethod = new GetMethod(url);
-		getMethod.setRequestHeader("Authorization", "OAuth " + partnerConnection.getConfig().getSessionId());
+		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
 		getMethod.setRequestHeader("Content-Type", "application/json");
 		getMethod.setQueryString(params);
 
@@ -146,7 +141,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		PostMethod postMethod = null;
 		try {
 
-			postMethod = doPost(partnerConnection.getConfig().getSessionId(), url, params, null);
+			postMethod = doPost(sessionId, url, params, null);
 
 			if (postMethod.getStatusCode() != HttpStatus.SC_OK) {
 				parseErrorResponse(postMethod.getResponseBodyAsStream());
@@ -163,15 +158,14 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void calculateQuote(String quoteId) {
-		
+	public void calculateQuote(String quoteId) {		
 		String url = applicationManager.getApiEndpoint() 
 				+ "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/calculate?quoteId=" + quoteId;
 
 		PostMethod postMethod = new PostMethod(url);
-		postMethod.setRequestHeader("Authorization", "OAuth " + partnerConnection.getConfig().getSessionId());
+		postMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
 		postMethod.setRequestHeader("Content-type", "application/json");
 
 		HttpClient httpclient = new HttpClient();
@@ -187,7 +181,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
-	public void copyQuote(String quoteId) {
+	public void copyQuote(String quoteId) throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() 
 				+ "/apexrest/"
 				+ applicationManager.getApiVersion() 
@@ -199,7 +193,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		log.info(url);
 
 		PostMethod postMethod = new PostMethod(url);
-		postMethod.setRequestHeader("Authorization", "OAuth " + partnerConnection.getConfig().getSessionId());
+		postMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
 		postMethod.setRequestHeader("Content-type", "application/json");
 		postMethod.setQueryString(params);
 
@@ -215,41 +209,44 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			log.error(e);
 		} catch (IOException e) {
 			log.error(e);
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} finally {
+			postMethod.releaseConnection();
 		}
 	}
 	
 	@Override
-	public void priceQuote(String xml) throws SalesforceServiceException {
+	public String priceQuote(String xml) throws SalesforceServiceException {
 		String url = applicationManager.getApiEndpoint() 
 				+ "/apexrest/"
 				+ applicationManager.getApiVersion()
-				+ "/QuoteRestService/price_quote";
+				+ "/QuoteRestService/price";
+		
+		log.info(xml);
 
-		NameValuePair[] params = new NameValuePair[1];
-		params[0] = new NameValuePair("quoteId", xml);
-
-		//JSONObject jsonObject = null;
-		GetMethod getMethod = null;
+		PostMethod postMethod = null;
 		try {
-			getMethod = doGet(partnerConnection.getConfig().getSessionId(), url, params);
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-			//	jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-				log.info(getMethod.getResponseBodyAsString());
+			postMethod = new PostMethod(url);
+			postMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
+			postMethod.setRequestHeader("Content-type", "application/xml");
+			postMethod.setRequestEntity(new StringRequestEntity(xml, "application/xml", null));
+			
+			HttpClient httpclient = new HttpClient();
+			httpclient.executeMethod(postMethod);
+			
+			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
+				xml = postMethod.getResponseBodyAsString();
 			} else {
-				parseErrorResponse(getMethod.getResponseBodyAsStream());
+				parseErrorResponse(postMethod.getResponseBodyAsStream());
 			}
-		} catch (JSONException e) {
-			log.error(e);
 		} catch (HttpException e) {
 			log.error(e);
 		} catch (IOException e) {
 			log.error(e);
 		} finally {
-			getMethod.releaseConnection();
+			postMethod.releaseConnection();
 		}
+		
+		return xml;
 	}
 
 	private PostMethod doPost(String accessToken, String url, NameValuePair[] params, String requestEntity) throws HttpException, IOException {
@@ -262,28 +259,13 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (requestEntity != null) {
-			postMethod.setRequestEntity(new StringRequestEntity(requestEntity, "application/json", null));
+			postMethod.setRequestEntity(new StringRequestEntity(requestEntity, "application/json", "UTF8"));
 		}
 
 		HttpClient httpclient = new HttpClient();
 		httpclient.executeMethod(postMethod);
 
 		return postMethod;
-	}
-
-	private GetMethod doGet(String accessToken, String url, NameValuePair[] params) throws HttpException, IOException, JSONException {
-		GetMethod getMethod = new GetMethod(url);
-		getMethod.setRequestHeader("Authorization", "OAuth " + accessToken);
-		getMethod.setRequestHeader("Content-type", "application/json");
-
-		if (params != null) {
-			getMethod.setQueryString(params);
-		}
-
-		HttpClient httpclient = new HttpClient();
-		httpclient.executeMethod(getMethod);
-
-		return getMethod;
 	}
 	
 	private void parseErrorResponse(InputStream is) throws SalesforceServiceException {

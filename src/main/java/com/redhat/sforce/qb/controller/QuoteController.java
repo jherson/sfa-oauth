@@ -143,12 +143,11 @@ public class QuoteController {
 	}
 	
 	public void priceQuote() {
-		priceQuote(selectedQuote);
+		quoteManager.price(selectedQuote);
 	}
 	
 	public void priceQuote(Quote quote) {
 		quoteManager.price(quote);
-		quoteEvent.select(UPDATE_QUOTE).fire(quote);
 	}
 
 	public void activateQuote() {

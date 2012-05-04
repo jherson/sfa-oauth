@@ -43,6 +43,9 @@ public class OpportunityFactory {
 		opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
 		opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+		opportunity.setAccountAliasName(wrapper.getString("Account", "Account_Alias_Name__c"));
+		opportunity.setOracleAccountNumber(wrapper.getString("Account", "OracleAccountNumber__c"));
+		opportunity.setAccountName(wrapper.getString("Account", "Name"));
 		opportunity.setBillingAddress(wrapper.getString("BillingAddress__c"));
 		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));
 		opportunity.setBillingCountry(wrapper.getString("BillingCountry__c"));

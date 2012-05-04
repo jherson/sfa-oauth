@@ -33,6 +33,8 @@ public class QuoteLineItem extends SObject {
 	@NotNull
 	private Product product;
 	private Boolean delete;
+	private String code;
+	private String message;
 
 	public QuoteLineItem() {
 		super();
@@ -254,5 +256,21 @@ public class QuoteLineItem extends SObject {
 
 	public void setDelete(Boolean delete) {
 		this.delete = delete;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

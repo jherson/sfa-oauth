@@ -34,8 +34,10 @@ public class Quote extends SObject {
 	private Boolean isCalculated;
 	private String ownerId;
 	private String ownerName;
+	private String ownerEmail;
 	private String contactId;
 	private String contactName;
+	private String contactEmail;
 	private String comments;
 	private Date expirationDate;
 	private Date startDate;
@@ -274,6 +276,14 @@ public class Quote extends SObject {
 	public void setOwnerName(String ownerName) {
 		this.ownerName = ownerName;
 	}
+	
+	public String getOwnerEmail() {
+		return ownerEmail;
+	}
+	
+	public void setOwnerEmail(String ownerEmail) {
+		this.ownerEmail = ownerEmail;
+	}
 
 	public String getContactId() {
 		return contactId;
@@ -289,6 +299,14 @@ public class Quote extends SObject {
 
 	public void setContactName(String contactName) {
 		this.contactName = contactName;
+	}
+	
+	public String getContactEmail() {
+		return contactEmail;
+	}
+	
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
 	}
 
 	public String getComments() {
