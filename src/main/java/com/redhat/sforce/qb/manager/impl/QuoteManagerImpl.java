@@ -88,20 +88,20 @@ public class QuoteManagerImpl implements QuoteManager {
 			quote.setHasQuoteLineItems(Boolean.TRUE);
 		} 
 		
-		try {
+		try {						
 			saveResult = quoteDAO.saveQuote(quote); 
 			if (saveResult.isSuccess() && saveResult.getId() != null) {
 				quote.setId(saveResult.getId());								
 				
-				if (quote.getQuotePriceAdjustments() != null && quote.getQuotePriceAdjustments().size() > 0)
-				    saveQuotePriceAdjustments(quote.getQuotePriceAdjustments());
-				
 				if (quote.getQuoteLineItems() != null && quote.getQuoteLineItems().size() > 0)
 				    saveQuoteLineItems(quote.getQuoteLineItems());
+				
+				if (quote.getQuotePriceAdjustments() != null && quote.getQuotePriceAdjustments().size() > 0)
+				    saveQuotePriceAdjustments(quote.getQuotePriceAdjustments());
 												
 				saveQuoteLineItemPriceAdjustments(addQuoteLineItemPriceAdjustments(quote));
 								
-				log.error("Quote save successful: " + saveResult.getId());
+				log.info("Quote save successful: " + saveResult.getId());
 				
 				JsfUtil.addInformationMessage("Quote saved successfully");				
 				
@@ -149,17 +149,14 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void saveQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
-		SaveResult[] saveResult = null;
+		SaveResult[] saveResults = null;
 		try {
-			saveResult = quoteDAO.saveQuoteLineItems(quoteLineItems);
+			saveResults = quoteDAO.saveQuoteLineItems(quoteLineItems);
 	
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 	
 	private void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {
@@ -280,10 +277,7 @@ public class QuoteManagerImpl implements QuoteManager {
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 	
 	private void doActivate(Quote quote) {

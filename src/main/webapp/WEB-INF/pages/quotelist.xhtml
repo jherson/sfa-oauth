@@ -41,7 +41,7 @@
 	<rich:column width="80px" style="text-align: center;">
 		<f:facet name="header">#{msgs.number}</f:facet>
 		<a4j:commandLink value="#{quote.number}"
-			action="#{quoteController.viewQuote(quote)}" render="mainArea">
+			render="mainArea" action="#{quoteController.viewQuote(quote)}">
 		</a4j:commandLink>
 	</rich:column>
 

@@ -3,7 +3,9 @@ package com.redhat.sforce.qb.dao.impl;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
 
@@ -87,6 +89,21 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
+	public Map<String, String[]> getPriceDetails(String quoteId) throws ConnectionException {		
+		String queryString = "Select Id, ListPrice__c, ProductDescription__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
+		Map<String, String[]> listPriceMap = new HashMap<String, String[]>();
+		QueryResult queryResult = em.query(queryString);
+		SObject[] sobjects = queryResult.getRecords();
+		for (SObject sobject : sobjects) {
+			String[] listPrice = new String[2];
+			listPrice[0] = sobject.getField("ListPrice__c").toString();
+			listPrice[1] = sobject.getField("ProductDescription__c").toString();
+			listPriceMap.put(sobject.getId(), listPrice);
+		}
+		return listPriceMap;
+	}
+	
+	@Override
 	public Double getQuoteAmount(String quoteId) throws ConnectionException {
 		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
 		QueryResult queryResult = em.query(queryString);
@@ -119,7 +136,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException {		
+	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {		
 		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));                     
 	}
 	
@@ -220,10 +237,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			sobject.setField("SortOrder__c", quoteLineItem.getSortOrder());
 			sobject.setField("StartDate__c", quoteLineItem.getStartDate());
 			sobject.setField("Term__c", quoteLineItem.getTerm());
-			sobject.setField("TotalPrice__c", quoteLineItem.getTotalPrice());
 			sobject.setField("UnitPrice__c", quoteLineItem.getUnitPrice());
 			sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
-			sobject.setField("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());
+			sobject.setField("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());			
 			
 			sobjectList.add(sobject);		    
 		}

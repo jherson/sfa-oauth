@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.SessionScoped;
@@ -22,6 +23,7 @@ import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
+import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
@@ -80,8 +82,17 @@ public class QuoteProducer implements Serializable {
 	public void onQuoteLineItemDeleted(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final Quote quote) {
 		selectedQuote.setAmount(getQuoteAmount(quote.getId()));
 	}
+	
+	public void onPriceQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PriceQuote final Quote quote) {
+		Map<String, String[]> priceDetails = getPriceDetails(quote.getId());
+		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
+			String[] details = priceDetails.get(quoteLineItem.getId());
+			quoteLineItem.setListPrice(new Double(details[0]));
+			quoteLineItem.setDescription(details[1]);
+		}
+	}
 
-	public Opportunity queryOpportunity(String opportunityId) {
+	private Opportunity queryOpportunity(String opportunityId) {
 		log.info("queryOpportunity: " + opportunityId);		
 		try {
 			return opportunityDAO.queryOpportunityById(opportunityId);
@@ -93,7 +104,7 @@ public class QuoteProducer implements Serializable {
 		return null;
 	}
 	
-	public Quote queryQuoteById(String quoteId) {
+	private Quote queryQuoteById(String quoteId) {
 		log.info("queryQuoteById");
 		try {
 			return quoteDAO.queryQuoteById(quoteId);
@@ -105,7 +116,7 @@ public class QuoteProducer implements Serializable {
 		return null;
 	}
 	
-	public Double getQuoteAmount(String quoteId) {
+	private Double getQuoteAmount(String quoteId) {
 		log.info("getQuoteAmount");
 		try {
 			return quoteDAO.getQuoteAmount(selectedQuote.getId());
@@ -116,5 +127,17 @@ public class QuoteProducer implements Serializable {
 		
 		return null;
 
+	}
+	
+	private Map<String, String[]> getPriceDetails(String quoteId) {
+		log.info("getPriceDetails");
+		try {
+			return quoteDAO.getPriceDetails(quoteId);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

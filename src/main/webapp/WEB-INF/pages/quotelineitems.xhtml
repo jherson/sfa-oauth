@@ -60,6 +60,7 @@
 			<a4j:commandButton value="#{msgs.goalSeek}"
 				styleClass="commandButton"
 				rendered="#{not quoteController.editMode}"
+				action="#{quoteController.goalSeek()}" render="quotedetails"
 				disabled="#{not selectedQuote.isCalculated}" />
 
 		</rich:panel>
@@ -206,12 +207,12 @@
 			<rich:column style="text-align: right; width: 6%;">
 				<f:facet name="header">#{msgs.unitPrice}</f:facet>
 				<h:outputText value="#{lineItem.unitPrice}"
-					rendered="#{not quoteController.editMode}">
+					rendered="#{not sessionManager.goalSeek}">
 					<f:convertNumber locale="#{user.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
-					rendered="#{quoteController.editMode}">
+					rendered="#{sessionManager.goalSeek}">
 					<f:convertNumber locale="#{user.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />
 				</h:inputText>
@@ -219,10 +220,16 @@
 
 			<rich:column style="text-align: right; width: 6%;">
 				<f:facet name="header">#{msgs.totalPrice}</f:facet>
-				<h:outputText value="#{lineItem.totalPrice}">
+				<h:outputText value="#{lineItem.totalPrice}"
+				    rendered="#{not sessionManager.goalSeek}">
 					<f:convertNumber locale="#{user.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
-				</h:outputText>			
+				</h:outputText>		
+				<h:inputText value="#{lineItem.totalPrice}" style="width: 70px;"
+					rendered="#{sessionManager.goalSeek}">
+					<f:convertNumber locale="#{user.locale}"
+						pattern="#,##0.00;(#,##0.00)" type="number" />
+				</h:inputText>	
 			</rich:column>			
 						
 			<f:facet name="footer">

@@ -27,6 +27,7 @@ import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
+import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
@@ -53,6 +54,9 @@ public class QuoteController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<DeleteQuoteLineItem> DELETE_QUOTE_LINE_ITEM = new AnnotationLiteral<DeleteQuoteLineItem>() {};
+		
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<PriceQuote> PRICE_QUOTE = new AnnotationLiteral<PriceQuote>() {};
 
 	@Inject
 	private Logger log;
@@ -87,6 +91,14 @@ public class QuoteController {
 	
 	public Boolean getEditMode() {
 		return sessionManager.getEditMode();
+	}
+	
+	public void setGoalSeek(Boolean goalSeek) {
+		sessionManager.setGoalSeek(goalSeek);
+	}
+	
+	public Boolean getGoalSeek() {
+		return sessionManager.getGoalSeek();
 	}
 
 	public void setMainArea(TemplatesEnum mainArea) {
@@ -142,12 +154,17 @@ public class QuoteController {
 		setEditMode(Boolean.TRUE);
 	}
 	
+	public void goalSeek() {
+		setGoalSeek(Boolean.TRUE);
+	}
+	
 	public void priceQuote() {
-		quoteManager.price(selectedQuote);
+		priceQuote(selectedQuote);
 	}
 	
 	public void priceQuote(Quote quote) {
 		quoteManager.price(quote);
+		quoteEvent.select(PRICE_QUOTE).fire(quote);
 	}
 
 	public void activateQuote() {
@@ -203,6 +220,7 @@ public class QuoteController {
 		}	
 
 		setEditMode(Boolean.FALSE);
+		setGoalSeek(Boolean.FALSE);
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 
@@ -214,6 +232,7 @@ public class QuoteController {
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);
 		}
 		setEditMode(Boolean.FALSE);
+		setGoalSeek(Boolean.FALSE);
 	}
 
 	public void viewOpportunityLineItems() {

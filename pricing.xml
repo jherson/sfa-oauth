@@ -4,14 +4,15 @@
 		<System>SFDC</System>
 		<Operation>Sync</Operation>
 		<Type>Quote</Type>
-		<InstanceId>a0QP0000001IFg7MAG_2012-05-03T18:52:58</InstanceId>
-		<Timestamp>2012-05-03T18:52:58.000-04:00</Timestamp>
+		<InstanceId>a0QP0000001IFg7MAG_2012-05-04T09:42:00</InstanceId>
+		<Timestamp>2012-05-04T09:42:00.000-04:00</Timestamp>
 	</Header>
 	<Payload>
 		<Quote>
 			<QuoteHeader>
 				<QuoteNumber>219585</QuoteNumber>
 				<QuoteSource>QuoteBuilder</QuoteSource>
+				<SuperRegion>none</SuperRegion>
 				<CountryOfOrder>United States</CountryOfOrder>
 				<CurrencyIso3Code>USD</CurrencyIso3Code>
 				<SalesRepEmail type="WORK" recipient-type="TO">
@@ -21,32 +22,6 @@
 				<OpportunityType>Standard</OpportunityType>
 				<OpportunityNumber>1079008</OpportunityNumber>
 			</QuoteHeader>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003PUO6MAO</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:52:59</Message>
-				</Status>
-			</QuoteLineItem>
 			<QuoteLineItem>
 				<LineNumber>a0EP0000003PUO5MAO</LineNumber>
 				<Product>
@@ -70,7 +45,33 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:52:59</Message>
+						status, time S:05/04/2012 09:42:01</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003PUO6MAO</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:01</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -96,7 +97,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:52:59</Message>
+						status, time S:05/04/2012 09:42:02</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -122,7 +123,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:02</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -148,33 +149,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003PyVoMAK</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:02</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -200,21 +175,34 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:02</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
 				<LineNumber>a0EP0000003PyVpMAK</LineNumber>
 				<Product>
 					<Sku>RH01</Sku>
-					<ConfigSku>RH0190902</ConfigSku>
+					<ConfigSku>RH0153936F3RN</ConfigSku>
+					<ConfigSkuDescription>Red Hat Enterprise Linux Server, Premium (4
+						sockets) (Up to 4 guests)</ConfigSkuDescription>
 				</Product>
 				<Quantity uom="EA" />
 				<ServiceDuration>3</ServiceDuration>
 				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>3898</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>3898</Value>
+				</Price>
 				<Status>
-					<Code>FAILURE</Code>
-					<Message>Validation Errors :Invalid CofigSKU : RH0190902</Message>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:02</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -240,7 +228,33 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:02</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003PyVoMAK</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:02</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -266,7 +280,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:03</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -292,7 +306,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:03</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -318,7 +332,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:03</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -344,7 +358,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:03</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -370,7 +384,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:03</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -396,7 +410,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
+						status, time S:05/04/2012 09:42:03</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -422,255 +436,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:00</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0z5MAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zKMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0z7MAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0z8MAC</LineNumber>
-				<Product>
-					<Sku>MCT0344</Sku>
-					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
-					</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0z9MAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zAMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zBMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zCMAS</LineNumber>
-				<Product>
-					<Sku>RH01</Sku>
-					<ConfigSku>RH0190902</ConfigSku>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Status>
-					<Code>FAILURE</Code>
-					<Message>Validation Errors :Invalid CofigSKU : RH0190902</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zDMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zEMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
+						status, time S:05/04/2012 09:42:04</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -696,11 +462,11 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
+						status, time S:05/04/2012 09:42:04</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zGMAS</LineNumber>
+				<LineNumber>a0EP0000003Q0zEMAS</LineNumber>
 				<Product>
 					<Sku>MCT0346</Sku>
 					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
@@ -722,11 +488,142 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:01</Message>
+						status, time S:05/04/2012 09:42:04</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zHMAS</LineNumber>
+				<LineNumber>a0EP0000003Q0zDMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:04</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zCMAS</LineNumber>
+				<Product>
+					<Sku>RH01</Sku>
+					<ConfigSku>RH0153936F3RN</ConfigSku>
+					<ConfigSkuDescription>Red Hat Enterprise Linux Server, Premium (4
+						sockets) (Up to 4 guests)</ConfigSkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>3898</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>3898</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:04</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zBMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:04</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zAMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:04</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0z9MAC</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:04</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0z8MAC</LineNumber>
 				<Product>
 					<Sku>MCT0344</Sku>
 					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
@@ -748,11 +645,11 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
+						status, time S:05/04/2012 09:42:05</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zIMAS</LineNumber>
+				<LineNumber>a0EP0000003Q0z7MAC</LineNumber>
 				<Product>
 					<Sku>MCT0346</Sku>
 					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
@@ -774,33 +671,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zJMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
+						status, time S:05/04/2012 09:42:05</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -826,7 +697,163 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
+						status, time S:05/04/2012 09:42:05</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0z5MAC</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:05</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zGMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:05</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zKMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:05</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zJMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:05</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zIMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:05</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zHMAS</LineNumber>
+				<Product>
+					<Sku>MCT0344</Sku>
+					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
+					</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:06</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -852,7 +879,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
+						status, time S:05/04/2012 09:42:06</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -878,437 +905,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zOMAS</LineNumber>
-				<Product>
-					<Sku>MCT0344</Sku>
-					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
-					</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zPMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zQMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zRMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zSMAS</LineNumber>
-				<Product>
-					<Sku>RH01</Sku>
-					<ConfigSku>RH0190902</ConfigSku>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Status>
-					<Code>FAILURE</Code>
-					<Message>Validation Errors :Invalid CofigSKU : RH0190902</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zTMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:02</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zUMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zVMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zWMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zXMAS</LineNumber>
-				<Product>
-					<Sku>MCT0344</Sku>
-					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
-					</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zYMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zZMAS</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zaMAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zbMAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zcMAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zdMAC</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q0zeMAC</LineNumber>
-				<Product>
-					<Sku>MCT0344</Sku>
-					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
-					</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>18000</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
+						status, time S:05/04/2012 09:42:06</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -1334,7 +931,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:03</Message>
+						status, time S:05/04/2012 09:42:06</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -1360,7 +957,476 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:04</Message>
+						status, time S:05/04/2012 09:42:06</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zOMAS</LineNumber>
+				<Product>
+					<Sku>MCT0344</Sku>
+					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
+					</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:06</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zPMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:07</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zQMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:07</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zRMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:07</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zSMAS</LineNumber>
+				<Product>
+					<Sku>RH01</Sku>
+					<ConfigSku>RH0153936F3RN</ConfigSku>
+					<ConfigSkuDescription>Red Hat Enterprise Linux Server, Premium (4
+						sockets) (Up to 4 guests)</ConfigSkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>3898</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>3898</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:07</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zTMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:07</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zUMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:07</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zVMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:08</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zWMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:08</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zXMAS</LineNumber>
+				<Product>
+					<Sku>MCT0344</Sku>
+					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
+					</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:08</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zYMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:08</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zZMAS</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:08</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zaMAC</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:08</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zbMAC</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:09</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zcMAC</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:09</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zdMAC</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:09</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q0zeMAC</LineNumber>
+				<Product>
+					<Sku>MCT0344</Sku>
+					<SkuDescription>Red Hat Enterprise Linux for Mainframe, Premium
+					</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>18000</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:09</Message>
+				</Status>
+			</QuoteLineItem>
+			<QuoteLineItem>
+				<LineNumber>a0EP0000003Q9CCMA0</LineNumber>
+				<Product>
+					<Sku>MCT0346</Sku>
+					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
+						sockets)</SkuDescription>
+				</Product>
+				<Quantity uom="EA" />
+				<ServiceDuration>3</ServiceDuration>
+				<ServicePeriod>YR</ServicePeriod>
+				<Price>
+					<Description>The unit price of the item purchased</Description>
+					<Code>UNIT_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Price>
+					<Description>The list price of the item purchased</Description>
+					<Code>UNIT_LIST_PRICE</Code>
+					<Value>799</Value>
+				</Price>
+				<Status>
+					<Code>SUCCESS</Code>
+					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
+						status, time S:05/04/2012 09:42:09</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -1386,7 +1452,7 @@
 				<Status>
 					<Code>SUCCESS</Code>
 					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:04</Message>
+						status, time S:05/04/2012 09:42:09</Message>
 				</Status>
 			</QuoteLineItem>
 			<QuoteLineItem>
@@ -1411,34 +1477,8 @@
 				</Price>
 				<Status>
 					<Code>SUCCESS</Code>
-					<Message>End of PLSQL Proc: XXRH_QP_APPS_CALC_PRICE_PKG , return
-						status, time S:05/03/2012 18:53:04</Message>
-				</Status>
-			</QuoteLineItem>
-			<QuoteLineItem>
-				<LineNumber>a0EP0000003Q9CCMA0</LineNumber>
-				<Product>
-					<Sku>MCT0346</Sku>
-					<SkuDescription>Red Hat Enterprise Linux, Standard (up to 2
-						sockets)</SkuDescription>
-				</Product>
-				<Quantity uom="EA" />
-				<ServiceDuration>3</ServiceDuration>
-				<ServicePeriod>YR</ServicePeriod>
-				<Price>
-					<Description>The unit price of the item purchased</Description>
-					<Code>UNIT_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Price>
-					<Description>The list price of the item purchased</Description>
-					<Code>UNIT_LIST_PRICE</Code>
-					<Value>799</Value>
-				</Price>
-				<Status>
-					<Code>SUCCESS</Code>
 					<Message>End of PLSQL proc: XXRH_QP_CALC_PRICE_PKG , return status,
-						time S:05/03/2012 18:53:04</Message>
+						time S:05/04/2012 09:42:10</Message>
 				</Status>
 			</QuoteLineItem>
 			<Account>
@@ -1446,7 +1486,7 @@
 				<AccountNumber>null</AccountNumber>
 			</Account>
 			<Status>
-				<Code>FAILURE</Code>
+				<Code>SUCCESS</Code>
 			</Status>
 		</Quote>
 	</Payload>

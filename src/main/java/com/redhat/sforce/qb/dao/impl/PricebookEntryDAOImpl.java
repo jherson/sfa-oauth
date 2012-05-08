@@ -24,7 +24,7 @@ public class PricebookEntryDAOImpl extends SObjectDAO implements PricebookEntryD
 		QueryResult queryResult = em.query(queryString); 
 		
 		if (queryResult == null || queryResult.getSize() == 0) {
-			queryString = getQueryString(pricebookId, productCode, "true", currencyIsoCode);
+			queryString = getQueryString(pricebookId, productCode.substring(0,4), "true", currencyIsoCode);
 			queryResult = em.query(queryString);
 		}
 		

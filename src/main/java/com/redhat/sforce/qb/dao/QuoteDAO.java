@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.Quote;
@@ -20,7 +21,7 @@ public interface QuoteDAO {
 	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException;
 	public SaveResult saveQuote(Quote quote) throws ConnectionException;
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException;
-	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException, SalesforceServiceException;
+	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException;
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
@@ -29,4 +30,5 @@ public interface QuoteDAO {
 	public Quote calculateQuote(String quoteId) throws SalesforceServiceException;
 	public Quote copyQuote(String quoteId) throws SalesforceServiceException;	
 	public Quote priceQuote(Quote quote) throws SalesforceServiceException;
+	public Map<String, String[]> getPriceDetails(String quoteId) throws ConnectionException;
 }

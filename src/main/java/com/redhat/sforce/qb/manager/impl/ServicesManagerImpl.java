@@ -233,9 +233,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			HttpClient httpclient = new HttpClient();
 			httpclient.executeMethod(postMethod);
 			
-			if (postMethod.getStatusCode() == HttpStatus.SC_OK) {
-				xml = postMethod.getResponseBodyAsString();
-			} else {
+			if (postMethod.getStatusCode() != HttpStatus.SC_OK) {				
 				parseErrorResponse(postMethod.getResponseBodyAsStream());
 			}
 		} catch (HttpException e) {

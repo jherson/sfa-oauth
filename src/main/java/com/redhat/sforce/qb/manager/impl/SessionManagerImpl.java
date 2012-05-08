@@ -45,6 +45,17 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public Boolean getEditMode() {
 		return editMode;
 	}
+	
+	@ManagedProperty(value = "false")
+	private Boolean goalSeek;
+
+	public void setGoalSeek(Boolean goalSeek) {
+		this.goalSeek = goalSeek;
+	}
+
+	public Boolean getGoalSeek() {
+		return goalSeek;
+	}
 
 	@PostConstruct
 	public void init() {
