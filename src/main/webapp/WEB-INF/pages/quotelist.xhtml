@@ -7,7 +7,7 @@
 	xmlns:a4j="http://richfaces.org/a4j">	
 
 <rich:extendedDataTable id="quoteList" var="quote"
-	style="height:400px; " value="#{quoteList}"
+	style="height:400px;" value="#{quoteList}"
 	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" 
 	selectionMode="none">
 
@@ -29,7 +29,8 @@
 			</a4j:commandLink>
 
 			<a4j:commandLink id="delete" rendered="#{not quote.isActive}"
-				action="#{quoteController.deleteQuote(quote)}" render="quoteList">
+				action="#{quoteController.deleteQuote(quote)}" render="quoteList"
+				onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };">
 				<h:graphicImage value="./images/delete.png" title="#{msgs.delete}"
 					style="vertical-align: middle;" />
 			</a4j:commandLink>
@@ -40,8 +41,12 @@
 
 	<rich:column width="80px" style="text-align: center;">
 		<f:facet name="header">#{msgs.number}</f:facet>
-		<a4j:commandLink value="#{quote.number}"
-			render="mainArea" action="#{quoteController.viewQuote(quote)}">
+		<a4j:commandLink value="#{quote.number}">  
+			<f:attribute name="quote" value="#{quote}" />
+					<a4j:ajax execute="@this" event="click"
+						listener="#{quoteListExtendedDataTableBean.viewQuote}"
+						render="mainArea">
+					</a4j:ajax>
 		</a4j:commandLink>
 	</rich:column>
 

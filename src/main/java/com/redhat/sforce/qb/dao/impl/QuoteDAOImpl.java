@@ -89,18 +89,20 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public Map<String, String[]> getPriceDetails(String quoteId) throws ConnectionException {		
-		String queryString = "Select Id, ListPrice__c, ProductDescription__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
-		Map<String, String[]> listPriceMap = new HashMap<String, String[]>();
+	public Map<String, QuoteLineItem> getPriceDetails(String quoteId) throws ConnectionException {		
+		String queryString = "Select Id, ListPrice__c, ProductDescription__c, Code__c, Message__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
+		Map<String, QuoteLineItem> quoteLineItemMap = new HashMap<String, QuoteLineItem>();
 		QueryResult queryResult = em.query(queryString);
 		SObject[] sobjects = queryResult.getRecords();
 		for (SObject sobject : sobjects) {
-			String[] listPrice = new String[2];
-			listPrice[0] = sobject.getField("ListPrice__c").toString();
-			listPrice[1] = sobject.getField("ProductDescription__c").toString();
-			listPriceMap.put(sobject.getId(), listPrice);
+			QuoteLineItem quoteLineItem = new QuoteLineItem();
+			quoteLineItem.setListPrice(Double.valueOf(sobject.getField("ListPrice__c").toString()));
+			quoteLineItem.setDescription(sobject.getField("ProductDescription__c").toString());
+			quoteLineItem.setCode(sobject.getField("Code__c").toString());
+			quoteLineItem.setMessage(sobject.getField("Message__c").toString());
+			quoteLineItemMap.put(sobject.getId(), quoteLineItem);
 		}
-		return listPriceMap;
+		return quoteLineItemMap;
 	}
 	
 	@Override
@@ -374,7 +376,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        PricebookEntryId__c, "
 			+ "        Configured_SKU__c, "
 			+ "        ProductDescription__c, "
-			+ "        Pricing_Attributes__c "
+			+ "        Pricing_Attributes__c, "
+			+ "        Code__c, "
+			+ "        Message__c "
 			+ " From   QuoteLineItem__r "
 			+ "Order By CreatedDate), "
 			+ "(Select Id, "
@@ -385,7 +389,8 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        Type__c, "
 			+ "        AppliesTo__c, "
 			+ "        Operator__c "
-			+ " From   QuotePriceAdjustment__r), "
+			+ " From   QuotePriceAdjustment__r "
+			+ "Order By Reason__c), "
 			+ "(Select Id, "
 			+ "        Name, "
 			+ "        CurrencyIsoCode, "

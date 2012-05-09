@@ -9,6 +9,7 @@ public class QuoteLineItem extends SObject {
 	private static final long serialVersionUID = 1L;
 	private String quoteId;
 	private String opportunityLineItemId;
+	private String sku;
 	private String description;
 	private String name;
 	private Date endDate;
@@ -80,6 +81,14 @@ public class QuoteLineItem extends SObject {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 
 	public String getName() {

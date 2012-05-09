@@ -57,38 +57,46 @@ public class QuoteProducer implements Serializable {
 		return selectedQuote;
 	}
 
-	public void onQuoteSelected(@Observes @ViewQuote final Quote quote) {
+	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
 		selectedQuote = quote;
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunityId()));
 	}
 	
-	public void onQuoteCreated(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {
+	public void onCreateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunityId()));
 		quoteList.add(selectedQuote);
 	}
 	
-	public void onQuoteUpdated(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuote final Quote quote) {
+	public void onUpdateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuote final Quote quote) {
 		int index = quoteList.indexOf(quote);
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunityId()));
 		quoteList.set(index, selectedQuote);
 	}
 	
-	public void onQuoteDeleted(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuote final Quote quote) {
+	public void onDeleteQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuote final Quote quote) {
 		quoteList.remove(quote);
 	}
 	
-	public void onQuoteLineItemDeleted(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final Quote quote) {
+	public void onDeleteQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final Quote quote) {
 		selectedQuote.setAmount(getQuoteAmount(quote.getId()));
 	}
 	
 	public void onPriceQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PriceQuote final Quote quote) {
-		Map<String, String[]> priceDetails = getPriceDetails(quote.getId());
+		Map<String, QuoteLineItem> priceResults = getPriceDetails(quote.getId());
 		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
-			String[] details = priceDetails.get(quoteLineItem.getId());
-			quoteLineItem.setListPrice(new Double(details[0]));
-			quoteLineItem.setDescription(details[1]);
+			QuoteLineItem newQuoteLineItem = priceResults.get(quoteLineItem.getId());
+			quoteLineItem.setListPrice(newQuoteLineItem.getListPrice());
+			quoteLineItem.setDescription(newQuoteLineItem.getDescription());
+			quoteLineItem.setCode(newQuoteLineItem.getCode());
+			quoteLineItem.setMessage(newQuoteLineItem.getMessage());
+			if (quoteLineItem.getUnitPrice() == null) {
+				quoteLineItem.setUnitPrice(quoteLineItem.getListPrice());
+			}
+			if (quoteLineItem.getUnitPrice() != null && quoteLineItem.getListPrice() != null) {
+				
+			}
 		}
 	}
 
@@ -129,7 +137,7 @@ public class QuoteProducer implements Serializable {
 
 	}
 	
-	private Map<String, String[]> getPriceDetails(String quoteId) {
+	private Map<String, QuoteLineItem> getPriceDetails(String quoteId) {
 		log.info("getPriceDetails");
 		try {
 			return quoteDAO.getPriceDetails(quoteId);

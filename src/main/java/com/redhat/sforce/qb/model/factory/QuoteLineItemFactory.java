@@ -58,7 +58,15 @@ public class QuoteLineItemFactory {
 		quoteLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
 		quoteLineItem.setDiscountAmount(wrapper.getDouble("DiscountAmount__c"));
 		quoteLineItem.setDiscountPercent(wrapper.getDouble("DiscountPercent__c"));
+		quoteLineItem.setCode(wrapper.getString("Code__c"));
+		quoteLineItem.setMessage(wrapper.getString("Message__c"));
 		quoteLineItem.setProduct(ProductFactory.parseProduct(wrapper.getJSONObject("Product__r")));
+		
+		if (quoteLineItem.getConfiguredSku() != null) {
+			quoteLineItem.setSku(quoteLineItem.getConfiguredSku());
+		} else {
+			quoteLineItem.setSku(quoteLineItem.getProduct().getProductCode());
+		}
 
 		if (quoteLineItem.getDescription() == null)
 			quoteLineItem.setDescription(quoteLineItem.getProduct().getDescription());

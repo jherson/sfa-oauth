@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.pricing.xml;
 
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,7 +10,6 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
@@ -153,35 +151,5 @@ public class MessageFactory {
 		}		
 
         return stringWriter.toString();
-	}
-	
-	public static Quote parsePricingMessage(Quote quote, String response) {
-		
-		PricingMessage pricingMessage = null;
-		try {
-			JAXBContext context = JAXBContext.newInstance(PricingMessage.class);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			pricingMessage = (PricingMessage) unmarshaller.unmarshal(new StringReader(response));
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		quote.setStatus(pricingMessage.getPayload().getQuote().getStatus().getMessage());
-		for (int i = 0; i < quote.getQuoteLineItems().size(); i++) {
-			QuoteLine quoteLine = pricingMessage.getPayload().getQuote().getQuoteLines().get(i);
-			List<Price> prices = quoteLine.getPrices();
-			QuoteLineItem quoteLineItem = quote.getQuoteLineItems().get(i);
-			quoteLineItem.setCode(quoteLine.getStatus().getCode());
-			quoteLineItem.setMessage(quoteLine.getStatus().getMessage());
-			for (Price price : prices) {
-				if ("UNIT_PRICE".equals(price.getCode())) {
-					quoteLineItem.setListPrice(Double.valueOf(price.getValue()));
-				}
-			}
-			
-		}
-		
-		return quote;
 	}
 }

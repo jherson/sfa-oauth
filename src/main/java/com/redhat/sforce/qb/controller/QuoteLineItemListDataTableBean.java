@@ -51,8 +51,16 @@ public class QuoteLineItemListDataTableBean {
 				quoteLineItem.setDescription(pricebookEntry.getProduct().getDescription());
 				quoteLineItem.setPricebookEntryId(pricebookEntry.getId());
 				quoteLineItem.setProduct(pricebookEntry.getProduct());
+				quoteLineItem.setUnitPrice(0.00);
+				quoteLineItem.setTotalPrice(0.00);
 				if (quoteLineItem.getProduct().getConfigurable()) {
 					quoteLineItem.setConfiguredSku(productCode);
+				}
+				
+				if (quoteLineItem.getConfiguredSku() != null) {
+					quoteLineItem.setSku(quoteLineItem.getConfiguredSku());
+				} else {
+					quoteLineItem.setSku(quoteLineItem.getProduct().getProductCode());
 				}
 				
 				log.info("PricebookEntry found: " + pricebookEntry.getId());
@@ -63,6 +71,8 @@ public class QuoteLineItemListDataTableBean {
 				quoteLineItem.setConfiguredSku(null);
 				quoteLineItem.setPricebookEntryId(null);
 				quoteLineItem.setListPrice(null);
+				quoteLineItem.setUnitPrice(null);
+				quoteLineItem.setTotalPrice(null);
 				
 				JsfUtil.addErrorMessage(inputText, "invalidSKU", productCode);		
 				
@@ -72,5 +82,11 @@ public class QuoteLineItemListDataTableBean {
 		} catch (ConnectionException e) {
             throw new FacesException(e);
 		}
+	}
+	
+	public void copyPrice(AjaxBehaviorEvent event) {
+		int rowIndex = Integer.valueOf(event.getComponent().getAttributes().get("rowIndex").toString());
+		QuoteLineItem quoteLineItem = selectedQuote.getQuoteLineItems().get(rowIndex);
+		quoteLineItem.setYearlySalesPrice(quoteLineItem.getListPrice());		
 	}
 }

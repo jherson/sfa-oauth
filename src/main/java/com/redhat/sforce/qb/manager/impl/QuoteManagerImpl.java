@@ -99,7 +99,7 @@ public class QuoteManagerImpl implements QuoteManager {
 				if (quote.getQuotePriceAdjustments() != null && quote.getQuotePriceAdjustments().size() > 0)
 				    saveQuotePriceAdjustments(quote.getQuotePriceAdjustments());
 												
-				saveQuoteLineItemPriceAdjustments(addQuoteLineItemPriceAdjustments(quote));
+				//saveQuoteLineItemPriceAdjustments(addQuoteLineItemPriceAdjustments(quote));
 								
 				log.info("Quote save successful: " + saveResult.getId());
 				

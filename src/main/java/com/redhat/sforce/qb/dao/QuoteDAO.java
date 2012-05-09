@@ -30,5 +30,5 @@ public interface QuoteDAO {
 	public Quote calculateQuote(String quoteId) throws SalesforceServiceException;
 	public Quote copyQuote(String quoteId) throws SalesforceServiceException;	
 	public Quote priceQuote(Quote quote) throws SalesforceServiceException;
-	public Map<String, String[]> getPriceDetails(String quoteId) throws ConnectionException;
+	public Map<String, QuoteLineItem> getPriceDetails(String quoteId) throws ConnectionException;
 }
