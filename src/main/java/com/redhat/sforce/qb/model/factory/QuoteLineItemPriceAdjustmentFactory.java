@@ -18,6 +18,8 @@ public class QuoteLineItemPriceAdjustmentFactory {
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(i));
+			
+			System.out.println("deserialize");
 
 			QuoteLineItemPriceAdjustment quotePriceAdjustment = new QuoteLineItemPriceAdjustment();
 			quotePriceAdjustment.setId(wrapper.getId());
@@ -35,6 +37,8 @@ public class QuoteLineItemPriceAdjustmentFactory {
 			quotePriceAdjustment.setReason(wrapper.getString("Reason__c"));
 			quotePriceAdjustment.setType(wrapper.getString("Type__c"));
 			quotePriceAdjustment.setOperator(wrapper.getString("Operator__c"));
+			quotePriceAdjustment.setValue(wrapper.getDouble("Value__c"));
+			quotePriceAdjustment.setDescription(wrapper.getString("Description__c"));
 
 			quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}

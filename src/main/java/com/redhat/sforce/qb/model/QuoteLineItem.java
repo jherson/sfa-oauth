@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -33,9 +34,10 @@ public class QuoteLineItem extends SObject {
 	private Integer sortOrder;
 	@NotNull
 	private Product product;
-	private Boolean delete;
+	private Boolean selected;
 	private String code;
 	private String message;
+	private List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustments;
 
 	public QuoteLineItem() {
 		super();
@@ -259,12 +261,12 @@ public class QuoteLineItem extends SObject {
 		this.product = product;
 	}
 
-	public Boolean getDelete() {
-		return delete;
+	public Boolean getSelected() {
+		return selected;
 	}
 
-	public void setDelete(Boolean delete) {
-		this.delete = delete;
+	public void setSelected(Boolean delete) {
+		this.selected = delete;
 	}
 
 	public String getCode() {
@@ -281,5 +283,13 @@ public class QuoteLineItem extends SObject {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public List<QuoteLineItemPriceAdjustment> getQuoteLineItemPriceAdjustments() {
+		return quoteLineItemPriceAdjustments;
+	}
+
+	public void setQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustments) {
+		this.quoteLineItemPriceAdjustments = quoteLineItemPriceAdjustments;
 	}
 }

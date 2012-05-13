@@ -22,6 +22,13 @@
 				action="#{quoteController.priceQuote()}" ajaxSingle="true"
 				render="quotedetails" />
 				
+			<a4j:commandButton value="#{msgs.copySelected}"
+			    styleClass="commandButton"
+			    rendered="#{quoteController.editMode}"
+				action="#{quoteController.copyQuoteLineItems()}"
+				disabled="#{empty selectedQuote.quoteLineItems}"
+				render="quotedetails" ajaxSingle="true" />				
+				
 			<a4j:commandButton value="#{msgs.deleteSelected}"
 			    styleClass="commandButton"
 			    rendered="#{quoteController.editMode}"
@@ -81,7 +88,7 @@
 					onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };"
 					render="quotedetails">
 				</a4j:commandLink>
-				<h:selectBooleanCheckbox value="#{lineItem.delete}"
+				<h:selectBooleanCheckbox value="#{lineItem.selected}"
 					rendered="#{quoteController.editMode}" />
 			</rich:column>
 
@@ -160,7 +167,7 @@
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<s>  </s>
-				<a4j:commandLink id="moveprice"
+				<a4j:commandLink id="copyprice"
 				    rendered="#{not empty lineItem.listPrice and quoteController.editMode}"
 				    status="waitstatus">
 				    <h:graphicImage value="./images/right-arrow.png" />
@@ -201,17 +208,19 @@
 			</rich:column>
 
 			<rich:column style="text-align: right; width: 6%;">
-				<f:facet name="header">#{msgs.salesPrice}</f:facet>
+				<f:facet name="header">#{msgs.salesPrice}</f:facet>				
 				<h:outputText value="#{lineItem.yearlySalesPrice}"
-					rendered="#{not quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}"
-						pattern="#,##0.00;(#,##0.00)" />
+				    rendered="#{not quoteController.editMode}">
+				    <f:convertNumber locale="#{user.locale}"
+					    pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
-				<h:inputText id="yearlySalesPrice" value="#{lineItem.yearlySalesPrice}"
-					style="width: 70px;" rendered="#{quoteController.editMode}">
+				<h:inputText 
+				    value="#{lineItem.yearlySalesPrice}"
+					style="width: 70px;" 
+					rendered="#{quoteController.editMode}">
 					<f:convertNumber locale="#{user.locale}"
-						pattern="#,##0.00;(#,##0.00)" type="number" />
-				</h:inputText>
+						pattern="#,##0.00;(#,##0.00)" type="number" />					
+				</h:inputText>								
 			</rich:column>
 
 			<rich:column style="text-align: right; width: 6%;">

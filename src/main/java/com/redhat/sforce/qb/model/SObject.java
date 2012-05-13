@@ -3,7 +3,7 @@ package com.redhat.sforce.qb.model;
 import java.util.Date;
 import java.io.Serializable;
 
-public class SObject implements Serializable {
+public class SObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	private String id;
@@ -117,5 +117,9 @@ public class SObject implements Serializable {
 
 	public void setLastModifiedByLastName(String lastModifiedByLastName) {
 		this.lastModifiedByLastName = lastModifiedByLastName;
+	}
+	
+    public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
 	}
 }

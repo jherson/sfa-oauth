@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
+import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
@@ -79,8 +81,18 @@ public class QuoteProducer implements Serializable {
 		quoteList.remove(quote);
 	}
 	
-	public void onDeleteQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final Quote quote) {
-		selectedQuote.setAmount(getQuoteAmount(quote.getId()));
+	public void onDeleteQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final QuoteLineItem quoteLineItem) {
+		selectedQuote.getQuoteLineItems().remove(quoteLineItem);
+		BigDecimal amount = new BigDecimal(selectedQuote.getAmount());
+		amount = amount.subtract(new BigDecimal(quoteLineItem.getTotalPrice()));
+		selectedQuote.setAmount(amount.doubleValue());
+	}
+	
+	public void onAddQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuoteLineItem final QuoteLineItem quoteLineItem) {
+		selectedQuote.getQuoteLineItems().add(quoteLineItem);
+		BigDecimal amount = new BigDecimal(selectedQuote.getAmount());
+		amount = amount.add(new BigDecimal(quoteLineItem.getTotalPrice()));
+		selectedQuote.setAmount(amount.doubleValue());
 	}
 	
 	public void onPriceQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PriceQuote final Quote quote) {
@@ -142,6 +154,18 @@ public class QuoteProducer implements Serializable {
 		try {
 			return quoteDAO.getPriceDetails(quoteId);
 		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	private QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) {
+		log.info("queryQuoteLineItemById");
+		try {
+			return quoteDAO.queryQuoteLineItemById(quoteLineItemId);
+		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -80,6 +80,11 @@ public class QuoteManagerImpl implements QuoteManager {
 		doDelete(quoteLineItems);
 	}
 	
+	@Override
+	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems) {
+		return doCopy(quoteLineItems);
+	}
+	
 	private void doSaveQuote(Quote quote) {
 		SaveResult saveResult = null;					
 		
@@ -300,6 +305,18 @@ public class QuoteManagerImpl implements QuoteManager {
 			e.printStackTrace();
 		} 
 		
+	}
+	
+	private SaveResult[] doCopy(List<QuoteLineItem> quoteLineItems) {
+		try {
+			return quoteDAO.copyQuoteLineItems(quoteLineItems);
+			
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }

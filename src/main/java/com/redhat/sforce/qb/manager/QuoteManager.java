@@ -5,6 +5,7 @@ import java.util.List;
 import com.redhat.sforce.qb.model.OpportunityLineItem;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.sforce.soap.partner.SaveResult;
 
 public interface QuoteManager {
 
@@ -18,4 +19,5 @@ public interface QuoteManager {
 	public void price(Quote quote);
 	public void copy(Quote quote);
 	public void activate(Quote quote);
+	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems);
 }

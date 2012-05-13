@@ -24,6 +24,7 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
+import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
@@ -32,6 +33,7 @@ import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
 import com.redhat.sforce.qb.util.JsfUtil;
+import com.sforce.soap.partner.SaveResult;
 
 @Model
 
@@ -54,6 +56,9 @@ public class QuoteController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<DeleteQuoteLineItem> DELETE_QUOTE_LINE_ITEM = new AnnotationLiteral<DeleteQuoteLineItem>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<CreateQuoteLineItem> CREATE_QUOTE_LINE_ITEM = new AnnotationLiteral<CreateQuoteLineItem>() {};	
 		
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<PriceQuote> PRICE_QUOTE = new AnnotationLiteral<PriceQuote>() {};
@@ -79,6 +84,9 @@ public class QuoteController {
 
 	@Inject
 	private Event<Quote> quoteEvent;
+	
+	@Inject
+	private Event<QuoteLineItem> quoteLineItemEvent;
 		 
 	@PostConstruct
 	public void init() {
@@ -251,8 +259,7 @@ public class QuoteController {
 	
 	public void deleteQuoteLineItem(QuoteLineItem quoteLineItem) {
 		quoteManager.delete(quoteLineItem);
-		selectedQuote.getQuoteLineItems().remove(quoteLineItem);
-		quoteEvent.select(DELETE_QUOTE_LINE_ITEM).fire(selectedQuote);
+		quoteLineItemEvent.select(DELETE_QUOTE_LINE_ITEM).fire(quoteLineItem);
 	}
 
 	public void deleteQuoteLineItems() {				
@@ -261,7 +268,8 @@ public class QuoteController {
 		
 		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
 		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
-			if (quoteLineItem.getDelete()) {
+			if (quoteLineItem.getSelected()) {
+				log.info(quoteLineItem.getId());
 				quoteLineItems.add(quoteLineItem);
 			}
 		}
@@ -272,10 +280,31 @@ public class QuoteController {
 		quoteManager.delete(quoteLineItems);
 		
 		for (QuoteLineItem quoteLineItem : quoteLineItems) {
-			selectedQuote.getQuoteLineItems().remove(quoteLineItem);
+			quoteLineItemEvent.select(DELETE_QUOTE_LINE_ITEM).fire(quoteLineItem);
 		}
+	}
+	
+	public void copyQuoteLineItems() {
+		if (selectedQuote.getQuoteLineItems() == null)
+			return;
 		
-		quoteEvent.select(DELETE_QUOTE_LINE_ITEM).fire(selectedQuote);		
+		List<QuoteLineItem> quoteLineItems = new ArrayList<QuoteLineItem>();
+		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
+			if (quoteLineItem.getSelected()) {
+				quoteLineItems.add(quoteLineItem);
+			}
+		}
+
+		if (quoteLineItems.size() == 0)
+			return;
+		
+		SaveResult[] saveResult = quoteManager.copy(quoteLineItems);
+		
+		for (int i = 0; i < quoteLineItems.size(); i++) {
+			QuoteLineItem quoteLineItem = quoteLineItems.get(i);
+			quoteLineItem.setId(saveResult[i].getId());
+			quoteLineItemEvent.select(CREATE_QUOTE_LINE_ITEM).fire(quoteLineItem);			
+		}
 	}
 
 	public void setQuoteContact(Contact contact) {

@@ -70,6 +70,13 @@ public class QuoteLineItemFactory {
 
 		if (quoteLineItem.getDescription() == null)
 			quoteLineItem.setDescription(quoteLineItem.getProduct().getDescription());
+		
+		JSONArray records = null;
+		
+		records = wrapper.getRecords("QuoteLineItemPriceAdjustment__r");
+		if (records != null) {
+			quoteLineItem.setQuoteLineItemPriceAdjustments(QuoteLineItemPriceAdjustmentFactory.deserialize(records));
+		}
 
 		return quoteLineItem;
 	}

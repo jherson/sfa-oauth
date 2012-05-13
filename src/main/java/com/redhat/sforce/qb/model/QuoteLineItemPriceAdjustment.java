@@ -10,6 +10,8 @@ public class QuoteLineItemPriceAdjustment extends SObject {
 	private String reason;
 	private String type;
 	private String operator;
+	private Double value;
+	private String description;
 
 	public QuoteLineItemPriceAdjustment() {
 		super();
@@ -78,5 +80,21 @@ public class QuoteLineItemPriceAdjustment extends SObject {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public Double getValue() {
+		return value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}	
 }

@@ -19,11 +19,13 @@ public interface QuoteDAO {
 	public List<Quote> queryQuotes(String whereClause) throws SalesforceServiceException;
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws SalesforceServiceException;
 	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException;
+	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws SalesforceServiceException;
 	public SaveResult saveQuote(Quote quote) throws ConnectionException;
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException;
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
+	public SaveResult[] copyQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
 	public Quote activateQuote(String quoteId) throws SalesforceServiceException;
