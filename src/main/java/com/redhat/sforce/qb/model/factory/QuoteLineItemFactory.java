@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.RelatedList;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 
@@ -22,6 +23,14 @@ public class QuoteLineItemFactory {
 		}
 
 		return quoteLineItemList;
+	}
+	
+	public static RelatedList<QuoteLineItem> parse(JSONArray jsonArray) throws JSONException, ParseException {
+		RelatedList<QuoteLineItem> relatedList = new RelatedList<QuoteLineItem>();
+		for (int i = 0; i < jsonArray.length(); i++) {
+			relatedList.add(deserialize(jsonArray.getJSONObject(i)));
+		}
+		return relatedList;
 	}
 
 	public static QuoteLineItem deserialize(JSONObject jsonObject) throws JSONException, ParseException {

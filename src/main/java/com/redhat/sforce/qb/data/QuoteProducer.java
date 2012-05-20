@@ -152,7 +152,7 @@ public class QuoteProducer implements Serializable {
 	private Map<String, QuoteLineItem> getPriceDetails(String quoteId) {
 		log.info("getPriceDetails");
 		try {
-			return quoteDAO.getPriceDetails(quoteId);
+			return quoteDAO.queryPriceDetails(quoteId);
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

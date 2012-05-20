@@ -203,7 +203,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private void doCalcualate(Quote quote) {
 		try {
-			quoteDAO.calculateQuote(quote.getId());			
+			quoteDAO.calculate(quote.getId());			
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -221,7 +221,7 @@ public class QuoteManagerImpl implements QuoteManager {
 
 	private void doPrice(Quote quote) {
 		try {
-			quoteDAO.priceQuote(quote);
+			quoteDAO.price(quote);
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -230,7 +230,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private void doCopy(Quote quote) {
 		try {
-			quoteDAO.copyQuote(quote.getId());
+			quoteDAO.copy(quote.getId());
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -287,7 +287,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private void doActivate(Quote quote) {
 		try {
-			quoteDAO.activateQuote(quote.getId());
+			quoteDAO.activate(quote.getId());
 			
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
@@ -309,7 +309,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private SaveResult[] doCopy(List<QuoteLineItem> quoteLineItems) {
 		try {
-			return quoteDAO.copyQuoteLineItems(quoteLineItems);
+			return quoteDAO.copy(quoteLineItems);
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block

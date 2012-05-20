@@ -14,13 +14,7 @@
 
 		<br />
 
-		<rich:panel style="text-align: center; border: 0px;">
-		
-			<a4j:commandButton value="#{msgs.getPrice}" 
-			    styleClass="commandButton"
-				rendered="#{quoteController.editMode}"
-				action="#{quoteController.priceQuote()}" ajaxSingle="true"
-				render="quotedetails" />
+		<rich:panel style="text-align: center; border: 0px;">		
 				
 			<a4j:commandButton value="#{msgs.copySelected}"
 			    styleClass="commandButton"
@@ -44,6 +38,13 @@
 				disabled="#{empty selectedQuote.quoteLineItems}"
 				action="#{quoteController.cancelEdit()}" render="quotedetails"
 				ajaxSingle="true" />
+				
+			<a4j:commandButton value="#{msgs.getPrice}" 
+			    styleClass="commandButton"
+				rendered="#{not quoteController.editMode}"
+				disabled="#{empty selectedQuote.quoteLineItems}"
+				action="#{quoteController.priceQuote()}" ajaxSingle="true"
+				render="quotedetails" />				
 								
 			<a4j:commandButton value="#{msgs.calculate}"
 			    styleClass="commandButton" 
@@ -78,7 +79,7 @@
 			var="lineItem" 
 			noDataLabel="#{msgs.noRecords}"
 			iterationStatusVar="it" 
-			value="#{selectedQuote.quoteLineItems}">
+			value="#{selectedQuote.quoteLineItemList.items}">
 
 			<rich:column style="text-align: center; width: 3%;">
 				<f:facet name="header">#{msgs.action}</f:facet>

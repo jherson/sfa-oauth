@@ -155,7 +155,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public Map<String, QuoteLineItem> getPriceDetails(String quoteId) throws ConnectionException {		
+	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws ConnectionException {		
 		String queryString = "Select Id, ListPrice__c, ProductDescription__c, Code__c, Message__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
 		Map<String, QuoteLineItem> quoteLineItemMap = new HashMap<String, QuoteLineItem>();
 		QueryResult queryResult = em.query(queryString);
@@ -180,25 +180,25 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote activateQuote(String quoteId) throws SalesforceServiceException {
+	public Quote activate(String quoteId) throws SalesforceServiceException {
 		sm.activateQuote(quoteId);
 		return null;
 	}
 
 	@Override
-	public Quote calculateQuote(String quoteId) throws SalesforceServiceException {
+	public Quote calculate(String quoteId) throws SalesforceServiceException {
 		sm.calculateQuote(quoteId);
 		return queryQuoteById(quoteId);
 	}
 
 	@Override
-	public Quote copyQuote(String quoteId) throws SalesforceServiceException {
+	public Quote copy(String quoteId) throws SalesforceServiceException {
 		sm.copyQuote(quoteId);
 		return null;
 	}
 	
 	@Override
-	public Quote priceQuote(Quote quote) throws SalesforceServiceException {
+	public Quote price(Quote quote) throws SalesforceServiceException {
         sm.priceQuote(MessageFactory.createPricingMessage(quote));
         return null;
 	}
@@ -228,7 +228,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public SaveResult[] copyQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
+	public SaveResult[] copy(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
 		for (int i = 0; i < quoteLineItemList.size(); i++) {
 			QuoteLineItem quoteLineItem = quoteLineItemList.get(i);
 			quoteLineItem.setSelected(Boolean.FALSE);
