@@ -6,19 +6,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RelatedList<T> {
+public class RelatedList {
 	
-	public Map<String, ? extends SObject> items = new LinkedHashMap<String, SObject>();
+	private static Map<String, ? extends SObject> items = new LinkedHashMap<String, SObject>();
 	
-	public List<SObject> getItems() {
-		return new ArrayList<SObject>(items.values());
+	public List<? super SObject> getItems() {
+		List<SObject> itemList = new ArrayList<SObject>();
+		itemList.addAll(items.values());
+		return itemList;
+		//return new ArrayList<SObject>(items.values());
 	}
 
 	public String[] getIds() {
 		return items.keySet().toArray(new String[items.keySet().size()]);
 	}
 	
-	public void add(SObject sobject) {
+	public <T extends SObject> void add(T sobject) {
 		items.put(sobject.getId(), sobject);
 	}
 	

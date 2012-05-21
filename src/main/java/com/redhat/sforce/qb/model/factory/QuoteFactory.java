@@ -136,7 +136,7 @@ public class QuoteFactory {
 			    quotePriceAdjustment.setAdjustedTotal(0.00);
 				
 				BigDecimal amount = new BigDecimal(0.00);
-			    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItemList().getItems()) {
+			    for (QuoteLineItem quoteLineItem : (QuoteLineItem) quote.getQuoteLineItemList().getItems()) {
 			    	if (quoteLineItem.getListPrice() != null) {
 					    if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
 						    amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getListPrice()).multiply(new BigDecimal(quoteLineItem.getQuantity())));
