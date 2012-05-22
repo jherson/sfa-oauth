@@ -8,9 +8,11 @@ import java.util.Map;
 
 public class RelatedList {
 	
-	private static Map<String, ? extends SObject> items = new LinkedHashMap<String, SObject>();
+	//private static Map<String, ? extends SObject> items = new LinkedHashMap<String, SObject>();
 	
-	public List<? super SObject> getItems() {
+	static Map<String, SObject> items = new LinkedHashMap<String, SObject>();
+	
+	public List<SObject> getItems() {
 		List<SObject> itemList = new ArrayList<SObject>();
 		itemList.addAll(items.values());
 		return itemList;
@@ -21,7 +23,7 @@ public class RelatedList {
 		return items.keySet().toArray(new String[items.keySet().size()]);
 	}
 	
-	public <T extends SObject> void add(T sobject) {
+	public void add(SObject sobject) {
 		items.put(sobject.getId(), sobject);
 	}
 	
