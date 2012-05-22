@@ -56,7 +56,7 @@
 			<a4j:commandButton value="#{msgs.addOpportunityProducts}"
 				styleClass="commandButton"
 				rendered="#{not quoteController.editMode}"
-				disabled="#{selectedQuote.currencyIsoCode != selectedQuote.opportunity.currencyIsoCode or empty selectedQuote.opportunity.opportunityLineItems}"
+				disabled="#{selectedQuote.currencyIsoCode != selectedQuote.opportunity.currencyIsoCode or not selectedQuote.opportunity.hasOpportunityLineItem}"
 				action="#{quoteController.viewOpportunityLineItems()}"
 				render="mainArea" />
 
@@ -79,7 +79,7 @@
 			var="lineItem" 
 			noDataLabel="#{msgs.noRecords}"
 			iterationStatusVar="it" 
-			value="#{selectedQuote.quoteLineItemList.items}">
+			value="#{selectedQuote.quoteLineItems}">
 
 			<rich:column style="text-align: center; width: 3%;">
 				<f:facet name="header">#{msgs.action}</f:facet>

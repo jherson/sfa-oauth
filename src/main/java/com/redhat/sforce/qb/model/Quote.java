@@ -49,12 +49,9 @@ public class Quote extends SObject {
 	private Boolean isNonStandardPayment;
 	private Date lastCalculatedDate;
 	private Date lastPricedDate;
-	private Opportunity opportunity;
-	
-	private RelatedList<QuoteLineItem> quoteLineItemList;
-	
+	private Opportunity opportunity;	
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
-	//private List<QuoteLineItem> quoteLineItems;
+	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
 
 	public Quote() {
@@ -416,13 +413,13 @@ public class Quote extends SObject {
 		this.quotePriceAdjustments = quotePriceAdjustments;
 	}
 
-//	public List<QuoteLineItem> getQuoteLineItems() {
-//		return quoteLineItems;
-//	}
-//
-//	public void setQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
-//		this.quoteLineItems = quoteLineItems;
-//	}
+	public List<QuoteLineItem> getQuoteLineItems() {
+		return quoteLineItems;
+	}
+
+	public void setQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
+		this.quoteLineItems = quoteLineItems;
+	}
 
 	public List<QuoteLineItemSchedule> getQuoteLineItemSchedules() {
 		return quoteLineItemSchedules;
@@ -430,13 +427,5 @@ public class Quote extends SObject {
 
 	public void setQuoteLineItemSchedules(List<QuoteLineItemSchedule> quoteLineItemSchedules) {
 		this.quoteLineItemSchedules = quoteLineItemSchedules;
-	}
-
-	public RelatedList getQuoteLineItemList() {
-		return quoteLineItemList;
-	}
-
-	public void setQuoteLineItemList(RelatedList quoteLineItemList) {
-		this.quoteLineItemList = quoteLineItemList;
 	}
 }

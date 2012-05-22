@@ -6,51 +6,63 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-<a4j:outputPanel>
+	<a4j:outputPanel>
 
-    <rich:toolbar height="20px" itemSeparator="grid">
+		<h:panelGrid width="100%" columns="2" cellpadding="3" columnClasses="grid_panels,grid_panels">
+		
+			<rich:collapsiblePanel header="Overview" switchType="client" bodyStyle="body3" style="width:200px;">
 
-		<rich:toolbarGroup location="left">
 
-			<a4j:commandLink id="new" value="#{msgs.new}"
-				action="#{quoteController.newQuote(opportunity)}" render="mainArea"
-				ajaxSingle="true">
-			</a4j:commandLink>
 
-			<a4j:commandLink id="refresh" value="#{msgs.refresh}" ajaxSingle="false"
-				immediate="false" render="quoteList"
-				action="quoteController.refresh()}">
-			</a4j:commandLink>
+			</rich:collapsiblePanel>
 
-		</rich:toolbarGroup>
-	</rich:toolbar>
+			<rich:panel>
+				<rich:toolbar height="20px" itemSeparator="grid">
 
-	<h:panelGrid width="100%" columns="1" cellpadding="3">
-		<h:panelGroup layout="block">
-			<h:graphicImage value="./images/quote.png"
-				style="vertical-align: middle" />
-			<h:outputText value=" " escape="false" />
-			<h:outputText value="#{msgs.headerTitle}"
-				style="font-weight:bold; font-size: 18px;" />
-		</h:panelGroup>
-		<h:panelGroup layout="block">
-			<h:selectOneMenu value="#{quoteReports.selectedReport}"
-				style="width: 250px;">
+					<rich:toolbarGroup location="left">
 
-				<f:selectItems value="#{quoteReports.quoteReportsList}" />
+						<a4j:commandLink id="new" value="#{msgs.new}"
+							action="#{quoteController.newQuote(opportunity)}"
+							render="mainArea" ajaxSingle="true">
+						</a4j:commandLink>
 
-				<a4j:ajax event="valueChange" render="@this" status="ajaxStatus" />
-			</h:selectOneMenu>
+						<a4j:commandLink id="refresh" value="#{msgs.refresh}"
+							ajaxSingle="false" immediate="false" render="quoteList"
+							action="quoteController.refresh()}">
+						</a4j:commandLink>
 
-			<a4j:commandButton value="#{msgs.go}"
-				action="#{quoteReports.runReport()}" render="quoteList"
-				ajaxSingle="true">
-			</a4j:commandButton>
+					</rich:toolbarGroup>
+				</rich:toolbar>
 
-		</h:panelGroup>
-	</h:panelGrid>	
+				<h:panelGrid width="100%" columns="1" cellpadding="3">
+					<h:panelGroup layout="block">
+						<h:graphicImage value="./images/quote.png"
+							style="vertical-align: middle" />
+						<h:outputText value=" " escape="false" />
+						<h:outputText value="#{msgs.headerTitle}"
+							style="font-weight:bold; font-size: 18px;" />
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<h:selectOneMenu value="#{quoteReports.selectedReport}"
+							style="width: 250px;">
 
-	<ui:include src="quotelist.xhtml" />
+							<f:selectItems value="#{quoteReports.quoteReportsList}" />
 
-</a4j:outputPanel>
+							<a4j:ajax event="valueChange" render="@this" status="ajaxStatus" />
+						</h:selectOneMenu>
+
+						<a4j:commandButton value="#{msgs.go}"
+							action="#{quoteReports.runReport()}" render="quoteList"
+							ajaxSingle="true">
+						</a4j:commandButton>
+
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<ui:include src="quotelist.xhtml" />
+
+			</rich:panel>
+		</h:panelGrid>
+
+	</a4j:outputPanel>
 </ui:composition>

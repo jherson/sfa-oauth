@@ -13,14 +13,13 @@ import org.json.JSONObject;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
-import com.redhat.sforce.qb.model.SObject;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 
 public class QuoteFactory {	
 	private static final Logger log = Logger.getLogger(QuoteFactory.class);
 
-	public static List<Quote> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
+	public static List<Quote> deserialize(JSONArray jsonArray) throws JSONException, ParseException {		
 		List<Quote> quoteList = new ArrayList<Quote>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -85,12 +84,10 @@ public class QuoteFactory {
 
 		records = wrapper.getRecords("QuoteLineItem__r");
 		if (records != null) {
-			//quote.setQuoteLineItems(QuoteLineItemFactory.deserialize(records));
-			quote.setQuoteLineItemList(QuoteLineItemFactory.parse(records));
+			quote.setQuoteLineItems(QuoteLineItemFactory.deserialize(records));
 		}
 		
-		if (quote.getQuoteLineItemList() == null || quote.getQuoteLineItemList().isEmpty()) {
-		//if (quote.getQuoteLineItems() == null || quote.getQuoteLineItems().size() == 0) {
+		if (quote.getQuoteLineItems() == null || quote.getQuoteLineItems().size() == 0) {
 			quote.setHasQuoteLineItems(Boolean.FALSE);
 		}
 
@@ -130,14 +127,13 @@ public class QuoteFactory {
 		    }
 		}
 				
-		if (quote.getQuoteLineItemList().getItems() != null) {
+		if (quote.getQuoteLineItems() != null) {
 			for (QuotePriceAdjustment quotePriceAdjustment : quote.getQuotePriceAdjustments()) {
 				quotePriceAdjustment.setPreAdjustedTotal(0.00);
 			    quotePriceAdjustment.setAdjustedTotal(0.00);
 				
 				BigDecimal amount = new BigDecimal(0.00);
-			    for (int i = 0; i < quote.getQuoteLineItemList().getItems().size(); i++) {
-			    	QuoteLineItem quoteLineItem = (QuoteLineItem) quote.getQuoteLineItemList().getItems().get(i);
+			    for (QuoteLineItem quoteLineItem : quote.getQuoteLineItems()) {
 			    	if (quoteLineItem.getListPrice() != null) {
 					    if (quoteLineItem.getProduct().getPrimaryBusinessUnit().equals(quotePriceAdjustment.getReason())) {
 						    amount = new BigDecimal(quotePriceAdjustment.getPreAdjustedTotal()).add(new BigDecimal(quoteLineItem.getListPrice()).multiply(new BigDecimal(quoteLineItem.getQuantity())));
