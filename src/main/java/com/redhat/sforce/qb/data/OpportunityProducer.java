@@ -1,6 +1,8 @@
 package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -33,11 +35,12 @@ public class OpportunityProducer implements Serializable {
 	@Inject
 	private OpportunityDAO opportunityDAO;
 
-	private Opportunity opportunity;
+	private List<Opportunity> opportunityList;
 
+	@Produces
 	@Named
-	public Opportunity getOpportunity() {
-		return opportunity;
+	public List<Opportunity> getOpportunityList() {
+		return opportunityList;
 	}
 
 	public void onOpportunityChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Opportunity opportunity) {
@@ -47,8 +50,15 @@ public class OpportunityProducer implements Serializable {
 	@PostConstruct
 	public void queryOpportunity() {
 		log.info("queryOpportunity");
+		
+		opportunityList = new ArrayList<Opportunity>();
 		try {
-			opportunity = opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId());
+			if (sessionManager.getOpportunityId() != null) {
+				opportunityList.add(opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId()));
+			} else {
+				opportunityList.addAll(opportunityDAO.queryOpenOpportunities());
+			}
+			
 		} catch (SalesforceServiceException e) {
 			log.info("QueryOpportunityException: " + e.getMessage());
 			throw new FacesException(e);

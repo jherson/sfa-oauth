@@ -43,9 +43,6 @@ public class OpportunityFactory {
 		opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
 		opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
-		opportunity.setAccountAliasName(wrapper.getString("Account", "Account_Alias_Name__c"));
-		opportunity.setOracleAccountNumber(wrapper.getString("Account", "OracleAccountNumber__c"));
-		opportunity.setAccountName(wrapper.getString("Account", "Name"));
 		opportunity.setBillingAddress(wrapper.getString("BillingAddress__c"));
 		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));
 		opportunity.setBillingCountry(wrapper.getString("BillingCountry__c"));
@@ -60,23 +57,10 @@ public class OpportunityFactory {
 		opportunity.setSuperRegion(wrapper.getString("Super_Region__c"));
 		opportunity.setPaymentType(wrapper.getString("PaymentType__c"));
 		opportunity.setOpportunityType(wrapper.getString("OpportunityType__c"));
+		opportunity.setHasOpportunityLineItem(wrapper.getBoolean("HasOpportunityLineItem"));
 		
-/*           
-        + "Account.BillingCity, "
-        + "Account.BillingCountry, "
-        + "Account.BillingPostalCode, " 
-        + "Account.BillingState, "
-        + "Account.BillingStreet, "
-        + "Account.ShippingCity, "
-        + "Account.ShippingCountry, "
-        + "Account.ShippingPostalCode, "
-        + "Account.ShippingState, "
-        + "Account.ShippingStreet, "
-        + "Account.VATNumber__c, "  			
-		+ "Account.Name, "
-		+ "Account.OracleAccountNumber__c, "
-		+ "Account.Account_Alias_Name__c, "
-*/ 
+		if (wrapper.getJSONObject("Account") != null)
+		    opportunity.setAccount(AccountFactory.deserialize(wrapper.getJSONObject("Account")));
 
 		List<User> ownerList = new ArrayList<User>();
 		if (wrapper.getJSONObject("Owner") != null) {

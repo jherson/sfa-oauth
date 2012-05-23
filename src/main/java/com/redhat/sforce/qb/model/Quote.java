@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 public class Quote extends SObject {
 
 	private static final long serialVersionUID = 1L;
-	private String opportunityId;
-	private String opportunityName;
 	private String link;
 	private Double version;
 	@NotNull
@@ -60,8 +58,7 @@ public class Quote extends SObject {
 
 	public Quote(Opportunity opportunity) {
 		super();
-		setOpportunityId(opportunity.getId());
-		setOpportunityName(opportunity.getName());
+		setOpportunity(opportunity);
 		setOwnerId(opportunity.getOwner().getId());
 		setOwnerName(opportunity.getOwner().getName());
 		setPayNow(opportunity.getPayNow());
@@ -91,22 +88,6 @@ public class Quote extends SObject {
 
 		//setQuoteLineItems(new ArrayList<QuoteLineItem>());
 		setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
-	}
-
-	public String getOpportunityId() {
-		return opportunityId;
-	}
-
-	public void setOpportunityId(String opportunityId) {
-		this.opportunityId = opportunityId;
-	}
-
-	public String getOpportunityName() {
-		return opportunityName;
-	}
-
-	public void setOpportunityName(String opportunityName) {
-		this.opportunityName = opportunityName;
 	}
 
 	public String getLink() {

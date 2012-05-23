@@ -61,19 +61,19 @@ public class QuoteProducer implements Serializable {
 
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
 		selectedQuote = quote;
-		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunityId()));
+		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
 	}
 	
 	public void onCreateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {
 		selectedQuote = queryQuoteById(quote.getId());
-		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunityId()));
+		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
 		quoteList.add(selectedQuote);
 	}
 	
 	public void onUpdateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuote final Quote quote) {
 		int index = quoteList.indexOf(quote);
 		selectedQuote = queryQuoteById(quote.getId());
-		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunityId()));
+		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
 		quoteList.set(index, selectedQuote);
 	}
 	

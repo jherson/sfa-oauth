@@ -265,7 +265,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	    if (quote.getId() != null) {
 	    	sobject.setId(quote.getId());	
 	    } else {
-	    	sobject.setField("OpportunityId__c", quote.getOpportunityId());
+	    	sobject.setField("OpportunityId__c", quote.getOpportunity().getId());
 	    }	    	
 	    sobject.setField("Comments__c", quote.getComments());
 	    sobject.setField("ContactId__c", quote.getContactId());

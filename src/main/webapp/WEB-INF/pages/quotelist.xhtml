@@ -62,7 +62,7 @@
 	
 	<rich:column width="350px">
 		<f:facet name="header">#{msgs.opportunity}</f:facet>
-		<a4j:commandLink value="#{quote.opportunityName}" onclick="window.open('#{sessionManager.frontDoorUrl}#{quote.opportunityId}');"/>     
+		<a4j:commandLink value="#{quote.opportunity.name}" onclick="window.open('#{sessionManager.frontDoorUrl}#{quote.opportunity.id}');"/>     
 	</rich:column>	
 
 	<rich:column width="80px" style="text-align: center;">

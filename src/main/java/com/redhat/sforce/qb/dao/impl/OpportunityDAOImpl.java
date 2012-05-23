@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 
@@ -33,8 +34,21 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 		}
 	}
 	
+	@Override
+	public List<Opportunity> queryOpenOpportunities() throws SalesforceServiceException {
+		String queryString = opportunityQuery + "Where IsClosed = false";
+		try {
+			return OpportunityFactory.deserialize(sm.query(queryString));
+		} catch (JSONException e) {
+			log.error(e);
+			throw new SalesforceServiceException(e);
+		} catch (ParseException e) {
+			log.error(e);
+			throw new SalesforceServiceException(e);
+		}
+	}
+	
 	private String opportunityQuery = "Select Id, " 
-	        + "AccountId, " 
 			+ "Name, "
 			+ "Description, " 
 			+ "StageName, " 
@@ -65,7 +79,8 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 			+ "OpportunityNumber__c,  "
 			+ "Pay_Now__c, " 
 			+ "Country_of_Order__c, " 
-			+ "Super_Region__c, "           
+			+ "Super_Region__c, "        
+			+ "Account.Id, "
             + "Account.BillingCity, "
             + "Account.BillingCountry, "
             + "Account.BillingPostalCode, " 

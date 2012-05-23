@@ -60,8 +60,6 @@ public class QuoteFactory {
 		quote.setLink(wrapper.getString("Link__c"));
 		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
-		quote.setOpportunityId(wrapper.getString("OpportunityId__r", "Id"));
-		quote.setOpportunityName(wrapper.getString("OpportunityId__r", "Name"));
 		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));
 		quote.setOwnerName(wrapper.getString("QuoteOwnerId__r", "Name"));
 		quote.setOwnerEmail(wrapper.getString("QuoteOwnerId__r", "Email"));
@@ -79,6 +77,9 @@ public class QuoteFactory {
 		quote.setYear4PaymentAmount(wrapper.getDouble("Year4PaymentAmount__c"));
 		quote.setYear5PaymentAmount(wrapper.getDouble("Year5PaymentAmount__c"));
 		quote.setYear6PaymentAmount(wrapper.getDouble("Year6PaymentAmount__c"));
+		
+		if (wrapper.getJSONObject("OpportunityId__r") != null)
+		    quote.setOpportunity(OpportunityFactory.deserialize(wrapper.getJSONObject("OpportunityId__r")));
 
 		JSONArray records = null;
 
@@ -166,7 +167,7 @@ public class QuoteFactory {
 			jsonObject.put("IsCalculated__c", quote.getIsCalculated());
 			jsonObject.put("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
 			jsonObject.put("Name", quote.getName());
-			jsonObject.put("OpportunityId__c", quote.getOpportunityId());
+			jsonObject.put("OpportunityId__c", quote.getOpportunity().getId());
 			jsonObject.put("QuoteOwnerId__c", quote.getOwnerId());
 			jsonObject.put("PayNow__c", quote.getPayNow());
 			jsonObject.put("PricebookId__c", quote.getPricebookId());

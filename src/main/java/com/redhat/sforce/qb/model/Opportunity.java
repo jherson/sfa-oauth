@@ -7,7 +7,6 @@ public class Opportunity extends SObject {
 
 	private static final long serialVersionUID = -1577960793119757037L;
 	private String name;
-	private String accountId;
 	private String description;
 	private String stageName;
 	private Double amount;
@@ -37,9 +36,7 @@ public class Opportunity extends SObject {
 	private String countryOfOrder;
 	private String superRegion;
 	private String paymentType;
-	private String accountName;
-	private String oracleAccountNumber;
-	private String accountAliasName;
+	private Account account;
 	private User owner;
 	private List<CreditCheck> creditChecks;
 	private List<OpportunityLineItem> opportunityLineItems;
@@ -58,14 +55,6 @@ public class Opportunity extends SObject {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
 	}
 
 	public String getDescription() {
@@ -315,29 +304,13 @@ public class Opportunity extends SObject {
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
 	}
-
-	public String getAccountName() {
-		return accountName;
+	
+	public Account getAccount() {
+		return account;
 	}
-
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
-
-	public String getOracleAccountNumber() {
-		return oracleAccountNumber;
-	}
-
-	public void setOracleAccountNumber(String oracleAccountNumber) {
-		this.oracleAccountNumber = oracleAccountNumber;
-	}
-
-	public String getAccountAliasName() {
-		return accountAliasName;
-	}
-
-	public void setAccountAliasName(String accountAliasName) {
-		this.accountAliasName = accountAliasName;
+	
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 	public List<OpportunityLineItem> getOpportunityLineItems() {

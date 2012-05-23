@@ -97,9 +97,9 @@ public class MessageFactory {
 		shippingAddress.setState(quote.getOpportunity().getShippingAddress());
 		
         Account account = new Account();
-        account.setAccountNumber(quote.getOpportunity().getOracleAccountNumber());
+        account.setAccountNumber(quote.getOpportunity().getAccount().getOracleAccountNumber());
         account.setAccountTransactionRole("END_CUSTOMER");
-        account.setPartyName(quote.getOpportunity().getAccountName());
+        account.setPartyName(quote.getOpportunity().getAccount().getName());
         account.setBillingAddress(billingAddress);
         account.setShippingAddress(shippingAddress);
         

@@ -40,6 +40,8 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	
 	@PostConstruct
 	public void init() {
+		log.info("init");
+		
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		
 		if (session.getAttribute("SessionId") != null) {

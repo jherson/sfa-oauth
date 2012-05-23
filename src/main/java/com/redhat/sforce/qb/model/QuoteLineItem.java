@@ -48,7 +48,7 @@ public class QuoteLineItem extends SObject {
 		setEndDate(quote.getEndDate());
 		setStartDate(quote.getStartDate());
 		setTerm(quote.getTerm());
-		setOpportunityId(quote.getOpportunityId());
+		setOpportunityId(quote.getOpportunity().getId());
 		setQuantity(0);
 		setUnitPrice(0.00);
 		setTotalPrice(0.00);

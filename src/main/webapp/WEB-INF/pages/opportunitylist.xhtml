@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">	
+
+<rich:dataGrid id="opportunityList" var="opportunity"
+	value="#{opportunityList}"  
+	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" >
+		
+	
+	<h:panelGrid columns="1" style="width:200px;border-top:0px;border-left:0px;border-right:0px">
+	    <h:outputText value="#{opportunity.name}" />
+	    <h:outputText value="#{opportunity.amount}" />
+	</h:panelGrid>
+
+</rich:dataGrid>
+</ui:composition>	

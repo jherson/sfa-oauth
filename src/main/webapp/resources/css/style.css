@@ -8,11 +8,14 @@ body {
 .body3 {
    height: 100px;
    overflow: auto;
-   border-width: 0px;
   }
 
 .grid_panels {
  vertical-align: top;
+}
+
+.rf-p-b {
+	padding: 0px !important; 
 }
 
 #header {
