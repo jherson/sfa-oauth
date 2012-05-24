@@ -6,16 +6,18 @@ body {
     font-size: 0.9em;
 }
 .body3 {
-   height: 100px;
    overflow: auto;
-  }
+   padding: 0px !important;
+  }  
 
+.left_panel {
+	font-size: 0.9em;
+    width: 225px;
+    height: 100%;
+    float: left;
+}
 .grid_panels {
  vertical-align: top;
-}
-
-.rf-p-b {
-	padding: 0px !important; 
 }
 
 #header {
@@ -23,6 +25,7 @@ body {
 	margin: 0px;
 	height: 60px;
 }
+
 #container {
     margin: 0;
     padding: 0 0px 0px 0px;
@@ -102,6 +105,45 @@ span.invalid {
 
 .commandButton {
 	cursor: pointer;
+}
+
+#links {
+        width:205px;
+        overflow:auto;
+        min-height: 100%;
+}
+#links ul {
+ list-style-type:none;
+ margin:0;
+ padding:0;
+ width:200px;
+}
+#links li {
+ border:1px dotted #999;
+ border-width:1px 0;
+ margin:5px 0;
+}
+#links li a {
+ color:#000066;
+ display:block;
+ font:bold 14px Arial, Helvetica, sans-serif;
+ padding:5px;
+ text-decoration:none;
+}
+* html #links li a {width:200px;} /*Necessary to works with IE6*/
+#links li a:hover {
+ background-color:#F0F8FF;
+}
+#links a em {
+ color:#333;
+ display:block;
+ font:normal 11px Verdana, Arial, Helvetica, sans-serif;
+ line-height:125%;
+}
+#links a span {
+ color:#125F15;
+ font:normal 9px Verdana, Arial, Helvetica, sans-serif;
+ line-height:150%;
 }
 
 .pic {

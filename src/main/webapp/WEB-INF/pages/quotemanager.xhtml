@@ -8,15 +8,18 @@
 
 	<a4j:outputPanel>
 
-		<h:panelGrid width="100%" columns="2" cellpadding="3" cellspacing="1" columnClasses="grid_panels, grid_panels">
+		<h:panelGrid width="100%" columns="2" cellpadding="3" cellspacing="1" columnClasses="left_panel, grid_panels">
 		
-			<rich:collapsiblePanel header="Open Opportunities" switchType="client">
+			<rich:collapsiblePanel 
+			    header="Open Opportunities" 
+			    switchType="client"
+			    width="100%"
+			    bodyClass="body3">
 
                 <ui:include src="opportunitylist.xhtml" />                  
 
 
 			</rich:collapsiblePanel>
-
 			<rich:panel>
 				<rich:toolbar height="20px" itemSeparator="grid">
 

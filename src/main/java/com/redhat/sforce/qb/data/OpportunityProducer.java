@@ -56,7 +56,10 @@ public class OpportunityProducer implements Serializable {
 			if (sessionManager.getOpportunityId() != null) {
 				opportunityList.add(opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId()));
 			} else {
-				opportunityList.addAll(opportunityDAO.queryOpenOpportunities());
+				List<Opportunity> test = opportunityDAO.queryOpenOpportunities();
+				for (int i = 0; i < 100; i++) {
+				opportunityList.addAll(test);
+				}
 			}
 			
 		} catch (SalesforceServiceException e) {
