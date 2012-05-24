@@ -162,6 +162,11 @@ public class QuoteController {
 		setEditMode(Boolean.TRUE);
 	}
 	
+	public void editQuote(Quote quote) {
+		viewQuote(quote);
+		setEditMode(Boolean.TRUE);
+	}
+	
 	public void goalSeek() {
 		setGoalSeek(Boolean.TRUE);
 	}

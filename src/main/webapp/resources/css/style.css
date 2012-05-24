@@ -35,6 +35,11 @@ body {
     padding-top: 2;
     padding-right: 2;
 }
+
+#leftcol {display: block; top: 61; bottom: 0; width: 230px; position: absolute
+		 margin-left: -1600px; padding-left: 1600px; 
+	        overflow: auto;}
+		 
 #sidebar {
     font-size: 0.9em;
     width: 225px;

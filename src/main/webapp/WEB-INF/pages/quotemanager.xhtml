@@ -8,35 +8,8 @@
 
 	<a4j:outputPanel>
 
-		<h:panelGrid width="100%" columns="2" cellpadding="3" cellspacing="1" columnClasses="left_panel, grid_panels">
-		
-			<rich:collapsiblePanel 
-			    header="Open Opportunities" 
-			    switchType="client"
-			    width="100%"
-			    bodyClass="body3">
-
-                <ui:include src="opportunitylist.xhtml" />                  
-
-
-			</rich:collapsiblePanel>
 			<rich:panel>
-				<rich:toolbar height="20px" itemSeparator="grid">
-
-					<rich:toolbarGroup location="left">
-
-						<a4j:commandLink id="new" value="#{msgs.new}"
-							action="#{quoteController.newQuote(opportunity)}"
-							render="mainArea" ajaxSingle="true">
-						</a4j:commandLink>
-
-						<a4j:commandLink id="refresh" value="#{msgs.refresh}"
-							ajaxSingle="false" immediate="false" render="quoteList"
-							action="quoteController.refresh()}">
-						</a4j:commandLink>
-
-					</rich:toolbarGroup>
-				</rich:toolbar>
+				
 
 				<h:panelGrid width="100%" columns="1" cellpadding="3">
 					<h:panelGroup layout="block">
@@ -62,11 +35,33 @@
 
 					</h:panelGroup>
 				</h:panelGrid>
+				
+				<hr />
+				
+				<h:outputText value="Recent Quotes" style="font-weight: bold" />
+
+		        <br />
+
+		        <rich:panel style="text-align: center; border: 0px;">	
+		        
+
+						<a4j:commandButton id="new"
+						    styleClass="commandButton" 
+						    value="#{msgs.new}"
+							action="#{quoteController.newQuote(opportunity)}"
+							render="mainArea" ajaxSingle="true" />
+
+						<a4j:commandButton id="refresh"
+						    styleClass="commandButton" 
+						    value="#{msgs.refresh}"
+							ajaxSingle="false" immediate="false" render="quoteList"
+							action="quoteController.refresh()}" />
+
+				</rich:panel>
 
 				<ui:include src="quotelist.xhtml" />
 
 			</rich:panel>
-		</h:panelGrid>
 
 	</a4j:outputPanel>
 </ui:composition>
