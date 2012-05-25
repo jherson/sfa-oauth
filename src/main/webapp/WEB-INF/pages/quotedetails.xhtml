@@ -5,82 +5,108 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-		
-    <rich:hotKey key="ctrl+s" enabledInInput="true">
-        <a4j:ajax listener="#{quoteController.save()}" render="quotedetails"/>
-    </rich:hotKey>
-         
+
+	<rich:hotKey key="ctrl+s" enabledInInput="true">
+		<a4j:ajax listener="#{quoteController.save()}" render="quotedetails" />
+	</rich:hotKey>
+
 	<a4j:outputPanel id="quotedetails">
 
-		<rich:toolbar height="20" itemSeparator="grid">
-
-			<rich:toolbarGroup location="left">
-				<a4j:commandLink value="#{msgs.back}"				
-					disabled="#{quoteController.editMode}" status="waitstatus"
-					render="mainArea" action="#{quoteController.backToQuoteManager()}">
-				</a4j:commandLink>
-			</rich:toolbarGroup>
-
-			<rich:toolbarGroup location="right">
-
-				<a4j:commandLink id="edit" action="#{quoteController.editQuote()}"
-					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					disabled="#{empty selectedQuote}"
-					render="quotedetails"
-					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
-					<h:outputText value="#{msgs.edit}" />
-				</a4j:commandLink>			
-
-				<a4j:commandLink id="activate"
-					action="#{quoteController.activateQuote()}"
-					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					disabled="#{empty selectedQuote}"
-					render="quotedetails">
-					<h:outputText value="#{msgs.activate}" />
-				</a4j:commandLink>
-
-				<a4j:commandLink id="copy" 
-				    action="#{quoteController.copyQuote()}"
-					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					render="mainArea" disabled="#{empty selectedQuote}">
-					<h:outputText value="#{msgs.copy}" />
-				</a4j:commandLink>
-
-				<a4j:commandLink id="delete"
-					action="#{quoteController.deleteQuote()}"
-					rendered="#{not quoteController.editMode}" ajaxSingle="true"
-					disabled="#{empty selectedQuote or selectedQuote.isActive}"
-					render="mainArea">
-					<h:outputText value="#{msgs.delete}" />
-				</a4j:commandLink>
-
-				<a4j:commandLink id="save" action="#{quoteController.save()}"
-					rendered="#{quoteController.editMode}" execute="@form" 
-					render="quotedetails">
-					<h:outputText value="#{msgs.save}" />
-				</a4j:commandLink>
-
-				<a4j:commandLink id="cancelEdit"
-					rendered="#{quoteController.editMode}"
-					action="#{quoteController.cancelEdit()}" ajaxSingle="true"
-					render="quotedetails">
-					<h:outputText value="#{msgs.cancel}" />
-				</a4j:commandLink>
-
-			</rich:toolbarGroup>
-		</rich:toolbar>
-
 		<rich:panel id="viewQuotePanel">
-		
+
+			<h:panelGrid width="100%" columns="1" cellpadding="3">
+				<h:panelGroup layout="block">
+					<h:graphicImage value="./images/quote.png"
+						style="vertical-align: middle" />
+					<h:outputText value=" " escape="false" />
+
+					<h:outputText value="#{selectedQuote.name}"
+						style="font-weight:bold; font-size: 18px;" />
+
+
+				</h:panelGroup>
+
+
+
+			</h:panelGrid>
+
+			<rich:toolbar height="20" itemSeparator="grid">
+
+				<rich:toolbarGroup location="left">
+					<a4j:commandLink value="#{msgs.back}"
+						disabled="#{quoteController.editMode}" status="waitstatus"
+						render="mainArea" action="#{quoteController.backToQuoteManager()}">
+					</a4j:commandLink>
+				</rich:toolbarGroup>
+
+			</rich:toolbar>
+
+			<h:panelGrid width="100%" columns="2" cellpadding="3"
+				columnClasses="column25,column75">
+				
+				<h:panelGroup layout="block">
+
+					<h:outputText value="#{msgs.quoteDetailsHeader}"
+						style="font-weight: bold" />
+
+				</h:panelGroup>
+
+				<h:panelGroup layout="block">
+
+						<a4j:commandButton id="edit" value="#{msgs.edit}"
+							action="#{quoteController.editQuote()}"
+							styleClass="commandButton"
+							rendered="#{not quoteController.editMode}" ajaxSingle="true"
+							disabled="#{empty selectedQuote}" render="quotedetails"
+							oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
+						</a4j:commandButton>
+
+						<a4j:commandButton id="activate" value="#{msgs.activate}"
+							action="#{quoteController.activateQuote()}"
+							styleClass="commandButton"
+							rendered="#{not quoteController.editMode}" ajaxSingle="true"
+							disabled="#{empty selectedQuote}" render="quotedetails">
+						</a4j:commandButton>
+
+						<a4j:commandButton id="copy" value="#{msgs.copy}"
+							action="#{quoteController.copyQuote()}"
+							styleClass="commandButton"
+							rendered="#{not quoteController.editMode}" ajaxSingle="true"
+							render="mainArea" disabled="#{empty selectedQuote}">
+						</a4j:commandButton>
+
+						<a4j:commandButton id="delete" value="#{msgs.delete}"
+							action="#{quoteController.deleteQuote()}"
+							styleClass="commandButton"
+							rendered="#{not quoteController.editMode}" ajaxSingle="true"
+							disabled="#{empty selectedQuote or selectedQuote.isActive}"
+							render="mainArea">
+						</a4j:commandButton>
+
+						<a4j:commandButton id="save" value="#{msgs.save}"
+							action="#{quoteController.save()}" styleClass="commandButton"
+							rendered="#{quoteController.editMode}" execute="@form"
+							render="quotedetails">
+						</a4j:commandButton>
+
+						<a4j:commandButton id="cancelEdit" value="#{msgs.cancel}"
+							styleClass="commandButton" rendered="#{quoteController.editMode}"
+							action="#{quoteController.cancelEdit()}" ajaxSingle="true"
+							render="quotedetails">
+						</a4j:commandButton>
+
+				</h:panelGroup>
+
+			</h:panelGrid>
+
 			<table style="width: 100%">
 				<tr>
 					<th class="label-column"><h:outputText value="#{msgs.name}" /></th>
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.name}"
 							rendered="#{not quoteController.editMode}" /> <h:inputText
-							id="quoteName" required="true"
-							value="#{selectedQuote.name}" style="width:300px"
-							rendered="#{quoteController.editMode}"
+							id="quoteName" required="true" value="#{selectedQuote.name}"
+							style="width:300px" rendered="#{quoteController.editMode}"
 							requiredMessage="#{msgs.quoteNameRequiredMessage}">
 							<rich:validator />
 						</h:inputText></td>
@@ -92,20 +118,16 @@
 				<tr>
 					<th class="label-column"><h:outputText value="#{msgs.type}" /></th>
 
-					<td class="column-l-align">
-					    <h:outputText
+					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.type}"
-							rendered="#{not quoteController.editMode}" /> 
-						<h:selectOneMenu style="width: 150px;"
-							value="#{selectedQuote.type}"
+							rendered="#{not quoteController.editMode}" /> <h:selectOneMenu
+							style="width: 150px;" value="#{selectedQuote.type}"
 							rendered="#{quoteController.editMode}">
 							<f:selectItem itemValue="Standard" />
 							<f:selectItem itemValue="Co-Term" />
 							<f:selectItem itemValue="Non Standard" />
-							<a4j:ajax execute="@this" 
-							    event="valueChange" 
-							    render="viewQuotePanel"
-								status="waitstatus" />
+							<a4j:ajax execute="@this" event="valueChange"
+								render="viewQuotePanel" status="waitstatus" />
 						</h:selectOneMenu></td>
 
 					<th class="label-column"><h:outputText value="#{msgs.version}" /></th>
@@ -117,8 +139,7 @@
 					<th class="label-column"><h:outputText value="#{msgs.active}" /></th>
 
 					<td class="column-l-align"><h:graphicImage
-							value="./images/active.png"
-							rendered="#{selectedQuote.isActive}" /></td>
+							value="./images/active.png" rendered="#{selectedQuote.isActive}" /></td>
 
 					<th class="label-column"><h:outputText
 							value="#{msgs.currency}" /></th>
@@ -126,8 +147,7 @@
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.currencyIsoCode}"
 							rendered="#{not quoteController.editMode or selectedQuote.hasQuoteLineItems}" />
-						<h:selectOneMenu
-							value="#{selectedQuote.currencyIsoCode}"
+						<h:selectOneMenu value="#{selectedQuote.currencyIsoCode}"
 							style="width: 75px;"
 							rendered="#{quoteController.editMode and not selectedQuote.hasQuoteLineItems}">
 
@@ -143,13 +163,10 @@
 				<tr>
 					<th class="label-column"><h:outputText value="#{msgs.payNow}" /></th>
 
-					<td class="column-l-align">
-					    <h:outputText
+					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.payNow}"
-							rendered="#{not quoteController.editMode}" /> 
-						<h:selectOneMenu
-						    style="width: 75px;"
-							value="#{selectedQuote.payNow}"
+							rendered="#{not quoteController.editMode}" /> <h:selectOneMenu
+							style="width: 75px;" value="#{selectedQuote.payNow}"
 							rendered="#{quoteController.editMode}">
 							<f:selectItem itemValue="Yes" />
 							<f:selectItem itemValue="No" />
@@ -157,8 +174,7 @@
 
 					<th class="label-column"><h:outputText value="#{msgs.amount}" /></th>
 
-					<td class="column-l-align">
-					    <h:outputText
+					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.amount}">
 							<f:convertNumber locale="#{user.locale}"
 								pattern="#,##0.00;(#,##0.00)" />
@@ -168,30 +184,22 @@
 				<tr>
 					<th class="label-column"><h:outputText value="#{msgs.owner}" /></th>
 
-					<td class="column-l-align">
-							<h:outputText id="ownerName"
-								value="#{selectedQuote.ownerName}" />
-
-							<a4j:commandLink id="changeOwner" value="#{msgs.change}"
-								oncomplete="#{rich:component('ownerPanel')}.show()"
-								status="waitstatus" rendered="#{quoteController.editMode}"
-								rerender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
-							</a4j:commandLink>
-
-				</td>
+					<td class="column-l-align"><h:outputText id="ownerName"
+							value="#{selectedQuote.ownerName}" /> <a4j:commandLink
+							id="changeOwner" value="#{msgs.change}"
+							oncomplete="#{rich:component('ownerPanel')}.show()"
+							status="waitstatus" rendered="#{quoteController.editMode}"
+							rerender="#{rich:clientId('ownerPanel')}" ajaxSingle="true">
+						</a4j:commandLink></td>
 
 					<th class="label-column"><h:outputText value="#{msgs.contact}" /></th>
-					<td class="column-l-align">
-							<h:outputText id="contactName"
-								value="#{selectedQuote.contactName}" />
-
-							<a4j:commandLink id="changeContact" value="#{msgs.change}"
-								oncomplete="#{rich:component('contactPanel')}.show()"
-								rendered="#{quoteController.editMode}"
-								rerender="#{rich:clientId('contactPanel')}" ajaxSingle="true">
-							</a4j:commandLink>
-
-						</td>
+					<td class="column-l-align"><h:outputText id="contactName"
+							value="#{selectedQuote.contactName}" /> <a4j:commandLink
+							id="changeContact" value="#{msgs.change}"
+							oncomplete="#{rich:component('contactPanel')}.show()"
+							rendered="#{quoteController.editMode}"
+							rerender="#{rich:clientId('contactPanel')}" ajaxSingle="true">
+						</a4j:commandLink></td>
 				</tr>
 
 				<tr>
@@ -202,8 +210,7 @@
 							rendered="#{not quoteController.editMode}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText> <rich:calendar
-							value="#{selectedQuote.effectiveDate}"
+						</h:outputText> <rich:calendar value="#{selectedQuote.effectiveDate}"
 							id="effectiveDate" locale="en_US" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
@@ -217,8 +224,7 @@
 							rendered="#{not quoteController.editMode}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText> <rich:calendar
-							value="#{selectedQuote.expirationDate}"
+						</h:outputText> <rich:calendar value="#{selectedQuote.expirationDate}"
 							id="expirationDate" locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
@@ -248,7 +254,7 @@
 							<f:selectItem itemLabel="1" itemValue="365" />
 							<f:selectItem itemLabel="3" itemValue="1095" />
 							<a4j:ajax event="valueChange"
-							    listener="#{quoteDateController.setDates()}"
+								listener="#{quoteDateController.setDates()}"
 								render="quotedetails">
 							</a4j:ajax>
 						</h:selectOneMenu></td>
@@ -263,18 +269,17 @@
 							rendered="#{not quoteController.editMode or selectedQuote.type != 'Standard'}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText> 
-						<rich:calendar value="#{selectedQuote.startDate}"
-							id="startDate" locale="#{user.locale}" popup="true"
+						</h:outputText> <rich:calendar value="#{selectedQuote.startDate}" id="startDate"
+							locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
-							cellWidth="24px" cellHeight="22px" style="width:200px"							
+							cellWidth="24px" cellHeight="22px" style="width:200px"
 							rendered="#{quoteController.editMode and selectedQuote.type == 'Standard'}"
 							disabled="false">
 							<a4j:ajax event="change"
-							    listener="#{quoteDateController.setDates()}"
+								listener="#{quoteDateController.setDates()}"
 								render="quotedetails">
 							</a4j:ajax>
-							
+
 						</rich:calendar></td>
 
 					<th class="label-column"><h:outputText value="#{msgs.endDate}" /></th>
@@ -283,8 +288,8 @@
 							rendered="#{not quoteController.editMode or selectedQuote.type != 'Co-Term'}">
 							<f:convertDateTime locale="#{user.locale}"
 								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText> <rich:calendar value="#{selectedQuote.endDate}"
-							id="endDate" locale="#{user.locale}" popup="true"
+						</h:outputText> <rich:calendar value="#{selectedQuote.endDate}" id="endDate"
+							locale="#{user.locale}" popup="true"
 							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
 							rendered="#{quoteController.editMode and selectedQuote.type == 'Co-Term'}"
@@ -298,18 +303,15 @@
 							rendered="#{not quoteController.editMode}" /></th>
 
 					<td class="column-l-align"><h:panelGroup>
-							<h:outputText
-								value="#{selectedQuote.createdByName}, "
+							<h:outputText value="#{selectedQuote.createdByName}, "
 								rendered="#{not quoteController.editMode and not empty selectedQuote}" />
-							<h:outputText
-								value="#{selectedQuote.createdDate}"
+							<h:outputText value="#{selectedQuote.createdDate}"
 								rendered="#{not quoteController.editMode and not empty selectedQuote}">
 								<f:convertDateTime locale="#{user.locale}"
-								    timeZone="#{user.timeZone}"
+									timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
-							<h:outputText value=" "
-								rendered="#{empty selectedQuote}" />
+							<h:outputText value=" " rendered="#{empty selectedQuote}" />
 						</h:panelGroup></td>
 
 					<th class="label-column"><h:outputText
@@ -317,23 +319,20 @@
 							rendered="#{not quoteController.editMode}" /></th>
 
 					<td class="column-l-align"><h:panelGroup>
-							<h:outputText
-								value="#{selectedQuote.lastModifiedByName}, "
+							<h:outputText value="#{selectedQuote.lastModifiedByName}, "
 								rendered="#{not quoteController.editMode and not empty selectedQuote}" />
-							<h:outputText
-								value="#{selectedQuote.lastModifiedDate}"
+							<h:outputText value="#{selectedQuote.lastModifiedDate}"
 								rendered="#{not quoteController.editMode and not empty selectedQuote}">
 								<f:convertDateTime locale="#{user.locale}"
-								    timeZone="#{user.timeZone}"
+									timeZone="#{user.timeZone}"
 									pattern="#{user.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
-							<h:outputText value=" "
-								rendered="#{empty selectedQuote}" />
+							<h:outputText value=" " rendered="#{empty selectedQuote}" />
 						</h:panelGroup></td>
 				</tr>
 
 			</table>
-			
+
 			<br />
 			<ui:include src="quotepriceadjustments.xhtml" />
 
@@ -342,8 +341,7 @@
 			<ui:include src="quotelineitems.xhtml" />
 
 			<ui:include src="owners.xhtml" />
-			<ui:include src="contacts.xhtml" />			
-
+			<ui:include src="contacts.xhtml" />
 		</rich:panel>
 
 	</a4j:outputPanel>

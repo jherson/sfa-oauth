@@ -162,9 +162,10 @@ public class QuoteController {
 		setEditMode(Boolean.TRUE);
 	}
 	
-	public void editQuote(Quote quote) {
-		viewQuote(quote);
+	public void editQuote(Quote quote) {	
+		quoteEvent.select(VIEW_QUOTE).fire(quote);	
 		setEditMode(Boolean.TRUE);
+		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 	
 	public void goalSeek() {

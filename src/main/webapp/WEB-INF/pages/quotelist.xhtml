@@ -16,17 +16,20 @@
 
 		<h:panelGroup>
 		
-			<a4j:commandLink id="editQuote" action="#{quoteController.editQuote()}"
-					ajaxSingle="true"					
-					render="mainArea"
-					oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
-					<h:outputText value="#{msgs.edit}" />
+			<a4j:commandLink id="editQuote" 
+			    action="#{quoteController.editQuote(quote)}"
+				ajaxSingle="true"					
+				render="mainArea">
+				<h:outputText value="#{msgs.edit}" />
 			</a4j:commandLink>	
+			
+			<h:outputText value="   " />			
 		
-		    <a4j:commandLink id="deleteQuote" value="#{msgs.delete}" 
+		    <a4j:commandLink id="deleteQuote"
 		        rendered="#{not quote.isActive}"
 				action="#{quoteController.deleteQuote(quote)}" render="quoteList"
 				onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };">
+				<h:outputText value="#{msgs.delete}" />
 			</a4j:commandLink>
 
 		</h:panelGroup>

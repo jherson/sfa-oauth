@@ -81,23 +81,23 @@ public class MessageFactory {
 		}
 		
 		List<Account> accountList = new ArrayList<Account>();
-		
+							
 		Address billingAddress = new Address();
-		billingAddress.setAddress1(quote.getOpportunity().getBillingAddress());
-		billingAddress.setCity(quote.getOpportunity().getBillingCity());
-		billingAddress.setCountry(quote.getOpportunity().getBillingCountry());
-		billingAddress.setPostalCode(quote.getOpportunity().getBillingZipPostalCode());
-		billingAddress.setState(quote.getOpportunity().getBillingState());
+		billingAddress.setAddress1(quote.getOpportunity().getAccount().getBillingStreet() != null ? quote.getOpportunity().getAccount().getBillingStreet() : "" );
+		billingAddress.setCity(quote.getOpportunity().getAccount().getBillingCity() != null ? quote.getOpportunity().getAccount().getBillingCity() : "" );
+		billingAddress.setCountry(quote.getOpportunity().getAccount().getBillingCountry() != null ? quote.getOpportunity().getAccount().getBillingCountry() : "" );
+		billingAddress.setPostalCode(quote.getOpportunity().getAccount().getBillingPostalCode() != null ? quote.getOpportunity().getAccount().getBillingPostalCode() : "" );
+		billingAddress.setState(quote.getOpportunity().getAccount().getBillingState() != null ? quote.getOpportunity().getAccount().getBillingState() : "" );
 		
 		Address shippingAddress = new Address();
-		shippingAddress.setAddress1(quote.getOpportunity().getShippingAddress());
-		shippingAddress.setCity(quote.getOpportunity().getShippingAddress());
-		shippingAddress.setCountry(quote.getOpportunity().getShippingAddress());
-		shippingAddress.setPostalCode(quote.getOpportunity().getShippingAddress());
-		shippingAddress.setState(quote.getOpportunity().getShippingAddress());
-		
+		shippingAddress.setAddress1(quote.getOpportunity().getAccount().getShippingStreet() != null ? quote.getOpportunity().getAccount().getShippingStreet() : "" );
+		shippingAddress.setCity(quote.getOpportunity().getAccount().getShippingCity() != null ? quote.getOpportunity().getAccount().getShippingCity() : "" );
+		shippingAddress.setCountry(quote.getOpportunity().getAccount().getShippingCountry() != null ? quote.getOpportunity().getAccount().getShippingCountry() : "" );
+		shippingAddress.setPostalCode(quote.getOpportunity().getAccount().getShippingPostalCode() != null ? quote.getOpportunity().getAccount().getShippingPostalCode() : "" );
+		shippingAddress.setState(quote.getOpportunity().getAccount().getShippingState() != null ? quote.getOpportunity().getAccount().getShippingState() : "" );
+	
         Account account = new Account();
-        account.setAccountNumber(quote.getOpportunity().getAccount().getOracleAccountNumber());
+        account.setAccountNumber(quote.getOpportunity().getAccount().getOracleAccountNumber() != null ? quote.getOpportunity().getAccount().getOracleAccountNumber() : "" );
         account.setAccountTransactionRole("END_CUSTOMER");
         account.setPartyName(quote.getOpportunity().getAccount().getName());
         account.setBillingAddress(billingAddress);
@@ -105,7 +105,6 @@ public class MessageFactory {
         
         accountList.add(account);
         
-//                      
 //      for (Partner partner: opportunity.partners) {
 //          account = quoteNode.addChildElement('Account', '', '');
 //          account.addChildElement('AccountTransactionRole', '', '').addTextNode( isNull(partner.Role) );
@@ -142,9 +141,9 @@ public class MessageFactory {
 		StringWriter stringWriter = new StringWriter();		
 		try {
 			JAXBContext context = JAXBContext.newInstance(PricingMessage.class);
-			Marshaller m = context.createMarshaller();
-			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			m.marshal(pricingMessage, stringWriter);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.marshal(pricingMessage, stringWriter);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
