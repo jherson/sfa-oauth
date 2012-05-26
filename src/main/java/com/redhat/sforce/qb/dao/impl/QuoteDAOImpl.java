@@ -184,6 +184,18 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		sm.activateQuote(quoteId);
 		return null;
 	}
+	
+	@Override
+	public Quote follow(String quoteId) throws SalesforceServiceException {
+		sm.follow(quoteId);
+		return null;
+	}
+	
+	@Override
+	public Quote unfollow(String quoteId) throws SalesforceServiceException {
+		sm.unfollow(quoteId);
+		return null;
+	}
 
 	@Override
 	public Quote calculate(String quoteId) throws SalesforceServiceException {

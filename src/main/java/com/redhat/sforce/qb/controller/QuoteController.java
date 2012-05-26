@@ -168,6 +168,14 @@ public class QuoteController {
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 	
+	public void followQuote(Quote quote) {
+		quoteManager.follow(quote);
+	}
+	
+	public void unfollowQuote(Quote quote) {
+		quoteManager.unfollow(quote);
+	}
+	
 	public void goalSeek() {
 		setGoalSeek(Boolean.TRUE);
 	}

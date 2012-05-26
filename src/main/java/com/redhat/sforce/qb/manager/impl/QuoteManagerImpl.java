@@ -76,6 +76,16 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
+	public void follow(Quote quote) {
+		doFollow(quote);
+	}
+	
+	@Override
+	public void unfollow(Quote quote) {
+		doUnfollow(quote);
+	}
+	
+	@Override
 	public void delete(List<QuoteLineItem> quoteLineItems) {
 		doDelete(quoteLineItems);
 	}
@@ -294,6 +304,26 @@ public class QuoteManagerImpl implements QuoteManager {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void doFollow(Quote quote) {
+		try {
+			quoteDAO.follow(quote.getId());
+			
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void doUnfollow(Quote quote) {
+		try {
+			quoteDAO.unfollow(quote.getId());
+			
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void doDelete(List<QuoteLineItem> quoteLineItems) {

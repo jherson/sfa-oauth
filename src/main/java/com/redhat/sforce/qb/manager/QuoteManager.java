@@ -19,5 +19,7 @@ public interface QuoteManager {
 	public void price(Quote quote);
 	public void copy(Quote quote);
 	public void activate(Quote quote);
+	public void follow(Quote quote);
+	public void unfollow(Quote quote);
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems);
 }

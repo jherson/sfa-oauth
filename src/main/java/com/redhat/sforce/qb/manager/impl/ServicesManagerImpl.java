@@ -17,6 +17,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -126,6 +127,77 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		return queryResult;
+	}
+	
+	@Override
+	public void follow(String subjectId) throws SalesforceServiceException {
+		String url = applicationManager.getApiEndpoint()
+				+ "/data/"
+				+ applicationManager.getApiVersion() 
+				+ "/chatter/users/me/following";
+		
+		log.info(sessionId);
+		log.info(url);
+		
+		NameValuePair[] params = new NameValuePair[1];
+		params[0] = new NameValuePair("subjectId", subjectId);
+
+		PostMethod method = new PostMethod(url);
+		method.setRequestHeader("Authorization", "OAuth " + sessionId);
+		method.setRequestHeader("Accept-Type", "application/json");
+        method.setQueryString(params);
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(method);
+			log.info("Status: " + HttpStatus.SC_OK);
+			if (method.getStatusCode() == HttpStatus.SC_OK) {
+				log.info("success: " + method.getResponseBodyAsString());
+			} else {
+				log.info("fail: " + method.getResponseBodyAsString());
+			}
+			
+		} catch (HttpException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		} finally {
+			method.releaseConnection();
+		}	
+	}
+	
+	public void unfollow(String id) {
+		///services/data/v22.0/chatter/subscriptions/0E8D00000001JkFKAU
+		
+		String url = applicationManager.getApiEndpoint()
+				+ "/data/"
+				+ applicationManager.getApiVersion() 
+				+ "/chatter/subscriptions/0E8P0000000ixXyKAI";
+		
+		log.info(sessionId);
+		log.info(url);
+
+		DeleteMethod method = new DeleteMethod(url);
+		method.setRequestHeader("Authorization", "OAuth " + sessionId);
+		method.setRequestHeader("Accept-Type", "application/json");
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(method);
+			log.info("Status: " + HttpStatus.SC_OK);
+			if (method.getStatusCode() == HttpStatus.SC_OK) {
+				log.info("success: " + method.getResponseBodyAsString());
+			} else {
+				log.info("fail: " + method.getResponseBodyAsString());
+			}
+			
+		} catch (HttpException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		} finally {
+			method.releaseConnection();
+		}	
 	}
 	
 	@Override

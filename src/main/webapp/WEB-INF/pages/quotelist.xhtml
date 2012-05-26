@@ -11,7 +11,7 @@
 	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" 
 	selectionMode="none">
 
-	<rich:column width="90px">
+	<rich:column width="110px">
 		<f:facet name="header">#{msgs.action}</f:facet>
 
 		<h:panelGroup>
@@ -30,6 +30,22 @@
 				action="#{quoteController.deleteQuote(quote)}" render="quoteList"
 				onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };">
 				<h:outputText value="#{msgs.delete}" />
+			</a4j:commandLink>
+			
+			<h:outputText value="   " />	
+			
+		    <a4j:commandLink id="followQuote"
+				action="#{quoteController.followQuote(quote)}" 
+				render="quoteList">
+				<h:outputText value="#{msgs.follow}" />
+			</a4j:commandLink>
+			
+			<h:outputText value="   " />	
+			
+		    <a4j:commandLink id="unfollowQuote"
+				action="#{quoteController.unfollowQuote(quote)}" 
+				render="quoteList">
+				<h:outputText value="#{msgs.unfollow}" />
 			</a4j:commandLink>
 
 		</h:panelGroup>

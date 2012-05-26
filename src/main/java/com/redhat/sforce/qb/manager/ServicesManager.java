@@ -13,4 +13,6 @@ public interface ServicesManager {
 	public void activateQuote(String quoteId) throws SalesforceServiceException;	
 	public void copyQuote(String quoteId) throws SalesforceServiceException;
 	public String priceQuote(String xml) throws SalesforceServiceException;	
+	public void follow(String subjectId) throws SalesforceServiceException;
+	public void unfollow(String subjectId) throws SalesforceServiceException;
 }

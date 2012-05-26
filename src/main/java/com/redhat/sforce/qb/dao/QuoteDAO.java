@@ -32,5 +32,7 @@ public interface QuoteDAO {
 	public Quote activate(String quoteId) throws SalesforceServiceException;
 	public Quote calculate(String quoteId) throws SalesforceServiceException;
 	public Quote copy(String quoteId) throws SalesforceServiceException;	
+	public Quote follow(String quoteId) throws SalesforceServiceException;
+	public Quote unfollow(String quoteId) throws SalesforceServiceException;
 	public Quote price(Quote quote) throws SalesforceServiceException;	
 }
