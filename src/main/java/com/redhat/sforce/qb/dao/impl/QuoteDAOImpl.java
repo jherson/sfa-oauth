@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 
 import org.json.JSONException;
 
@@ -18,9 +19,11 @@ import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
 import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.pricing.xml.MessageFactory;
+import com.redhat.sforce.qb.qualifiers.LoggedIn;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
@@ -33,9 +36,15 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
 	
+	@Inject
+	@LoggedIn
+	User user;
+	
 	@Override
 	public List<Quote> queryQuotes() throws SalesforceServiceException {
 		String queryString = quoteQuery + "Order By Number__c";
+		queryString = queryString.replace("#userId#", user.getId());
+		log.info(queryString);
 		try {
 			return QuoteFactory.deserialize(sm.query(queryString));
 		} catch (JSONException e) {
@@ -539,6 +548,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        Operator__c "
 			+ " From   QuotePriceAdjustment__r "
 			+ "Order By Reason__c), "
+			+ "(Select Id "
+			+ " From   FeedSubscriptionsForEntity "
+			+ " Where  SubscriberId = '#userId#'), "
 			+ "(Select Id, "
 			+ "        Name, "
 			+ "        CurrencyIsoCode, "
