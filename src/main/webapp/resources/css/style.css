@@ -85,6 +85,14 @@ span.invalid {
 	width: 25%
 }
 
+.column35 {
+	width: 35%;
+}
+
+.column65 {
+	width: 65%;
+}
+
 .label-column {
 	font-weight: bold;
 	text-align: right;

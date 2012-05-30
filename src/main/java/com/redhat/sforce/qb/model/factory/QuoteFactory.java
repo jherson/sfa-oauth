@@ -78,8 +78,6 @@ public class QuoteFactory {
 		quote.setYear5PaymentAmount(wrapper.getDouble("Year5PaymentAmount__c"));
 		quote.setYear6PaymentAmount(wrapper.getDouble("Year6PaymentAmount__c"));
 		
-		log.info(wrapper.getString("FeedSubscriptionsForEntity","Id"));
-		
 		if (wrapper.getJSONObject("OpportunityId__r") != null)
 		    quote.setOpportunity(OpportunityFactory.deserialize(wrapper.getJSONObject("OpportunityId__r")));
 
@@ -92,6 +90,11 @@ public class QuoteFactory {
 		
 		if (quote.getQuoteLineItems() == null || quote.getQuoteLineItems().size() == 0) {
 			quote.setHasQuoteLineItems(Boolean.FALSE);
+		}
+		
+		records = wrapper.getRecords("FeedSubscriptionsForEntity");
+		if (records != null) {
+			quote.setEntitySubscriptions(EntitySubscriptionFactory.deserialize(records));
 		}
 
 		records = wrapper.getRecords("QuoteLineItemSchedule__r");

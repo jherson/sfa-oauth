@@ -33,13 +33,27 @@
 						disabled="#{quoteController.editMode}" status="waitstatus"
 						render="mainArea" action="#{quoteController.backToQuoteManager()}">
 					</a4j:commandLink>
+
+					<a4j:commandLink id="followQuote"
+						action="#{quoteController.followQuote(quote)}" render="quoteList"
+						rendered="#{empty selectedQuote.userSubscriptionId}">
+						<h:outputText value="#{msgs.follow}" />
+					</a4j:commandLink>
+
+					<a4j:commandLink id="unfollowQuote"
+						action="#{quoteController.unfollowQuote(quote)}"
+						rendered="#{not empty selectedQuote.userSubscriptionId}"
+						render="quoteList">
+						<h:outputText value="#{msgs.unfollow}" />
+					</a4j:commandLink>
+
 				</rich:toolbarGroup>
 
 			</rich:toolbar>
 
 			<h:panelGrid width="100%" columns="2" cellpadding="3"
-				columnClasses="column25,column75">
-				
+				columnClasses="column35,column65">
+
 				<h:panelGroup layout="block">
 
 					<h:outputText value="#{msgs.quoteDetailsHeader}"
@@ -49,47 +63,44 @@
 
 				<h:panelGroup layout="block">
 
-						<a4j:commandButton id="edit" value="#{msgs.edit}"
-							action="#{quoteController.editQuote()}"
-							styleClass="commandButton"
-							rendered="#{not quoteController.editMode}" ajaxSingle="true"
-							disabled="#{empty selectedQuote}" render="quotedetails"
-							oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
-						</a4j:commandButton>
+					<a4j:commandButton id="edit" value="#{msgs.edit}"
+						action="#{quoteController.editQuote()}" styleClass="commandButton"
+						rendered="#{not quoteController.editMode}" ajaxSingle="true"
+						disabled="#{empty selectedQuote}" render="quotedetails"
+						oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
+					</a4j:commandButton>
 
-						<a4j:commandButton id="activate" value="#{msgs.activate}"
-							action="#{quoteController.activateQuote()}"
-							styleClass="commandButton"
-							rendered="#{not quoteController.editMode}" ajaxSingle="true"
-							disabled="#{empty selectedQuote}" render="quotedetails">
-						</a4j:commandButton>
+					<a4j:commandButton id="activate" value="#{msgs.activate}"
+						styleClass="commandButton"
+						rendered="#{not quoteController.editMode}" ajaxSingle="true"
+						disabled="#{empty selectedQuote}" render="quotedetails">
+					</a4j:commandButton>
 
-						<a4j:commandButton id="copy" value="#{msgs.copy}"
-							action="#{quoteController.copyQuote()}"
-							styleClass="commandButton"
-							rendered="#{not quoteController.editMode}" ajaxSingle="true"
-							render="mainArea" disabled="#{empty selectedQuote}">
-						</a4j:commandButton>
+					<a4j:commandButton id="copy" value="#{msgs.copy}"
+						action="#{quoteController.copyQuote()}" styleClass="commandButton"
+						rendered="#{not quoteController.editMode}" ajaxSingle="true"
+						render="mainArea" disabled="#{empty selectedQuote}">
+					</a4j:commandButton>
 
-						<a4j:commandButton id="delete" value="#{msgs.delete}"
-							action="#{quoteController.deleteQuote()}"
-							styleClass="commandButton"
-							rendered="#{not quoteController.editMode}" ajaxSingle="true"
-							disabled="#{empty selectedQuote or selectedQuote.isActive}"
-							render="mainArea">
-						</a4j:commandButton>
+					<a4j:commandButton id="delete" value="#{msgs.delete}"
+						action="#{quoteController.deleteQuote()}"
+						styleClass="commandButton"
+						rendered="#{not quoteController.editMode}" ajaxSingle="true"
+						disabled="#{empty selectedQuote or selectedQuote.isActive}"
+						render="mainArea">
+					</a4j:commandButton>
 
-						<a4j:commandButton id="save" value="#{msgs.save}"
-							action="#{quoteController.save()}" styleClass="commandButton"
-							rendered="#{quoteController.editMode}" execute="@form"
-							render="quotedetails">
-						</a4j:commandButton>
+					<a4j:commandButton id="save" value="#{msgs.save}"
+						action="#{quoteController.save()}" styleClass="commandButton"
+						rendered="#{quoteController.editMode}" execute="@form"
+						render="quotedetails">
+					</a4j:commandButton>
 
-						<a4j:commandButton id="cancelEdit" value="#{msgs.cancel}"
-							styleClass="commandButton" rendered="#{quoteController.editMode}"
-							action="#{quoteController.cancelEdit()}" ajaxSingle="true"
-							render="quotedetails">
-						</a4j:commandButton>
+					<a4j:commandButton id="cancelEdit" value="#{msgs.cancel}"
+						styleClass="commandButton" rendered="#{quoteController.editMode}"
+						action="#{quoteController.cancelEdit()}" ajaxSingle="true"
+						render="quotedetails">
+					</a4j:commandButton>
 
 				</h:panelGroup>
 

@@ -19,6 +19,7 @@ import com.redhat.sforce.qb.manager.EntityManager;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.Contact;
+import com.redhat.sforce.qb.model.EntitySubscription;
 import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.Quote;
 import com.redhat.sforce.qb.model.QuoteLineItem;
@@ -28,6 +29,7 @@ import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
+import com.redhat.sforce.qb.qualifiers.LoggedIn;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
@@ -87,6 +89,10 @@ public class QuoteController {
 	
 	@Inject
 	private Event<QuoteLineItem> quoteLineItemEvent;
+	
+	@Inject
+	@LoggedIn
+	private User user;
 		 
 	@PostConstruct
 	public void init() {
@@ -208,6 +214,11 @@ public class QuoteController {
 	}
 
 	public void viewQuote(Quote quote) {
+		for (EntitySubscription entitySubscription : quote.getEntitySubscriptions()) {
+			if (entitySubscription.getSubscriberId().equals(user.getId())) {
+				selectedQuote.setUserSubscriptionId(entitySubscription.getId());
+			}
+		}
 		quoteEvent.select(VIEW_QUOTE).fire(quote);		
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}

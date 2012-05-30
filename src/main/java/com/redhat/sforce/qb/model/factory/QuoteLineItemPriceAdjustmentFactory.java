@@ -18,8 +18,6 @@ public class QuoteLineItemPriceAdjustmentFactory {
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(i));
-			
-			System.out.println("deserialize");
 
 			QuoteLineItemPriceAdjustment quotePriceAdjustment = new QuoteLineItemPriceAdjustment();
 			quotePriceAdjustment.setId(wrapper.getId());

@@ -47,7 +47,9 @@ public class Quote extends SObject {
 	private Boolean isNonStandardPayment;
 	private Date lastCalculatedDate;
 	private Date lastPricedDate;
+	private String userSubscriptionId;
 	private Opportunity opportunity;	
+	private List<EntitySubscription> entitySubscriptions;
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
@@ -378,12 +380,28 @@ public class Quote extends SObject {
 		this.lastPricedDate = lastPricedDate;
 	}
 		
+	public String getUserSubscriptionId() {
+		return userSubscriptionId;
+	}
+
+	public void setUserSubscriptionId(String userSubscriptionId) {
+		this.userSubscriptionId = userSubscriptionId;
+	}
+
 	public Opportunity getOpportunity() {
 		return opportunity;
 	}
 
 	public void setOpportunity(Opportunity opportunity) {
 		this.opportunity = opportunity;
+	}
+
+	public List<EntitySubscription> getEntitySubscriptions() {
+		return entitySubscriptions;
+	}
+
+	public void setEntitySubscriptions(List<EntitySubscription> entitySubscriptions) {
+		this.entitySubscriptions = entitySubscriptions;
 	}
 
 	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {
