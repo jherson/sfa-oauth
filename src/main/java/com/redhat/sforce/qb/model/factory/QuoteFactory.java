@@ -10,9 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 
@@ -90,11 +90,6 @@ public class QuoteFactory {
 		
 		if (quote.getQuoteLineItems() == null || quote.getQuoteLineItems().size() == 0) {
 			quote.setHasQuoteLineItems(Boolean.FALSE);
-		}
-		
-		records = wrapper.getRecords("FeedSubscriptionsForEntity");
-		if (records != null) {
-			quote.setEntitySubscriptions(EntitySubscriptionFactory.deserialize(records));
 		}
 
 		records = wrapper.getRecords("QuoteLineItemSchedule__r");

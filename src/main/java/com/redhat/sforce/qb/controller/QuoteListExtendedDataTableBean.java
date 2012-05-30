@@ -10,7 +10,7 @@ import org.jboss.logging.Logger;
 import org.richfaces.component.UIExtendedDataTable;
 
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
 
 @Model

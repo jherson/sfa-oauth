@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
 

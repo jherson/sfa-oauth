@@ -7,8 +7,9 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.User;
 import com.redhat.sforce.qb.model.factory.UserFactory;
+import com.redhat.sforce.qb.model.sobject.User;
+
 import java.io.Serializable;
 
 @SessionScoped

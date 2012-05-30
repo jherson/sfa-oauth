@@ -29,24 +29,30 @@
 			<rich:toolbar height="20" itemSeparator="grid">
 
 				<rich:toolbarGroup location="left">
+				
 					<a4j:commandLink value="#{msgs.back}"
 						disabled="#{quoteController.editMode}" status="waitstatus"
 						render="mainArea" action="#{quoteController.backToQuoteManager()}">
 					</a4j:commandLink>
-
+				
+				    <h:outputText value="#{msgs.followers}: " />
+				    <a4j:commandLink value="#{selectedQuote.followers.total}" />
+				
 					<a4j:commandLink id="followQuote"
-						action="#{quoteController.followQuote(quote)}" render="quoteList"
-						rendered="#{empty selectedQuote.userSubscriptionId}">
-						<h:outputText value="#{msgs.follow}" />
+						action="#{quoteController.followQuote()}" render="viewQuotePanel"
+						rendered="#{empty selectedQuote.followers.mySubscription}">
+						<h:outputText value="#{msgs.follow}"  />
+						<h:graphicImage value="./images/list-add.png" />
 					</a4j:commandLink>
 
 					<a4j:commandLink id="unfollowQuote"
-						action="#{quoteController.unfollowQuote(quote)}"
-						rendered="#{not empty selectedQuote.userSubscriptionId}"
-						render="quoteList">
+						action="#{quoteController.unfollowQuote()}"
+						rendered="#{not empty selectedQuote.followers.mySubscription}"
+						render="viewQuotePanel">
 						<h:outputText value="#{msgs.unfollow}" />
+						<h:graphicImage value="./images/list-remove.png" />
 					</a4j:commandLink>
-
+				
 				</rich:toolbarGroup>
 
 			</rich:toolbar>
@@ -57,7 +63,7 @@
 				<h:panelGroup layout="block">
 
 					<h:outputText value="#{msgs.quoteDetailsHeader}"
-						style="font-weight: bold" />
+						style="font-weight: bold; font-size: 14px;" />
 
 				</h:panelGroup>
 

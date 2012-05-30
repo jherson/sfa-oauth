@@ -11,8 +11,8 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Opportunity;
 import com.redhat.sforce.qb.model.factory.OpportunityFactory;
+import com.redhat.sforce.qb.model.sobject.Opportunity;
 
 @SessionScoped
 

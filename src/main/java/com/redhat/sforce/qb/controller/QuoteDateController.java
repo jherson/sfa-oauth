@@ -5,8 +5,8 @@ import javax.inject.Inject;
 
 import org.joda.time.DateTime;
 
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 
 @Model

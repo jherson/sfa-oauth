@@ -12,11 +12,11 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.QuoteManager;
-import com.redhat.sforce.qb.model.OpportunityLineItem;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.sobject.OpportunityLineItem;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItemPriceAdjustment;
+import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
 import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
@@ -318,7 +318,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private void doUnfollow(Quote quote) {
 		try {
-			quoteDAO.unfollow(quote.getId());
+			quoteDAO.unfollow(quote.getFollowers().getMySubscription().getId());
 			
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block

@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model;
+package com.redhat.sforce.qb.model.sobject;
 
 import java.util.Date;
 

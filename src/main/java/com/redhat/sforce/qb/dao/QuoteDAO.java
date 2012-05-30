@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.chatter.Followers;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItemPriceAdjustment;
+import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.ws.ConnectionException;
@@ -35,4 +36,5 @@ public interface QuoteDAO {
 	public Quote follow(String quoteId) throws SalesforceServiceException;
 	public Quote unfollow(String quoteId) throws SalesforceServiceException;
 	public Quote price(Quote quote) throws SalesforceServiceException;	
+	public Followers getFollowers(String quoteId);
 }

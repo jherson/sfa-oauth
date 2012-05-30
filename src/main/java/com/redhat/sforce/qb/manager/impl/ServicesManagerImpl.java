@@ -27,9 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.google.gson.Gson;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
+import com.redhat.sforce.qb.model.chatter.Followers;
 
 @Named(value="servicesManager")
 @SessionScoped
@@ -130,7 +132,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void follow(String subjectId) throws SalesforceServiceException {
+	public void follow(String subjectId) {
 		String url = applicationManager.getApiEndpoint()
 				+ "/data/"
 				+ applicationManager.getApiVersion() 
@@ -166,13 +168,12 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}	
 	}
 	
-	public void unfollow(String id) {
-		///services/data/v22.0/chatter/subscriptions/0E8D00000001JkFKAU
-		
+	@Override
+	public void unfollow(String subscriptionId) {		
 		String url = applicationManager.getApiEndpoint()
 				+ "/data/"
 				+ applicationManager.getApiVersion() 
-				+ "/chatter/subscriptions/0E8P0000000ixXyKAI";
+				+ "/chatter/subscriptions/" + subscriptionId;
 		
 		log.info(sessionId);
 		log.info(url);
@@ -198,6 +199,66 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		} finally {
 			method.releaseConnection();
 		}	
+	}
+	
+	@Override
+	public JSONObject getFollowers(String recordId) {
+		String url = applicationManager.getApiEndpoint() 
+				+ "/data/"
+				+ applicationManager.getApiVersion() 
+				+ "/chatter/records/" + recordId + "/followers";
+		
+		GetMethod getMethod = new GetMethod(url);
+		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
+		getMethod.setRequestHeader("Content-Type", "application/json");
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(getMethod);
+			JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+			log.info(response.toString(2));
+			return response;
+		} catch (HttpException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		} catch (JSONException e) {
+			log.error(e);
+		} finally {
+			getMethod.releaseConnection();
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public JSONObject getFeed(String recordId) {
+		String url = applicationManager.getApiEndpoint()
+				+ "/data/"
+				+ applicationManager.getApiVersion() 
+				+ "/chatter/feeds/record/" + recordId + "/feed-items";		
+
+		GetMethod getMethod = new GetMethod(url);
+		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
+		getMethod.setRequestHeader("Content-Type", "application/json");
+		
+		HttpClient httpclient = new HttpClient();
+		try {
+			httpclient.executeMethod(getMethod);
+			JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+			log.info(response.toString(2));
+			return response;
+		} catch (HttpException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		} catch (JSONException e) {
+			log.error(e);
+		} finally {
+			getMethod.releaseConnection();
+		}
+		
+		return null;
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 package com.redhat.sforce.qb.model.factory;
 
-import com.redhat.sforce.qb.model.SObject;
+import com.redhat.sforce.qb.model.sobject.SObject;
 import com.sforce.soap.partner.QueryResult;
 
 public class SObjectFactory {

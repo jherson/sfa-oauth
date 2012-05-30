@@ -6,8 +6,8 @@ import javax.enterprise.context.SessionScoped;
 
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
-import com.redhat.sforce.qb.model.PricebookEntry;
 import com.redhat.sforce.qb.model.factory.PricebookEntryFactory;
+import com.redhat.sforce.qb.model.sobject.PricebookEntry;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.ws.ConnectionException;
 

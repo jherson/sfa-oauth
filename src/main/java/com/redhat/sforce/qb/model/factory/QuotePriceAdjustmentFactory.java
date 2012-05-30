@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class QuotePriceAdjustmentFactory {

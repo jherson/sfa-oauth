@@ -199,6 +199,12 @@
 			<artifactId>force-partner-api</artifactId>
 			<version>${force.api.version}</version>
 		</dependency>
+		
+		<dependency>
+	       <groupId>mysql</groupId>
+	       <artifactId>mysql-connector-java</artifactId>
+	       <version>5.1.20</version>	    
+        </dependency>
 
 	</dependencies>
 

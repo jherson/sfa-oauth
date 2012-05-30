@@ -8,8 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.model.sobject.Opportunity;
+import com.redhat.sforce.qb.model.sobject.User;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class OpportunityFactory {

@@ -18,9 +18,11 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.chatter.Followers;
+import com.redhat.sforce.qb.model.sobject.Opportunity;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.qualifiers.ChatterEvent;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
@@ -62,6 +64,7 @@ public class QuoteProducer implements Serializable {
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
 		selectedQuote = quote;
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
+		selectedQuote.setFollowers(queryFollowers(quote.getId()));
 	}
 	
 	public void onCreateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {
@@ -111,6 +114,10 @@ public class QuoteProducer implements Serializable {
 			}
 		}
 	}
+	
+	public void onChatter(@Observes(during=TransactionPhase.AFTER_SUCCESS) @ChatterEvent final Quote quote) {
+		selectedQuote.setFollowers(queryFollowers(quote.getId()));
+	}
 
 	private Opportunity queryOpportunity(String opportunityId) {
 		log.info("queryOpportunity: " + opportunityId);		
@@ -122,6 +129,11 @@ public class QuoteProducer implements Serializable {
 		}	
 		
 		return null;
+	}
+	
+	private Followers queryFollowers(String quoteId) {
+		log.info("queryFollowers: " + quoteId);
+		return quoteDAO.getFollowers(quoteId);
 	}
 	
 	private Quote queryQuoteById(String quoteId) {

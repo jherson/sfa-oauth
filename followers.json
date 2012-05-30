@@ -1,0 +1,72 @@
+{
+  "currentPageUrl": "/services/data/v25.0/chatter/records/a0QP0000001IFg7MAG/followers",
+  "followers": [
+    {
+      "id": "0E8P0000000ixY8KAI",
+      "subject": {
+        "id": "a0QP0000001IFg7MAG",
+        "mySubscription": {
+          "id": "0E8P0000000ixY8KAI",
+          "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000ixY8KAI"
+        },
+        "name": "Quote for RHEL6",
+        "type": "CustomEntityDataTemplate",
+        "url": "/services/data/v25.0/chatter/records/a0QP0000001IFg7MAG"
+      },
+      "subscriber": {
+        "companyName": null,
+        "firstName": "John",
+        "id": "00560000000m2EaAAI",
+        "isActive": true,
+        "isChatterGuest": false,
+        "lastName": "Herson",
+        "mySubscription": null,
+        "name": "John Herson",
+        "photo": {
+          "largePhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/F",
+          "photoVersionId": null,
+          "smallPhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/T"
+        },
+        "title": "Salesforce.com Technical Architect",
+        "type": "User",
+        "url": "/services/data/v25.0/chatter/users/00560000000m2EaAAI"
+      },
+      "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000ixY8KAI"
+    },
+    {
+      "id": "0E8P0000000ixbWKAQ",
+      "subject": {
+        "id": "a0QP0000001IFg7MAG",
+        "mySubscription": {
+          "id": "0E8P0000000ixY8KAI",
+          "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000ixY8KAI"
+        },
+        "name": "Quote for RHEL6",
+        "type": "CustomEntityDataTemplate",
+        "url": "/services/data/v25.0/chatter/records/a0QP0000001IFg7MAG"
+      },
+      "subscriber": {
+        "companyName": null,
+        "firstName": "Wendy",
+        "id": "00560000000nYyJAAU",
+        "isActive": true,
+        "isChatterGuest": false,
+        "lastName": "Bloom",
+        "mySubscription": null,
+        "name": "Wendy Bloom",
+        "photo": {
+          "largePhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/F",
+          "photoVersionId": null,
+          "smallPhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/T"
+        },
+        "title": "Business Analyst, IT",
+        "type": "User",
+        "url": "/services/data/v25.0/chatter/users/00560000000nYyJAAU"
+      },
+      "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000ixbWKAQ"
+    }
+  ],
+  "nextPageUrl": null,
+  "previousPageUrl": null,
+  "total": 2
+}

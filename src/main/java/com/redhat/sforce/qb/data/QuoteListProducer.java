@@ -13,7 +13,7 @@ import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
 
 import java.io.Serializable;

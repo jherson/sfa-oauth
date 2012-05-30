@@ -7,7 +7,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.model.CreditCheck;
+import com.redhat.sforce.qb.model.sobject.CreditCheck;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 
 public class CreditCheckFactory {

@@ -16,7 +16,7 @@ import org.jboss.logging.Logger;
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Quote;
+import com.redhat.sforce.qb.model.sobject.Quote;
 
 @RequestScoped
 @ApplicationPath("/rest")

@@ -18,12 +18,12 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.manager.EntityManager;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.Contact;
-import com.redhat.sforce.qb.model.EntitySubscription;
-import com.redhat.sforce.qb.model.Opportunity;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.User;
+import com.redhat.sforce.qb.model.sobject.Contact;
+import com.redhat.sforce.qb.model.sobject.Opportunity;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.User;
+import com.redhat.sforce.qb.qualifiers.ChatterEvent;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
@@ -64,6 +64,9 @@ public class QuoteController {
 		
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<PriceQuote> PRICE_QUOTE = new AnnotationLiteral<PriceQuote>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<ChatterEvent> CHATTER_EVENT = new AnnotationLiteral<ChatterEvent>() {};
 
 	@Inject
 	private Logger log;
@@ -174,12 +177,14 @@ public class QuoteController {
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}
 	
-	public void followQuote(Quote quote) {
-		quoteManager.follow(quote);
+	public void followQuote() {
+		quoteManager.follow(selectedQuote);
+		quoteEvent.select(CHATTER_EVENT).fire(selectedQuote);	
 	}
 	
-	public void unfollowQuote(Quote quote) {
-		quoteManager.unfollow(quote);
+	public void unfollowQuote() {
+		quoteManager.unfollow(selectedQuote);
+		quoteEvent.select(CHATTER_EVENT).fire(selectedQuote);	
 	}
 	
 	public void goalSeek() {
@@ -214,11 +219,6 @@ public class QuoteController {
 	}
 
 	public void viewQuote(Quote quote) {
-		for (EntitySubscription entitySubscription : quote.getEntitySubscriptions()) {
-			if (entitySubscription.getSubscriberId().equals(user.getId())) {
-				selectedQuote.setUserSubscriptionId(entitySubscription.getId());
-			}
-		}
 		quoteEvent.select(VIEW_QUOTE).fire(quote);		
 		setMainArea(TemplatesEnum.QUOTE_DETAILS);
 	}

@@ -10,9 +10,9 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
-import com.redhat.sforce.qb.model.PricebookEntry;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.PricebookEntry;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.ws.ConnectionException;

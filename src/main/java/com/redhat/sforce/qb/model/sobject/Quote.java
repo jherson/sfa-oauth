@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model;
+package com.redhat.sforce.qb.model.sobject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
+import com.redhat.sforce.qb.model.chatter.Followers;
 
 public class Quote extends SObject {
 
@@ -47,9 +49,8 @@ public class Quote extends SObject {
 	private Boolean isNonStandardPayment;
 	private Date lastCalculatedDate;
 	private Date lastPricedDate;
-	private String userSubscriptionId;
 	private Opportunity opportunity;	
-	private List<EntitySubscription> entitySubscriptions;
+	private Followers followers;
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
@@ -379,14 +380,6 @@ public class Quote extends SObject {
 	public void setLastPricedDate(Date lastPricedDate) {
 		this.lastPricedDate = lastPricedDate;
 	}
-		
-	public String getUserSubscriptionId() {
-		return userSubscriptionId;
-	}
-
-	public void setUserSubscriptionId(String userSubscriptionId) {
-		this.userSubscriptionId = userSubscriptionId;
-	}
 
 	public Opportunity getOpportunity() {
 		return opportunity;
@@ -396,12 +389,12 @@ public class Quote extends SObject {
 		this.opportunity = opportunity;
 	}
 
-	public List<EntitySubscription> getEntitySubscriptions() {
-		return entitySubscriptions;
+	public Followers getFollowers() {
+		return followers;
 	}
 
-	public void setEntitySubscriptions(List<EntitySubscription> entitySubscriptions) {
-		this.entitySubscriptions = entitySubscriptions;
+	public void setFollowers(Followers followers) {
+		this.followers = followers;
 	}
 
 	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {

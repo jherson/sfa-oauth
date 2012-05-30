@@ -11,15 +11,17 @@ import javax.enterprise.context.SessionScoped;
 
 import org.json.JSONException;
 
+import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Quote;
-import com.redhat.sforce.qb.model.QuoteLineItem;
-import com.redhat.sforce.qb.model.QuoteLineItemPriceAdjustment;
-import com.redhat.sforce.qb.model.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
+import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.sobject.QuoteLineItemPriceAdjustment;
+import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
 import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.QueryResult;
@@ -77,8 +79,8 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	@Override
 	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException {
-		String queryString = quoteQuery + "Where Id = '" + quoteId + "'";
-		try {
+		String queryString = quoteQuery + "Where Id = '" + quoteId + "'";		
+		try {			
 			return QuoteFactory.deserialize(sm.query(queryString)).get(0);
 		} catch (JSONException e) {
 			log.error(e);
@@ -101,57 +103,6 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			log.error(e);
 			throw new SalesforceServiceException(e);
 		}
-		
-//		QueryResult queryResult = em.query(queryString);
-//		
-//		if (queryResult == null || queryResult.getSize() == 0)
-//			return null;
-//				
-//		SObject sobject = queryResult.getRecords()[0];
-//		QuoteLineItem quoteLineItem = new QuoteLineItem();
-//		quoteLineItem.setId(sobject.getId());
-//		
-//		if (sobject.getChildren("QuoteLineItemPriceAdjustment__r") != null) {
-//			List<QuoteLineItemPriceAdjustment> priceAdjustments = new ArrayList<QuoteLineItemPriceAdjustment>();			
-//			for (Iterator<XmlObject> iterator = sobject.getChildren("QuoteLineItemPriceAdjustment__r"); iterator.hasNext(); ) {
-//				XmlObject xmlObject = iterator.next();
-//                
-//
-//				QuoteLineItemPriceAdjustment priceAdjustment = new QuoteLineItemPriceAdjustment();				
-//				//priceAdjustment.setId(xmlObject.getField("Id").toString());
-//				log.info("ID: " + xmlObject.getField("Id"));
-//				priceAdjustment.setQuoteLineItemId(String.valueOf(xmlObject.getField("QuoteLineItemId__c")));
-//				
-//				if (xmlObject.getField("Amount__c") != null)
-//				    priceAdjustment.setAmount(Double.valueOf(String.valueOf(xmlObject.getField("Amount__c"))));
-//				
-//				if (xmlObject.getField("Description__c") != null)
-//				    priceAdjustment.setDescription(String.valueOf(xmlObject.getField("Description__c")));
-//				
-//				if (xmlObject.getField("Operator__c") != null)
-//				    priceAdjustment.setOperator(String.valueOf(xmlObject.getField("Operator__c")));
-//				
-//				if (xmlObject.getField("Percent__c") != null)
-//				    priceAdjustment.setPercent(Double.valueOf(String.valueOf(xmlObject.getField("Percent__c"))));
-//				
-//				if (xmlObject.getField("QuoteId__c") != null)
-//				    priceAdjustment.setQuoteId(String.valueOf(xmlObject.getField("QuoteId__c")));
-//				
-//				if (xmlObject.getField("Reason__c") != null)
-//				    priceAdjustment.setReason(String.valueOf(xmlObject.getField("Reason__c")));
-//				
-//				if (xmlObject.getField("Type__c") != null)
-//				    priceAdjustment.setType(String.valueOf(xmlObject.getField("Type__c")));
-//				
-//				if (xmlObject.getField("Value__c") != null)
-//				    priceAdjustment.setValue(Double.valueOf(String.valueOf(xmlObject.getField("Value__c"))));
-//				
-//				priceAdjustments.add(priceAdjustment);
-//			}
-//			quoteLineItem.setQuoteLineItemPriceAdjustments(priceAdjustments);
-//		}
-		
-//		return quoteLineItem;
 	}
 	
 	@Override
@@ -177,6 +128,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		QueryResult queryResult = em.query(queryString);
 		SObject sobject = queryResult.getRecords()[0];
 		return Double.valueOf(sobject.getField("Amount__c").toString());
+	}
+	
+	@Override
+	public Followers getFollowers(String quoteId) {		
+		return new Gson().fromJson(sm.getFollowers(quoteId).toString(), Followers.class);
 	}
 
 	@Override
@@ -539,10 +495,6 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "        Operator__c "
 			+ " From   QuotePriceAdjustment__r "
 			+ "Order By Reason__c), "
-			+ "(Select Id, "
-			+ "        ParentId, "
-			+ "        SubscriberId "
-			+ " From   FeedSubscriptionsForEntity), "
 			+ "(Select Id, "
 			+ "        Name, "
 			+ "        CurrencyIsoCode, "

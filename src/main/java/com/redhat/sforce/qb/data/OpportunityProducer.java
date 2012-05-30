@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.Opportunity;
+import com.redhat.sforce.qb.model.sobject.Opportunity;
 
 @SessionScoped
 

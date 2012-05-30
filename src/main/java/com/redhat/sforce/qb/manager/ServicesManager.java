@@ -12,7 +12,11 @@ public interface ServicesManager {
 	public void calculateQuote(String quoteId);			
 	public void activateQuote(String quoteId) throws SalesforceServiceException;	
 	public void copyQuote(String quoteId) throws SalesforceServiceException;
-	public String priceQuote(String xml) throws SalesforceServiceException;	
-	public void follow(String subjectId) throws SalesforceServiceException;
-	public void unfollow(String subjectId) throws SalesforceServiceException;
+	public String priceQuote(String xml) throws SalesforceServiceException;
+	
+	// chatter functions
+	public void follow(String subjectId);
+	public void unfollow(String subscriptionId);
+	public JSONObject getFollowers(String recordId);
+	public JSONObject getFeed(String recordId);
 }

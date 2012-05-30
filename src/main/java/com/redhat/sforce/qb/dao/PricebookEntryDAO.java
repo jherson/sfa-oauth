@@ -1,6 +1,6 @@
 package com.redhat.sforce.qb.dao;
 
-import com.redhat.sforce.qb.model.PricebookEntry;
+import com.redhat.sforce.qb.model.sobject.PricebookEntry;
 import com.sforce.ws.ConnectionException;
 
 public interface PricebookEntryDAO {

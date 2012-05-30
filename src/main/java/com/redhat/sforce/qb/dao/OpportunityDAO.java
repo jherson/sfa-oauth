@@ -3,7 +3,7 @@ package com.redhat.sforce.qb.dao;
 import java.util.List;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.Opportunity;
+import com.redhat.sforce.qb.model.sobject.Opportunity;
 
 public interface OpportunityDAO {
     
