@@ -10,8 +10,8 @@ public class Followers implements Serializable {
     private String nextPageUrl;
     private String previousPageUrl;
     private Integer total;
-    private List<Subscriber> subscriber;
-    private MySubscription mySubscription;
+    private List<Follower> followers;
+    private Boolean isCurrentUserFollowing;
     
 	public String getCurrentPageUrl() {
 		return currentPageUrl;
@@ -45,20 +45,19 @@ public class Followers implements Serializable {
 		this.total = total;
 	}
 	
-	public List<Subscriber> getSubscriber() {
-		return subscriber;
+	public List<Follower> getFollowers() {
+		return followers;
 	}
 	
-	public void setSubscriber(List<Subscriber> subscriber) {
-		this.subscriber = subscriber;
+	public void setSubscriber(List<Follower> followers) {
+		this.followers = followers;
 	}
 	
-	public MySubscription getMySubscription() {
-		return mySubscription;
+	public Boolean getIsCurrentUserFollowing() {
+		return isCurrentUserFollowing;
 	}
 	
-	public void setMySubscription(MySubscription mySubscription) {
-		this.mySubscription = mySubscription;
+	public void setIsCurrentUserFollowing(Boolean isCurrentUserFollowing) {
+		this.isCurrentUserFollowing = isCurrentUserFollowing;
 	}
-	
 }

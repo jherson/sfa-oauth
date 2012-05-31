@@ -132,7 +132,12 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	
 	@Override
 	public Followers getFollowers(String quoteId) {		
-		return new Gson().fromJson(sm.getFollowers(quoteId).toString(), Followers.class);
+		Followers followers = new Gson().fromJson(sm.getFollowers(quoteId).toString(), Followers.class);
+		followers.setIsCurrentUserFollowing(Boolean.FALSE);
+		if (followers.getTotal() > 0 && followers.getFollowers().get(0).getSubject().getMySubscription() != null) {
+			followers.setIsCurrentUserFollowing(Boolean.TRUE);
+		}
+		return followers;
 	}
 
 	@Override

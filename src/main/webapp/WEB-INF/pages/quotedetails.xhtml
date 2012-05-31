@@ -25,37 +25,45 @@
 
 				</h:panelGroup>
 			</h:panelGrid>
-
-			<rich:toolbar height="20" itemSeparator="grid">
-
-				<rich:toolbarGroup location="left">
-				
-					<a4j:commandLink value="#{msgs.back}"
+			
+		    <h:panelGrid id="menu" width="100%" columns="1" cellpadding="3">
+				<h:panelGroup layout="block">
+		    
+		            <a4j:commandLink value="#{msgs.back}"
 						disabled="#{quoteController.editMode}" status="waitstatus"
 						render="mainArea" action="#{quoteController.backToQuoteManager()}">
 					</a4j:commandLink>
 				
+				    <h:outputText value=" " escape="false" />
+				    
 				    <h:outputText value="#{msgs.followers}: " />
 				    <a4j:commandLink value="#{selectedQuote.followers.total}" />
+				 
+				    <h:outputText value=" " escape="false" />
 				
 					<a4j:commandLink id="followQuote"
-						action="#{quoteController.followQuote()}" render="viewQuotePanel"
-						rendered="#{empty selectedQuote.followers.mySubscription}">
-						<h:outputText value="#{msgs.follow}"  />
-						<h:graphicImage value="./images/list-add.png" />
+						action="#{quoteController.followQuote()}"
+						status="waitstatus" 
+						render="menu" 
+						rendered="#{not selectedQuote.followers.isCurrentUserFollowing}">
+						<h:graphicImage url="./images/list-add.png" />#{msgs.follow}
 					</a4j:commandLink>
+
+                    <h:outputText value=" " escape="false" />
 
 					<a4j:commandLink id="unfollowQuote"
 						action="#{quoteController.unfollowQuote()}"
-						rendered="#{not empty selectedQuote.followers.mySubscription}"
-						render="viewQuotePanel">
-						<h:outputText value="#{msgs.unfollow}" />
-						<h:graphicImage value="./images/list-remove.png" />
+						status="waitstatus"
+						rendered="#{selectedQuote.followers.isCurrentUserFollowing}"
+						render="menu">
+						<h:graphicImage url="./images/list-remove.png"/>#{msgs.unfollow}
 					</a4j:commandLink>
-				
-				</rich:toolbarGroup>
-
-			</rich:toolbar>
+					
+				</h:panelGroup>	
+		    
+		    </h:panelGrid>
+		    
+		    <hr />
 
 			<h:panelGrid width="100%" columns="2" cellpadding="3"
 				columnClasses="column35,column65">

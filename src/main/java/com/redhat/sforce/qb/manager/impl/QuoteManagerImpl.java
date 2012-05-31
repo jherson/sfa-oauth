@@ -318,7 +318,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private void doUnfollow(Quote quote) {
 		try {
-			quoteDAO.unfollow(quote.getFollowers().getMySubscription().getId());
+			quoteDAO.unfollow(quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId());
 			
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
