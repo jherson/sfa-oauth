@@ -30,11 +30,11 @@ public interface QuoteDAO {
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
-	public Quote activate(String quoteId) throws SalesforceServiceException;
-	public Quote calculate(String quoteId) throws SalesforceServiceException;
+	public void activate(String quoteId);
+	public void calculate(String quoteId);
 	public Quote copy(String quoteId) throws SalesforceServiceException;	
-	public Quote follow(String quoteId) throws SalesforceServiceException;
-	public Quote unfollow(String quoteId) throws SalesforceServiceException;
-	public Quote price(Quote quote) throws SalesforceServiceException;	
+	public void follow(String quoteId);
+	public void unfollow(String quoteId);
+	public void price(Quote quote);	
 	public Followers getFollowers(String quoteId);
 }

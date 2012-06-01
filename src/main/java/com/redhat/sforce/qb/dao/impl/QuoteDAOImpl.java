@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.model.ListDataModel;
 
 import org.json.JSONException;
 
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.impl.Query;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
@@ -37,72 +40,105 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	
 	@Override
 	public List<Quote> queryQuotes() throws SalesforceServiceException {
-		String queryString = quoteQuery + "Order By Number__c";
-		try {
-			return QuoteFactory.deserialize(sm.query(queryString));
-		} catch (JSONException e) {
-			log.error(e.getStackTrace());
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e.getStackTrace());
-			throw new SalesforceServiceException(e);
+		String queryString = quoteQuery + "Order By Number__c Limit 200";
+		List<Quote> dataModel = new ArrayList<Quote>();
+		for (com.redhat.sforce.qb.model.sobject.SObject sobject : sm.query(queryString)) {
+		    dataModel.add(((Quote) sobject));    
 		}
+		
+		Query q = sm.createQuery(queryString);
+		try {
+			List<Quote> quoteList = (List<Quote>) q.getResultList();
+			for (Quote quote : quoteList) {
+				log.info("query: " +quote.getId());
+			}
+		} catch (QueryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dataModel;
+//		try { 
+//			ListDataModel<Quote> dataModel = new ListDataModel<Quote>();
+//			for (com.redhat.sforce.qb.model.sobject.SObject sobject : sm.query(queryString)) {
+//			    dataModel.setWrappedData(((Quote) sobject));    
+//			}
+//			return dataModel;
+//		} catch (JSONException e) {
+//			log.error(e.getStackTrace());
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e.getStackTrace());
+//			throw new SalesforceServiceException(e);
+//		} catch (ConnectionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return null;
+//		}
 	}
 	
 	@Override
 	public List<Quote> queryQuotes(String whereClause) throws SalesforceServiceException {
 		String queryString = quoteQuery + "Where " + whereClause;
-		try {
-			return QuoteFactory.deserialize(sm.query(queryString));
-		} catch (JSONException e) {
-			log.error(e.getStackTrace());
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e.getStackTrace());
-			throw new SalesforceServiceException(e);
-		}
+//		try {
+//			return null; //QuoteFactory.deserialize(sm.query(queryString));
+//		} catch (JSONException e) {
+//			log.error(e.getStackTrace());
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e.getStackTrace());
+//			throw new SalesforceServiceException(e);
+//		}
+		
+		return null;
 	}
 
 	@Override
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws SalesforceServiceException {
 		String queryString = quoteQuery + "Where OpportunityId__c = '" + opportunityId + "'";
-		try {
-			return QuoteFactory.deserialize(sm.query(queryString));
-		} catch (JSONException e) {
-			log.error(e.getStackTrace());
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e.getStackTrace());
-			throw new SalesforceServiceException(e);
-		}
+//		try {
+//			return QuoteFactory.deserialize(sm.query(queryString));
+//		} catch (JSONException e) {
+//			log.error(e.getStackTrace());
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e.getStackTrace());
+//			throw new SalesforceServiceException(e);
+//		}
+		
+		return null;
 	}
 
 	@Override
 	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException {
 		String queryString = quoteQuery + "Where Id = '" + quoteId + "'";		
-		try {			
-			return QuoteFactory.deserialize(sm.query(queryString)).get(0);
-		} catch (JSONException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		}
+//		try {			
+//			return QuoteFactory.deserialize(sm.query(queryString)).get(0);
+//		} catch (JSONException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		}
+		
+		return null;
 	}
 	
 	@Override
 	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws SalesforceServiceException {
 		String queryString = quoteLineItemQuery + "Where Id = '" + quoteLineItemId + "'";
-		try {
-			return QuoteLineItemFactory.deserialize(sm.query(queryString)).get(0);
-		} catch (JSONException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		}
+//		try {
+//			return QuoteLineItemFactory.deserialize(sm.query(queryString)).get(0);
+//		} catch (JSONException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		}
+		
+		return null;
 	}
 	
 	@Override
@@ -141,39 +177,33 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public Quote activate(String quoteId) throws SalesforceServiceException {
+	public void activate(String quoteId) {
 		sm.activateQuote(quoteId);
-		return null;
 	}
 	
 	@Override
-	public Quote follow(String quoteId) throws SalesforceServiceException {
+	public void follow(String quoteId) {
 		sm.follow(quoteId);
-		return null;
 	}
 	
 	@Override
-	public Quote unfollow(String quoteId) throws SalesforceServiceException {
+	public void unfollow(String quoteId) {
 		sm.unfollow(quoteId);
-		return null;
 	}
 
 	@Override
-	public Quote calculate(String quoteId) throws SalesforceServiceException {
+	public void calculate(String quoteId) {
 		sm.calculateQuote(quoteId);
-		return queryQuoteById(quoteId);
 	}
 
 	@Override
 	public Quote copy(String quoteId) throws SalesforceServiceException {
-		sm.copyQuote(quoteId);
-		return null;
+		return queryQuoteById(sm.copyQuote(quoteId));
 	}
 	
 	@Override
-	public Quote price(Quote quote) throws SalesforceServiceException {
+	public void price(Quote quote) {
         sm.priceQuote(MessageFactory.createPricingMessage(quote));
-        return null;
 	}
 
 	@Override
@@ -357,12 +387,12 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "CurrencyIsoCode, "
 			+ "CreatedDate, "
 			+ "CreatedBy.Id, "
-			+ "        CreatedBy.Name, "
-			+ "        LastModifiedDate, "
-			+ "        LastModifiedBy.Id, "
-			+ "        LastModifiedBy.Name, "
-			+ "        OpportunityLineItemId__c, "
-			+ "        Quantity__c, "
+			+ "CreatedBy.Name, "
+			+ "LastModifiedDate, "
+			+ "LastModifiedBy.Id, "
+			+ "LastModifiedBy.Name, "
+			+ "OpportunityLineItemId__c, "
+			+ "Quantity__c, "
 			+ "        EndDate__c, "
 			+ "        ContractNumbers__c, "
 			+ "        ListPrice__c, "

@@ -1,18 +1,22 @@
 package com.redhat.sforce.qb.manager;
 
-import org.json.JSONArray;
+import java.util.List;
+
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.impl.Query;
+import com.redhat.sforce.qb.model.sobject.SObject;
 
 public interface ServicesManager {
 
+	public Query createQuery(String query);
 	public JSONObject getCurrentUserInfo() throws SalesforceServiceException;	
-	public JSONArray query(String query) throws SalesforceServiceException;	
+	public List<SObject> query(String query) throws SalesforceServiceException;	
 	public void calculateQuote(String quoteId);			
-	public void activateQuote(String quoteId) throws SalesforceServiceException;	
-	public void copyQuote(String quoteId) throws SalesforceServiceException;
-	public String priceQuote(String xml) throws SalesforceServiceException;
+	public void activateQuote(String quoteId);	
+	public String copyQuote(String quoteId);
+	public void priceQuote(String xml);
 	
 	// chatter functions
 	public void follow(String subjectId);

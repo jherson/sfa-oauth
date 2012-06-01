@@ -4,6 +4,7 @@ import com.redhat.sforce.qb.controller.TemplatesEnum;
 
 public interface SessionManager {
 
+	public void logout();
 	public void setOpportunityId(String opportunityId);
 	public String getFrontDoorUrl();
 	public void setFrontDoorUrl(String frontDoorUrl);

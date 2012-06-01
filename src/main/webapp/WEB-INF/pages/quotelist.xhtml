@@ -4,86 +4,94 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j">	
+	xmlns:a4j="http://richfaces.org/a4j">
 
-<rich:extendedDataTable id="quoteList" var="quote"
-	style="height:400px;" value="#{quoteList}"
-	noDataLabel="#{msgs.noRecords}" iterationStatusVar="it" 
-	selectionMode="none">
+	<rich:extendedDataTable id="quoteList" var="quote"
+		style="height:400px;" value="#{quoteList}"
+		noDataLabel="#{msgs.noRecords}" iterationStatusVar="it"
+		selectionMode="none">
 
-	<rich:column width="80px">
-		<f:facet name="header">#{msgs.action}</f:facet>
+		<rich:column width="80px">
+			<f:facet name="header">#{msgs.action}</f:facet>
 
-		<h:panelGroup>
-		
-			<a4j:commandLink id="editQuote" 
-			    action="#{quoteController.editQuote(quote)}"
-				ajaxSingle="true"					
-				render="mainArea">
-				<h:outputText value="#{msgs.edit}" />
-			</a4j:commandLink>	
-			
-			<h:outputText value="   " />			
-		
-		    <a4j:commandLink id="deleteQuote"
-		        rendered="#{not quote.isActive}"
-				action="#{quoteController.deleteQuote(quote)}" render="quoteList"
-				onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };">
-				<h:outputText value="#{msgs.delete}" />
+			<h:panelGroup>
+
+				<a4j:commandLink id="editQuote"
+				    value="#{msgs.edit}"
+					ajaxSingle="true" >
+					<f:attribute name="quote" value="#{quote}" />
+				    <a4j:ajax execute="@this" event="click"
+					    listener="#{quoteManagerController.editQuote}"
+					    render="mainArea">
+				    </a4j:ajax>
+				</a4j:commandLink>
+
+				<h:outputText value="   " />
+
+				<a4j:commandLink id="deleteQuote" 
+				    value="#{msgs.delete}"
+				    rendered="#{not quote.isActive}"
+					onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };" >
+					<f:attribute name="quote" value="#{quote}" />
+				    <a4j:ajax execute="@this" event="click"
+					    listener="#{quoteManagerController.deleteQuote}"
+					    render="quoteList">
+				    </a4j:ajax>
+				</a4j:commandLink>
+
+				<h:outputText value="   " />
+
+			</h:panelGroup>
+
+		</rich:column>
+
+		<rich:column width="80px" style="text-align: center;">
+			<f:facet name="header">#{msgs.number}</f:facet>
+			<a4j:commandLink value="#{quote.number}">
+				<f:attribute name="quote" value="#{quote}" />
+				<a4j:ajax execute="@this" event="click"
+					listener="#{quoteManagerController.viewQuote}"
+					render="mainArea">
+				</a4j:ajax>
 			</a4j:commandLink>
-			
-			<h:outputText value="   " />	
+		</rich:column>
 
-		</h:panelGroup>
+		<rich:column width="350px">
+			<f:facet name="header">#{msgs.name}</f:facet>
+			<h:outputText value="#{quote.name}" />
+		</rich:column>
 
-	</rich:column>
+		<rich:column width="80px">
+			<f:facet name="header">#{msgs.type}</f:facet>
+			<h:outputText value="#{quote.type}" />
+		</rich:column>
 
-	<rich:column width="80px" style="text-align: center;">
-		<f:facet name="header">#{msgs.number}</f:facet>
-		<a4j:commandLink value="#{quote.number}">  
-			<f:attribute name="quote" value="#{quote}" />
-					<a4j:ajax execute="@this" event="click"
-						listener="#{quoteListExtendedDataTableBean.viewQuote}"
-						render="mainArea">
-					</a4j:ajax>
-		</a4j:commandLink>
-	</rich:column>
+		<rich:column width="350px">
+			<f:facet name="header">#{msgs.opportunity}</f:facet>
+			<a4j:commandLink value="#{quote.opportunity.name}"
+				onclick="window.open('#{sessionManager.frontDoorUrl}#{quote.opportunity.id}');" />
+		</rich:column>
 
-	<rich:column width="350px">
-		<f:facet name="header">#{msgs.name}</f:facet>
-		<h:outputText value="#{quote.name}" />
-	</rich:column>
+		<rich:column width="80px" style="text-align: center;">
+			<f:facet name="header">#{msgs.active}</f:facet>
+			<h:graphicImage value="./images/active.png" styleClass="centered"
+				style="vertical-align: middle;" rendered="#{quote.isActive}" />
+		</rich:column>
 
-	<rich:column width="80px">
-		<f:facet name="header">#{msgs.type}</f:facet>
-		<h:outputText value="#{quote.type}" />
-	</rich:column>
-	
-	<rich:column width="350px">
-		<f:facet name="header">#{msgs.opportunity}</f:facet>
-		<a4j:commandLink value="#{quote.opportunity.name}" onclick="window.open('#{sessionManager.frontDoorUrl}#{quote.opportunity.id}');"/>     
-	</rich:column>	
+		<rich:column width="100px">
+			<f:facet name="header">#{msgs.amount} </f:facet>
+			<h:outputText value="#{quote.currencyIsoCode}" />
+			<h:outputText value="  " escape="false" />
+			<h:outputText value="#{quote.amount}">
+				<f:convertNumber locale="#{user.locale}"
+					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
+			</h:outputText>
+		</rich:column>
 
-	<rich:column width="80px" style="text-align: center;">
-		<f:facet name="header">#{msgs.active}</f:facet>
-		<h:graphicImage value="./images/active.png" styleClass="centered"
-			style="vertical-align: middle;" rendered="#{quote.isActive}" />
-	</rich:column>
+		<rich:column width="100px" style="text-align: center;">
+			<f:facet name="header">#{msgs.status}</f:facet>
+			<h:outputText value="#{quote.status}" />
+		</rich:column>
 
-	<rich:column width="100px">
-		<f:facet name="header">#{msgs.amount} </f:facet>
-		<h:outputText value="#{quote.currencyIsoCode}" />
-		<h:outputText value="  " escape="false" />
-		<h:outputText value="#{quote.amount}">
-			<f:convertNumber locale="#{user.locale}"
-				pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
-		</h:outputText>
-	</rich:column>
-
-	<rich:column width="100px" style="text-align: center;">
-		<f:facet name="header">#{msgs.status}</f:facet>
-		<h:outputText value="#{quote.status}" />
-	</rich:column>
-
-</rich:extendedDataTable>
+	</rich:extendedDataTable>
 </ui:composition>

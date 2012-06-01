@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
+import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 
@@ -28,6 +29,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	@Inject
 	private ApplicationManager applicationManager;
+	
+	@Inject
+	private SessionUserDAO sessionUserDAO;
 	
 	private String opportunityId;
 	
@@ -73,6 +77,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		} else {
 			setMainArea(TemplatesEnum.HOME);		 
 		}			
+	}
+	
+	@Override
+	public void logout() {
+		sessionUserDAO.logout();
 	}
 	
 	@Override

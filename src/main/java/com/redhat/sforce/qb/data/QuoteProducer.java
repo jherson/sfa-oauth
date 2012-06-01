@@ -23,6 +23,7 @@ import com.redhat.sforce.qb.model.sobject.Opportunity;
 import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ChatterEvent;
+import com.redhat.sforce.qb.qualifiers.CopyQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
@@ -78,6 +79,12 @@ public class QuoteProducer implements Serializable {
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
 		quoteList.set(index, selectedQuote);
+	}
+	
+	public void onCopyQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CopyQuote final Quote quote) {		
+		selectedQuote = quote;
+		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
+		quoteList.add(quote);
 	}
 	
 	public void onDeleteQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuote final Quote quote) {

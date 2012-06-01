@@ -24,12 +24,12 @@ import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
 import com.redhat.sforce.qb.model.sobject.User;
 import com.redhat.sforce.qb.qualifiers.ChatterEvent;
+import com.redhat.sforce.qb.qualifiers.CopyQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
-import com.redhat.sforce.qb.qualifiers.LoggedIn;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
@@ -46,6 +46,9 @@ public class QuoteController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<ViewQuote> VIEW_QUOTE = new AnnotationLiteral<ViewQuote>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<CopyQuote> COPY_QUOTE = new AnnotationLiteral<CopyQuote>() {};	
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<UpdateQuote> UPDATE_QUOTE = new AnnotationLiteral<UpdateQuote>() {};
@@ -83,19 +86,12 @@ public class QuoteController {
 	@Inject
 	@SelectedQuote
 	private Quote selectedQuote;
-	
-	@Inject
-	private Event<User> userEvent;
 
 	@Inject
 	private Event<Quote> quoteEvent;
 	
 	@Inject
-	private Event<QuoteLineItem> quoteLineItemEvent;
-	
-	@Inject
-	@LoggedIn
-	private User user;
+	private Event<QuoteLineItem> quoteLineItemEvent;	
 		 
 	@PostConstruct
 	public void init() {
@@ -125,13 +121,10 @@ public class QuoteController {
 	public TemplatesEnum getMainArea() {
 		return sessionManager.getMainArea();
 	}
-	
-	public void refresh() {
-		userEvent.fire(new User());
-		quoteEvent.select(LIST_QUOTES).fire(new Quote());		
-	}
 
-	public void logout() {			
+	public void logout() {		
+		
+		sessionManager.logout();
 							
        	HttpSession session = JsfUtil.getSession();
        	session.invalidate();
@@ -171,12 +164,6 @@ public class QuoteController {
 		setEditMode(Boolean.TRUE);
 	}
 	
-	public void editQuote(Quote quote) {	
-		quoteEvent.select(VIEW_QUOTE).fire(quote);	
-		setEditMode(Boolean.TRUE);
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
-	}
-	
 	public void followQuote() {
 		quoteManager.follow(selectedQuote);
 		quoteEvent.select(CHATTER_EVENT).fire(selectedQuote);	
@@ -214,23 +201,14 @@ public class QuoteController {
 	}
 
 	public void copyQuote(Quote quote) {
-		quoteManager.copy(quote);
-		quoteEvent.select(LIST_QUOTES).fire(new Quote());			
-	}
-
-	public void viewQuote(Quote quote) {
-		quoteEvent.select(VIEW_QUOTE).fire(quote);		
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		quote = quoteManager.copy(quote);
+		quoteEvent.select(COPY_QUOTE).fire(quote);			
 	}
 
 	public void deleteQuote() {
-		deleteQuote(selectedQuote);		
+		quoteManager.delete(selectedQuote);	
+		quoteEvent.select(DELETE_QUOTE).fire(selectedQuote);
 		setMainArea(TemplatesEnum.QUOTE_MANAGER);
-	}
-
-	public void deleteQuote(Quote quote) {
-		quoteManager.delete(quote);
-		quoteEvent.select(DELETE_QUOTE).fire(quote);
 	}
 	
 	public void calculateQuote() {

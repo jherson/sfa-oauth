@@ -7,6 +7,7 @@ public class SObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	private String id;
+	private String url;
 	private String currencyIsoCode;
 	private Date createdDate;
 	private String createdById;
@@ -29,6 +30,14 @@ public class SObject implements Serializable, Cloneable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getCurrencyIsoCode() {

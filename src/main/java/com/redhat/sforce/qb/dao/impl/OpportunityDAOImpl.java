@@ -23,29 +23,33 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 	@Override
 	public Opportunity queryOpportunityById(String opportunityId) throws SalesforceServiceException {
 		String queryString = opportunityQuery + "Where Id = '" + opportunityId + "'";
-		try {
-			return OpportunityFactory.deserialize(sm.query(queryString)).get(0);
-		} catch (JSONException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		}
+//		try {
+//			return OpportunityFactory.deserialize(sm.query(queryString)).get(0);
+//		} catch (JSONException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		}
+		
+		return null;
 	}
 	
 	@Override
 	public List<Opportunity> queryOpenOpportunities() throws SalesforceServiceException {
 		String queryString = opportunityQuery + "Where IsClosed = false";
-		try {
-			return OpportunityFactory.deserialize(sm.query(queryString));
-		} catch (JSONException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		} catch (ParseException e) {
-			log.error(e);
-			throw new SalesforceServiceException(e);
-		}
+//		try {
+//			return OpportunityFactory.deserialize(sm.query(queryString));
+//		} catch (JSONException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		} catch (ParseException e) {
+//			log.error(e);
+//			throw new SalesforceServiceException(e);
+//		}
+		
+		return null;
 	}
 	
 	private String opportunityQuery = "Select Id, " 

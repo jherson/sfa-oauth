@@ -22,4 +22,9 @@ public class SessionUserDAOImpl extends SObjectDAO implements Serializable, Sess
 	public User querySessionUser() throws SalesforceServiceException, JSONException {
 		return UserFactory.deserialize(sm.getCurrentUserInfo());
 	}
+	
+	@Override
+	public void logout() {
+		
+	}
 }

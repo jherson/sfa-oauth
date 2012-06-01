@@ -10,7 +10,6 @@
 
 			<rich:panel>
 				
-
 				<h:panelGrid width="100%" columns="1" cellpadding="3">
 					<h:panelGroup layout="block">
 						<h:graphicImage value="./images/quote.png"
@@ -54,8 +53,9 @@
 						<a4j:commandButton id="refresh"
 						    styleClass="commandButton" 
 						    value="#{msgs.refresh}"
-							ajaxSingle="false" immediate="false" render="quoteList"
-							action="quoteController.refresh()}" />
+							ajaxSingle="true" 
+							render="quoteList"
+							action="#{quoteManagerController.refresh()}" />
 
 				</rich:panel>
 

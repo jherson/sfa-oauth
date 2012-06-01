@@ -46,6 +46,7 @@ public class QuoteListProducer implements Serializable {
 	public void queryQuotes() {
 		log.info("queryQuotes");
 		try {
+			//quoteList = quoteDAO.queryQuotesByOpportunityId("006P0000003U4G1");
 			quoteList = quoteDAO.queryQuotes();
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block

@@ -10,6 +10,7 @@ import com.sforce.ws.ConnectionException;
 
 public interface EntityManager {
 
+	public void logout() throws ConnectionException;
 	public QueryResult query(String queryString) throws ConnectionException;
 	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException;
 	public SaveResult persist(SObject sobject) throws ConnectionException;

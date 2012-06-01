@@ -66,8 +66,8 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void copy(Quote quote) {
-		doCopy(quote);
+	public Quote copy(Quote quote) {
+		return doCopy(quote);
 	}
 	
 	@Override
@@ -212,12 +212,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void doCalcualate(Quote quote) {
-		try {
-			quoteDAO.calculate(quote.getId());			
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteDAO.calculate(quote.getId());			
 	}
 	
 	private void doDelete(QuoteLineItem quoteLineItem) {
@@ -230,21 +225,18 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 
 	private void doPrice(Quote quote) {
-		try {
-			quoteDAO.price(quote);
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteDAO.price(quote);
 	}
 	
-	private void doCopy(Quote quote) {
+	private Quote doCopy(Quote quote) {
 		try {
-			quoteDAO.copy(quote.getId());
+			return quoteDAO.copy(quote.getId());
 		} catch (SalesforceServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 	
 	private void doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {		
@@ -296,34 +288,15 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void doActivate(Quote quote) {
-		try {
-			quoteDAO.activate(quote.getId());
-			
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		quoteDAO.activate(quote.getId());
 	}
 	
 	private void doFollow(Quote quote) {
-		try {
-			quoteDAO.follow(quote.getId());
-			
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteDAO.follow(quote.getId());
 	}
 	
 	private void doUnfollow(Quote quote) {
-		try {
-			quoteDAO.unfollow(quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId());
-			
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		quoteDAO.unfollow(quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId());
 	}
 	
 	private void doDelete(List<QuoteLineItem> quoteLineItems) {

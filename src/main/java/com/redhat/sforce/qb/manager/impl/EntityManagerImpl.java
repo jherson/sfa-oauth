@@ -61,6 +61,11 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	@Override
+	public void logout() throws ConnectionException {
+		partnerConnection.logout();		
+	}
+	
+	@Override
 	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException {
 		List<SObject> updateList = new ArrayList<SObject>();
 		List<SObject> createList = new ArrayList<SObject>();

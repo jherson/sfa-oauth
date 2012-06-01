@@ -1,5 +1,8 @@
 package com.redhat.sforce.qb.util;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +40,19 @@ public class Util {
 			return null;
 		
 		return value != null ? dateTimeFormat.parse(value) : null;
+	}
+	
+	public static String covertResponseToString(InputStream is) throws IOException {
+		BufferedInputStream bi = new BufferedInputStream(is);
+		 
+		StringBuilder sb = new StringBuilder();
+ 
+		byte[] buffer = new byte[1024];
+		int bytesRead = 0;
+		while ((bytesRead = bi.read(buffer)) != -1) {
+			sb.append(new String(buffer, 0, bytesRead));
+		}
+		return sb.toString();
 	}
 
 	public static Locale stringToLocale(String localeSidKey) {

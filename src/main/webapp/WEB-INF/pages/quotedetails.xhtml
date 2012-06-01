@@ -25,45 +25,48 @@
 
 				</h:panelGroup>
 			</h:panelGrid>
-			
-		    <h:panelGrid id="menu" width="100%" columns="1" cellpadding="3">
+
+			<h:panelGrid width="100%" columns="1" cellpadding="3">
 				<h:panelGroup layout="block">
-		    
-		            <a4j:commandLink value="#{msgs.back}"
+
+					<a4j:commandLink value="#{msgs.back}"
 						disabled="#{quoteController.editMode}" status="waitstatus"
 						render="mainArea" action="#{quoteController.backToQuoteManager()}">
 					</a4j:commandLink>
-				
-				    <h:outputText value=" " escape="false" />
-				    
-				    <h:outputText value="#{msgs.followers}: " />
-				    <a4j:commandLink value="#{selectedQuote.followers.total}" />
-				 
-				    <h:outputText value=" " escape="false" />
-				
-					<a4j:commandLink id="followQuote"
-						action="#{quoteController.followQuote()}"
-						status="waitstatus" 
-						render="menu" 
-						rendered="#{not selectedQuote.followers.isCurrentUserFollowing}">
-						<h:graphicImage url="./images/list-add.png" />#{msgs.follow}
-					</a4j:commandLink>
 
-                    <h:outputText value=" " escape="false" />
+					<h:outputText value=" " escape="false" />
 
-					<a4j:commandLink id="unfollowQuote"
-						action="#{quoteController.unfollowQuote()}"
-						status="waitstatus"
-						rendered="#{selectedQuote.followers.isCurrentUserFollowing}"
-						render="menu">
-						<h:graphicImage url="./images/list-remove.png"/>#{msgs.unfollow}
-					</a4j:commandLink>
-					
-				</h:panelGroup>	
-		    
-		    </h:panelGrid>
-		    
-		    <hr />
+					<h:outputText value="#{msgs.followers}: " />
+
+					<a4j:region>
+
+						<a4j:commandLink value="#{selectedQuote.followers.total}" />
+
+						<h:outputText value=" " escape="false" />
+
+						<a4j:commandLink id="followQuote"
+							action="#{quoteController.followQuote()}" status="waitstatus"
+							rerender="@region"
+							rendered="#{not selectedQuote.followers.isCurrentUserFollowing}">
+							<h:graphicImage url="./images/list-add.png" />#{msgs.follow}
+					    </a4j:commandLink>
+
+						<h:outputText value=" " escape="false" />
+
+						<a4j:commandLink id="unfollowQuote"
+							action="#{quoteController.unfollowQuote()}" status="waitstatus"
+							rendered="#{selectedQuote.followers.isCurrentUserFollowing}"
+							rerender="@region">
+							<h:graphicImage url="./images/list-remove.png" />#{msgs.unfollow}
+					    </a4j:commandLink>
+
+					</a4j:region>
+
+				</h:panelGroup>
+
+			</h:panelGrid>
+
+			<hr />
 
 			<h:panelGrid width="100%" columns="2" cellpadding="3"
 				columnClasses="column35,column65">
@@ -93,7 +96,7 @@
 					<a4j:commandButton id="copy" value="#{msgs.copy}"
 						action="#{quoteController.copyQuote()}" styleClass="commandButton"
 						rendered="#{not quoteController.editMode}" ajaxSingle="true"
-						render="mainArea" disabled="#{empty selectedQuote}">
+						render="quotedetails" disabled="#{empty selectedQuote}">
 					</a4j:commandButton>
 
 					<a4j:commandButton id="delete" value="#{msgs.delete}"
@@ -113,6 +116,7 @@
 					<a4j:commandButton id="cancelEdit" value="#{msgs.cancel}"
 						styleClass="commandButton" rendered="#{quoteController.editMode}"
 						action="#{quoteController.cancelEdit()}" ajaxSingle="true"
+						bypassUpdates="true" immediate="true"
 						render="quotedetails">
 					</a4j:commandButton>
 

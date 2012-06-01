@@ -8,4 +8,5 @@ import com.redhat.sforce.qb.model.sobject.User;
 public interface SessionUserDAO {
 
 	public User querySessionUser() throws SalesforceServiceException, JSONException;
+	public void logout();
 }
