@@ -104,7 +104,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				+ applicationManager.getApiVersion() 
 				+ "/query";
 				
-		return new Query(sessionId, url, query);
+		return new QueryImpl(sessionId, url, query);
 	}
 
 	@Override

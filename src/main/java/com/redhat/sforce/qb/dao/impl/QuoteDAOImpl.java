@@ -18,6 +18,7 @@ import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.impl.Query;
+import com.redhat.sforce.qb.manager.impl.ResultList;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
@@ -37,7 +38,7 @@ import com.sforce.ws.ConnectionException;
 public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
-	
+		
 	@Override
 	public List<Quote> queryQuotes() throws SalesforceServiceException {
 		String queryString = quoteQuery + "Order By Number__c Limit 200";
@@ -48,8 +49,8 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		
 		Query q = sm.createQuery(queryString);
 		try {
-			List<Quote> quoteList = (List<Quote>) q.getResultList();
-			for (Quote quote : quoteList) {
+			ResultList<Quote> quoteList = q.getResultList();
+			for (Quote quote : quoteList.getRecords()) {
 				log.info("query: " +quote.getId());
 			}
 		} catch (QueryException e) {

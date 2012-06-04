@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.redhat.sforce.qb.model.sobject.SObject;
 
-public class ResultList<T> {
+public class ResultList<E> {
 	
-	private Map<String, T> records = new LinkedHashMap<String, T>();
+	private Map<String, E> records = new LinkedHashMap<String, E>();
 	
 	public Integer getSize() {
 		return records.values().size();
@@ -18,27 +18,27 @@ public class ResultList<T> {
 		return records.keySet().toArray(new String[records.size()]);
 	}
 
-	public T getRecord(String id) {
+	public E getRecord(String id) {
 		return records.get(id);
 	}
 	
-	public Collection<T> getRecords() {
+	public Collection<E> getRecords() {
 		return records.values();
 	}
 	
-	public void add(T object) {
+	public void add(E object) {
 		SObject sobject = new SObject();
 		sobject = sobject.getClass().cast(object);
 		records.put(sobject.getId(), object);
 	}	
 	
-	public void replace(T object) {
+	public void replace(E object) {
 		add(object);
 	}
 	
-	public void addAll(Collection<T> records) {
-		for (T t : records) {
-			add(t);
+	public void addAll(Collection<E> records) {
+		for (E e : records) {
+			add(e);
 		}
 	}
 	
