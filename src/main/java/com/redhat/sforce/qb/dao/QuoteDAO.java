@@ -3,7 +3,7 @@ package com.redhat.sforce.qb.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
@@ -16,12 +16,12 @@ import com.sforce.ws.ConnectionException;
 public interface QuoteDAO {
 
 	public Double getQuoteAmount(String quoteId) throws ConnectionException;
-	public List<Quote> queryQuotes() throws SalesforceServiceException;
-	public List<Quote> queryQuotes(String whereClause) throws SalesforceServiceException;
-	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws SalesforceServiceException;
+	public List<Quote> queryQuotes() throws QueryException;
+	public List<Quote> queryQuotes(String whereClause) throws QueryException;
+	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws QueryException;
 	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws ConnectionException;
-	public Quote queryQuoteById(String quoteId) throws SalesforceServiceException;
-	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws SalesforceServiceException;
+	public Quote queryQuoteById(String quoteId) throws QueryException;
+	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws QueryException;
 	public SaveResult saveQuote(Quote quote) throws ConnectionException;
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
@@ -32,7 +32,7 @@ public interface QuoteDAO {
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
 	public void activate(String quoteId);
 	public void calculate(String quoteId);
-	public Quote copy(String quoteId) throws SalesforceServiceException;	
+	public Quote copy(String quoteId) throws QueryException;	
 	public void follow(String quoteId);
 	public void unfollow(String quoteId);
 	public void price(Quote quote);	

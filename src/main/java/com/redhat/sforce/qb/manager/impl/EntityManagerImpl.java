@@ -108,6 +108,19 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	@Override
+	public Query createQuery(String query) {
+		String url = applicationManager.getApiEndpoint() 
+				+ "/data/"
+				+ applicationManager.getApiVersion() 
+				+ "/query";
+				
+		return new QueryImpl<Object>(
+				partnerConnection.getConfig().getSessionId(), 
+				url, 
+				query);
+	}
+	
+	@Override
 	public DeleteResult[] delete(List<String> idList) throws ConnectionException {
 		return delete(idList.toArray(new String[idList.size()]));
 	}	

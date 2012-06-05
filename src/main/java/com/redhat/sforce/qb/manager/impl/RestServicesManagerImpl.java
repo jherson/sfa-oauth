@@ -30,7 +30,7 @@ import org.json.JSONTokener;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
-import com.redhat.sforce.qb.manager.ServicesManager;
+import com.redhat.sforce.qb.manager.RestServicesManager;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
 import com.redhat.sforce.qb.model.sobject.SObject;
 import com.redhat.sforce.qb.util.Util;
@@ -38,7 +38,7 @@ import com.redhat.sforce.qb.util.Util;
 @Named(value="servicesManager")
 @SessionScoped
 
-public class ServicesManagerImpl implements Serializable, ServicesManager {
+public class RestServicesManagerImpl implements Serializable, RestServicesManager {
 
 	private static final long serialVersionUID = 6709733022603934113L;
 
@@ -95,16 +95,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		return response;
-	}
-	
-	@Override
-	public Query createQuery(String query) {
-		String url = applicationManager.getApiEndpoint() 
-				+ "/data/"
-				+ applicationManager.getApiVersion() 
-				+ "/query";
-				
-		return new QueryImpl(sessionId, url, query);
 	}
 
 	@Override

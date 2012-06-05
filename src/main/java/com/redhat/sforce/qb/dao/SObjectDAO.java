@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.manager.EntityManager;
-import com.redhat.sforce.qb.manager.ServicesManager;
+import com.redhat.sforce.qb.manager.RestServicesManager;
 
 public class SObjectDAO implements Serializable {
 
@@ -17,7 +17,7 @@ public class SObjectDAO implements Serializable {
 	protected Logger log;
 
 	@Inject
-	protected ServicesManager sm;
+	protected RestServicesManager sm;
 	
 	@Inject
 	protected EntityManager em;

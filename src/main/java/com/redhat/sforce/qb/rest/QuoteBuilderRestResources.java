@@ -15,7 +15,7 @@ import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.sobject.Quote;
 
 @RequestScoped
@@ -55,16 +55,14 @@ public class QuoteBuilderRestResources extends Application {
 			@QueryParam("opportunityId") String opportunityId) {
 		
 		Gson gson = new Gson();			
+		List<Quote> quoteList = null;
 		try {
-			List<Quote> quoteList = quoteDAO.queryQuotesByOpportunityId(opportunityId); 
-			return gson.toJson(quoteList); 			
-			
-		} catch (SalesforceServiceException e) {
+			quoteList = quoteDAO.queryQuotesByOpportunityId(opportunityId);
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		
-		return null;	
+		return gson.toJson(quoteList); 	
 	}
 
 //	@POST
@@ -160,7 +158,7 @@ public class QuoteBuilderRestResources extends Application {
 			Quote quote = quoteDAO.queryQuoteById(quoteId); 
 			return gson.toJson(quote); 			
 			
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 

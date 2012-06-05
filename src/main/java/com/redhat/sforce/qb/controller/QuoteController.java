@@ -33,6 +33,7 @@ import com.redhat.sforce.qb.qualifiers.ListQuotes;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
+import com.redhat.sforce.qb.qualifiers.UpdateQuoteAmount;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
 import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.soap.partner.SaveResult;
@@ -64,6 +65,9 @@ public class QuoteController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<CreateQuoteLineItem> CREATE_QUOTE_LINE_ITEM = new AnnotationLiteral<CreateQuoteLineItem>() {};	
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<UpdateQuoteAmount> UPDATE_QUOTE_AMOUNT = new AnnotationLiteral<UpdateQuoteAmount>() {};
 		
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<PriceQuote> PRICE_QUOTE = new AnnotationLiteral<PriceQuote>() {};
@@ -263,6 +267,7 @@ public class QuoteController {
 	public void deleteQuoteLineItem(QuoteLineItem quoteLineItem) {
 		quoteManager.delete(quoteLineItem);
 		quoteLineItemEvent.select(DELETE_QUOTE_LINE_ITEM).fire(quoteLineItem);
+		quoteEvent.select(UPDATE_QUOTE_AMOUNT).fire(selectedQuote);
 	}
 
 	public void deleteQuoteLineItems() {				
@@ -285,6 +290,8 @@ public class QuoteController {
 		for (QuoteLineItem quoteLineItem : quoteLineItems) {
 			quoteLineItemEvent.select(DELETE_QUOTE_LINE_ITEM).fire(quoteLineItem);
 		}
+		
+		quoteEvent.select(UPDATE_QUOTE_AMOUNT).fire(selectedQuote);
 	}
 	
 	public void copyQuoteLineItems() {
@@ -308,6 +315,8 @@ public class QuoteController {
 			quoteLineItem.setId(saveResult[i].getId());
 			quoteLineItemEvent.select(CREATE_QUOTE_LINE_ITEM).fire(quoteLineItem);			
 		}
+		
+		quoteEvent.select(UPDATE_QUOTE_AMOUNT).fire(selectedQuote);
 	}
 
 	public void setQuoteContact(Contact contact) {

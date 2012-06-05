@@ -15,48 +15,46 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.redhat.sforce.qb.exception.QueryException;
+import com.redhat.sforce.qb.model.factory.OpportunityFactory;
 import com.redhat.sforce.qb.model.factory.QuoteFactory;
+import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
 import com.redhat.sforce.qb.util.Util;
 
 public class QueryImpl<X> implements Query {
 
 	private String sessionId;
-	private String restEndpoint;
+	private String endpoint;
 	private String query;
 	private String type;
 	private Integer totalSize; 
-    private Boolean done;
     
-    public QueryImpl(String sessionId, String restEndpoint, String query) {
+    public QueryImpl(String sessionId, String endpoint, String query) {
     	this.sessionId = sessionId;
-    	this.restEndpoint = restEndpoint;
+    	this.endpoint = endpoint;
     	this.query = query;
     }
     
+    @Override
 	public String getType() {
 		return type;
 	}
 	
-	public void setType(String type) {
-		this.type = type;
-	}
-	
+	@Override
 	public Integer getTotalSize() {
 		return totalSize;
+	}	
+	
+	@Override
+	public void addParameter(String param, String value) {
+		query = query.replace(":" + param, value);
 	}
 	
-	public void setTotalSize(Integer totalSize) {
-		this.totalSize = totalSize;
+	@Override
+	public void setLimit(Integer limit) {
+		query = query + " Limit " + limit;
 	}
-	
-	public Boolean getDone() {
-		return done;
-	}
-	
-	public void setDone(Boolean done) {
-		this.done = done;
-	}
-	
+		
+	@Override
 	@SuppressWarnings({"unchecked"})
 	public ResultList<X> getResultList() throws QueryException {				
 
@@ -66,7 +64,7 @@ public class QueryImpl<X> implements Query {
 		GetMethod getMethod = null;
 		try {
 
-			getMethod = executeGet(restEndpoint, params);			
+			getMethod = executeGet(endpoint, params);			
 			
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				
@@ -90,42 +88,49 @@ public class QueryImpl<X> implements Query {
 					    if ("Quote__c".equals(type)) {
 					    	resultList.add((X) QuoteFactory.deserialize(records.getJSONObject(i)));
 					    }
+					    
+					    if ("Opportunity".equals(type)) {
+					    	resultList.add((X) OpportunityFactory.deserialize(records.getJSONObject(i)));
+					    }
+					    
+					    if ("QuoteLineItem__c".equals(type)) {
+					    	resultList.add((X) QuoteLineItemFactory.deserialize(records.getJSONObject(i)));
+					    }
 				    }
 				    
-				    System.out.println("Size: " + resultList.getSize());
 				    if (resultList.getSize() < totalSize) {
 				    	
-				    	String nextRecordsUrl = restEndpoint.replace("/services", response.getString("nextRecordsUrl"));
+				    	String nextRecordsUrl = endpoint.substring(0, endpoint.indexOf("/services")) + response.getString("nextRecordsUrl");
 				    	
-				    	System.out.println("nextRecordsUrl: " + nextRecordsUrl);
 						getMethod = executeGet(nextRecordsUrl, null);
-						response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+						if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
+						    response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+						} else {
+							throw new QueryException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
+						}
 				    }				    
 				}
 				
-				System.out.println("Size: " + resultList.getSize());
 				return resultList;
 				
 			} else {
-			    new QueryException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
+			    throw new QueryException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
 		    }
 		} catch (HttpException e) {
 			e.printStackTrace();
-			new QueryException(e);
+			throw new QueryException(e);
 		} catch (IOException e) {
 			e.printStackTrace();
-			new QueryException(e);
+			throw new QueryException(e);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			new QueryException(e);
+			throw new QueryException(e);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			new QueryException(e);
+			throw new QueryException(e);
 		} finally {
 			getMethod.releaseConnection();
-		}
-		
-	    return null;
+		}		
 	}
 	
 	private GetMethod executeGet(String url, NameValuePair[] params) throws HttpException, IOException {

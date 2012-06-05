@@ -1,7 +1,6 @@
 package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.sobject.Opportunity;
 import com.redhat.sforce.qb.model.sobject.Quote;
@@ -31,6 +30,7 @@ import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
+import com.redhat.sforce.qb.qualifiers.UpdateQuoteAmount;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
 import com.sforce.ws.ConnectionException;
 
@@ -75,7 +75,7 @@ public class QuoteProducer implements Serializable {
 	}
 	
 	public void onUpdateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuote final Quote quote) {
-		int index = quoteList.indexOf(quote);
+		int index = getQuoteIndex(quote.getId());
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
 		quoteList.set(index, selectedQuote);
@@ -93,16 +93,16 @@ public class QuoteProducer implements Serializable {
 	
 	public void onDeleteQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final QuoteLineItem quoteLineItem) {
 		selectedQuote.getQuoteLineItems().remove(quoteLineItem);
-		BigDecimal amount = new BigDecimal(selectedQuote.getAmount());
-		amount = amount.subtract(new BigDecimal(quoteLineItem.getTotalPrice()));
-		selectedQuote.setAmount(amount.doubleValue());
 	}
 	
-	public void onAddQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuoteLineItem final QuoteLineItem quoteLineItem) {
+	public void onCreateQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuoteLineItem final QuoteLineItem quoteLineItem) {
 		selectedQuote.getQuoteLineItems().add(quoteLineItem);
-		BigDecimal amount = new BigDecimal(selectedQuote.getAmount());
-		amount = amount.add(new BigDecimal(quoteLineItem.getTotalPrice()));
-		selectedQuote.setAmount(amount.doubleValue());
+	}
+	
+	public void onUpdateQuoteAmount(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuoteAmount final Quote quote) {
+		int index = getQuoteIndex(quote.getId());
+		selectedQuote.setAmount(getQuoteAmount(quote.getId()));
+		quoteList.set(index, selectedQuote);
 	}
 	
 	public void onPriceQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PriceQuote final Quote quote) {
@@ -130,7 +130,7 @@ public class QuoteProducer implements Serializable {
 		log.info("queryOpportunity: " + opportunityId);		
 		try {
 			return opportunityDAO.queryOpportunityById(opportunityId);
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
@@ -147,7 +147,7 @@ public class QuoteProducer implements Serializable {
 		log.info("queryQuoteById");
 		try {
 			return quoteDAO.queryQuoteById(quoteId);
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -184,11 +184,21 @@ public class QuoteProducer implements Serializable {
 		log.info("queryQuoteLineItemById");
 		try {
 			return quoteDAO.queryQuoteLineItemById(quoteLineItemId);
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	private int getQuoteIndex(String quoteId) {
+		for (int i = 0; i < quoteList.size(); i++) {
+			Quote quote = quoteList.get(i);
+			if (quoteId.equals(quote.getId())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

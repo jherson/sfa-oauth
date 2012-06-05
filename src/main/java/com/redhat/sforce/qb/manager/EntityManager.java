@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.manager;
 
 import java.util.List;
 
+import com.redhat.sforce.qb.manager.impl.Query;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
@@ -11,6 +12,7 @@ import com.sforce.ws.ConnectionException;
 public interface EntityManager {
 
 	public void logout() throws ConnectionException;
+	public Query createQuery(String query);
 	public QueryResult query(String queryString) throws ConnectionException;
 	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException;
 	public SaveResult persist(SObject sobject) throws ConnectionException;

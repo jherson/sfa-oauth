@@ -16,7 +16,7 @@ import javax.inject.Named;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.OpportunityDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.sobject.Opportunity;
 
@@ -55,14 +55,9 @@ public class OpportunityProducer implements Serializable {
 		try {
 			if (sessionManager.getOpportunityId() != null) {
 				opportunityList.add(opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId()));
-			} else {
-				List<Opportunity> test = opportunityDAO.queryOpenOpportunities();
-				for (int i = 0; i < 100; i++) {
-				opportunityList.addAll(test);
-				}
-			}
+			} 
 			
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			log.info("QueryOpportunityException: " + e.getMessage());
 			throw new FacesException(e);
 		}

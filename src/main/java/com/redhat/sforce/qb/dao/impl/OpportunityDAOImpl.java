@@ -1,17 +1,15 @@
 package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 
-import org.json.JSONException;
-
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.factory.OpportunityFactory;
+import com.redhat.sforce.qb.exception.QueryException;
+import com.redhat.sforce.qb.manager.impl.Query;
+import com.redhat.sforce.qb.manager.impl.ResultList;
 import com.redhat.sforce.qb.model.sobject.Opportunity;
 
 @SessionScoped
@@ -21,35 +19,21 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 	private static final long serialVersionUID = -7930084693877198927L;
 	
 	@Override
-	public Opportunity queryOpportunityById(String opportunityId) throws SalesforceServiceException {
-		String queryString = opportunityQuery + "Where Id = '" + opportunityId + "'";
-//		try {
-//			return OpportunityFactory.deserialize(sm.query(queryString)).get(0);
-//		} catch (JSONException e) {
-//			log.error(e);
-//			throw new SalesforceServiceException(e);
-//		} catch (ParseException e) {
-//			log.error(e);
-//			throw new SalesforceServiceException(e);
-//		}
+	public Opportunity queryOpportunityById(String opportunityId) throws QueryException {
+		String queryString = opportunityQuery + "Where Id = ':opportunityId'";
+		Query q = em.createQuery(queryString);				
+		q.addParameter("opportunityId", opportunityId);
 		
-		return null;
+		return (Opportunity) q.getResultList().getRecords().get(0);
 	}
 	
 	@Override
-	public List<Opportunity> queryOpenOpportunities() throws SalesforceServiceException {
+	public List<Opportunity> queryOpenOpportunities() throws QueryException {
 		String queryString = opportunityQuery + "Where IsClosed = false";
-//		try {
-//			return OpportunityFactory.deserialize(sm.query(queryString));
-//		} catch (JSONException e) {
-//			log.error(e);
-//			throw new SalesforceServiceException(e);
-//		} catch (ParseException e) {
-//			log.error(e);
-//			throw new SalesforceServiceException(e);
-//		}
 		
-		return null;
+		Query q = em.createQuery(queryString);
+		ResultList<Opportunity> resultList = q.getResultList();
+		return resultList.getRecords();
 	}
 	
 	private String opportunityQuery = "Select Id, " 

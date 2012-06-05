@@ -5,12 +5,10 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.impl.Query;
 import com.redhat.sforce.qb.model.sobject.SObject;
 
-public interface ServicesManager {
-
-	public Query createQuery(String query);
+public interface RestServicesManager {
+	
 	public JSONObject getCurrentUserInfo() throws SalesforceServiceException;	
 	public List<SObject> query(String query) throws SalesforceServiceException;	
 	public void calculateQuote(String quoteId);			

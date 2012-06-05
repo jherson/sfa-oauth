@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.model.sobject.OpportunityLineItem;
@@ -231,7 +232,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	private Quote doCopy(Quote quote) {
 		try {
 			return quoteDAO.copy(quote.getId());
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

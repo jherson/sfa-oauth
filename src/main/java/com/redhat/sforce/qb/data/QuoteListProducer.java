@@ -12,7 +12,7 @@ import javax.inject.Named;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
 
@@ -46,9 +46,8 @@ public class QuoteListProducer implements Serializable {
 	public void queryQuotes() {
 		log.info("queryQuotes");
 		try {
-			//quoteList = quoteDAO.queryQuotesByOpportunityId("006P0000003U4G1");
 			quoteList = quoteDAO.queryQuotes();
-		} catch (SalesforceServiceException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
