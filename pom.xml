@@ -18,7 +18,7 @@
 		<seam.solder.version>3.0.0.Final</seam.solder.version>
 		<force.api.version>25.0.0</force.api.version>
 	</properties>
-	
+
 	<repositories>
 		<!-- The JBoss Community public repository is a composite repository of 
 			several major repositories -->
@@ -53,20 +53,22 @@
 	</pluginRepositories>
 
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>${version.arquillian_core}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+         <groupId>org.jboss.arquillian.junit</groupId>
+         <artifactId>arquillian-junit-container</artifactId>
+         <version>1.0.0.CR1</version>
+         <scope>test</scope>
+      </dependency>
+
 
 		<dependency>
 			<groupId>org.jboss.seam.solder</groupId>
@@ -199,12 +201,12 @@
 			<artifactId>force-partner-api</artifactId>
 			<version>${force.api.version}</version>
 		</dependency>
-		
+
 		<dependency>
-	       <groupId>mysql</groupId>
-	       <artifactId>mysql-connector-java</artifactId>
-	       <version>5.1.20</version>	    
-        </dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.20</version>
+		</dependency>
 
 	</dependencies>
 
