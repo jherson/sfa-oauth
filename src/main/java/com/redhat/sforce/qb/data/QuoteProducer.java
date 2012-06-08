@@ -63,8 +63,7 @@ public class QuoteProducer implements Serializable {
 	}
 
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
-		selectedQuote = quote;
-		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
+		selectedQuote = queryQuoteById(quote.getId()); 
 		selectedQuote.setFollowers(queryFollowers(quote.getId()));
 	}
 	

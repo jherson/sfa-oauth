@@ -9,7 +9,6 @@ import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.impl.Query;
-import com.redhat.sforce.qb.manager.impl.ResultList;
 import com.redhat.sforce.qb.model.sobject.Opportunity;
 
 @SessionScoped
@@ -20,20 +19,23 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 	
 	@Override
 	public Opportunity queryOpportunityById(String opportunityId) throws QueryException {
-		String queryString = opportunityQuery + "Where Id = ':opportunityId'";
+		String queryString = opportunityQuery 
+				+ "Where Id = ':opportunityId'";
+		
 		Query q = em.createQuery(queryString);				
 		q.addParameter("opportunityId", opportunityId);
 		
-		return (Opportunity) q.getResultList().getRecords().get(0);
+		return (Opportunity) q.getSingleResult();
 	}
 	
 	@Override
 	public List<Opportunity> queryOpenOpportunities() throws QueryException {
-		String queryString = opportunityQuery + "Where IsClosed = false";
+		String queryString = opportunityQuery 
+				+ "Where IsClosed = false";
 		
 		Query q = em.createQuery(queryString);
-		ResultList<Opportunity> resultList = q.getResultList();
-		return resultList.getRecords();
+
+		return q.getResultList();
 	}
 	
 	private String opportunityQuery = "Select Id, " 

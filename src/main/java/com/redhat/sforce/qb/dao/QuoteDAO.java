@@ -21,6 +21,7 @@ public interface QuoteDAO {
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws QueryException;
 	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws ConnectionException;
 	public Quote queryQuoteById(String quoteId) throws QueryException;
+	public List<QuoteLineItem> queryQuoteLineItemsByQuoteId(String quoteId) throws QueryException;
 	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws QueryException;
 	public SaveResult saveQuote(Quote quote) throws ConnectionException;
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException;

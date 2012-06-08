@@ -13,7 +13,6 @@ import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.impl.Query;
-import com.redhat.sforce.qb.manager.impl.ResultList;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
@@ -36,10 +35,9 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	public List<Quote> queryQuotes() throws QueryException {
 		String queryString = quoteQuery + "Order By Number__c";
 		
-		Query q = em.createQuery(queryString);
-		ResultList<Quote> resultList = q.getResultList();
+		Query q = em.createQuery(queryString);	
 		
-		return resultList.getRecords();
+		return q.getResultList();
 	}
 	
 	@Override
@@ -47,40 +45,51 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		String queryString = quoteQuery + "Where " + whereClause;
 		
 		Query q = em.createQuery(queryString);
-		ResultList<Quote> resultList = q.getResultList();
 		
-		return resultList.getRecords();
+		return q.getResultList();
 	}
 
 	@Override
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws QueryException {
-		String queryString = quoteQuery + "Where OpportunityId__c = '" + opportunityId + "'";
+		String queryString = quoteQuery 
+				+ "Where OpportunityId__c = ':opportunityId'";
 		
 		Query q = em.createQuery(queryString);
-		ResultList<Quote> resultList = q.getResultList();
+		q.addParameter("opportunityId", opportunityId);
 		
-		return resultList.getRecords();
+		return q.getResultList();
+	}
+	
+	@Override
+	public List<QuoteLineItem> queryQuoteLineItemsByQuoteId(String quoteId) throws QueryException {
+		String queryString = quoteLineItemQuery 
+				+ "Where QuoteId__c = ':quoteId'";
+		
+		Query q = em.createQuery(queryString);				
+		q.addParameter("quoteId", quoteId);
+		
+		return q.getResultList();
 	}
 
 	@Override
 	public Quote queryQuoteById(String quoteId) throws QueryException {
-		String queryString = quoteQuery 
+		String queryString = quoteDetailsQuery 
 				+ "Where Id = ':quoteId'";
 		
 		Query q = em.createQuery(queryString);				
 		q.addParameter("quoteId", quoteId);
 		
-		return (Quote) q.getResultList().getRecords().get(0);
+		return (Quote) q.getSingleResult();
 	}
 	
 	@Override
 	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws QueryException {
-		String queryString = quoteLineItemQuery + "Where Id = '" + quoteLineItemId + "'";
+		String queryString = quoteLineItemQuery + "Where Id = ':quoteLineItemId'";
 		
 		Query q = em.createQuery(queryString);
-		QuoteLineItem quoteLineItem = (QuoteLineItem) q.getResultList().getRecords().get(0);
+		q.addParameter("quoteLineItemId", quoteLineItemId);
 		
-		return quoteLineItem;	
+		return (QuoteLineItem) q.getSingleResult();	
 	}
 	
 	@Override
@@ -420,6 +429,183 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 			+ "LastModifiedBy.Name, "
 			+ "OpportunityId__r.Id, "
 			+ "OpportunityId__r.Name, "
+			+ "OpportunityId__r.Description, " 
+			+ "OpportunityId__r.StageName, " 
+			+ "OpportunityId__r.Amount, " 
+			+ "OpportunityId__r.Probability, "
+			+ "OpportunityId__r.CloseDate, " 
+			+ "OpportunityId__r.Type, " 
+			+ "OpportunityId__r.IsClosed, " 
+			+ "OpportunityId__r.IsWon, "
+			+ "OpportunityId__r.ForecastCategory, " 
+			+ "OpportunityId__r.CurrencyIsoCode, "
+			+ "OpportunityId__r.HasOpportunityLineItem, " 
+			+ "OpportunityId__r.CreatedDate, "
+			+ "OpportunityId__r.LastModifiedDate, " 
+			+ "OpportunityId__r.FulfillmentChannel__c, "
+			+ "OpportunityId__r.OpportunityType__c, "
+			+ "OpportunityId__r.PaymentType__c, "
+			+ "OpportunityId__r.BillingAddress__c, " 
+			+ "OpportunityId__r.ShippingAddress__c, "
+			+ "OpportunityId__r.BillingCity__c, " 
+			+ "OpportunityId__r.ShippingCity__c, " 
+			+ "OpportunityId__r.BillingCountry__c, "
+			+ "OpportunityId__r.ShippingCountry__c, " 
+			+ "OpportunityId__r.BillingZipPostalCode__c, "
+			+ "OpportunityId__r.ShippingZipPostalCode__c, " 
+			+ "OpportunityId__r.BillingState__c, "
+			+ "OpportunityId__r.ShippingState__c, " 
+			+ "OpportunityId__r.OpportunityNumber__c,  "
+			+ "OpportunityId__r.Pay_Now__c, " 
+			+ "OpportunityId__r.Country_of_Order__c, " 
+			+ "OpportunityId__r.Super_Region__c, "        
+			+ "OpportunityId__r.Account.Id, "
+            + "OpportunityId__r.Account.BillingCity, "
+            + "OpportunityId__r.Account.BillingCountry, "
+            + "OpportunityId__r.Account.BillingPostalCode, " 
+            + "OpportunityId__r.Account.BillingState, "
+            + "OpportunityId__r.Account.BillingStreet, "
+            + "OpportunityId__r.Account.ShippingCity, "
+            + "OpportunityId__r.Account.ShippingCountry, "
+            + "OpportunityId__r.Account.ShippingPostalCode, "
+            + "OpportunityId__r.Account.ShippingState, "
+            + "OpportunityId__r.Account.ShippingStreet, "
+            + "OpportunityId__r.Account.VATNumber__c, "  			
+			+ "OpportunityId__r.Account.Name, "
+			+ "OpportunityId__r.Account.OracleAccountNumber__c, "
+			+ "OpportunityId__r.Account.Account_Alias_Name__c, " 
+			+ "OpportunityId__r.Owner.Id, "
+			+ "OpportunityId__r.Owner.Name, "
+			+ "OpportunityId__r.Owner.FirstName, " 
+			+ "OpportunityId__r.Owner.LastName, " 
+			+ "OpportunityId__r.Owner.ContactId, "
+			+ "OpportunityId__r.Owner.Email, " 
+			+ "OpportunityId__r.Owner.Phone, " 
+			+ "OpportunityId__r.Owner.Title, "
+			+ "OpportunityId__r.Owner.Department, " 
+			+ "OpportunityId__r.Owner.UserRole.Name, "
+			+ "OpportunityId__r.Owner.Profile.Name, " 
+			+ "OpportunityId__r.CreatedBy.Id, " 
+			+ "OpportunityId__r.CreatedBy.Name, "
+			+ "OpportunityId__r.CreatedBy.FirstName, " 
+			+ "OpportunityId__r.CreatedBy.LastName, "
+			+ "OpportunityId__r.LastModifiedBy.Id, " 
+			+ "OpportunityId__r.LastModifiedBy.Name, "
+			+ "OpportunityId__r.LastModifiedBy.FirstName, " 
+			+ "OpportunityId__r.LastModifiedBy.LastName, "
+			+ "OpportunityId__r.Pricebook2.Id, " 
+			+ "OpportunityId__r.Pricebook2.Name " 
+			+ "From   Quote__c ";
+	
+	private String quoteDetailsQuery = "Select Id, "
+			+ "Name, "
+			+ "CurrencyIsoCode, "
+			+ "ReferenceNumber__c, "
+			+ "Term__c, "
+			+ "PricebookId__c, "
+			+ "Number__c, "
+			+ "IsCalculated__c, "
+			+ "Type__c, "
+			+ "StartDate__c, "
+			+ "HasQuoteLineItems__c, "
+			+ "Year1PaymentAmount__c, "
+			+ "Year3PaymentAmount__c, "
+			+ "Year2PaymentAmount__c, "
+			+ "ExpirationDate__c, "
+			+ "EffectiveDate__c, "
+			+ "IsActive__c, "
+			+ "Comments__c, "
+			+ "Year5PaymentAmount__c, "
+			+ "Version__c, "
+			+ "Year6PaymentAmount__c, "
+			+ "IsNonStandardPayment__c, "
+			+ "Year4PaymentAmount__c, "
+			+ "EndDate__c, "
+			+ "Amount__c, "
+			+ "PayNow__c, "
+			+ "Status__c, "
+			+ "LastCalculatedDate__c, "
+			+ "LastPricedDate__c, "
+			+ "QuoteOwnerId__r.Id, "
+			+ "QuoteOwnerId__r.Name, "
+			+ "QuoteOwnerId__r.Email, "
+			+ "ContactId__r.Id, "
+			+ "ContactId__r.Name, "
+			+ "ContactId__r.Email, "			
+			+ "CreatedDate, "
+			+ "CreatedBy.Id, "
+			+ "CreatedBy.Name, "
+			+ "LastModifiedDate, "
+			+ "LastModifiedBy.Id, "
+			+ "LastModifiedBy.Name, "
+			+ "OpportunityId__r.Id, "
+			+ "OpportunityId__r.Name, "
+			+ "OpportunityId__r.Description, " 
+			+ "OpportunityId__r.StageName, " 
+			+ "OpportunityId__r.Amount, " 
+			+ "OpportunityId__r.Probability, "
+			+ "OpportunityId__r.CloseDate, " 
+			+ "OpportunityId__r.Type, " 
+			+ "OpportunityId__r.IsClosed, " 
+			+ "OpportunityId__r.IsWon, "
+			+ "OpportunityId__r.ForecastCategory, " 
+			+ "OpportunityId__r.CurrencyIsoCode, "
+			+ "OpportunityId__r.HasOpportunityLineItem, " 
+			+ "OpportunityId__r.CreatedDate, "
+			+ "OpportunityId__r.LastModifiedDate, " 
+			+ "OpportunityId__r.FulfillmentChannel__c, "
+			+ "OpportunityId__r.OpportunityType__c, "
+			+ "OpportunityId__r.PaymentType__c, "
+			+ "OpportunityId__r.BillingAddress__c, " 
+			+ "OpportunityId__r.ShippingAddress__c, "
+			+ "OpportunityId__r.BillingCity__c, " 
+			+ "OpportunityId__r.ShippingCity__c, " 
+			+ "OpportunityId__r.BillingCountry__c, "
+			+ "OpportunityId__r.ShippingCountry__c, " 
+			+ "OpportunityId__r.BillingZipPostalCode__c, "
+			+ "OpportunityId__r.ShippingZipPostalCode__c, " 
+			+ "OpportunityId__r.BillingState__c, "
+			+ "OpportunityId__r.ShippingState__c, " 
+			+ "OpportunityId__r.OpportunityNumber__c,  "
+			+ "OpportunityId__r.Pay_Now__c, " 
+			+ "OpportunityId__r.Country_of_Order__c, " 
+			+ "OpportunityId__r.Super_Region__c, "        
+			+ "OpportunityId__r.Account.Id, "
+            + "OpportunityId__r.Account.BillingCity, "
+            + "OpportunityId__r.Account.BillingCountry, "
+            + "OpportunityId__r.Account.BillingPostalCode, " 
+            + "OpportunityId__r.Account.BillingState, "
+            + "OpportunityId__r.Account.BillingStreet, "
+            + "OpportunityId__r.Account.ShippingCity, "
+            + "OpportunityId__r.Account.ShippingCountry, "
+            + "OpportunityId__r.Account.ShippingPostalCode, "
+            + "OpportunityId__r.Account.ShippingState, "
+            + "OpportunityId__r.Account.ShippingStreet, "
+            + "OpportunityId__r.Account.VATNumber__c, "  			
+			+ "OpportunityId__r.Account.Name, "
+			+ "OpportunityId__r.Account.OracleAccountNumber__c, "
+			+ "OpportunityId__r.Account.Account_Alias_Name__c, " 
+			+ "OpportunityId__r.Owner.Id, "
+			+ "OpportunityId__r.Owner.Name, "
+			+ "OpportunityId__r.Owner.FirstName, " 
+			+ "OpportunityId__r.Owner.LastName, " 
+			+ "OpportunityId__r.Owner.ContactId, "
+			+ "OpportunityId__r.Owner.Email, " 
+			+ "OpportunityId__r.Owner.Phone, " 
+			+ "OpportunityId__r.Owner.Title, "
+			+ "OpportunityId__r.Owner.Department, " 
+			+ "OpportunityId__r.Owner.UserRole.Name, "
+			+ "OpportunityId__r.Owner.Profile.Name, " 
+			+ "OpportunityId__r.CreatedBy.Id, " 
+			+ "OpportunityId__r.CreatedBy.Name, "
+			+ "OpportunityId__r.CreatedBy.FirstName, " 
+			+ "OpportunityId__r.CreatedBy.LastName, "
+			+ "OpportunityId__r.LastModifiedBy.Id, " 
+			+ "OpportunityId__r.LastModifiedBy.Name, "
+			+ "OpportunityId__r.LastModifiedBy.FirstName, " 
+			+ "OpportunityId__r.LastModifiedBy.LastName, "
+			+ "OpportunityId__r.Pricebook2.Id, " 
+			+ "OpportunityId__r.Pricebook2.Name, " 
 			+ "(Select Id, "
 			+ "        Name, "
 			+ "        CurrencyIsoCode, "
