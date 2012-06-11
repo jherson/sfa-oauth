@@ -4,19 +4,25 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
 
 import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.manager.RestServicesManager;
 import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.util.JsfUtil;
 
 @RequestScoped
 @ApplicationPath("/rest")
@@ -26,17 +32,33 @@ public class QuoteBuilderRestResources extends Application {
 	@Inject
 	Logger log;
 	
+	@Context 
+	private HttpServletRequest httpRequest;
+	
+	@Inject
+	private RestServicesManager sm;
+	
 	@Inject
 	private QuoteDAO quoteDAO;
 
-//	@GET
-//	@Path("/get_current_user")
-//	@Produces("text/plain")
-//	public JSONObject getCurrentUserInfo(
-//			@QueryParam("accessToken") String accessToken) {
-//		log.info("get_current_user: " + accessToken);
-//		return sm.getCurrentUserInfo(accessToken);
-//	}
+	@GET
+	@Path("/get_current_user")
+	@Produces("application/json")
+	public String getCurrentUserInfo(
+			@HeaderParam("SessionId") String sessionId) {
+		
+		log.info("Rest SessionId: " + sessionId);
+		httpRequest.getSession().setAttribute("SessionId", sessionId);				 
+		
+		try {
+			return sm.getCurrentUserInfo().toString();
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 //
 //	@GET()
 //	@Path("/get_opportunity")
@@ -51,8 +73,11 @@ public class QuoteBuilderRestResources extends Application {
 	@Path("/get_quotes_for_opportunity")
 	@Produces("application/json")
 	public String queryQuotesByOpportunityId(
-			@QueryParam("accessToken") String accessToken,
+			@HeaderParam("SessionId") String sessionId,
 			@QueryParam("opportunityId") String opportunityId) {
+		
+		log.info("Rest SessionId: " + sessionId);
+		httpRequest.getSession().setAttribute("SessionId", sessionId);			 
 		
 		Gson gson = new Gson();			
 		List<Quote> quoteList = null;

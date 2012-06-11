@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -23,6 +24,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,32 +72,50 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 				+ "/apexrest/"
 				+ applicationManager.getApiVersion()
 				+ "/QuoteRestService/currentUserInfo";
-
-		GetMethod getMethod = new GetMethod(url);
-		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
-		getMethod.setRequestHeader("Content-type", "application/json");
-
-		JSONObject response = null;
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/json");
+		
+		JSONObject jsonObject = null;
 		try {
-			HttpClient httpclient = new HttpClient();
-			httpclient.executeMethod(getMethod);
-
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+			ClientResponse<String> response = request.get(String.class);
+			if (response.getResponseStatus() == Status.OK) {
+			    jsonObject = new JSONObject(new JSONTokener(response.getEntity()));
 			} else {
-				new SalesforceServiceException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
+				throw new SalesforceServiceException(response.getEntity());
 			}
-		} catch (HttpException e) {
+		} catch (Exception e) {
 			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} catch (JSONException e) {
-			log.error(e);
-		} finally {
-			getMethod.releaseConnection();
 		}
+		
+		return jsonObject;
 
-		return response;
+//		GetMethod getMethod = new GetMethod(url);
+//		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
+//		getMethod.setRequestHeader("Content-type", "application/json");
+
+//		JSONObject response = null;
+//		try {
+//			HttpClient httpclient = new HttpClient();
+//			httpclient.executeMethod(getMethod);
+//
+//			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
+//				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
+//			} else {
+//				new SalesforceServiceException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
+//			}
+//		} catch (HttpException e) {
+//			log.error(e);
+//		} catch (IOException e) {
+//			log.error(e);
+//		} catch (JSONException e) {
+//			log.error(e);
+//		} finally {
+//			getMethod.releaseConnection();
+//		}
+//
+//		return response;
 	}
 
 	@Override

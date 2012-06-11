@@ -101,6 +101,8 @@ public class AuthorizeServlet extends HttpServlet {
 			}
 		}
 		
+		log.info("SessionId: " + sessionId);
+		
 		request.getSession().setAttribute("SessionId", sessionId);
 		response.sendRedirect(request.getContextPath() + "/index.jsf");
 	}
