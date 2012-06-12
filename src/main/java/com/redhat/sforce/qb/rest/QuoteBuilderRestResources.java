@@ -2,7 +2,6 @@ package com.redhat.sforce.qb.rest;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ApplicationPath;
@@ -22,9 +21,7 @@ import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.RestServicesManager;
 import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.util.JsfUtil;
 
-@RequestScoped
 @ApplicationPath("/rest")
 @Path("/resources")
 public class QuoteBuilderRestResources extends Application {

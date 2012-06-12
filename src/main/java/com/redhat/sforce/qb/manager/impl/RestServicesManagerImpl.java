@@ -90,91 +90,6 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 		}
 		
 		return jsonObject;
-
-//		GetMethod getMethod = new GetMethod(url);
-//		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
-//		getMethod.setRequestHeader("Content-type", "application/json");
-
-//		JSONObject response = null;
-//		try {
-//			HttpClient httpclient = new HttpClient();
-//			httpclient.executeMethod(getMethod);
-//
-//			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
-//				response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-//			} else {
-//				new SalesforceServiceException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
-//			}
-//		} catch (HttpException e) {
-//			log.error(e);
-//		} catch (IOException e) {
-//			log.error(e);
-//		} catch (JSONException e) {
-//			log.error(e);
-//		} finally {
-//			getMethod.releaseConnection();
-//		}
-//
-//		return response;
-	}
-
-	@Override
-	public List<SObject> query(String query) throws SalesforceServiceException {
-		String url = applicationManager.getApiEndpoint() 
-				+ "/data/"
-				+ applicationManager.getApiVersion() 
-				+ "/query";
-		
-		NameValuePair[] params = new NameValuePair[1];
-		params[0] = new NameValuePair("q", query);
-		
-		List<SObject> queryResult = new ArrayList<SObject>();
-		
-		GetMethod getMethod = null;
-		try {
-
-			getMethod = executeGet(url, params);
-			
-			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {				
-				
-				JSONObject response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));				
-				
-				while (queryResult.size() != response.getLong("totalSize")) {										
-					
-				    JSONArray records = response.getJSONArray("records");				    
-				
-				    for (int i = 0; i < records.length(); i++) {
-					    JSONObject attributes = records.getJSONObject(i).getJSONObject("attributes");
-					    String type = attributes.getString("type");
-					    
-					    if ("Quote__c".equals(type)) {
-					    	queryResult.add(QuoteFactory.deserialize(records.getJSONObject(i)));
-					    }
-				    }
-				    
-				    if (queryResult.size() < response.getLong("totalSize")) {
-				    	url = applicationManager.getApiEndpoint().replace("/services", response.getString("nextRecordsUrl"));
-						getMethod = executeGet(url, null);
-						response = new JSONObject(new JSONTokener(new InputStreamReader(getMethod.getResponseBodyAsStream())));
-				    }				    
-				}	
-				
-			} else {
-				new SalesforceServiceException(Util.covertResponseToString(getMethod.getResponseBodyAsStream()));
-			}
-		} catch (HttpException e) {
-			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} catch (JSONException e) {
-			log.error(e);
-		} catch (ParseException e) {
-			log.error(e);
-		} finally {
-			getMethod.releaseConnection();
-		}
-
-		return queryResult;
 	}
 	
 	@Override
@@ -187,31 +102,49 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 		log.info(sessionId);
 		log.info(url);
 		
-		NameValuePair[] params = new NameValuePair[1];
-		params[0] = new NameValuePair("subjectId", subjectId);
-
-		PostMethod method = new PostMethod(url);
-		method.setRequestHeader("Authorization", "OAuth " + sessionId);
-		method.setRequestHeader("Accept-Type", "application/json");
-        method.setQueryString(params);
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Accept-Type", "application/json");
+		request.queryParameter("subjectId", subjectId);
 		
-		HttpClient httpclient = new HttpClient();
 		try {
-			httpclient.executeMethod(method);
-			log.info("Status: " + method.getStatusCode());
-			if (method.getStatusCode() == HttpStatus.SC_OK) {
-				log.info("success: " + method.getResponseBodyAsString());
+			ClientResponse<String> response = request.post(String.class);
+			if (response.getResponseStatus() == Status.OK) {
+				log.info("success: " + response.getEntity());
 			} else {
-				log.info("fail: " + method.getResponseBodyAsString());
+				log.info("fail: " + response.getEntity());
+				throw new SalesforceServiceException(response.getEntity());
 			}
-			
-		} catch (HttpException e) {
+		} catch (Exception e) {
 			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		} finally {
-			method.releaseConnection();
-		}	
+		}
+		
+		
+//		NameValuePair[] params = new NameValuePair[1];
+//		params[0] = new NameValuePair("subjectId", subjectId);
+//
+//		PostMethod method = new PostMethod(url);
+//		method.setRequestHeader("Authorization", "OAuth " + sessionId);
+//		method.setRequestHeader("Accept-Type", "application/json");
+//        method.setQueryString(params);
+//		
+//		HttpClient httpclient = new HttpClient();
+//		try {
+//			httpclient.executeMethod(method);
+//			log.info("Status: " + method.getStatusCode());
+//			if (method.getStatusCode() == HttpStatus.SC_OK) {
+//				log.info("success: " + method.getResponseBodyAsString());
+//			} else {
+//				log.info("fail: " + method.getResponseBodyAsString());
+//			}
+//			
+//		} catch (HttpException e) {
+//			log.error(e);
+//		} catch (IOException e) {
+//			log.error(e);
+//		} finally {
+//			method.releaseConnection();
+//		}	
 	}
 	
 	@Override
@@ -429,19 +362,5 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 		
 		return postMethod;
 		
-	}
-	
-	private GetMethod executeGet(String url, NameValuePair[] params) throws HttpException, IOException {
-		GetMethod getMethod = new GetMethod(url);
-		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
-		getMethod.setRequestHeader("Content-Type", "application/json");
-		
-		if (params != null)
-		    getMethod.setQueryString(params);
-		
-		HttpClient httpclient = new HttpClient();
-		httpclient.executeMethod(getMethod);
-		
-		return getMethod;
 	}
 }

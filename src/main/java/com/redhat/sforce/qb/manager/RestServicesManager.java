@@ -10,7 +10,6 @@ import com.redhat.sforce.qb.model.sobject.SObject;
 public interface RestServicesManager {
 	
 	public JSONObject getCurrentUserInfo() throws SalesforceServiceException;	
-	public List<SObject> query(String query) throws SalesforceServiceException;	
 	public void calculateQuote(String quoteId);			
 	public void activateQuote(String quoteId);	
 	public String copyQuote(String quoteId);
