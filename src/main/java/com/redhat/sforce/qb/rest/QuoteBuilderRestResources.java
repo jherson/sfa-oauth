@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.rest;
 
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ApplicationPath;
@@ -21,9 +22,12 @@ import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.RestServicesManager;
 import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.sobject.Token;
 
+@RequestScoped
 @ApplicationPath("/rest")
 @Path("/resources")
+
 public class QuoteBuilderRestResources extends Application {
 
 	@Inject
@@ -31,6 +35,9 @@ public class QuoteBuilderRestResources extends Application {
 	
 	@Context 
 	private HttpServletRequest httpRequest;
+	
+	@Inject
+	private Token token;
 	
 	@Inject
 	private RestServicesManager sm;
@@ -44,8 +51,8 @@ public class QuoteBuilderRestResources extends Application {
 	public String getCurrentUserInfo(
 			@HeaderParam("SessionId") String sessionId) {
 		
-		log.info("Rest SessionId: " + sessionId);
-		httpRequest.getSession().setAttribute("SessionId", sessionId);				 
+		token.setAccessToken(sessionId);
+		//httpRequest.getSession().setAttribute("SessionId", sessionId);
 		
 		try {
 			return sm.getCurrentUserInfo().toString();

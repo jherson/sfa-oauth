@@ -8,6 +8,8 @@ body {
 .body3 {
    overflow: auto;
    padding: 0px !important;
+       height: 100px;
+       overflow: auto;   
   }  
 
 .left_panel {

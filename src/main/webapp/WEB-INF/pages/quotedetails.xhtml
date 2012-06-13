@@ -14,17 +14,36 @@
 
 		<rich:panel id="viewQuotePanel">
 
-			<h:panelGrid width="100%" columns="1" cellpadding="3">
-				<h:panelGroup layout="block">
-					<h:graphicImage value="./images/quote.png"
-						style="vertical-align: middle" />
-					<h:outputText value=" " escape="false" />
+			<table style="width: 100%">
+				<tr>
+					<td><h:graphicImage value="./images/quote.png"
+							style="vertical-align: middle" /> <h:outputText value=" "
+							escape="false" /> <h:outputText value="#{selectedQuote.name}"
+							style="font-weight:bold; font-size: 18px;" /></td>
+				</tr>
+			</table>
+			<hr />
+			<table style="width: 100%">
+				<tr>
+					<td width="200"><b>#{msgs.amount}</b><br />
+					<h:outputText value="#{selectedQuote.currencyIsoCode}" />
+					<h:outputText value= " " /> 
+					<h:outputText
+							value="#{selectedQuote.amount}">
+							<f:convertNumber locale="#{user.locale}"
+								pattern="#,##0.00;(#,##0.00)" />
+						</h:outputText></td>
+					<td width="200"><b>#{msgs.type}</b><br />
+					<h:outputText value="#{selectedQuote.type}">
+						</h:outputText>
+					</td>
+					<td width="200"><b>#{msgs.status}</b><br />
+					<h:outputText value="#{selectedQuote.status}">
+						</h:outputText>
+					</td>
 
-					<h:outputText value="#{selectedQuote.name}"
-						style="font-weight:bold; font-size: 18px;" />
-
-				</h:panelGroup>
-			</h:panelGrid>
+				</tr>
+			</table>
 
 			<h:panelGrid width="100%" columns="1" cellpadding="3">
 				<h:panelGroup layout="block">
@@ -116,8 +135,7 @@
 					<a4j:commandButton id="cancelEdit" value="#{msgs.cancel}"
 						styleClass="commandButton" rendered="#{quoteController.editMode}"
 						action="#{quoteController.cancelEdit()}" ajaxSingle="true"
-						bypassUpdates="true" immediate="true"
-						render="quotedetails">
+						bypassUpdates="true" immediate="true" render="quotedetails">
 					</a4j:commandButton>
 
 				</h:panelGroup>
