@@ -115,7 +115,7 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 				+ "/query";
 				
 		return new QueryImpl<Object>(
-				partnerConnection.getConfig().getSessionId(), 
+				partnerConnection,
 				url, 
 				query);
 	}
