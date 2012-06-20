@@ -1,10 +1,14 @@
-package com.redhat.sforce.qb.manager.impl;
+package com.redhat.sforce.persistence.impl;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericDeclaration;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -18,6 +22,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.redhat.sforce.persistence.Entity;
+import com.redhat.sforce.persistence.Column;
+import com.redhat.sforce.persistence.EntityManager;
+import com.redhat.sforce.persistence.Query;
+import com.redhat.sforce.persistence.Table;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.model.factory.OpportunityFactory;
@@ -34,26 +43,18 @@ import com.sforce.ws.bind.XmlObject;
 
 public class QueryImpl<X> implements Query {
 
-	private PartnerConnection connection;
-	private String sessionId;
-	private String endpoint;
+	private static final Logger log = Logger.getLogger(QueryImpl.class.getName());
+	
+	private EntityManager em;	
 	private String query;
 	private String type;
 	private Integer totalSize; 
-    
-    public QueryImpl(String sessionId, String endpoint, String query) {
-    	this.sessionId = sessionId;
-    	this.endpoint = endpoint;
-    	this.query = query;
-    }
-    
-    public QueryImpl(PartnerConnection connection, String endpoint, String query) {
-    	this.connection = connection;
-    	this.sessionId = connection.getConfig().getSessionId();
-    	this.endpoint = endpoint;
-    	this.query = query;
-    }
-    
+	
+	public QueryImpl(EntityManager em, String query) {
+		this.em = em;        
+		this.query = query;
+	}
+       
     @Override
 	public String getType() {
 		return type;
@@ -79,37 +80,91 @@ public class QueryImpl<X> implements Query {
 		return getResultList().get(0);
 	}
 	
-	public void executeQuery() {
+	@Override
+	@SuppressWarnings({"unchecked"})
+	public List<X> getResultList() throws QueryException {
+		List<X> resultList = new ArrayList<X>();
+				
+		//log.info(resultList.getClass().getTypeParameters().getClass().getCanonicalName());
+		
+		//if (! resultList.getClass().getTypeParameters().getClass().isAnnotationPresent(Entity.class))
+		//	throw new QueryException("Unknown Entity: " + resultList.getClass().getSimpleName());
+				
+//		if (resultList.getClass().isAnnotationPresent(Table.class)) {
+//			Table table = resultList.getClass().getAnnotation(Table.class);
+//			log.info("SObject name: " + table.name());
+//		}
+				
 		try {
-			QueryResult qr = connection.query(query);
-			System.out.println("Size: " + qr.getSize());
-			for (SObject sobject : qr.getRecords()) {
-				System.out.println(sobject.toString());
-				System.out.println("Length: " + qr.getRecords().length);
-			System.out.println("Type: " + sobject.getType());
-			System.out.println("Amount: " + getDouble(sobject.getField("Amount__c")));
-			System.out.println("Done: " + qr.getDone());
-			}
+			QueryResult qr = em.getConnection().query(query);
+			
+			log.info("QueryResult Size: " + qr.getSize());			
+			
+			if (qr.getSize() == 0)
+				return null;
+			
+//			while (! qr.getDone()) {
+									
+				for (SObject sobject : qr.getRecords()) {									
+					
+//					resultList.getClass().getFields()[0].getAnnotation(Column.class);
+//										
+//					log.info(resultList.getClass().getCanonicalName());
+					
+//					try {
+//						Class<?> c = Class.forName(resultList.getClass().getCanonicalName());
+//						c.newInstance();
+//						
+//						resultList.add((X) c);
+//					} catch (ClassNotFoundException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (InstantiationException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (IllegalAccessException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+
+					System.out.println("Length: " + qr.getRecords().length);				    
+				    System.out.println("Done: " + qr.getDone());
+				
+				    if ("Quote__c".equals(sobject.getType())) {
+				    	resultList.add((X) QuoteFactory.parse(sobject));
+				    }		
+				    
+				    if ("Opportunity".equals(type)) {
+				    	resultList.add((X) OpportunityFactory.parse(sobject));
+				    }
+				    
+				    if ("QuoteLineItem__c".equals(type)) {
+				    	resultList.add((X) QuoteLineItemFactory.parse(sobject));
+				    }
+				}			
+//			}
+			
+			return resultList;
+			
 		} catch (ConnectionException e) {
 			e.printStackTrace();
-		}
-		
-	}
-	
-	private Double getDouble(Object field) {
-		return field != null ? Double.valueOf(field.toString()) : null;
+			throw new QueryException(e);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new QueryException(e);
+		}		
 	}
 	
 	@Override
 	@SuppressWarnings({"unchecked"})
-	public List<X> getResultList() throws QueryException {
+	public List<X> executeQuery() throws QueryException {
 		NameValuePair[] params = new NameValuePair[1];
 		params[0] = new NameValuePair("q", query);
 		
 		GetMethod getMethod = null;
 		try {
 
-			getMethod = executeGet(endpoint, params);			
+			getMethod = executeGet(em.getConnection().getConfig().getRestEndpoint(), params);			
 			
 			if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
 				
@@ -145,7 +200,10 @@ public class QueryImpl<X> implements Query {
 				    
 				    if (resultList.size() < totalSize) {
 				    	
-				    	String nextRecordsUrl = endpoint.substring(0, endpoint.indexOf("/services")) + response.getString("nextRecordsUrl");
+				    	String nextRecordsUrl = em.getConnection().getConfig().getRestEndpoint().substring(
+				    			0, 
+				    			em.getConnection().getConfig().getRestEndpoint().indexOf("/services")) + 
+				    			response.getString("nextRecordsUrl");
 				    	
 						getMethod = executeGet(nextRecordsUrl, null);
 						if (getMethod.getStatusCode() == HttpStatus.SC_OK) {
@@ -155,8 +213,6 @@ public class QueryImpl<X> implements Query {
 						}
 				    }				    
 				}
-				
-				executeQuery();
 				
 				return resultList;
 				
@@ -182,7 +238,7 @@ public class QueryImpl<X> implements Query {
 	
 	private GetMethod executeGet(String url, NameValuePair[] params) throws HttpException, IOException {
 		GetMethod getMethod = new GetMethod(url);
-		getMethod.setRequestHeader("Authorization", "OAuth " + sessionId);
+		getMethod.setRequestHeader("Authorization", "OAuth " + em.getConnection().getConfig().getSessionId());
 		getMethod.setRequestHeader("Content-Type", "application/json");
 		
 		if (params != null)

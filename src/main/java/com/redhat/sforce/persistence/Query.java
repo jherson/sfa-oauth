@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.manager.impl;
+package com.redhat.sforce.persistence;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface Query {
 	public Integer getTotalSize();	
 	public void addParameter(String param, String value);
 	public void setLimit(Integer limit);
-	//public <E> ResultList<E> getResultList() throws QueryException;
+	public <X> List<X> executeQuery() throws QueryException;
     public <X> List<X> getResultList() throws QueryException;
     public Object getSingleResult() throws QueryException;
 }

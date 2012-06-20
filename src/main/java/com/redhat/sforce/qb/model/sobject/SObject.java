@@ -3,9 +3,13 @@ package com.redhat.sforce.qb.model.sobject;
 import java.util.Date;
 import java.io.Serializable;
 
+import com.redhat.sforce.persistence.Id;
+
 public class SObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Id
 	private String id;
 	private String url;
 	private String currencyIsoCode;

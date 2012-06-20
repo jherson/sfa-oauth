@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.qb.manager.EntityManager;
+import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.qb.manager.RestServicesManager;
 
 public class SObjectDAO implements Serializable {

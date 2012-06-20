@@ -1,21 +1,56 @@
 package com.redhat.sforce.qb.model.sobject;
 
+import com.redhat.sforce.persistence.Entity;
+import com.redhat.sforce.persistence.Column;
+import com.redhat.sforce.persistence.Table;
+
+@Entity
+@Table(name="Account")
+
 public class Account extends SObject {
 
 	private static final long serialVersionUID = 4563614967304678524L;
+		
+	@Column(name="BillingCity")	
 	private String billingCity;
+	
+	@Column(name="BillingCountry")	
 	private String billingCountry;
+	
+	@Column(name="BillingPostalCode")	
 	private String billingPostalCode;
+	
+	@Column(name="BillingState")	
 	private String billingState;
+	
+	@Column(name="BillingStreet")	
 	private String billingStreet;
+	
+	@Column(name="ShippingCity")	
 	private String shippingCity;
+	
+	@Column(name="ShippingCountry")	
 	private String shippingCountry;
+	
+	@Column(name="ShippingPostalCode")	
 	private String shippingPostalCode;
+	
+	@Column(name="ShippingState")	
 	private String shippingState;
+	
+	@Column(name="ShippingStreet")	
 	private String shippingStreet;
+	
+	@Column(name="VATNumber__c")	
 	private String vatNumber;
+	
+	@Column(name="Name")	
 	private String name;
+	
+	@Column(name="OracleAccountNumber__c")	
 	private String oracleAccountNumber;
+	
+	@Column(name="Account_Alias_Name__c")	
 	private String accountAliasName;
 	
 	public String getBillingCity() {

@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.model.factory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -10,7 +11,9 @@ import org.json.JSONObject;
 
 import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.redhat.sforce.qb.util.Util;
+import com.sforce.ws.bind.XmlObject;
 
 public class QuoteLineItemFactory {
 
@@ -22,6 +25,74 @@ public class QuoteLineItemFactory {
 		}
 
 		return quoteLineItemList;
+	}
+	
+	public static List<QuoteLineItem> parse(Iterator<XmlObject> iterator) throws ParseException {
+		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
+		
+		while (iterator.hasNext()) {
+			quoteLineItemList.add(parse(iterator.next()));			
+		}
+		
+		return quoteLineItemList;
+		
+	}
+	
+	public static QuoteLineItem parse(XmlObject xmlObject) throws ParseException {
+		
+		SObjectWrapper wrapper = new SObjectWrapper(xmlObject);
+		
+		QuoteLineItem quoteLineItem = new QuoteLineItem();
+		quoteLineItem.setId(wrapper.getId());
+		quoteLineItem.setConfiguredSku(wrapper.getString("Configured_SKU__c"));
+		quoteLineItem.setContractNumbers(wrapper.getString("ContractNumbers__c"));
+		quoteLineItem.setCreatedById(wrapper.getString("CreatedBy", "Id"));
+		quoteLineItem.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
+		quoteLineItem.setCreatedDate(wrapper.getDateTime("CreatedDate"));
+		quoteLineItem.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
+		quoteLineItem.setEndDate(wrapper.getDate("EndDate__c"));
+		quoteLineItem.setLastModifiedById(wrapper.getString("LastModifiedBy","Id"));
+		quoteLineItem.setLastModifiedByName(wrapper.getString("LastModifiedBy","Name"));
+		quoteLineItem.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
+		quoteLineItem.setListPrice(wrapper.getDouble("ListPrice__c"));
+		quoteLineItem.setName(wrapper.getString("Name"));
+		quoteLineItem.setDescription(wrapper.getString("ProductDescription__c"));
+		quoteLineItem.setNewOrRenewal(wrapper.getString("NewOrRenewal__c"));
+		quoteLineItem.setOpportunityId(wrapper.getString("OpportunityId__c"));
+		quoteLineItem.setOpportunityLineItemId(wrapper.getString("OpportunityLineItemId__c"));
+		quoteLineItem.setPricebookEntryId(wrapper.getString("PricebookEntryId__c"));
+		quoteLineItem.setPricingAttributes(wrapper.getString("Pricing_Attributes__c"));
+		quoteLineItem.setQuantity(wrapper.getInteger("Quantity__c"));
+		quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));
+		quoteLineItem.setSortOrder(wrapper.getInteger("SortOrder__c"));
+		quoteLineItem.setStartDate(wrapper.getDate("StartDate__c"));
+		quoteLineItem.setTerm(wrapper.getInteger("Term__c"));
+		quoteLineItem.setTotalPrice(wrapper.getDouble("TotalPrice__c"));
+		quoteLineItem.setUnitPrice(wrapper.getDouble("UnitPrice__c"));
+		quoteLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
+		quoteLineItem.setDiscountAmount(wrapper.getDouble("DiscountAmount__c"));
+		quoteLineItem.setDiscountPercent(wrapper.getDouble("DiscountPercent__c"));
+		quoteLineItem.setCode(wrapper.getString("Code__c"));
+		quoteLineItem.setMessage(wrapper.getString("Message__c"));
+		quoteLineItem.setProduct(ProductFactory.parse(wrapper.getXmlObject("Product__r")));
+		
+		if (quoteLineItem.getConfiguredSku() != null) {
+			quoteLineItem.setSku(quoteLineItem.getConfiguredSku());
+		} else {
+			quoteLineItem.setSku(quoteLineItem.getProduct().getProductCode());
+		}
+
+		if (quoteLineItem.getDescription() == null)
+			quoteLineItem.setDescription(quoteLineItem.getProduct().getDescription());
+		
+		Iterator<XmlObject> records = null;
+		
+		records = wrapper.getRecords("QuoteLineItemPriceAdjustment__r");
+		if (records != null) {
+			quoteLineItem.setQuoteLineItemPriceAdjustments(QuoteLineItemPriceAdjustmentFactory.parse(records));
+		}
+
+		return quoteLineItem;
 	}
 
 	public static QuoteLineItem deserialize(JSONObject jsonObject) throws JSONException, ParseException {

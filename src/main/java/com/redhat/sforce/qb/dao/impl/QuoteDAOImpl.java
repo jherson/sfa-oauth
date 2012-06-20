@@ -9,10 +9,10 @@ import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 
 import com.google.gson.Gson;
+import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.manager.impl.Query;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.sobject.Quote;
 import com.redhat.sforce.qb.model.sobject.QuoteLineItem;

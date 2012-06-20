@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 
+import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.manager.impl.Query;
 import com.redhat.sforce.qb.model.sobject.Opportunity;
 
 @SessionScoped

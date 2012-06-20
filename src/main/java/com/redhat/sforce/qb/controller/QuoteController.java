@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.qb.manager.EntityManager;
+import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.sobject.Contact;

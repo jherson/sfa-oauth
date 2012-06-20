@@ -1,17 +1,16 @@
 package com.redhat.sforce.qb.model.factory;
 
-import com.redhat.sforce.qb.model.sobject.SObject;
-import com.sforce.soap.partner.QueryResult;
+import com.sforce.ws.bind.XmlObject;
 
 public class SObjectFactory {
-
-	public static SObject toSObject(QueryResult queryResult) {
-		String type = queryResult.getRecords()[0].getType();
-		if ("PricebookEntry".equals(type)) {
-			return PricebookEntryFactory.toPricebookEntry(queryResult);
-		}
-		
-		return null;
-	}
 	
+	public static com.redhat.sforce.qb.model.sobject.SObject toSObject(XmlObject xmlObject) {
+		System.out.println("XmlObject Name: " + xmlObject.getName());
+		System.out.println("XmlObject XmlType: " + xmlObject.getXmlType());
+		
+		if ("Quote__c".equals(xmlObject.getName())) {
+			
+		}
+		return null;
+	}	
 }

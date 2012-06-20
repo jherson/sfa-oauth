@@ -7,50 +7,127 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+import com.redhat.sforce.persistence.Column;
+import com.redhat.sforce.persistence.Entity;
+import com.redhat.sforce.persistence.Table;
 import com.redhat.sforce.qb.model.chatter.Followers;
+
+@Entity
+@Table(name="Quote__c")
 
 public class Quote extends SObject {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Column(name="Link__c")
 	private String link;
+	
+	@Column(name="Version__c")
 	private Double version;
+	
 	@NotNull
+	@Column(name="Name")
 	private String name;
+	
+	@Column(name="Number__c")
 	private String number;
+	
+	@Column(name="CurrencyIsoCode")
 	private String currencyIsoCode;
+	
+	@Column(name="PayNow__c")
 	private String payNow;
+	
+	@Column(name="PricebookId__c")
 	private String pricebookId;
+	
 	private String pricebookName;
+	
+	@Column(name="Type__c")
 	private String type;
+	
+	@Column(name="IsActive__c")
 	private Boolean isActive;
+	
+	@Column(name="Amount__c")
 	private Double amount;
+	
+	@Column(name="Year1PaymentAmount__c")
 	private Double year1PaymentAmount;
+	
+	@Column(name="Year2PaymentAmount__c")
 	private Double year2PaymentAmount;
+	
+	@Column(name="Year3PaymentAmount__c")
 	private Double year3PaymentAmount;
+	
+	@Column(name="Year4PaymentAmount__c")
 	private Double year4PaymentAmount;
+	
+	@Column(name="Year5PaymentAmount__c")
 	private Double year5PaymentAmount;
+	
+	@Column(name="Year6PaymentAmount__c")
 	private Double year6PaymentAmount;
+	
+	@Column(name="HasQuoteLineItems__c")
 	private Boolean hasQuoteLineItems;
+	
+	@Column(name="IsCalculated__c")
 	private Boolean isCalculated;
+	
 	private String ownerId;
+	
 	private String ownerName;
+	
 	private String ownerEmail;
+	
 	private String contactId;
+	
 	private String contactName;
+	
 	private String contactEmail;
+	
+	@Column(name="Comments__c")
 	private String comments;
+	
+	@Column(name="ExpirationDate__c")
 	private Date expirationDate;
+	
+	@Column(name="StartDate__c")
 	private Date startDate;
+	
+	@Column(name="EndDate__c")
 	private Date endDate;
+	
+	@Column(name="Term__c")
 	private Integer term;
+	
+	@Column(name="Status__c")
 	private String status;
+	
+	@Column(name="EffectiveDate__c")
 	private Date effectiveDate;
+	
+	@Column(name="ReferenceNumber__c")
 	private String referenceNumber;
+	
+	@Column(name="IsNonStandardPayment__c")
 	private Boolean isNonStandardPayment;
+	
+	@Column(name="LastCalculatedDate__c")
 	private Date lastCalculatedDate;
+	
+	@Column(name="LastPricedDate__c")
 	private Date lastPricedDate;
-	private Opportunity opportunity;	
+	
+	
+	private Opportunity opportunity;
+	
+	
 	private Followers followers;
+	
+	
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	private List<QuoteLineItem> quoteLineItems;
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;

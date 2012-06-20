@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.manager.impl;
+package com.redhat.sforce.persistence.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,8 +13,9 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.persistence.EntityManager;
+import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.manager.ApplicationManager;
-import com.redhat.sforce.qb.manager.EntityManager;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
@@ -58,6 +59,11 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 				e.printStackTrace();
 			}
 		}	
+	}
+	
+	@Override
+	public PartnerConnection getConnection() {
+		return partnerConnection;
 	}
 	
 	@Override
@@ -113,11 +119,11 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 				+ "/data/"
 				+ applicationManager.getApiVersion() 
 				+ "/query";
+		
+		getConnection().getConfig().setRestEndpoint(url);
 				
-		return new QueryImpl<Object>(
-				partnerConnection,
-				url, 
-				query);
+		return new QueryImpl<Object>(this, query);
+				
 	}
 	
 	@Override

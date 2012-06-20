@@ -2,6 +2,7 @@ package com.redhat.sforce.qb.model.factory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -9,8 +10,40 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.model.sobject.OpportunityPartner;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
+import com.redhat.sforce.qb.util.SObjectWrapper;
+import com.sforce.ws.bind.XmlObject;
 
 public class OpportunityPartnerFactory {
+	
+	public static List<OpportunityPartner> parse(Iterator<XmlObject> iterator) {
+		
+		List<OpportunityPartner> opportunityPartnerList = new ArrayList<OpportunityPartner>();
+		
+		while (iterator.hasNext()) {
+			SObjectWrapper wrapper = new SObjectWrapper(iterator.next());
+			
+			OpportunityPartner opportunityPartner = new OpportunityPartner();
+			opportunityPartner.setId(wrapper.getId());
+			opportunityPartner.setBillingCity(wrapper.getXmlObject("Partner__r").getField("BillingCity").toString());
+			opportunityPartner.setBillingCountry(wrapper.getXmlObject("Partner__r").getField("BillingCountry").toString());
+			opportunityPartner.setBillingPostalCode(wrapper.getXmlObject("Partner__r").getField("BillingPostalCode").toString());
+			opportunityPartner.setBillingState(wrapper.getXmlObject("Partner__r").getField("BillingState").toString());
+			opportunityPartner.setBillingStreet(wrapper.getXmlObject("Partner__r").getField("BillingStreet").toString());
+			opportunityPartner.setName(wrapper.getXmlObject("Partner__r").getField("Name").toString());
+			opportunityPartner.setOracleAccountNumber(wrapper.getXmlObject("Partner__r").getField("OracleAccountNumber__c").toString());
+			opportunityPartner.setShippingCity(wrapper.getXmlObject("Partner__r").getField("ShippingCity").toString());
+			opportunityPartner.setShippingCountry(wrapper.getXmlObject("Partner__r").getField("ShippingCountry").toString());
+			opportunityPartner.setShippingPostalCode(wrapper.getXmlObject("Partner__r").getField("ShippingPostalCode").toString());
+			opportunityPartner.setShippingState(wrapper.getXmlObject("Partner__r").getField("ShippingState").toString());
+			opportunityPartner.setShippingStreet(wrapper.getXmlObject("Partner__r").getField("ShippingStreet").toString());
+			opportunityPartner.setVatNumber(wrapper.getXmlObject("Partner__r").getField("VATNumber__c").toString());			
+
+			opportunityPartnerList.add(opportunityPartner);
+			
+		}
+		
+		return opportunityPartnerList;
+	}
 
 	public static List<OpportunityPartner> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
 		List<OpportunityPartner> opportunityPartnerList = new ArrayList<OpportunityPartner>();
