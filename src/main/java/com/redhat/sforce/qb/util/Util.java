@@ -11,7 +11,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 public class Util {
-	private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSSZ");
+	//private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSSZ");
+	private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS'Z'");
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static String dateFormat(Date value) {
@@ -38,7 +39,7 @@ public class Util {
 	public static Date parseDateTime(String value) throws ParseException {
 		if (value == null)
 			return null;
-		
+
 		return value != null ? dateTimeFormat.parse(value) : null;
 	}
 	

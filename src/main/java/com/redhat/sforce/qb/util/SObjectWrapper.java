@@ -31,7 +31,7 @@ public class SObjectWrapper {
 	}
 	
 	public Integer getInteger(String name) {
-		return sobject.getField(name) != null ? Integer.valueOf(sobject.getField(name).toString()) : null;
+		return sobject.getField(name) != null ? Double.valueOf(sobject.getField(name).toString()).intValue() : null;
 	}
 		
 	public Date getDate(String name) throws ParseException {
