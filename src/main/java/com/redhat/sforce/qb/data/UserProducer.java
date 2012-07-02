@@ -16,7 +16,7 @@ import org.json.JSONException;
 
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.sobject.User;
+import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.redhat.sforce.qb.qualifiers.LoggedIn;
 import com.redhat.sforce.qb.util.JsfUtil;
 

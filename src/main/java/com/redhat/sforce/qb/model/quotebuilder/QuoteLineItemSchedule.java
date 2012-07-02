@@ -1,8 +1,8 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import java.util.Date;
 
-public class QuoteLineItemSchedule extends SObject {
+public class QuoteLineItemSchedule extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
 	private String name;

@@ -9,7 +9,7 @@ import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.sobject.Opportunity;
+import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
 
 @SessionScoped
 

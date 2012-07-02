@@ -1,6 +1,6 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
-public class OpportunityPartner extends SObject {
+public class OpportunityPartner extends QuoteBuilderObject {
 	
 	private static final long serialVersionUID = -6448583922075358390L;
 	private String billingCity;

@@ -5,7 +5,7 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.sobject.Account;
+import com.redhat.sforce.qb.model.quotebuilder.Account;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.sforce.ws.bind.XmlObject;

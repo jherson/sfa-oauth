@@ -7,9 +7,9 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 	<rich:extendedDataTable id="quoteList" var="quote"
-		style="height:400px;" value="#{quoteList}"
+		style="height:600px;" value="#{quoteList}"
 		noDataLabel="#{msgs.noRecords}" iterationStatusVar="it"
-		selectionMode="none">
+		selectionMode="single">
 
 		<rich:column width="80px">
 			<f:facet name="header">#{msgs.action}</f:facet>

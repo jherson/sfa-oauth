@@ -1,6 +1,6 @@
 package com.redhat.sforce.qb.model.factory;
 
-import com.redhat.sforce.qb.model.sobject.Token;
+import com.redhat.sforce.qb.model.quotebuilder.Token;
 
 import org.json.JSONException;
 import org.json.JSONObject;

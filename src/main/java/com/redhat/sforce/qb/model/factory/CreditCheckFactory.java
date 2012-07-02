@@ -8,8 +8,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.model.sobject.Contact;
-import com.redhat.sforce.qb.model.sobject.CreditCheck;
+import com.redhat.sforce.qb.model.quotebuilder.CreditCheck;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.sforce.ws.bind.XmlObject;

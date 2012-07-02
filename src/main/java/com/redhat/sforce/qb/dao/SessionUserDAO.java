@@ -3,7 +3,7 @@ package com.redhat.sforce.qb.dao;
 import org.json.JSONException;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.sobject.User;
+import com.redhat.sforce.qb.model.quotebuilder.User;
 
 public interface SessionUserDAO {
 

@@ -1,6 +1,6 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
-public class CreditCheck extends SObject {
+public class CreditCheck extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
 	private Double arBalance;

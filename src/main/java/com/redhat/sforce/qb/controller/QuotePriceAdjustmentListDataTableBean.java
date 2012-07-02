@@ -11,8 +11,8 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 
 @ManagedBean(name = "quotePriceAdjustmentListDataTableBean")

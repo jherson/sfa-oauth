@@ -11,9 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
-import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.redhat.sforce.qb.util.Util;

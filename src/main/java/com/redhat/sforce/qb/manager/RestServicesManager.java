@@ -5,7 +5,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.sobject.SObject;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteBuilderObject;
 
 public interface RestServicesManager {
 	

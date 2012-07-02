@@ -8,7 +8,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.redhat.sforce.qb.model.sobject.OpportunityPartner;
+import com.redhat.sforce.qb.model.quotebuilder.OpportunityPartner;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.sforce.ws.bind.XmlObject;

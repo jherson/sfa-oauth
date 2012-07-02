@@ -9,8 +9,8 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.qb.model.sobject.OpportunityLineItem;
-import com.redhat.sforce.qb.model.sobject.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.OpportunityLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 
 @Model

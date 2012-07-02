@@ -1,6 +1,6 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
-public class Contact extends SObject {
+public class Contact extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
 	private String name;

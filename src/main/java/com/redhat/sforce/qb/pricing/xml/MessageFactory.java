@@ -11,8 +11,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 
 public class MessageFactory {
 

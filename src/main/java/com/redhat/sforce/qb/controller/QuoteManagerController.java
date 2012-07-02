@@ -11,8 +11,8 @@ import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.model.sobject.User;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;

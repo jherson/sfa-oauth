@@ -3,8 +3,8 @@ package com.redhat.sforce.qb.model.factory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.sobject.OpportunityLineItem;
-import com.redhat.sforce.qb.model.sobject.Product;
+import com.redhat.sforce.qb.model.quotebuilder.OpportunityLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.Product;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.sforce.ws.bind.XmlObject;

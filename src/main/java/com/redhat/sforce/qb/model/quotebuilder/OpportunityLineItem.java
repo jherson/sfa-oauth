@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import java.util.Date;
 
@@ -7,7 +7,7 @@ import javax.faces.bean.SessionScoped;
 
 @ManagedBean
 @SessionScoped
-public class OpportunityLineItem extends SObject {
+public class OpportunityLineItem extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
 	private String opportunityId;

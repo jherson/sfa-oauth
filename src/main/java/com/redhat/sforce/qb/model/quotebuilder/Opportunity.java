@@ -1,9 +1,9 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import java.util.Date;
 import java.util.List;
 
-public class Opportunity extends SObject {
+public class Opportunity extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = -1577960793119757037L;
 	private String name;

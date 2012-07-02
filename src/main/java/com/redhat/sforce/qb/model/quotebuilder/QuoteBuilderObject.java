@@ -1,11 +1,11 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import java.util.Date;
 import java.io.Serializable;
 
 import com.redhat.sforce.persistence.Id;
 
-public class SObject implements Serializable, Cloneable {
+public class QuoteBuilderObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -24,7 +24,7 @@ public class SObject implements Serializable, Cloneable {
 	private String lastModifiedByFirstName;
 	private String lastModifiedByLastName;
 
-	public SObject() {
+	public QuoteBuilderObject() {
 
 	}
 

@@ -2,9 +2,9 @@ package com.redhat.sforce.qb.manager;
 
 import java.util.List;
 
-import com.redhat.sforce.qb.model.sobject.OpportunityLineItem;
-import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.OpportunityLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.sforce.soap.partner.SaveResult;
 
 public interface QuoteManager {

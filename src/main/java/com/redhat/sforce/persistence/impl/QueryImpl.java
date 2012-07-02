@@ -8,9 +8,7 @@ import java.util.logging.Logger;
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.factory.OpportunityFactory;
-import com.redhat.sforce.qb.model.factory.QuoteFactory;
-import com.redhat.sforce.qb.model.factory.QuoteLineItemFactory;
+import com.redhat.sforce.qb.model.factory.QuoteBuilderObjectFactory;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -58,17 +56,7 @@ public class QueryImpl<X> implements Query {
 	@SuppressWarnings({"unchecked"})
 	public List<X> getResultList() throws QueryException {
 		List<X> resultList = new ArrayList<X>();
-				
-		//log.info(resultList.getClass().getTypeParameters().getClass().getCanonicalName());
-		
-		//if (! resultList.getClass().getTypeParameters().getClass().isAnnotationPresent(Entity.class))
-		//	throw new QueryException("Unknown Entity: " + resultList.getClass().getSimpleName());
-				
-//		if (resultList.getClass().isAnnotationPresent(Table.class)) {
-//			Table table = resultList.getClass().getAnnotation(Table.class);
-//			log.info("SObject name: " + table.name());
-//		}
-				
+							
 		try {
 			QueryResult qr = em.getConnection().query(query);
 			
@@ -77,46 +65,17 @@ public class QueryImpl<X> implements Query {
 			if (qr.getSize() == 0)
 				return null;
 			
-//			while (! qr.getDone()) {
+			boolean done = false;
+			
+			while (! done) {
 									
-				for (SObject sobject : qr.getRecords()) {									
-					
-//					resultList.getClass().getFields()[0].getAnnotation(Column.class);
-//										
-//					log.info(resultList.getClass().getCanonicalName());
-					
-//					try {
-//						Class<?> c = Class.forName(resultList.getClass().getCanonicalName());
-//						c.newInstance();
-//						
-//						resultList.add((X) c);
-//					} catch (ClassNotFoundException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (InstantiationException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (IllegalAccessException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-
-					System.out.println("Length: " + qr.getRecords().length);				    
-				    System.out.println("Done: " + qr.getDone());
-				
-				    if ("Quote__c".equals(sobject.getType())) {
-				    	resultList.add((X) QuoteFactory.parse(sobject));
-				    }		
+				for (SObject sobject : qr.getRecords()) {																		
 				    
-				    if ("Opportunity".equals(type)) {
-				    	resultList.add((X) OpportunityFactory.parse(sobject));
-				    }
-				    
-				    if ("QuoteLineItem__c".equals(type)) {
-				    	resultList.add((X) QuoteLineItemFactory.parse(sobject));
-				    }
-				}			
-//			}
+				    resultList.add((X) QuoteBuilderObjectFactory.parse(sobject));
+				}	
+							    			    
+			    done = qr.getDone();
+			}
 			
 			return resultList;
 			

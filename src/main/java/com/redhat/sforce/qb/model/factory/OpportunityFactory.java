@@ -9,8 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.sobject.Opportunity;
-import com.redhat.sforce.qb.model.sobject.User;
+import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
+import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.sforce.ws.bind.XmlObject;

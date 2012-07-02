@@ -5,10 +5,10 @@ import java.util.Map;
 
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.chatter.Followers;
-import com.redhat.sforce.qb.model.sobject.Quote;
-import com.redhat.sforce.qb.model.sobject.QuoteLineItem;
-import com.redhat.sforce.qb.model.sobject.QuoteLineItemPriceAdjustment;
-import com.redhat.sforce.qb.model.sobject.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
+import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.ws.ConnectionException;

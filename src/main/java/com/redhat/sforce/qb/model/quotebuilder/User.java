@@ -1,8 +1,8 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import java.util.Locale;
 
-public class User extends SObject {
+public class User extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = -5495949651775917498L;
 	private String userName;

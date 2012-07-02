@@ -1,6 +1,6 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
-public class QuotePriceAdjustment extends SObject {
+public class QuotePriceAdjustment extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
 	private String quoteId;

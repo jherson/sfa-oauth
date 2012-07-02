@@ -18,74 +18,38 @@
 					<h:outputText value="#{msgs.headerTitle}"
 						style="font-weight:bold; font-size: 18px;" />
 				</h:panelGroup>
-				
+
 			</h:panelGrid>
 
 			<hr />
 
-			<h:panelGrid width="100%" columns="2" cellpadding="3" styleClass="grid_panels" columnClasses="column25,column75">
-			
-			<rich:panel>
-			
-			    <h:panelGrid columns="1">
-			    <h:panelGroup layout="block">
-					<h:selectOneMenu value="#{quoteReports.selectedReport}"
-						style="width: 200px;">
-
-						<f:selectItems value="#{quoteReports.quoteReportsList}" />
-
-						<a4j:ajax event="valueChange" render="@this" status="ajaxStatus" />
-					</h:selectOneMenu>
-
-					<a4j:commandButton value="#{msgs.go}"
-						action="#{quoteReports.runReport()}" render="quoteList"
-						ajaxSingle="true">
-					</a4j:commandButton>
-					</h:panelGroup>
-					
-					<h:panelGroup layout="block">
-
-				    <rich:dataTable value="#{quoteList}" var="q">
-
-					<rich:column>
-
-						<h:outputText value="#{q.name}" style="font-weight: bold"/>
-						<br />
-						<h:outputText value="#{q.currencyIsoCode}" />
-						<h:outputText value=" " />
-						<h:outputText value="#{q.amount}">
-							<f:convertNumber locale="#{user.locale}"
-								pattern="#,##0.00;(#,##0.00)" />
-						</h:outputText>
-
-						<h:outputText value=" | " />
-
-						<h:outputText value="#{q.opportunity.closeDate}">
-							<f:convertDateTime locale="#{user.locale}"
-								timeZone="#{user.timeZone}"
-								pattern="#{user.dateFormatPattern}" type="date" />
-						</h:outputText>
-
-						<h:outputText value=" | " />
-
-						<h:outputText value="#{q.opportunity.probability}" />
-
-					</rich:column>
-
-				</rich:dataTable>
-				
-				</h:panelGroup>
-				</h:panelGrid>
-				</rich:panel>
+			<h:panelGrid width="100%" columns="2" cellpadding="3"
+				styleClass="grid_panels" columnClasses="column75,column25">
 
 				<h:panelGroup layout="block">
 
 					<h:outputText value="#{msgs.quoteListHeader}"
 						style="font-weight: bold" />
+						
+					<h:outputText value=" [#{quoteList.size()}]"
+						style="font-weight: bold" />
 
 					<br />
 
 					<rich:panel style="text-align: center; border: 0px;">
+
+						<h:selectOneMenu value="#{quoteReports.selectedReport}"
+							style="width: 200px;">
+
+							<f:selectItems value="#{quoteReports.quoteReportsList}" />
+
+							<a4j:ajax event="valueChange" render="@this" status="ajaxStatus" />
+						</h:selectOneMenu>
+
+						<a4j:commandButton value="#{msgs.go}"
+							action="#{quoteReports.runReport()}" render="quoteList"
+							ajaxSingle="true">
+						</a4j:commandButton>
 
 						<a4j:commandButton id="new" styleClass="commandButton"
 							value="#{msgs.new}"
@@ -101,7 +65,12 @@
 					<ui:include src="quotelist.xhtml" />
 
 				</h:panelGroup>
-				</h:panelGrid>
+
+				<h:panelGroup layout="block">
+
+				</h:panelGroup>
+
+			</h:panelGrid>
 		</rich:panel>
 
 	</a4j:outputPanel>

@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import com.redhat.sforce.persistence.Entity;
 import com.redhat.sforce.persistence.Column;
@@ -7,7 +7,7 @@ import com.redhat.sforce.persistence.Table;
 @Entity
 @Table(name="Account")
 
-public class Account extends SObject {
+public class Account extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 4563614967304678524L;
 		

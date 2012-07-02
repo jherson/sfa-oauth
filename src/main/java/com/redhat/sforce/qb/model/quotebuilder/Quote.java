@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.sobject;
+package com.redhat.sforce.qb.model.quotebuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,7 +15,7 @@ import com.redhat.sforce.qb.model.chatter.Followers;
 @Entity
 @Table(name="Quote__c")
 
-public class Quote extends SObject {
+public class Quote extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
 	
