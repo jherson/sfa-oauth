@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.factory;
+package com.redhat.sforce.qb.model.quotebuilder.factory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -9,22 +9,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
+import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.util.JSONObjectWrapper;
 import com.redhat.sforce.qb.util.SObjectWrapper;
 import com.sforce.ws.bind.XmlObject;
 
-public class QuotePriceAdjustmentFactory {
+public class QuoteLineItemPriceAdjustmentFactory {
 	
-	public static List<QuotePriceAdjustment> parse(Iterator<XmlObject> iterator) throws ParseException {
+	public static List<QuoteLineItemPriceAdjustment> parse(Iterator<XmlObject> iterator) throws ParseException {
 		
-		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
+		List<QuoteLineItemPriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuoteLineItemPriceAdjustment>();
 		
 		while (iterator.hasNext()) {
 			SObjectWrapper wrapper = new SObjectWrapper(iterator.next());
-
-			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment();
+			
+			QuoteLineItemPriceAdjustment quotePriceAdjustment = new QuoteLineItemPriceAdjustment();
 			quotePriceAdjustment.setId(wrapper.getId());
+			quotePriceAdjustment.setQuoteLineItemId(wrapper.getString("QuoteLineItemId__c"));
+			quotePriceAdjustment.setQuoteId(wrapper.getString("QuoteId__c"));
 			quotePriceAdjustment.setCreatedById(wrapper.getString("CreatedBy","Id"));
 			quotePriceAdjustment.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
 			quotePriceAdjustment.setCreatedDate(wrapper.getDateTime("CreatedDate"));
@@ -36,8 +38,9 @@ public class QuotePriceAdjustmentFactory {
 			quotePriceAdjustment.setPercent(wrapper.getDouble("Percent__c"));
 			quotePriceAdjustment.setReason(wrapper.getString("Reason__c"));
 			quotePriceAdjustment.setType(wrapper.getString("Type__c"));
-			quotePriceAdjustment.setAppliesTo(wrapper.getString("AppliesTo__c"));
 			quotePriceAdjustment.setOperator(wrapper.getString("Operator__c"));
+			quotePriceAdjustment.setValue(wrapper.getDouble("Value__c"));
+			quotePriceAdjustment.setDescription(wrapper.getString("Description__c"));
 
 			quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}
@@ -45,14 +48,16 @@ public class QuotePriceAdjustmentFactory {
 		return quotePriceAdjustmentList;
 	}
 
-	public static List<QuotePriceAdjustment> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
-		List<QuotePriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuotePriceAdjustment>();
+	public static List<QuoteLineItemPriceAdjustment> deserialize(JSONArray jsonArray) throws JSONException, ParseException {
+		List<QuoteLineItemPriceAdjustment> quotePriceAdjustmentList = new ArrayList<QuoteLineItemPriceAdjustment>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObjectWrapper wrapper = new JSONObjectWrapper(jsonArray.getJSONObject(i));
 
-			QuotePriceAdjustment quotePriceAdjustment = new QuotePriceAdjustment();
+			QuoteLineItemPriceAdjustment quotePriceAdjustment = new QuoteLineItemPriceAdjustment();
 			quotePriceAdjustment.setId(wrapper.getId());
+			quotePriceAdjustment.setQuoteLineItemId(wrapper.getString("QuoteLineItemId__c"));
+			quotePriceAdjustment.setQuoteId(wrapper.getString("QuoteId__c"));
 			quotePriceAdjustment.setCreatedById(wrapper.getString("CreatedBy","Id"));
 			quotePriceAdjustment.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
 			quotePriceAdjustment.setCreatedDate(wrapper.getDateTime("CreatedDate"));
@@ -64,8 +69,9 @@ public class QuotePriceAdjustmentFactory {
 			quotePriceAdjustment.setPercent(wrapper.getDouble("Percent__c"));
 			quotePriceAdjustment.setReason(wrapper.getString("Reason__c"));
 			quotePriceAdjustment.setType(wrapper.getString("Type__c"));
-			quotePriceAdjustment.setAppliesTo(wrapper.getString("AppliesTo__c"));
 			quotePriceAdjustment.setOperator(wrapper.getString("Operator__c"));
+			quotePriceAdjustment.setValue(wrapper.getDouble("Value__c"));
+			quotePriceAdjustment.setDescription(wrapper.getString("Description__c"));
 
 			quotePriceAdjustmentList.add(quotePriceAdjustment);
 		}
@@ -73,20 +79,20 @@ public class QuotePriceAdjustmentFactory {
 		return quotePriceAdjustmentList;
 	}
 
-	public static JSONArray serialize(List<QuotePriceAdjustment> quotePriceAdjustmentList) {
+	public static JSONArray serialize(List<QuoteLineItemPriceAdjustment> quotePriceAdjustmentList) {
 		JSONArray jsonArray = new JSONArray();
 
-		for (QuotePriceAdjustment quotePriceAdjustment : quotePriceAdjustmentList) {
+		for (QuoteLineItemPriceAdjustment quotePriceAdjustment : quotePriceAdjustmentList) {
 
 			JSONObject jsonObject = new JSONObject();
 			try {
 				jsonObject.put("Id", quotePriceAdjustment.getId());
+				jsonObject.put("QuoteLineItemId__c", quotePriceAdjustment.getQuoteLineItemId());
 				jsonObject.put("QuoteId__c", quotePriceAdjustment.getQuoteId());
 				jsonObject.put("Amount__c", quotePriceAdjustment.getAmount());
 				jsonObject.put("Percent__c", quotePriceAdjustment.getPercent());
 				jsonObject.put("Reason__c", quotePriceAdjustment.getReason());
 				jsonObject.put("Type__c", quotePriceAdjustment.getType());
-				jsonObject.put("AppliesTo__C", quotePriceAdjustment.getAppliesTo());
 				jsonObject.put("Operator__c", quotePriceAdjustment.getOperator());
 
 				jsonArray.put(jsonObject);

@@ -38,4 +38,5 @@ public interface QuoteDAO {
 	public void unfollow(String quoteId);
 	public void price(Quote quote);	
 	public Followers getFollowers(String quoteId);
+	public void getQuoteFeed();
 }

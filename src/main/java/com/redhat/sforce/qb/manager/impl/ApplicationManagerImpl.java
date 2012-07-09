@@ -82,9 +82,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());		
 			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));			
 			setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
-			
-			currencyIsoCodes = queryCurrencyIsoCodes();
-
+						
 		} catch (ConnectionException e) {
 			log.error(e);
 		}

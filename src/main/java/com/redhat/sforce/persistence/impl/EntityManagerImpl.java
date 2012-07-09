@@ -1,21 +1,18 @@
 package com.redhat.sforce.persistence.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
+import java.util.Properties;
 
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
-import com.redhat.sforce.qb.manager.ApplicationManager;
+import com.redhat.sforce.persistence.threadlocal.ConnectorThreadLocal;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
@@ -25,41 +22,80 @@ import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
-@SessionScoped
-
 public class EntityManagerImpl implements EntityManager, Serializable {
 
 	private static final long serialVersionUID = 8472659225063158884L;
 	
-	@Inject
-	private Logger log;
+	private Logger log = Logger.getLogger(EntityManagerImpl.class.getName());
 	
-	@Inject
-	private ApplicationManager applicationManager;
-
+	private String apiEndpoint;
+	
+	private String apiVersion;
+	
 	private PartnerConnection partnerConnection;
 	
-	@PostConstruct
-	public void init() {
+	public EntityManagerImpl() {
+		init();
+	}
+	
+	private void init() {
 		log.info("init");
 		
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
+		Properties propertiesFile = new Properties();
+		try {
+			propertiesFile.load(is);
+		} catch (IOException e) {
+			log.error(e);
+		}
 		
-		if (session.getAttribute("SessionId") != null) {
+		ConnectorConfig config = ConnectorThreadLocal.get();
+		log.info("Thread Local Session: " + config.getSessionId());
+		try {
+			partnerConnection = Connector.newConnection(config);
 			
-			String sessionId = session.getAttribute("SessionId").toString();
-			
-			ConnectorConfig config = new ConnectorConfig();
-			config.setManualLogin(true);
-			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-			config.setSessionId(sessionId);								
-			try {
-				partnerConnection = Connector.newConnection(config);
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
-		}	
-	}
+		} catch (ConnectionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		apiEndpoint = (partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+		apiVersion = (propertiesFile.getProperty("salesforce.api.version"));
+		
+		//HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		
+		//if (session == null)
+		//	log.info("1 session is null");
+		
+		try {
+		
+		//HttpSession session = request.getSession();
+		
+		} catch (Exception e) {
+			log.error("session is null");
+		}
+		
+//		if (session == null)
+//			log.info("2 session is null");
+//
+//		
+//		if (session.getAttribute("SessionId") != null) {
+//			
+//			String sessionId = session.getAttribute("SessionId").toString();
+//			
+//			log.info("found session id" + sessionId);
+//			
+//			ConnectorConfig config = new ConnectorConfig();
+//			config.setManualLogin(true);
+//			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
+//			config.setSessionId(sessionId);								
+//			try {
+//				partnerConnection = Connector.newConnection(config);
+//			} catch (ConnectionException e) {
+//				e.printStackTrace();
+//			}
+//		}	
+	}	
 	
 	@Override
 	public PartnerConnection getConnection() {
@@ -115,11 +151,12 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	
 	@Override
 	public Query createQuery(String query) {
-		String url = applicationManager.getApiEndpoint() 
+		String url = apiEndpoint
 				+ "/data/"
-				+ applicationManager.getApiVersion() 
+				+ apiVersion 
 				+ "/query";
 		
+		init();
 		getConnection().getConfig().setRestEndpoint(url);
 				
 		return new QueryImpl<Object>(this, query);

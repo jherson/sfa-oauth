@@ -7,8 +7,8 @@ import org.json.JSONException;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.factory.UserFactory;
 import com.redhat.sforce.qb.model.quotebuilder.User;
+import com.redhat.sforce.qb.model.quotebuilder.factory.UserFactory;
 
 import java.io.Serializable;
 

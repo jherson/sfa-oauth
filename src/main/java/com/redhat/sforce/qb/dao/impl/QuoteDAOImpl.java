@@ -126,6 +126,11 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		}
 		return followers;
 	}
+	
+	@Override
+	public void getQuoteFeed() {
+		sm.getQuoteFeed();
+	}
 
 	@Override
 	public void activate(String quoteId) {

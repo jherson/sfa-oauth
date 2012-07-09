@@ -1,0 +1,304 @@
+{
+  "currentPageUrl": "/services/data/v25.0/chatter/feeds/filter/00560000000m2EaAAI/a0Q/feed-items",
+  "isModifiedUrl": null,
+  "items": [
+    {
+      "actor": {
+        "companyName": null,
+        "firstName": "John",
+        "id": "00560000000m2EaAAI",
+        "isActive": true,
+        "isChatterGuest": false,
+        "lastName": "Herson",
+        "mySubscription": null,
+        "name": "John Herson",
+        "photo": {
+          "largePhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/F",
+          "photoVersionId": null,
+          "smallPhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/T"
+        },
+        "title": "Salesforce.com Technical Architect",
+        "type": "User",
+        "url": "/services/data/v25.0/chatter/users/00560000000m2EaAAI"
+      },
+      "attachment": null,
+      "body": {
+        "messageSegments": [
+          {
+            "text": "changed ",
+            "type": "Text"
+          },
+          {
+            "segments": [
+              {
+                "text": "Quote Name",
+                "type": "FieldChangeName"
+              },
+              {
+                "text": " from ",
+                "type": "Text"
+              },
+              {
+                "text": "Copy of: Trying to create a new quote",
+                "type": "FieldChangeValue",
+                "url": "/services/data/v25.0/null"
+              },
+              {
+                "text": " to ",
+                "type": "Text"
+              },
+              {
+                "text": "Trying to create a new quote",
+                "type": "FieldChangeValue",
+                "url": "/services/data/v25.0/null"
+              }
+            ],
+            "text": "Quote Name from Copy of: Trying to create a new quote to Trying to create a new quote",
+            "type": "FieldChange"
+          },
+          {
+            "text": ".",
+            "type": "Text"
+          }
+        ],
+        "text": "changed Quote Name from Copy of: Trying to create a new quote to Trying to create a new quote."
+      },
+      "clientInfo": null,
+      "comments": {
+        "comments": [],
+        "currentPageUrl": "/services/data/v25.0/chatter/feed-items/0D5P0000006R2n8KAC/comments",
+        "nextPageUrl": null,
+        "total": 0
+      },
+      "createdDate": "2012-07-03T14:30:49.000Z",
+      "event": false,
+      "id": "0D5P0000006R2n8KAC",
+      "isBookmarkedByCurrentUser": false,
+      "isDeleteRestricted": true,
+      "isLikedByCurrentUser": false,
+      "likes": {
+        "currentPageUrl": "/services/data/v25.0/chatter/feed-items/0D5P0000006R2n8KAC/likes",
+        "likes": [],
+        "nextPageUrl": null,
+        "previousPageUrl": null,
+        "total": 0
+      },
+      "modifiedDate": "2012-07-03T14:30:49.000Z",
+      "myLike": null,
+      "originalFeedItem": null,
+      "originalFeedItemActor": null,
+      "parent": {
+        "id": "a0QP0000001IK63MAG",
+        "mySubscription": {
+          "id": "0E8P0000000j0vNKAQ",
+          "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000j0vNKAQ"
+        },
+        "name": "Trying to create a new quote",
+        "type": "CustomEntityDataTemplate",
+        "url": "/services/data/v25.0/chatter/records/a0QP0000001IK63MAG"
+      },
+      "photoUrl": "https://c.cs4.content.force.com/profilephoto/005/T",
+      "type": "TrackedChange",
+      "url": "/services/data/v25.0/chatter/feed-items/0D5P0000006R2n8KAC"
+    },
+    {
+      "actor": {
+        "companyName": null,
+        "firstName": "John",
+        "id": "00560000000m2EaAAI",
+        "isActive": true,
+        "isChatterGuest": false,
+        "lastName": "Herson",
+        "mySubscription": null,
+        "name": "John Herson",
+        "photo": {
+          "largePhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/F",
+          "photoVersionId": null,
+          "smallPhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/T"
+        },
+        "title": "Salesforce.com Technical Architect",
+        "type": "User",
+        "url": "/services/data/v25.0/chatter/users/00560000000m2EaAAI"
+      },
+      "attachment": null,
+      "body": {
+        "messageSegments": [
+          {
+            "text": "changed ",
+            "type": "Text"
+          },
+          {
+            "segments": [
+              {
+                "text": "OpportunityId",
+                "type": "FieldChangeName"
+              },
+              {
+                "text": " from ",
+                "type": "Text"
+              },
+              {
+                "text": "RHEL6 Subscription",
+                "type": "FieldChangeValue",
+                "url": "/services/data/v25.0//006P0000003U4G1"
+              },
+              {
+                "text": " to ",
+                "type": "Text"
+              },
+              {
+                "text": "RHEL6 Subscription II",
+                "type": "FieldChangeValue",
+                "url": "/services/data/v25.0//006P00000045kg5"
+              }
+            ],
+            "text": "OpportunityId from RHEL6 Subscription to RHEL6 Subscription II",
+            "type": "FieldChange"
+          },
+          {
+            "text": ".",
+            "type": "Text"
+          }
+        ],
+        "text": "changed OpportunityId from RHEL6 Subscription to RHEL6 Subscription II."
+      },
+      "clientInfo": null,
+      "comments": {
+        "comments": [],
+        "currentPageUrl": "/services/data/v25.0/chatter/feed-items/0D5P0000006R2mtKAC/comments",
+        "nextPageUrl": null,
+        "total": 0
+      },
+      "createdDate": "2012-07-03T14:25:03.000Z",
+      "event": false,
+      "id": "0D5P0000006R2mtKAC",
+      "isBookmarkedByCurrentUser": false,
+      "isDeleteRestricted": true,
+      "isLikedByCurrentUser": false,
+      "likes": {
+        "currentPageUrl": "/services/data/v25.0/chatter/feed-items/0D5P0000006R2mtKAC/likes",
+        "likes": [],
+        "nextPageUrl": null,
+        "previousPageUrl": null,
+        "total": 0
+      },
+      "modifiedDate": "2012-07-03T14:25:03.000Z",
+      "myLike": null,
+      "originalFeedItem": null,
+      "originalFeedItemActor": null,
+      "parent": {
+        "id": "a0QP0000001IK63MAG",
+        "mySubscription": {
+          "id": "0E8P0000000j0vNKAQ",
+          "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000j0vNKAQ"
+        },
+        "name": "Trying to create a new quote",
+        "type": "CustomEntityDataTemplate",
+        "url": "/services/data/v25.0/chatter/records/a0QP0000001IK63MAG"
+      },
+      "photoUrl": "https://c.cs4.content.force.com/profilephoto/005/T",
+      "type": "TrackedChange",
+      "url": "/services/data/v25.0/chatter/feed-items/0D5P0000006R2mtKAC"
+    },
+    {
+      "actor": {
+        "companyName": null,
+        "firstName": "John",
+        "id": "00560000000m2EaAAI",
+        "isActive": true,
+        "isChatterGuest": false,
+        "lastName": "Herson",
+        "mySubscription": null,
+        "name": "John Herson",
+        "photo": {
+          "largePhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/F",
+          "photoVersionId": null,
+          "smallPhotoUrl": "https://c.cs4.content.force.com/profilephoto/005/T"
+        },
+        "title": "Salesforce.com Technical Architect",
+        "type": "User",
+        "url": "/services/data/v25.0/chatter/users/00560000000m2EaAAI"
+      },
+      "attachment": null,
+      "body": {
+        "messageSegments": [
+          {
+            "text": "changed ",
+            "type": "Text"
+          },
+          {
+            "segments": [
+              {
+                "text": "Quote Name",
+                "type": "FieldChangeName"
+              },
+              {
+                "text": " from ",
+                "type": "Text"
+              },
+              {
+                "text": "Copy of: Trying to create a new quote and save test",
+                "type": "FieldChangeValue",
+                "url": "/services/data/v25.0/null"
+              },
+              {
+                "text": " to ",
+                "type": "Text"
+              },
+              {
+                "text": "Quote for RHEL6",
+                "type": "FieldChangeValue",
+                "url": "/services/data/v25.0/null"
+              }
+            ],
+            "text": "Quote Name from Copy of: Trying to create a new quote and save test to Quote for RHEL6",
+            "type": "FieldChange"
+          },
+          {
+            "text": ".",
+            "type": "Text"
+          }
+        ],
+        "text": "changed Quote Name from Copy of: Trying to create a new quote and save test to Quote for RHEL6."
+      },
+      "clientInfo": null,
+      "comments": {
+        "comments": [],
+        "currentPageUrl": "/services/data/v25.0/chatter/feed-items/0D5P0000006QFY2KAO/comments",
+        "nextPageUrl": null,
+        "total": 0
+      },
+      "createdDate": "2012-05-25T17:07:07.000Z",
+      "event": false,
+      "id": "0D5P0000006QFY2KAO",
+      "isBookmarkedByCurrentUser": false,
+      "isDeleteRestricted": true,
+      "isLikedByCurrentUser": false,
+      "likes": {
+        "currentPageUrl": "/services/data/v25.0/chatter/feed-items/0D5P0000006QFY2KAO/likes",
+        "likes": [],
+        "nextPageUrl": null,
+        "previousPageUrl": null,
+        "total": 0
+      },
+      "modifiedDate": "2012-05-25T17:07:07.000Z",
+      "myLike": null,
+      "originalFeedItem": null,
+      "originalFeedItemActor": null,
+      "parent": {
+        "id": "a0QP0000001IFg7MAG",
+        "mySubscription": {
+          "id": "0E8P0000000iyMPKAY",
+          "url": "/services/data/v25.0/chatter/subscriptions/0E8P0000000iyMPKAY"
+        },
+        "name": "Quote for RHEL6",
+        "type": "CustomEntityDataTemplate",
+        "url": "/services/data/v25.0/chatter/records/a0QP0000001IFg7MAG"
+      },
+      "photoUrl": "https://c.cs4.content.force.com/profilephoto/005/T",
+      "type": "TrackedChange",
+      "url": "/services/data/v25.0/chatter/feed-items/0D5P0000006QFY2KAO"
+    }
+  ],
+  "nextPageUrl": null
+}

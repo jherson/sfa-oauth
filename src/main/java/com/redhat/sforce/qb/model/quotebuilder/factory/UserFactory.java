@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.factory;
+package com.redhat.sforce.qb.model.quotebuilder.factory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -1,11 +1,8 @@
 package com.redhat.sforce.qb.manager;
 
-import java.util.List;
-
 import org.json.JSONObject;
 
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.model.quotebuilder.QuoteBuilderObject;
 
 public interface RestServicesManager {
 	
@@ -20,4 +17,5 @@ public interface RestServicesManager {
 	public void unfollow(String subscriptionId);
 	public JSONObject getFollowers(String recordId);
 	public JSONObject getFeed(String recordId);
+	public JSONObject getQuoteFeed();
 }

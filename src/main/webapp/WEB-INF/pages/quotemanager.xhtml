@@ -46,7 +46,7 @@
 							<a4j:ajax event="valueChange" render="@this" status="ajaxStatus" />
 						</h:selectOneMenu>
 
-						<a4j:commandButton value="#{msgs.go}"
+						<a4j:commandButton value="#{msgs.go}" styleClass="commandButton"
 							action="#{quoteReports.runReport()}" render="quoteList"
 							ajaxSingle="true">
 						</a4j:commandButton>
@@ -59,6 +59,10 @@
 						<a4j:commandButton id="refresh" styleClass="commandButton"
 							value="#{msgs.refresh}" ajaxSingle="true" render="quoteList"
 							action="#{quoteManagerController.refresh()}" />
+							
+						<a4j:commandButton id="refreshFeed" styleClass="commandButton"
+							value="Refresh Feed" ajaxSingle="true"
+							action="#{quoteManagerController.refresh()}" />	
 
 					</rich:panel>
 

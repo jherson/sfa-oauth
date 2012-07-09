@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.factory.QuoteBuilderObjectFactory;
+import com.redhat.sforce.qb.model.quotebuilder.factory.QuoteBuilderObjectFactory;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;

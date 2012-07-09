@@ -13,16 +13,24 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.core.ThreadLocalResteasyProviderFactory;
+import org.json.JSONException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.redhat.sforce.persistence.threadlocal.ConnectorThreadLocal;
 import com.redhat.sforce.qb.dao.QuoteDAO;
+import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.RestServicesManager;
+import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.Token;
+import com.redhat.sforce.qb.model.quotebuilder.User;
+import com.sforce.ws.ConnectorConfig;
 
 @RequestScoped
 @ApplicationPath("/rest")
@@ -34,16 +42,19 @@ public class QuoteBuilderRestResources extends Application {
 	Logger log;
 	
 	@Context 
-	private HttpServletRequest httpRequest;
+	private HttpServletRequest request;
 	
 	@Inject
-	private Token token;
+	private Token token;	
 	
 	@Inject
-	private RestServicesManager sm;
+	private ApplicationManager applicationManager;
 	
 	@Inject
 	private QuoteDAO quoteDAO;
+	
+	@Inject
+	private SessionUserDAO userDAO;
 
 	@GET
 	@Path("/get_current_user")
@@ -54,14 +65,19 @@ public class QuoteBuilderRestResources extends Application {
 		token.setAccessToken(sessionId);
 		//httpRequest.getSession().setAttribute("SessionId", sessionId);
 		
+		Gson gson = new Gson();	
+		User user = null;
 		try {
-			return sm.getCurrentUserInfo().toString();
+			user = userDAO.querySessionUser();
 		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return null;
+		return gson.toJson(user);
 	}
 //
 //	@GET()
@@ -76,14 +92,21 @@ public class QuoteBuilderRestResources extends Application {
 	@GET
 	@Path("/get_quotes_for_opportunity")
 	@Produces("application/json")
-	public String queryQuotesByOpportunityId(
+	public Response queryQuotesByOpportunityId(
 			@HeaderParam("SessionId") String sessionId,
 			@QueryParam("opportunityId") String opportunityId) {
 		
-		log.info("Rest SessionId: " + sessionId);
-		httpRequest.getSession().setAttribute("SessionId", sessionId);			 
+		log.info("SessionId: " + sessionId);
+		log.info("OpportunityId: " + opportunityId);
 		
-		Gson gson = new Gson();			
+		ConnectorConfig config = new ConnectorConfig();
+		config.setManualLogin(true);
+		config.setServiceEndpoint("https://cs4-api.salesforce.com/services/Soap/u/25.0/00DP00000006lRQ");
+		config.setSessionId(sessionId);	
+				
+		ConnectorThreadLocal.set(config);
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();	
 		List<Quote> quoteList = null;
 		try {
 			quoteList = quoteDAO.queryQuotesByOpportunityId(opportunityId);
@@ -91,7 +114,7 @@ public class QuoteBuilderRestResources extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		return gson.toJson(quoteList); 	
+		return Response.status(200).entity(gson.toJson(quoteList)).build(); 	
 	}
 
 //	@POST

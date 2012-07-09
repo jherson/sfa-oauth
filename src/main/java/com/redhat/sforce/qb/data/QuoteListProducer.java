@@ -47,6 +47,7 @@ public class QuoteListProducer implements Serializable {
 		log.info("queryQuotes");
 		try {
 			quoteList = quoteDAO.queryQuotes();
+			//quoteDAO.getQuoteFeed();
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
