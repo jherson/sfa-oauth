@@ -58,7 +58,7 @@ public class QueryImpl<X> implements Query {
 		List<X> resultList = new ArrayList<X>();
 							
 		try {
-			QueryResult qr = em.getConnection().query(query);
+			QueryResult qr = em.getPartnerConnection().query(query);
 			
 			log.info("QueryResult Size: " + qr.getSize());			
 			

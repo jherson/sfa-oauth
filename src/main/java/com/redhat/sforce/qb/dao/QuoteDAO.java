@@ -15,11 +15,11 @@ import com.sforce.ws.ConnectionException;
 
 public interface QuoteDAO {
 
-	public Double getQuoteAmount(String quoteId) throws ConnectionException;
+	public Double getQuoteAmount(String quoteId) throws QueryException;
 	public List<Quote> queryQuotes() throws QueryException;
 	public List<Quote> queryQuotes(String whereClause) throws QueryException;
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws QueryException;
-	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws ConnectionException;
+	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws QueryException;
 	public Quote queryQuoteById(String quoteId) throws QueryException;
 	public List<QuoteLineItem> queryQuoteLineItemsByQuoteId(String quoteId) throws QueryException;
 	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws QueryException;

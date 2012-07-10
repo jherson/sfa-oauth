@@ -1,114 +1,40 @@
 package com.redhat.sforce.persistence.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
-import com.redhat.sforce.persistence.threadlocal.ConnectorThreadLocal;
-import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
-import com.sforce.ws.ConnectorConfig;
 
 public class EntityManagerImpl implements EntityManager, Serializable {
 
 	private static final long serialVersionUID = 8472659225063158884L;
 	
 	private Logger log = Logger.getLogger(EntityManagerImpl.class.getName());
-	
-	private String apiEndpoint;
-	
-	private String apiVersion;
-	
-	private PartnerConnection partnerConnection;
-	
-	public EntityManagerImpl() {
-		init();
-	}
-	
-	private void init() {
-		log.info("init");
-		
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
-		Properties propertiesFile = new Properties();
-		try {
-			propertiesFile.load(is);
-		} catch (IOException e) {
-			log.error(e);
-		}
-		
-		ConnectorConfig config = ConnectorThreadLocal.get();
-		log.info("Thread Local Session: " + config.getSessionId());
-		try {
-			partnerConnection = Connector.newConnection(config);
 			
-		} catch (ConnectionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	public EntityManagerImpl() {
 		
-		apiEndpoint = (partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-		apiVersion = (propertiesFile.getProperty("salesforce.api.version"));
-		
-		//HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		
-		//if (session == null)
-		//	log.info("1 session is null");
-		
-		try {
-		
-		//HttpSession session = request.getSession();
-		
-		} catch (Exception e) {
-			log.error("session is null");
-		}
-		
-//		if (session == null)
-//			log.info("2 session is null");
-//
-//		
-//		if (session.getAttribute("SessionId") != null) {
-//			
-//			String sessionId = session.getAttribute("SessionId").toString();
-//			
-//			log.info("found session id" + sessionId);
-//			
-//			ConnectorConfig config = new ConnectorConfig();
-//			config.setManualLogin(true);
-//			config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-//			config.setSessionId(sessionId);								
-//			try {
-//				partnerConnection = Connector.newConnection(config);
-//			} catch (ConnectionException e) {
-//				e.printStackTrace();
-//			}
-//		}	
-	}	
-	
-	@Override
-	public PartnerConnection getConnection() {
-		return partnerConnection;
 	}
 	
-	@Override
-	public void logout() throws ConnectionException {
-		partnerConnection.logout();		
+	public PartnerConnection getPartnerConnection() {
+		return ConnectionManager.getConnection();
 	}
 	
 	@Override
 	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException {
+		log.debug("persist");
+		
 		List<SObject> updateList = new ArrayList<SObject>();
 		List<SObject> createList = new ArrayList<SObject>();
 		
@@ -150,17 +76,8 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	@Override
-	public Query createQuery(String query) {
-		String url = apiEndpoint
-				+ "/data/"
-				+ apiVersion 
-				+ "/query";
-		
-		init();
-		getConnection().getConfig().setRestEndpoint(url);
-				
-		return new QueryImpl<Object>(this, query);
-				
+	public Query createQuery(String query) {			
+		return new QueryImpl<Object>(this, query);				
 	}
 	
 	@Override
@@ -173,28 +90,23 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return delete(new String[] {id})[0];
 	}
 	
-	@Override
-	public QueryResult query(String queryString) throws ConnectionException {
-		return partnerConnection.query(queryString);
-	}
-	
 	private DeleteResult[] delete(String[] ids) throws ConnectionException {
-		return partnerConnection.delete(ids);
+		return getPartnerConnection().delete(ids);
 	}
 	
 	private SaveResult create(SObject sobject) throws ConnectionException {
-		return partnerConnection.create(new SObject[] {sobject})[0];
+		return getPartnerConnection().create(new SObject[] {sobject})[0];
 	}
 	
 	private SaveResult[] create(SObject[] sobjects) throws ConnectionException {
-		return partnerConnection.create(sobjects);
+		return getPartnerConnection().create(sobjects);
 	}
 	
 	private SaveResult update(SObject sobject) throws ConnectionException {
-		return partnerConnection.update(new SObject[] {sobject})[0];
+		return getPartnerConnection().update(new SObject[] {sobject})[0];
 	}
 	
 	private SaveResult[] update(SObject[] sobjects) throws ConnectionException {
-		return partnerConnection.update(sobjects);
+		return getPartnerConnection().update(sobjects);
 	}
 }

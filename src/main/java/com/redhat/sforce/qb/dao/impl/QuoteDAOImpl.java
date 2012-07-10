@@ -20,7 +20,6 @@ import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
 import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.sforce.soap.partner.DeleteResult;
-import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -93,28 +92,23 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	}
 	
 	@Override
-	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws ConnectionException {		
+	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws QueryException {		
 		String queryString = "Select Id, ListPrice__c, ProductDescription__c, Code__c, Message__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
 		Map<String, QuoteLineItem> quoteLineItemMap = new HashMap<String, QuoteLineItem>();
-		QueryResult queryResult = em.query(queryString);
-		SObject[] sobjects = queryResult.getRecords();
-		for (SObject sobject : sobjects) {
-			QuoteLineItem quoteLineItem = new QuoteLineItem();
-			quoteLineItem.setListPrice(Double.valueOf(sobject.getField("ListPrice__c").toString()));
-			quoteLineItem.setDescription(sobject.getField("ProductDescription__c").toString());
-			quoteLineItem.setCode(sobject.getField("Code__c").toString());
-			quoteLineItem.setMessage(sobject.getField("Message__c").toString());
-			quoteLineItemMap.put(sobject.getId(), quoteLineItem);
+		Query q = em.createQuery(queryString);		
+		List<QuoteLineItem> quoteLineItems = q.getResultList();
+		for (QuoteLineItem quoteLineItem : quoteLineItems) {
+			quoteLineItemMap.put(quoteLineItem.getId(), quoteLineItem);
 		}
 		return quoteLineItemMap;
 	}
 	
 	@Override
-	public Double getQuoteAmount(String quoteId) throws ConnectionException {
+	public Double getQuoteAmount(String quoteId) throws QueryException {
 		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
-		QueryResult queryResult = em.query(queryString);
-		SObject sobject = queryResult.getRecords()[0];
-		return Double.valueOf(sobject.getField("Amount__c").toString());
+		Query q = em.createQuery(queryString);		
+        Quote quote = (Quote) q.getSingleResult();
+		return Double.valueOf(quote.getAmount());
 	}
 	
 	@Override
