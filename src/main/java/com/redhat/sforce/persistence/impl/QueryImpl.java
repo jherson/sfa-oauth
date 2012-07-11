@@ -46,9 +46,10 @@ public class QueryImpl<X> implements Query {
 	public void setLimit(Integer limit) {
 		query = query + " Limit " + limit;
 	}
-	
+		
 	@Override
-	public Object getSingleResult() throws QueryException {
+	@SuppressWarnings("unchecked")
+	public X getSingleResult() throws QueryException {
 		return getResultList().get(0);
 	}
 	

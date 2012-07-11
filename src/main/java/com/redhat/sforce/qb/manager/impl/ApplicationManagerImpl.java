@@ -21,6 +21,7 @@ import javax.inject.Singleton;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.persistence.ConnectionProperties;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.qualifiers.CurrencyIsoCodes;
 import com.sforce.soap.partner.Connector;
@@ -42,15 +43,9 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	private PartnerConnection partnerConnection;
 
-	private String sessionId;
-
-	private Locale locale;
-
 	private String apiVersion;
 
 	private String apiEndpoint;
-
-	private String serviceEndpoint;
 	
 	private String frontDoorUrl;
 
@@ -76,25 +71,16 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		try {
 			partnerConnection = Connector.newConnection(config);
 
-			setSessionId(partnerConnection.getConfig().getSessionId());
-			setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
-			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-			setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());		
+			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));		
 			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));			
-			setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
+			setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");			
+			
+			ConnectionProperties.setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
+			ConnectionProperties.setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
 						
 		} catch (ConnectionException e) {
 			log.error(e);
 		}
-	}
-	
-
-	public PartnerConnection getPartnerConnection() {
-		return partnerConnection;
-	}
-
-	public void setPartnerConnection(PartnerConnection partnerConnection) {
-		this.partnerConnection = partnerConnection;
 	}
 	
 	@Override
@@ -118,24 +104,6 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 	}
 
 	@Override
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
-
-	@Override
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
-
-	@Override
 	public String getApiVersion() {
 		return apiVersion;
 	}
@@ -151,15 +119,6 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	public void setApiEndpoint(String apiEndpoint) {
 		this.apiEndpoint = apiEndpoint;
-	}
-
-	@Override
-	public String getServiceEndpoint() {
-		return serviceEndpoint;
-	}
-
-	public void setServiceEndpoint(String serviceEndpoint) {
-		this.serviceEndpoint = serviceEndpoint;
 	}
 
 	@Override

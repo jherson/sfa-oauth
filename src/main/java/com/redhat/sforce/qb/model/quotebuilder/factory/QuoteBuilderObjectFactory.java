@@ -24,6 +24,10 @@ public class QuoteBuilderObjectFactory {
 	    if ("OpportunityLineItem".equals(sobject.getType())) {
 	    	return OpportunityLineItemFactory.parse(sobject);
 	    }
+	    
+	    if ("PricebookEntry".equals(sobject.getType())) {
+	    	return PricebookEntryFactory.parse(sobject);
+	    }
 		
 		return null;
 	}	

@@ -18,16 +18,15 @@ import org.json.JSONException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.redhat.sforce.persistence.threadlocal.ConnectionThreadLocal;
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.Token;
 import com.redhat.sforce.qb.model.quotebuilder.User;
-import com.sforce.ws.ConnectorConfig;
+import com.sforce.ws.ConnectionException;
 
 @RequestScoped
 @ApplicationPath("/rest")
@@ -40,9 +39,6 @@ public class QuoteBuilderRestResources extends Application {
 		
 	@Inject
 	private Token token;	
-	
-	@Inject
-	private ApplicationManager applicationManager;
 	
 	@Inject
 	private QuoteDAO quoteDAO;
@@ -91,25 +87,21 @@ public class QuoteBuilderRestResources extends Application {
 			@QueryParam("opportunityId") String opportunityId) {
 		
 		log.info("SessionId: " + sessionId);
-		log.info("OpportunityId: " + opportunityId);
-		
-		ConnectorConfig config = new ConnectorConfig();
-		config.setManualLogin(true);
-		config.setServiceEndpoint(applicationManager.getServiceEndpoint());
-		config.setSessionId(sessionId);
-		
-		ConnectionThreadLocal.set(config);		
+		log.info("OpportunityId: " + opportunityId);						
 		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();	
 		List<Quote> quoteList = null;
 		try {
+			ConnectionManager.openConnection(sessionId);
 			quoteList = quoteDAO.queryQuotesByOpportunityId(opportunityId);
+			ConnectionManager.closeConnection();
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} 
-		
-		ConnectionThreadLocal.close();
 		
 		return Response.status(200).entity(gson.toJson(quoteList)).build(); 	
 	}

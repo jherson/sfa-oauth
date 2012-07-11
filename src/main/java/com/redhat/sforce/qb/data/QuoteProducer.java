@@ -32,7 +32,6 @@ import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuoteAmount;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
-import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
@@ -158,7 +157,7 @@ public class QuoteProducer implements Serializable {
 		log.info("getQuoteAmount");
 		try {
 			return quoteDAO.getQuoteAmount(selectedQuote.getId());
-		} catch (ConnectionException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -171,7 +170,7 @@ public class QuoteProducer implements Serializable {
 		log.info("getPriceDetails");
 		try {
 			return quoteDAO.queryPriceDetails(quoteId);
-		} catch (ConnectionException e) {
+		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

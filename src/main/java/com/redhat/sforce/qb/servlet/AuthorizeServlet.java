@@ -19,6 +19,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.redhat.sforce.persistence.ConnectionManager;
+import com.sforce.ws.ConnectionException;
+
 @WebServlet("/authorize")
 public class AuthorizeServlet extends HttpServlet {
 
@@ -45,6 +48,17 @@ public class AuthorizeServlet extends HttpServlet {
 		setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
 		setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
 		setEnvironment(System.getProperty("salesforce.environment"));
+	}
+	
+	@Override
+	public void destroy() {
+		log.info("destroy");
+		try {
+			ConnectionManager.closeConnection();
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -73,6 +87,7 @@ public class AuthorizeServlet extends HttpServlet {
 
 				} catch (UnsupportedEncodingException e) {
 					log.error("UnsupportedEncodingException", e);
+					throw new ServletException(e);
 				}
 
 			} else {
@@ -95,13 +110,22 @@ public class AuthorizeServlet extends HttpServlet {
 					sessionId = authResponse.getString("access_token");
 				} catch (JSONException e) {
 					log.error("JSONException", e);
+					throw new ServletException(e);
 				} catch (IOException e) {
 					log.error("IOException", e);
+					throw new ServletException(e);
 				}
 			}
 		}
 		
 		log.info("SessionId: " + sessionId);	
+		
+		try {
+			ConnectionManager.openConnection(sessionId);
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new ServletException(e);
+		}
 		
 		request.getSession().setAttribute("SessionId", sessionId);
 		response.sendRedirect(request.getContextPath() + "/index.jsf");

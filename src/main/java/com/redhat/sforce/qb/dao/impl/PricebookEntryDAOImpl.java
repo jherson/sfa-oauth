@@ -4,12 +4,11 @@ import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 
+import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
+import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.PricebookEntry;
-import com.redhat.sforce.qb.model.quotebuilder.factory.PricebookEntryFactory;
-import com.sforce.soap.partner.QueryResult;
-import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
@@ -18,17 +17,20 @@ public class PricebookEntryDAOImpl extends SObjectDAO implements PricebookEntryD
 	private static final long serialVersionUID = 7731570933466830064L;
 
 	@Override
-	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws ConnectionException {		
+	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws QueryException {		
 		String queryString = getQueryString(pricebookId, productCode, "false", currencyIsoCode);
 		
-		QueryResult queryResult = em.query(queryString); 
+		Query q = em.createQuery(queryString);	
 		
-		if (queryResult == null || queryResult.getSize() == 0) {
+		PricebookEntry pricebookEntry = q.getSingleResult();				
+		
+		if (pricebookEntry == null) {
 			queryString = getQueryString(pricebookId, productCode.substring(0,4), "true", currencyIsoCode);
-			queryResult = em.query(queryString);
+			q = em.createQuery(queryString);	
+			pricebookEntry = q.getSingleResult();
 		}
 		
-		return PricebookEntryFactory.toPricebookEntry(queryResult);		
+		return pricebookEntry;
 	}
 	
 	private String getQueryString(String pricebookId, String productCode, String configurable, String currencyIsoCode) {

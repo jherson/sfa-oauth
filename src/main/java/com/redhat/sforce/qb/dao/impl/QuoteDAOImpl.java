@@ -78,7 +78,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		Query q = em.createQuery(queryString);				
 		q.addParameter("quoteId", quoteId);
 		
-		return (Quote) q.getSingleResult();
+		return q.getSingleResult();
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		Query q = em.createQuery(queryString);
 		q.addParameter("quoteLineItemId", quoteLineItemId);
 		
-		return (QuoteLineItem) q.getSingleResult();	
+		return q.getSingleResult();	
 	}
 	
 	@Override
