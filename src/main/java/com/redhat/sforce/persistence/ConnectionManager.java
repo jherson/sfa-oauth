@@ -19,13 +19,7 @@ public class ConnectionManager {
     }
     
     public static void openConnection() throws ConnectionException {
-    	InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
-		Properties properties = new Properties();
-		try {
-			properties.load(is);
-		} catch (IOException e) {
-			throw new ConnectionException("Unable to load quotebuilder.properties file");
-		}
+    	Properties properties = getProperties();
     	
     	ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
@@ -36,7 +30,7 @@ public class ConnectionManager {
 		
 		ConnectionProperties.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
 		
-		threadLocal.set(connection);
+		setConnection(connection);
     }
     
     public static void openConnection(String sessionId) throws ConnectionException {
@@ -48,6 +42,25 @@ public class ConnectionManager {
     	
     	PartnerConnection connection = Connector.newConnection(config);
     	
+    	setConnection(connection);
+    }
+    
+    public static void openConnection(String username, String password) throws ConnectionException {
+    	Properties properties = getProperties();
+    	
+    	ConnectorConfig config = new ConnectorConfig();
+    	config.setAuthEndpoint(MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
+    	config.setUsername(username);
+		config.setPassword(password);
+						
+		PartnerConnection connection = Connector.newConnection(config);
+		
+		ConnectionProperties.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
+		
+		setConnection(connection);
+    }
+    
+    public static void setConnection(PartnerConnection connection) {
     	threadLocal.set(connection);
     }
 
@@ -57,5 +70,16 @@ public class ConnectionManager {
     
     public static void closeConnection() throws ConnectionException {	
     	threadLocal.remove();
+    }
+    
+    private static Properties getProperties() throws ConnectionException {
+    	InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
+		Properties properties = new Properties();
+		try {
+			properties.load(is);
+		} catch (IOException e) {
+			throw new ConnectionException("Unable to load quotebuilder.properties file");
+		}
+		return properties;
     }
 }

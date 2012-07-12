@@ -43,12 +43,6 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	private PartnerConnection partnerConnection;
 
-	private String apiVersion;
-
-	private String apiEndpoint;
-	
-	private String frontDoorUrl;
-
 	private List<String> currencyIsoCodes;
 
 	@PostConstruct
@@ -71,25 +65,15 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		try {
 			partnerConnection = Connector.newConnection(config);
 
-			setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));		
-			setApiVersion(propertiesFile.getProperty("salesforce.api.version"));			
-			setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");			
-			
 			ConnectionProperties.setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
 			ConnectionProperties.setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
+			ConnectionProperties.setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+			ConnectionProperties.setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
+			ConnectionProperties.setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
 						
 		} catch (ConnectionException e) {
 			log.error(e);
 		}
-	}
-	
-	@Override
-	public String getFrontDoorUrl() {
-		return frontDoorUrl;
-	}
-
-	public void setFrontDoorUrl(String frontDoorUrl) {
-		this.frontDoorUrl = frontDoorUrl;
 	}
 
 	public List<String> queryCurrencyIsoCodes() throws ConnectionException {
@@ -101,24 +85,6 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		}
 
 		return currencyIsoCodes;
-	}
-
-	@Override
-	public String getApiVersion() {
-		return apiVersion;
-	}
-
-	public void setApiVersion(String apiVersion) {
-		this.apiVersion = apiVersion;
-	}
-
-	@Override
-	public String getApiEndpoint() {
-		return apiEndpoint;
-	}
-
-	public void setApiEndpoint(String apiEndpoint) {
-		this.apiEndpoint = apiEndpoint;
 	}
 
 	@Override

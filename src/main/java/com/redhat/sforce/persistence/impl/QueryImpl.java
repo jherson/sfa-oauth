@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.factory.QuoteBuilderObjectFactory;
+import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -17,13 +17,13 @@ public class QueryImpl<X> implements Query {
 
 	private static final Logger log = Logger.getLogger(QueryImpl.class.getName());
 	
-	private EntityManager em;	
+	private PartnerConnection connection;	
 	private String query;
 	private String type;
 	private Integer totalSize; 
 	
-	public QueryImpl(EntityManager em, String query) {
-		this.em = em;        
+	public QueryImpl(PartnerConnection connection, String query) {
+		this.connection = connection;        
 		this.query = query;
 	}
        
@@ -59,7 +59,7 @@ public class QueryImpl<X> implements Query {
 		List<X> resultList = new ArrayList<X>();
 							
 		try {
-			QueryResult qr = em.getPartnerConnection().query(query);
+			QueryResult qr = connection.query(query);
 			
 			log.info("QueryResult Size: " + qr.getSize());			
 			

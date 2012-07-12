@@ -21,10 +21,6 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		
 	}
 	
-	public PartnerConnection getPartnerConnection() {
-		return ConnectionManager.getConnection();
-	}
-	
 	@Override
 	public SaveResult[] persist(List<SObject> sobjectList) throws ConnectionException {		
 		List<SObject> updateList = new ArrayList<SObject>();
@@ -37,18 +33,6 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 				createList.add(sobject);
 			}
 		}
-		
-//		List<SaveResult> saveResultList = new ArrayList<SaveResult>(); 	
-//						 
-//		if (updateList.size() > 0) {
-//			saveResultList.addAll(Arrays.asList(update(updateList.toArray(new SObject[updateList.size()]))));
-//		}
-//		
-//		if (createList.size() > 0) {
-//			saveResultList.addAll(Arrays.asList(create(createList.toArray(new SObject[createList.size()]))));
-//		}
-		
-//		return saveResultList.toArray(new SaveResult[saveResultList.size()]);
 		
 		SaveResult[] saveResult = new SaveResult[sobjectList.size()];
 		if (updateList.size() > 0) {
@@ -77,7 +61,7 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	
 	@Override
 	public Query createQuery(String query) {			
-		return new QueryImpl<Object>(this, query);				
+		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
 	
 	@Override
@@ -108,5 +92,9 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	
 	private SaveResult[] update(SObject[] sobjects) throws ConnectionException {
 		return getPartnerConnection().update(sobjects);
+	}
+	
+	private PartnerConnection getPartnerConnection() {
+		return ConnectionManager.getConnection();
 	}
 }

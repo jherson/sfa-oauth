@@ -12,9 +12,9 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.persistence.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
-import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 
 @Named(value="sessionManager")
@@ -26,9 +26,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	@Inject
 	private Logger log;
-
-	@Inject
-	private ApplicationManager applicationManager;
 	
 	@Inject
 	private SessionUserDAO sessionUserDAO;
@@ -71,7 +68,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			
 			String sessionId = session.getAttribute("SessionId").toString();
 											
-			setFrontDoorUrl(applicationManager.getFrontDoorUrl().replace("#sid#", sessionId));
+			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", sessionId));
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);			
 
 		} else {
