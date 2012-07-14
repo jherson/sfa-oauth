@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.factory.QuoteBuilderObjectFactory;
@@ -57,10 +58,12 @@ public class QueryImpl<X> implements Query {
 	@SuppressWarnings({"unchecked"})
 	public List<X> getResultList() throws QueryException {
 		List<X> resultList = new ArrayList<X>();
-							
+						
+		log.info("Thread Id: " + Thread.currentThread().getId());
+		
 		try {
-			QueryResult qr = connection.query(query);
-			
+			QueryResult qr = ConnectionManager.getConnection().query(query);
+									
 			log.info("QueryResult Size: " + qr.getSize());			
 			
 			if (qr.getSize() == 0)
