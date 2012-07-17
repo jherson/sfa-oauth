@@ -19,9 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.persistence.ConnectionManager;
-import com.sforce.ws.ConnectionException;
-
 @WebServlet("/authorize")
 public class AuthorizeServlet extends HttpServlet {
 
@@ -29,7 +26,7 @@ public class AuthorizeServlet extends HttpServlet {
 
 	@Inject
 	private Logger log;
-
+		
 	private String redirectUri;
 
 	private String clientId;
@@ -50,17 +47,6 @@ public class AuthorizeServlet extends HttpServlet {
 		setEnvironment(System.getProperty("salesforce.environment"));
 	}
 	
-	@Override
-	public void destroy() {
-		log.info("destroy");
-		try {
-			ConnectionManager.closeConnection();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -116,17 +102,10 @@ public class AuthorizeServlet extends HttpServlet {
 					throw new ServletException(e);
 				}
 			}
-		}
-		
-		log.info("SessionId: " + sessionId);	
-		
-		try {
-			ConnectionManager.openConnection(sessionId);
-		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
-			throw new ServletException(e);
-		}
-		
+		}		
+				
+		log.info("SessionId: " + sessionId);			
+					
 		request.getSession().setAttribute("SessionId", sessionId);
 		response.sendRedirect(request.getContextPath() + "/index.jsf");
 	}

@@ -36,6 +36,17 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private String frontDoorUrl;
 	
+	private String sessionId;
+	
+	@Override
+	public String getSessionId() {
+		return sessionId;
+	}
+	
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+	
 	@ManagedProperty(value = "false")
 	private Boolean editMode;
 
@@ -66,9 +77,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				
 		if (session.getAttribute("SessionId") != null) {
 			
-			String sessionId = session.getAttribute("SessionId").toString();
-											
-			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", sessionId));
+			setSessionId(session.getAttribute("SessionId").toString());											
+			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", getSessionId()));
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);			
 
 		} else {
@@ -91,7 +101,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		return mainArea;
 	}
 
-	@Override
 	public void setOpportunityId(String opportunityId) {
 		this.opportunityId = opportunityId;
 	}
@@ -106,7 +115,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		return frontDoorUrl;
 	}
 	
-	@Override
 	public void setFrontDoorUrl(String frontDoorUrl) {
 		this.frontDoorUrl = frontDoorUrl;
 	}

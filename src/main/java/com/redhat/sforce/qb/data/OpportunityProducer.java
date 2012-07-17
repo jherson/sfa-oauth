@@ -15,10 +15,12 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
+import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
@@ -51,15 +53,28 @@ public class OpportunityProducer implements Serializable {
 	public void queryOpportunity() {
 		log.info("queryOpportunity");
 		
-		opportunityList = new ArrayList<Opportunity>();
 		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		
+		    opportunityList = new ArrayList<Opportunity>();
+		    
 			if (sessionManager.getOpportunityId() != null) {
 				opportunityList.add(opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId()));
-			} 
+			}
 			
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new FacesException(e);
 		} catch (QueryException e) {
 			log.info("QueryOpportunityException: " + e.getMessage());
 			throw new FacesException(e);
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

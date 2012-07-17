@@ -10,7 +10,7 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
-public class ConnectionManager {
+public class ConnectionManager {	
 
     private static final ThreadLocal<PartnerConnection> threadLocal;
 
@@ -41,7 +41,7 @@ public class ConnectionManager {
     	config.setSessionId(sessionId);
     	
     	PartnerConnection connection = Connector.newConnection(config);
-    	
+    	    	
     	setConnection(connection);
     }
     
@@ -65,7 +65,11 @@ public class ConnectionManager {
     }
 
     public static PartnerConnection getConnection() {
-        return threadLocal.get();
+    	PartnerConnection connection = threadLocal.get();
+    	if (connection == null) {
+    		
+    	}
+        return connection;
     }
     
     public static void closeConnection() throws ConnectionException {	
