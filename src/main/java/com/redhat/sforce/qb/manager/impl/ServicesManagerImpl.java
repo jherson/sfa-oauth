@@ -2,11 +2,8 @@ package com.redhat.sforce.qb.manager.impl;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
@@ -17,40 +14,19 @@ import org.json.JSONTokener;
 
 import com.redhat.sforce.persistence.ConnectionProperties;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
-import com.redhat.sforce.qb.manager.RestServicesManager;
+import com.redhat.sforce.qb.manager.ServicesManager;
 
 @Named(value="servicesManager")
 
-public class RestServicesManagerImpl implements Serializable, RestServicesManager {
+public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 	private static final long serialVersionUID = 6709733022603934113L;
 
 	@Inject
 	private Logger log;
-	
-	private String sessionId;
-	
-	@PostConstruct
-	public void init() {
-		log.info("init");
-		
-		try {		
-		
-		    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		
-		    if (session.getAttribute("SessionId") != null) {
-			
-			    sessionId = session.getAttribute("SessionId").toString();
-			
-		    }	
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
-	public JSONObject getCurrentUserInfo() throws SalesforceServiceException {
+	public JSONObject getCurrentUserInfo(String sessionId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"
 				+ ConnectionProperties.getApiVersion()
@@ -76,7 +52,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public void follow(String subjectId) {
+	public void follow(String sessionId, String subjectId) {
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
@@ -104,7 +80,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public void unfollow(String subscriptionId) {		
+	public void unfollow(String sessionId, String subscriptionId) {		
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
@@ -131,7 +107,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public JSONObject getFollowers(String recordId) {
+	public JSONObject getFollowers(String sessionId, String recordId) {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
@@ -158,7 +134,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public JSONObject getFeed(String recordId) {
+	public JSONObject getFeed(String sessionId, String recordId) {
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
@@ -184,7 +160,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public void activateQuote(String quoteId) {
+	public void activateQuote(String sessionId, String quoteId) {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"
 				+ ConnectionProperties.getApiVersion() 
@@ -209,7 +185,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public void calculateQuote(String quoteId) {		
+	public void calculateQuote(String sessionId, String quoteId) {		
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"
 				+ ConnectionProperties.getApiVersion()
@@ -234,7 +210,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 
 	@Override
-	public String copyQuote(String quoteId) {
+	public String copyQuote(String sessionId, String quoteId) {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"
 				+ ConnectionProperties.getApiVersion() 
@@ -262,12 +238,12 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public JSONObject getQuoteFeed() {		
+	public JSONObject getQuoteFeed(String sessionId) {		
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/filter/me/a0Q/feeds-items";	
-
+		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
 		request.header("Content-type", "application/json");
@@ -290,7 +266,7 @@ public class RestServicesManagerImpl implements Serializable, RestServicesManage
 	}
 	
 	@Override
-	public void priceQuote(String xml) {
+	public void priceQuote(String sessionId, String xml) {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"
 				+ ConnectionProperties.getApiVersion()

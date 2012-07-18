@@ -10,14 +10,15 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.QuoteManager;
+import com.redhat.sforce.qb.manager.ServicesManager;
+import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.OpportunityLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
+import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
@@ -30,6 +31,12 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	@Inject
 	private QuoteDAO quoteDAO;
+	
+	@Inject
+	private SessionManager sessionManager;
+	
+	@Inject
+	private ServicesManager servicesManager;
 	
 	@Override
 	public void delete(Quote quote) {
@@ -67,7 +74,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public Quote copy(Quote quote) {
+	public String copy(Quote quote) {
 		return doCopy(quote);
 	}
 	
@@ -213,7 +220,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void doCalcualate(Quote quote) {
-		quoteDAO.calculate(quote.getId());			
+		servicesManager.calculateQuote(sessionManager.getSessionId(), quote.getId());			
 	}
 	
 	private void doDelete(QuoteLineItem quoteLineItem) {
@@ -226,18 +233,11 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 
 	private void doPrice(Quote quote) {
-		quoteDAO.price(quote);
+		servicesManager.priceQuote(sessionManager.getSessionId(), MessageFactory.createPricingMessage(quote));
 	}
 	
-	private Quote doCopy(Quote quote) {
-		try {
-			return quoteDAO.copy(quote.getId());
-		} catch (QueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
+	private String doCopy(Quote quote) {		
+		return servicesManager.copyQuote(sessionManager.getSessionId(), quote.getId());
 	}
 	
 	private void doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {		
@@ -289,15 +289,16 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	private void doActivate(Quote quote) {
-		quoteDAO.activate(quote.getId());
+		servicesManager.activateQuote(sessionManager.getSessionId(), quote.getId());
 	}
 	
 	private void doFollow(Quote quote) {
-		quoteDAO.follow(quote.getId());
+		servicesManager.follow(sessionManager.getSessionId(), quote.getId());				
 	}
 	
 	private void doUnfollow(Quote quote) {
-		quoteDAO.unfollow(quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId());
+		String subscriptionId = quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId();		
+		servicesManager.unfollow(sessionManager.getSessionId(), subscriptionId);
 	}
 	
 	private void doDelete(List<QuoteLineItem> quoteLineItems) {

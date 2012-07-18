@@ -54,7 +54,7 @@ public class UserProducer implements Serializable {
 
 	@PostConstruct
 	public void querySessionUser() {
-		log.info("querySessionUser: " + sessionManager.getSessionId());
+		log.info("querySessionUser");
 		
 		try {
 			ConnectionManager.openConnection(sessionManager.getSessionId());

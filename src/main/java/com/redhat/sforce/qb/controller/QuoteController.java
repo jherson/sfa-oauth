@@ -205,7 +205,8 @@ public class QuoteController {
 	}
 
 	public void copyQuote(Quote quote) {
-		quote = quoteManager.copy(quote);
+		String quoteId = quoteManager.copy(quote);		
+		quote.setId(quoteId);
 		quoteEvent.select(COPY_QUOTE).fire(quote);			
 	}
 

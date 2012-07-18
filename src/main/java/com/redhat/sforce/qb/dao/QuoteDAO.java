@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
@@ -31,12 +30,5 @@ public interface QuoteDAO {
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItemList) throws ConnectionException;
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
-	public void activate(String quoteId);
-	public void calculate(String quoteId);
-	public Quote copy(String quoteId) throws QueryException;	
-	public void follow(String quoteId);
-	public void unfollow(String quoteId);
-	public void price(Quote quote);	
-	public Followers getFollowers(String quoteId);
-	public void getQuoteFeed();
+	
 }

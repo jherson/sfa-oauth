@@ -50,13 +50,13 @@ public class QuoteListProducer implements Serializable {
 
 	@PostConstruct
 	public void queryQuotes() {
-		log.info("queryQuotes: " + sessionManager.getSessionId());
+		log.info("queryQuotes");
 		
 		try {
 			ConnectionManager.openConnection(sessionManager.getSessionId());
 			
-			quoteList = quoteDAO.queryQuotes();
-			quoteDAO.getQuoteFeed();
+			quoteList = quoteDAO.queryQuotes();			
+			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

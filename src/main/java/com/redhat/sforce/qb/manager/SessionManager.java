@@ -8,6 +8,7 @@ public interface SessionManager {
 	public String getFrontDoorUrl();
 	public String getOpportunityId();
 	public String getSessionId();
+	public Boolean getLoggedIn();
 	public void setEditMode(Boolean editMode);
 	public Boolean getEditMode();	
 	public void setGoalSeek(Boolean goalSeek);

@@ -26,14 +26,14 @@
 					<a4j:commandLink value="#{msgs.logout}"
 						style="color:#{a4jSkin.generalTextColor};"
 						render="quoteForm"
-						rendered="#{not empty user}"
+						rendered="#{sessionManager.loggedIn}"
 						action="#{quoteController.logout()}">
 					</a4j:commandLink>
 					
 					<a4j:commandLink value="#{msgs.login}"
 						style="color:#{a4jSkin.generalTextColor};"
 						render="quoteForm"
-						rendered="#{empty user}"
+						rendered="#{not sessionManager.loggedIn}"
 						action="#{quoteController.login()}">
 					</a4j:commandLink>
 

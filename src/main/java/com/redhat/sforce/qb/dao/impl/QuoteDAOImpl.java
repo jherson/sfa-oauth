@@ -8,17 +8,14 @@ import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
 
-import com.google.gson.Gson;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
-import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
@@ -107,53 +104,8 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 	public Double getQuoteAmount(String quoteId) throws QueryException {
 		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
 		Query q = em.createQuery(queryString);		
-        Quote quote = (Quote) q.getSingleResult();
+        Quote quote = q.getSingleResult();
 		return Double.valueOf(quote.getAmount());
-	}
-	
-	@Override
-	public Followers getFollowers(String quoteId) {		
-		Followers followers = new Gson().fromJson(sm.getFollowers(quoteId).toString(), Followers.class);
-		followers.setIsCurrentUserFollowing(Boolean.FALSE);
-		if (followers.getTotal() > 0 && followers.getFollowers().get(0).getSubject().getMySubscription() != null) {
-			followers.setIsCurrentUserFollowing(Boolean.TRUE);
-		}
-		return followers;
-	}
-	
-	@Override
-	public void getQuoteFeed() {
-		sm.getQuoteFeed();
-	}
-
-	@Override
-	public void activate(String quoteId) {
-		sm.activateQuote(quoteId);
-	}
-	
-	@Override
-	public void follow(String quoteId) {
-		sm.follow(quoteId);
-	}
-	
-	@Override
-	public void unfollow(String quoteId) {
-		sm.unfollow(quoteId);
-	}
-
-	@Override
-	public void calculate(String quoteId) {
-		sm.calculateQuote(quoteId);
-	}
-
-	@Override
-	public Quote copy(String quoteId) throws QueryException {
-		return queryQuoteById(sm.copyQuote(quoteId));
-	}
-	
-	@Override
-	public void price(Quote quote) {
-        sm.priceQuote(MessageFactory.createPricingMessage(quote));
 	}
 
 	@Override
