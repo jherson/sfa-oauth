@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
+import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
@@ -22,10 +24,27 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 		String queryString = opportunityQuery 
 				+ "Where Id = ':opportunityId'";
 		
-		Query q = em.createQuery(queryString);				
-		q.addParameter("opportunityId", opportunityId);
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
 		
-		return (Opportunity) q.getSingleResult();
+		    Query q = em.createQuery(queryString);				
+		    q.addParameter("opportunityId", opportunityId);
+		
+		    return (Opportunity) q.getSingleResult();
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
 	}
 	
 	@Override
@@ -33,9 +52,26 @@ public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Se
 		String queryString = opportunityQuery 
 				+ "Where IsClosed = false";
 		
-		Query q = em.createQuery(queryString);
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+			
+		    Query q = em.createQuery(queryString);
 
-		return q.getResultList();
+		    return q.getResultList();
+		  
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return null;		    
 	}
 	
 	private String opportunityQuery = "Select Id, " 

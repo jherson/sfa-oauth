@@ -111,7 +111,7 @@ public class QuoteManagerImpl implements QuoteManager {
 			quote.setHasQuoteLineItems(Boolean.TRUE);
 		} 
 		
-		try {						
+		try {									
 			saveResult = quoteDAO.saveQuote(quote); 
 			if (saveResult.isSuccess() && saveResult.getId() != null) {
 				quote.setId(saveResult.getId());								
@@ -131,9 +131,7 @@ public class QuoteManagerImpl implements QuoteManager {
 			} else {
 				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());
 				return;
-			}
-			
-			
+			} 						
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block

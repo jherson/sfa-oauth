@@ -1,5 +1,6 @@
 package com.redhat.sforce.qb.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,15 +12,10 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
-import com.sforce.ws.ConnectionException;
-
-import java.io.Serializable;
 
 @SessionScoped
 
@@ -31,10 +27,7 @@ public class QuoteListProducer implements Serializable {
 	private Logger log;
 	
 	@Inject
-	private QuoteDAO quoteDAO;
-	
-	@Inject
-	private SessionManager sessionManager;
+	private QuoteDAO quoteDAO;	
 
 	private List<Quote> quoteList;
 
@@ -53,23 +46,11 @@ public class QuoteListProducer implements Serializable {
 		log.info("queryQuotes");
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
-			
 			quoteList = quoteDAO.queryQuotes();			
 			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} 
+		}
 	}
 }

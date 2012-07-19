@@ -14,11 +14,9 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
@@ -34,7 +32,6 @@ import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuoteAmount;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
-import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
@@ -53,9 +50,6 @@ public class QuoteProducer implements Serializable {
 	
 	@Inject
 	private List<Quote> quoteList;
-	
-	@Inject
-	private SessionManager sessionManager;
 
 	private Quote selectedQuote;
 
@@ -133,23 +127,12 @@ public class QuoteProducer implements Serializable {
 	private Opportunity queryOpportunity(String opportunityId) {
 		log.info("queryOpportunity: " + opportunityId);		
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
 			
 			return opportunityDAO.queryOpportunityById(opportunityId);
 			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}	
 		
 		return null;
@@ -171,23 +154,12 @@ public class QuoteProducer implements Serializable {
 	private Quote queryQuoteById(String quoteId) {
 		log.info("queryQuoteById");
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
 			
 			return quoteDAO.queryQuoteById(quoteId);
 			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		} 
 		
 		return null;
@@ -196,23 +168,12 @@ public class QuoteProducer implements Serializable {
 	private Double getQuoteAmount(String quoteId) {
 		log.info("getQuoteAmount");
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
 			
 			return quoteDAO.getQuoteAmount(selectedQuote.getId());
 			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		} 
 		
 		return null;
@@ -222,23 +183,12 @@ public class QuoteProducer implements Serializable {
 	private Map<String, QuoteLineItem> getPriceDetails(String quoteId) {
 		log.info("getPriceDetails");
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
 			
 			return quoteDAO.queryPriceDetails(quoteId);
 			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		} 
 		
 		return null;
@@ -247,23 +197,12 @@ public class QuoteProducer implements Serializable {
 	private QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) {
 		log.info("queryQuoteLineItemById");
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
-			
+
 			return quoteDAO.queryQuoteLineItemById(quoteLineItemId);
 			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		} 
 		
 		return null;

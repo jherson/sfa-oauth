@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
@@ -26,45 +27,102 @@ import com.sforce.ws.ConnectionException;
 public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
-		
+			
 	@Override
 	public List<Quote> queryQuotes() throws QueryException {
 		String queryString = quoteQuery + "Order By Number__c";
 		
-		Query q = em.createQuery(queryString);	
-		
-		return q.getResultList();
+		try {
+			
+			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			Query q = em.createQuery(queryString);				
+			return q.getResultList();
+			
+		} catch (ConnectionException e) {
+            log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}		
 	}
 	
 	@Override
 	public List<Quote> queryQuotes(String whereClause) throws QueryException {
 		String queryString = quoteQuery + "Where " + whereClause;
 		
-		Query q = em.createQuery(queryString);
-		
-		return q.getResultList();
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			Query q = em.createQuery(queryString);				
+			return q.getResultList();
+			
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
 	}
 
 	@Override
 	public List<Quote> queryQuotesByOpportunityId(String opportunityId) throws QueryException {
 		String queryString = quoteQuery 
 				+ "Where OpportunityId__c = ':opportunityId'";
-		
-		Query q = em.createQuery(queryString);
-		q.addParameter("opportunityId", opportunityId);
-		
-		return q.getResultList();
+						
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			Query q = em.createQuery(queryString);
+			q.addParameter("opportunityId", opportunityId);			
+			return q.getResultList();
+			
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
 	}
 	
 	@Override
 	public List<QuoteLineItem> queryQuoteLineItemsByQuoteId(String quoteId) throws QueryException {
 		String queryString = quoteLineItemQuery 
 				+ "Where QuoteId__c = ':quoteId'";
-		
-		Query q = em.createQuery(queryString);				
-		q.addParameter("quoteId", quoteId);
-		
-		return q.getResultList();
+									
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			Query q = em.createQuery(queryString);
+			q.addParameter("quoteId", quoteId);			
+			return q.getResultList();
+			
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
 	}
 
 	@Override
@@ -72,64 +130,190 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		String queryString = quoteDetailsQuery 
 				+ "Where Id = ':quoteId'";
 		
-		Query q = em.createQuery(queryString);				
-		q.addParameter("quoteId", quoteId);
-		
-		return q.getSingleResult();
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());		
+		    Query q = em.createQuery(queryString);				
+		    q.addParameter("quoteId", quoteId);		    		    		
+		    return q.getSingleResult();
+		   
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
 	}
 	
 	@Override
 	public QuoteLineItem queryQuoteLineItemById(String quoteLineItemId) throws QueryException {
 		String queryString = quoteLineItemQuery + "Where Id = ':quoteLineItemId'";
-		
-		Query q = em.createQuery(queryString);
-		q.addParameter("quoteLineItemId", quoteLineItemId);
-		
-		return q.getSingleResult();	
+										
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			Query q = em.createQuery(queryString);
+			q.addParameter("quoteLineItemId", quoteLineItemId);			
+			return q.getSingleResult();	
+			
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
 	}
 	
 	@Override
 	public Map<String, QuoteLineItem> queryPriceDetails(String quoteId) throws QueryException {		
 		String queryString = "Select Id, ListPrice__c, ProductDescription__c, Code__c, Message__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
-		Map<String, QuoteLineItem> quoteLineItemMap = new HashMap<String, QuoteLineItem>();
-		Query q = em.createQuery(queryString);		
-		List<QuoteLineItem> quoteLineItems = q.getResultList();
-		for (QuoteLineItem quoteLineItem : quoteLineItems) {
-			quoteLineItemMap.put(quoteLineItem.getId(), quoteLineItem);
-		}
-		return quoteLineItemMap;
+						
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    Query q = em.createQuery(queryString);		
+		    List<QuoteLineItem> quoteLineItems = q.getResultList();
+		    
+		    Map<String, QuoteLineItem> quoteLineItemMap = new HashMap<String, QuoteLineItem>();
+		    for (QuoteLineItem quoteLineItem : quoteLineItems) {
+			    quoteLineItemMap.put(quoteLineItem.getId(), quoteLineItem);
+		    }
+		    return quoteLineItemMap;
+		    
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}   		    		
 	}
 	
 	@Override
 	public Double getQuoteAmount(String quoteId) throws QueryException {
 		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
-		Query q = em.createQuery(queryString);		
-        Quote quote = q.getSingleResult();
-		return Double.valueOf(quote.getAmount());
+		
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    Query q = em.createQuery(queryString);		
+            Quote quote = q.getSingleResult();
+		    return Double.valueOf(quote.getAmount());
+		    
+		} catch (ConnectionException e) {
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
+			
+		} finally {
+			
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		} 
 	}
 
 	@Override
-	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {		
-		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));                     
+	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
+		SaveResult[] saveResult = null;	
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}    
+		
+		return saveResult;
 	}
 	
 	@Override
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException {
-		return em.persist(convertQuotePriceAdjustmentsToSObjects(quotePriceAdjustmentList));
+		SaveResult[] saveResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    saveResult = em.persist(convertQuotePriceAdjustmentsToSObjects(quotePriceAdjustmentList));
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
+		
+		return saveResult;
 	}
 	
 	@Override
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) throws ConnectionException {
-		return em.persist(convertQuoteLineItemPriceAdjustmentsToSObjects(quoteLineItemPriceAdjustmentList));
+		SaveResult[] saveResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    saveResult = em.persist(convertQuoteLineItemPriceAdjustmentsToSObjects(quoteLineItemPriceAdjustmentList));
+		    
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
+		
+		return saveResult;
 	}
 
 	@Override
-	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
+	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {		
 		List<String> ids = new ArrayList<String>();
 		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
 			ids.add(quoteLineItem.getId());
 		}
-		return em.delete(ids);
+		
+		DeleteResult[] deleteResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    deleteResult = em.delete(ids);
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}    
+		    
+		return deleteResult;
 	}
 	
 	@Override
@@ -146,22 +330,87 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 				e.printStackTrace();
 			}
 		}
-		return em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
+		
+		SaveResult[] saveResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
+		
+		return saveResult;
 	}
 	
 	@Override
 	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException {
-        return em.delete(quoteLineItem.getId());
+		DeleteResult deleteResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+            deleteResult = em.delete(quoteLineItem.getId());
+        
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
+		
+		return deleteResult;
 	}
 	
 	@Override
-	public SaveResult saveQuote(Quote quote) throws ConnectionException {		
-		return em.persist(convertQuoteToSObject(quote));		
+	public SaveResult saveQuote(Quote quote) throws ConnectionException {	
+		SaveResult saveResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    saveResult = em.persist(convertQuoteToSObject(quote));
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
+		
+		return saveResult;
 	}
 	
 	@Override
-	public DeleteResult deleteQuote(Quote quote) throws ConnectionException {		
-		return em.delete(quote.getId());				
+	public DeleteResult deleteQuote(Quote quote) throws ConnectionException {
+		DeleteResult deleteResult = null;
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
+		    deleteResult = em.delete(quote.getId());	
+		
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				log.error("Unable to close connection", e);
+			}
+		}
+		
+		return deleteResult;
 	}
 	
 	private SObject convertQuoteToSObject(Quote quote) {

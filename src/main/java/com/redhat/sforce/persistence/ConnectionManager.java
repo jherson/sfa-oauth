@@ -65,15 +65,16 @@ public class ConnectionManager {
     }
 
     public static PartnerConnection getConnection() {
-    	PartnerConnection connection = threadLocal.get();
-    	if (connection == null) {
-    		
-    	}
-        return connection;
+    	return threadLocal.get();
     }
     
-    public static void closeConnection() throws ConnectionException {	
+    public static void closeConnection() throws ConnectionException {
     	threadLocal.remove();
+    }
+    
+    public static void logout() throws ConnectionException {
+    	if (getConnection() != null)
+    		getConnection().logout();
     }
     
     private static Properties getProperties() throws ConnectionException {

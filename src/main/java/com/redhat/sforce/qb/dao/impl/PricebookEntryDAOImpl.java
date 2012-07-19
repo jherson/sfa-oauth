@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.PricebookEntry;
+import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
@@ -20,17 +22,34 @@ public class PricebookEntryDAOImpl extends SObjectDAO implements PricebookEntryD
 	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws QueryException {		
 		String queryString = getQueryString(pricebookId, productCode, "false", currencyIsoCode);
 		
-		Query q = em.createQuery(queryString);	
+		try {
+			ConnectionManager.openConnection(sessionManager.getSessionId());
 		
-		PricebookEntry pricebookEntry = q.getSingleResult();				
+		    Query q = em.createQuery(queryString);	
 		
-		if (pricebookEntry == null) {
-			queryString = getQueryString(pricebookId, productCode.substring(0,4), "true", currencyIsoCode);
-			q = em.createQuery(queryString);	
-			pricebookEntry = q.getSingleResult();
+		    PricebookEntry pricebookEntry = q.getSingleResult();				
+		
+		    if (pricebookEntry == null) {
+			    queryString = getQueryString(pricebookId, productCode.substring(0,4), "true", currencyIsoCode);
+			    q = em.createQuery(queryString);	
+			    pricebookEntry = q.getSingleResult();
+		    }
+		    
+		    return pricebookEntry;
+		    
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionManager.closeConnection();
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		return pricebookEntry;
+		return null;
 	}
 	
 	private String getQueryString(String pricebookId, String productCode, String configurable, String currencyIsoCode) {

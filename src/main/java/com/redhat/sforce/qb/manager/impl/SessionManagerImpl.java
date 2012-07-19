@@ -3,6 +3,7 @@ package com.redhat.sforce.qb.manager.impl;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
@@ -12,10 +13,11 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.sforce.ws.ConnectionException;
 
 @Named(value="sessionManager")
 @SessionScoped
@@ -25,10 +27,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private Logger log;
-	
-	@Inject
-	private SessionUserDAO sessionUserDAO;
+	private Logger log;	
 	
 	private String opportunityId;
 	
@@ -49,7 +48,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		this.sessionId = sessionId;
 	}
 	
-	@Override
+	@Override	
 	public Boolean getLoggedIn() {
 		return loggedIn;
 	}
@@ -89,19 +88,38 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		if (session.getAttribute("SessionId") != null) {
 			
 			setSessionId(session.getAttribute("SessionId").toString());											
-			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", getSessionId()));
-			setMainArea(TemplatesEnum.QUOTE_MANAGER);
-						
-			setLoggedIn(Boolean.TRUE);
+			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", getSessionId()));							
+			setLoggedIn(Boolean.TRUE);								
+			setMainArea(TemplatesEnum.QUOTE_MANAGER);	
 
 		} else {
-			setMainArea(TemplatesEnum.HOME);		 
+			
+			setLoggedIn(Boolean.FALSE);
+			setMainArea(TemplatesEnum.HOME);
+			
 		}			
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		log.info("destroy");		
 	}
 	
 	@Override
 	public void logout() {
-		sessionUserDAO.logout();
+		log.info("logout");
+		
+		try {
+			ConnectionManager.openConnection(getSessionId());
+			ConnectionManager.logout();
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		session.setAttribute("SessionId", null);
+		
 		setLoggedIn(Boolean.FALSE);
 	}
 	

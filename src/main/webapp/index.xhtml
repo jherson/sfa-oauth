@@ -16,7 +16,7 @@
 				<rich:toolbarGroup location="left">
 
 					<h:outputText value="#{msgs.loggedInAs}: #{user.name}"
-					    rendered="#{not empty user}"
+					    rendered="#{sessionManager.loggedIn}"
 						style="color:#{a4jSkin.generalTextColor};" />
 
 				</rich:toolbarGroup>
@@ -44,7 +44,7 @@
 			<h:panelGroup layout="block">
 				<h:panelGroup id="mainArea" layout="block">
 					<h:panelGroup layout="block">
-						<ui:include src="#{quoteController.mainArea.template}" />
+						<ui:include src="#{sessionManager.mainArea.template}" />
 					</h:panelGroup>
 				</h:panelGroup>
 			</h:panelGroup>
