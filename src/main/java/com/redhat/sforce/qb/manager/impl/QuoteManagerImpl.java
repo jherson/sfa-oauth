@@ -9,16 +9,14 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.manager.QuoteManager;
-import com.redhat.sforce.qb.manager.ServicesManager;
-import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.OpportunityLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
-import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
@@ -33,24 +31,21 @@ public class QuoteManagerImpl implements QuoteManager {
 	private QuoteDAO quoteDAO;
 	
 	@Inject
-	private SessionManager sessionManager;
-	
-	@Inject
-	private ServicesManager servicesManager;
-	
+	private ChatterDAO chatterDAO;
+		
 	@Override
-	public void delete(Quote quote) {
-		doDelete(quote);					
+	public DeleteResult delete(Quote quote) {
+		return doDelete(quote);					
 	}
 	
 	@Override
-	public void update(Quote quote) {
-		doSaveQuote(quote);		
+	public SaveResult update(Quote quote) {
+		return doSaveQuote(quote);		
 	}
 	
 	@Override
-	public void create(Quote quote) {
-		doSaveQuote(quote);
+	public SaveResult create(Quote quote) {
+		return doSaveQuote(quote);
 	}
 	
 	@Override
@@ -59,8 +54,8 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void delete(QuoteLineItem quoteLineItem) {
-		doDelete(quoteLineItem);		
+	public DeleteResult delete(QuoteLineItem quoteLineItem) {
+		return doDelete(quoteLineItem);		
 	}
 	
 	@Override
@@ -69,8 +64,8 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void add(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
-		doAdd(quote, opportunityLineItems);
+	public SaveResult[] add(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
+		return doAdd(quote, opportunityLineItems);
 	}
 	
 	@Override
@@ -94,8 +89,8 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void delete(List<QuoteLineItem> quoteLineItems) {
-		doDelete(quoteLineItems);
+	public DeleteResult[] delete(List<QuoteLineItem> quoteLineItems) {
+		return doDelete(quoteLineItems);
 	}
 	
 	@Override
@@ -103,7 +98,7 @@ public class QuoteManagerImpl implements QuoteManager {
 		return doCopy(quoteLineItems);
 	}
 	
-	private void doSaveQuote(Quote quote) {
+	private SaveResult doSaveQuote(Quote quote) {
 		SaveResult saveResult = null;					
 		
 		quote.setIsCalculated(Boolean.FALSE);
@@ -122,7 +117,7 @@ public class QuoteManagerImpl implements QuoteManager {
 				if (quote.getQuotePriceAdjustments() != null && quote.getQuotePriceAdjustments().size() > 0)
 				    saveQuotePriceAdjustments(quote.getQuotePriceAdjustments());
 												
-				//saveQuoteLineItemPriceAdjustments(addQuoteLineItemPriceAdjustments(quote));
+				saveQuoteLineItemPriceAdjustments(addQuoteLineItemPriceAdjustments(quote));
 								
 				log.info("Quote save successful: " + saveResult.getId());
 				
@@ -130,13 +125,14 @@ public class QuoteManagerImpl implements QuoteManager {
 				
 			} else {
 				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());
-				return;
 			} 						
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
+		return saveResult;
 	}
 	
 	private List<QuoteLineItemPriceAdjustment> addQuoteLineItemPriceAdjustments(Quote quote) {
@@ -169,18 +165,20 @@ public class QuoteManagerImpl implements QuoteManager {
 		return quoteLineItemPriceAdjustmentList;
 	}
 	
-	private void saveQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
-		SaveResult[] saveResults = null;
+	private SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
+		SaveResult[] saveResult = null;
 		try {
-			saveResults = quoteDAO.saveQuoteLineItems(quoteLineItems);
+			saveResult = quoteDAO.saveQuoteLineItems(quoteLineItems);
 	
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
+		return saveResult;
 	}
 	
-	private void saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {
+	private SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustments) {
 		SaveResult[] saveResult = null;
 		try {
 			saveResult = quoteDAO.saveQuotePriceAdjustments(quotePriceAdjustments);
@@ -189,56 +187,63 @@ public class QuoteManagerImpl implements QuoteManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
+		return saveResult;
 	}
 	
-	private void saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) {
-		SaveResult[] saveResult = null;
-		try {
-			saveResult = quoteDAO.saveQuoteLineItemPriceAdjustments(quoteLineItemPriceAdjustmentList);
-			
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+	private SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) {
+//		SaveResult[] saveResult = null;
+//		try {
+//			saveResult = quoteDAO.saveQuoteLineItemPriceAdjustments(quoteLineItemPriceAdjustmentList);
+//			
+//		} catch (ConnectionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
+//		
+//		return saveResult;
+		return null;
 	}
 	
-	private void doDelete(Quote quote) {
+	private DeleteResult doDelete(Quote quote) {
 		DeleteResult deleteResult = null;
 		try {
 			deleteResult = quoteDAO.deleteQuote(quote);			
-			if (deleteResult.isSuccess()) {
-				log.info("Quote " + quote.getId() + " has been deleted");				
-			} else {
-				log.error("Quote delete failed: " + deleteResult.getErrors()[0].getMessage());
-			}
+
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+		
+		return deleteResult;
 	}
 	
 	private void doCalcualate(Quote quote) {
-		servicesManager.calculateQuote(sessionManager.getSessionId(), quote.getId());			
+		quoteDAO.calculateQuote(quote.getId());			
 	}
 	
-	private void doDelete(QuoteLineItem quoteLineItem) {
+	private DeleteResult doDelete(QuoteLineItem quoteLineItem) {
+		DeleteResult deleteResult = null;
 		try {
-			quoteDAO.deleteQuoteLineItem(quoteLineItem);			
+			deleteResult = quoteDAO.deleteQuoteLineItem(quoteLineItem);			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return deleteResult;
 	}
 
 	private void doPrice(Quote quote) {
-		servicesManager.priceQuote(sessionManager.getSessionId(), MessageFactory.createPricingMessage(quote));
+		quoteDAO.priceQuote(quote);
 	}
 	
 	private String doCopy(Quote quote) {		
-		return servicesManager.copyQuote(sessionManager.getSessionId(), quote.getId());
+		return quoteDAO.copyQuote(quote.getId());
 	}
 	
-	private void doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {		
+	private SaveResult[] doAdd(Quote quote, List<OpportunityLineItem> opportunityLineItems) {
+		SaveResult[] saveResult = null; 
 		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
 		for (OpportunityLineItem opportunityLineItem : opportunityLineItems) {
 			if (opportunityLineItem.isSelected()) {
@@ -278,48 +283,52 @@ public class QuoteManagerImpl implements QuoteManager {
 		}	
 
 		try {
-			quoteDAO.saveQuoteLineItems(quoteLineItemList);
-			
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-	}
-	
-	private void doActivate(Quote quote) {
-		servicesManager.activateQuote(sessionManager.getSessionId(), quote.getId());
-	}
-	
-	private void doFollow(Quote quote) {
-		servicesManager.follow(sessionManager.getSessionId(), quote.getId());				
-	}
-	
-	private void doUnfollow(Quote quote) {
-		String subscriptionId = quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId();		
-		servicesManager.unfollow(sessionManager.getSessionId(), subscriptionId);
-	}
-	
-	private void doDelete(List<QuoteLineItem> quoteLineItems) {
-		try {
-			quoteDAO.deleteQuoteLineItems(quoteLineItems);
+			saveResult = quoteDAO.saveQuoteLineItems(quoteLineItemList);
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
+		return saveResult;
+	}
+	
+	private void doActivate(Quote quote) {
+		quoteDAO.activateQuote(quote.getId());
+	}
+	
+	private void doFollow(Quote quote) {
+		chatterDAO.followQuote(quote.getId());				
+	}
+	
+	private void doUnfollow(Quote quote) {
+		chatterDAO.unfollowQuote(quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId());
+	}
+	
+	private DeleteResult[] doDelete(List<QuoteLineItem> quoteLineItems) {
+		DeleteResult[] deleteResult = null;
+		try {
+			deleteResult = quoteDAO.deleteQuoteLineItems(quoteLineItems);
+			
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		return deleteResult;
+		
 	}
 	
 	private SaveResult[] doCopy(List<QuoteLineItem> quoteLineItems) {
+		SaveResult[] saveResult = null;
 		try {
-			return quoteDAO.copy(quoteLineItems);
+			saveResult = quoteDAO.copy(quoteLineItems);
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return null;
+		return saveResult;
 	}
-
 }

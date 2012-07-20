@@ -6,13 +6,16 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 
 public interface ServicesManager {
 	
-	public JSONObject getCurrentUserInfo(String sessionId) throws SalesforceServiceException;	
+	// user service
+	public JSONObject getCurrentUserInfo(String sessionId) throws SalesforceServiceException;
+	
+	// quote services
 	public void calculateQuote(String sessionId, String quoteId);			
 	public void activateQuote(String sessionId, String quoteId);	
 	public String copyQuote(String sessionId, String quoteId);
 	public void priceQuote(String sessionId, String xml);
 	
-	// chatter functions
+	// chatter services
 	public void follow(String sessionId, String subjectId);
 	public void unfollow(String sessionId, String subscriptionId);
 	public JSONObject getFollowers(String sessionId, String recordId);

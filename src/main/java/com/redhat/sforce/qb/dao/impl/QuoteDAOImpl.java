@@ -11,12 +11,12 @@ import javax.enterprise.context.SessionScoped;
 import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItemPriceAdjustment;
 import com.redhat.sforce.qb.model.quotebuilder.QuotePriceAdjustment;
+import com.redhat.sforce.qb.pricing.xml.MessageFactory;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
@@ -24,7 +24,7 @@ import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
-public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
+public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
 			
@@ -411,8 +411,28 @@ public class QuoteDAOImpl extends SObjectDAO implements QuoteDAO, Serializable {
 		}
 		
 		return deleteResult;
-	}
+	}		
 	
+	@Override
+	public String copyQuote(String quoteId) {
+		return servicesManager.copyQuote(sessionManager.getSessionId(), quoteId);		
+	}
+
+	@Override
+	public void activateQuote(String quoteId) {
+		servicesManager.activateQuote(sessionManager.getSessionId(), quoteId);		
+	}
+
+	@Override
+	public void calculateQuote(String quoteId) {
+		servicesManager.calculateQuote(sessionManager.getSessionId(), quoteId);		
+	}
+
+	@Override
+	public void priceQuote(Quote quote) {
+		servicesManager.priceQuote(sessionManager.getSessionId(), MessageFactory.createPricingMessage(quote));		
+	}
+
 	private SObject convertQuoteToSObject(Quote quote) {
 		SObject sobject = new SObject();		
 	    sobject.setType("Quote__c");	    

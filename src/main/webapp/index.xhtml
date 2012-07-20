@@ -27,14 +27,14 @@
 						style="color:#{a4jSkin.generalTextColor};"
 						render="quoteForm"
 						rendered="#{sessionManager.loggedIn}"
-						action="#{quoteController.logout()}">
+						action="#{sessionManager.logout()}">
 					</a4j:commandLink>
 					
 					<a4j:commandLink value="#{msgs.login}"
 						style="color:#{a4jSkin.generalTextColor};"
 						render="quoteForm"
 						rendered="#{not sessionManager.loggedIn}"
-						action="#{quoteController.login()}">
+						action="#{sessionManager.login()}">
 					</a4j:commandLink>
 
 				</rich:toolbarGroup>

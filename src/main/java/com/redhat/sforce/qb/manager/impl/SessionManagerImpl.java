@@ -1,11 +1,13 @@
 package com.redhat.sforce.qb.manager.impl;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,6 +19,7 @@ import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.ws.ConnectionException;
 
 @Named(value="sessionManager")
@@ -83,14 +86,16 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void init() {
 		log.info("init");
 
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 				
 		if (session.getAttribute("SessionId") != null) {
 			
 			setSessionId(session.getAttribute("SessionId").toString());											
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", getSessionId()));							
 			setLoggedIn(Boolean.TRUE);								
-			setMainArea(TemplatesEnum.QUOTE_MANAGER);	
+			setMainArea(TemplatesEnum.QUOTE_MANAGER);
+			
+			session.setAttribute("SessionId", null);
 
 		} else {
 			
@@ -117,10 +122,23 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			e.printStackTrace();
 		}
 		
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-		session.setAttribute("SessionId", null);
-		
 		setLoggedIn(Boolean.FALSE);
+		setMainArea(TemplatesEnum.HOME);
+	}
+	
+	@Override
+	public void login() {
+		
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+       	session.invalidate();
+		
+	    try {
+		    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
+	    } catch (IOException e) {
+	    	// TODO Auto-generated catch block
+		    e.printStackTrace();
+	    } 
 	}
 	
 	@Override

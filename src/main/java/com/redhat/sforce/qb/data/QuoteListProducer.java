@@ -12,6 +12,7 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
@@ -28,6 +29,9 @@ public class QuoteListProducer implements Serializable {
 	
 	@Inject
 	private QuoteDAO quoteDAO;	
+	
+	@Inject
+	private ChatterDAO chatterDAO;
 
 	private List<Quote> quoteList;
 
@@ -47,7 +51,7 @@ public class QuoteListProducer implements Serializable {
 		
 		try {
 			quoteList = quoteDAO.queryQuotes();			
-			
+			chatterDAO.getQuoteFeed();
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

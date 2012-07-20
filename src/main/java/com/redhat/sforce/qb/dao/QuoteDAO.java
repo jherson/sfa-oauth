@@ -31,4 +31,8 @@ public interface QuoteDAO {
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
 	
+	public String copyQuote(String quoteId);
+	public void activateQuote(String quoteId);
+	public void calculateQuote(String quoteId);
+	public void priceQuote(Quote quote);	
 }

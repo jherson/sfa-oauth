@@ -7,14 +7,13 @@ import javax.enterprise.context.SessionScoped;
 import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
-import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.PricebookEntry;
 import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
-public class PricebookEntryDAOImpl extends SObjectDAO implements PricebookEntryDAO, Serializable {
+public class PricebookEntryDAOImpl extends QuoteBuilderObjectDAO implements PricebookEntryDAO, Serializable {
 
 	private static final long serialVersionUID = 7731570933466830064L;
 

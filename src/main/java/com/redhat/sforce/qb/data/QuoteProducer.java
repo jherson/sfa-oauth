@@ -14,20 +14,21 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
+import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
-import com.redhat.sforce.qb.qualifiers.ChatterEvent;
 import com.redhat.sforce.qb.qualifiers.CopyQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
+import com.redhat.sforce.qb.qualifiers.FollowQuote;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
+import com.redhat.sforce.qb.qualifiers.UnfollowQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuoteAmount;
@@ -49,6 +50,9 @@ public class QuoteProducer implements Serializable {
 	private QuoteDAO quoteDAO;
 	
 	@Inject
+	private ChatterDAO chatterDAO;
+	
+	@Inject
 	private List<Quote> quoteList;
 
 	private Quote selectedQuote;
@@ -62,8 +66,8 @@ public class QuoteProducer implements Serializable {
 	}
 
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
-		selectedQuote = queryQuoteById(quote.getId()); 
-		selectedQuote.setFollowers(queryFollowers(quote.getId()));
+		selectedQuote = queryQuoteById(quote.getId()); 	
+		selectedQuote.setFollowers(chatterDAO.getQuoteFollowers(quote.getId()));
 	}
 	
 	public void onCreateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {
@@ -120,8 +124,12 @@ public class QuoteProducer implements Serializable {
 		}
 	}
 	
-	public void onChatter(@Observes(during=TransactionPhase.AFTER_SUCCESS) @ChatterEvent final Quote quote) {
-		selectedQuote.setFollowers(queryFollowers(quote.getId()));
+	public void onFollowQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @FollowQuote final Quote quote) {
+		selectedQuote.getFollowers().setIsCurrentUserFollowing(Boolean.TRUE);
+	}
+	
+	public void onUnfollowQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UnfollowQuote final Quote quote) {
+		selectedQuote.getFollowers().setIsCurrentUserFollowing(Boolean.FALSE);
 	}
 
 	private Opportunity queryOpportunity(String opportunityId) {
@@ -134,19 +142,6 @@ public class QuoteProducer implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		
-		return null;
-	}
-	
-	private Followers queryFollowers(String quoteId) {
-//		Followers followers = new Gson().fromJson(sm.getFollowers(sessionManager.getSessionId(), quoteId).toString(), Followers.class);
-//		followers.setIsCurrentUserFollowing(Boolean.FALSE);
-//		if (followers.getTotal() > 0 && followers.getFollowers().get(0).getSubject().getMySubscription() != null) {
-//			followers.setIsCurrentUserFollowing(Boolean.TRUE);
-//		}
-//		return followers;
-		
-//		sm.getQuoteFeed(sessionManager.getSessionId());
 		
 		return null;
 	}

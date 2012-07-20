@@ -8,14 +8,13 @@ import javax.enterprise.context.SessionScoped;
 import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
 import com.redhat.sforce.qb.dao.OpportunityDAO;
-import com.redhat.sforce.qb.dao.SObjectDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
 import com.sforce.ws.ConnectionException;
 
 @SessionScoped
 
-public class OpportunityDAOImpl extends SObjectDAO implements OpportunityDAO, Serializable {
+public class OpportunityDAOImpl extends QuoteBuilderObjectDAO implements OpportunityDAO, Serializable {
 
 	private static final long serialVersionUID = -7930084693877198927L;
 	

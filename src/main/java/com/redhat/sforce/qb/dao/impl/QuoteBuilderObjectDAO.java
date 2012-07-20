@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.dao;
+package com.redhat.sforce.qb.dao.impl;
 
 import java.io.Serializable;
 
@@ -10,23 +10,23 @@ import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 
-public class SObjectDAO implements Serializable {
+public class QuoteBuilderObjectDAO implements Serializable {
 
 	private static final long serialVersionUID = -7799337206776609911L;
+	
+	@Inject
+	protected Logger log;
 
 	@Inject
-	protected ServicesManager sm;
+	protected ServicesManager servicesManager;
 		
 	@Inject
 	protected EntityManager em;
 	
 	@Inject
 	protected SessionManager sessionManager;
-	
-	@Inject
-	protected Logger log;
-	
-	public SObjectDAO() {
+		
+	public QuoteBuilderObjectDAO() {
 		
 	}
 }

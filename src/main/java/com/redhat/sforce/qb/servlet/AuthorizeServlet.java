@@ -1,7 +1,6 @@
 package com.redhat.sforce.qb.servlet;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -11,11 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.jboss.logging.Logger;
-import org.json.JSONException;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -77,29 +76,26 @@ public class AuthorizeServlet extends HttpServlet {
 				}
 
 			} else {
-
+								
 				String tokenUrl = getEnvironment() + "/services/oauth2/token";
-
-				PostMethod postMethod = new PostMethod(tokenUrl);
-				postMethod.addParameter("code", code);
-				postMethod.addParameter("grant_type", "authorization_code");
-				postMethod.addParameter("client_id", getClientId());
-				postMethod.addParameter("client_secret", getClientSecret());
-				postMethod.addParameter("redirect_uri", getRedirectUri());
-
-				HttpClient httpClient = new HttpClient();
-				httpClient.getParams().setSoTimeout(60000);
-
+				
+				ClientRequest clientRequest = new ClientRequest(tokenUrl);
+				clientRequest.header("Authorization", "OAuth " + sessionId);
+				clientRequest.header("Content-type", "application/json");
+				clientRequest.queryParameter("code", code);
+				clientRequest.queryParameter("grant_type", "authorization_code");
+				clientRequest.queryParameter("client_id", getClientId());
+				clientRequest.queryParameter("client_secret", getClientSecret());
+				clientRequest.queryParameter("redirect_uri", getRedirectUri());
+				
 				try {
-					httpClient.executeMethod(postMethod);
-					JSONObject authResponse = new JSONObject(new JSONTokener(new InputStreamReader(postMethod.getResponseBodyAsStream())));
-					sessionId = authResponse.getString("access_token");
-				} catch (JSONException e) {
-					log.error("JSONException", e);
-					throw new ServletException(e);
-				} catch (IOException e) {
-					log.error("IOException", e);
-					throw new ServletException(e);
+					ClientResponse<String> clientResponse = clientRequest.post(String.class);
+					if (clientResponse.getResponseStatus() == Status.OK) {
+						JSONObject authResponse = new JSONObject(new JSONTokener(clientResponse.getEntity()));
+						sessionId = authResponse.getString("access_token");
+					}
+				} catch (Exception e) {
+					log.error(e);
 				}
 			}
 		}		

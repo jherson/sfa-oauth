@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +7,10 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.Contact;
@@ -23,7 +18,7 @@ import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.QuoteLineItem;
 import com.redhat.sforce.qb.model.quotebuilder.User;
-import com.redhat.sforce.qb.qualifiers.ChatterEvent;
+import com.redhat.sforce.qb.qualifiers.FollowQuote;
 import com.redhat.sforce.qb.qualifiers.CopyQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuote;
 import com.redhat.sforce.qb.qualifiers.CreateQuoteLineItem;
@@ -32,10 +27,10 @@ import com.redhat.sforce.qb.qualifiers.DeleteQuoteLineItem;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
 import com.redhat.sforce.qb.qualifiers.PriceQuote;
 import com.redhat.sforce.qb.qualifiers.SelectedQuote;
+import com.redhat.sforce.qb.qualifiers.UnfollowQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuote;
 import com.redhat.sforce.qb.qualifiers.UpdateQuoteAmount;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
-import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.soap.partner.SaveResult;
 
 @Model
@@ -73,14 +68,14 @@ public class QuoteController {
 	private static final AnnotationLiteral<PriceQuote> PRICE_QUOTE = new AnnotationLiteral<PriceQuote>() {};
 	
 	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<ChatterEvent> CHATTER_EVENT = new AnnotationLiteral<ChatterEvent>() {};
+	private static final AnnotationLiteral<FollowQuote> FOLLOW_QUOTE = new AnnotationLiteral<FollowQuote>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<UnfollowQuote> UNFOLLOW_QUOTE = new AnnotationLiteral<UnfollowQuote>() {};	
 
 	@Inject
 	private Logger log;
 	
-	@Inject
-	protected EntityManager entityManager;
-
 	@Inject
 	private SessionManager sessionManager;
 	
@@ -126,29 +121,6 @@ public class QuoteController {
 		return sessionManager.getMainArea();
 	}
 
-	public void logout() {		
-		
-		sessionManager.logout();
-							
-       	HttpSession session = JsfUtil.getSession();
-       	session.invalidate();
-       	
-       	setMainArea(TemplatesEnum.HOME);
-	}
-	
-	public void login() {
-		
-		HttpSession session = JsfUtil.getSession();
-       	session.invalidate();
-		
-	    try {
-		    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
-	    } catch (IOException e) {
-		    e.printStackTrace();
-	    } 
-	}
-
 	public void backToQuoteManager() {
 		setMainArea(TemplatesEnum.QUOTE_MANAGER);
 	}
@@ -170,12 +142,12 @@ public class QuoteController {
 	
 	public void followQuote() {
 		quoteManager.follow(selectedQuote);
-		quoteEvent.select(CHATTER_EVENT).fire(selectedQuote);	
+		quoteEvent.select(FOLLOW_QUOTE).fire(selectedQuote);	
 	}
 	
 	public void unfollowQuote() {
 		quoteManager.unfollow(selectedQuote);
-		quoteEvent.select(CHATTER_EVENT).fire(selectedQuote);	
+		quoteEvent.select(UNFOLLOW_QUOTE).fire(selectedQuote);	
 	}
 	
 	public void goalSeek() {
