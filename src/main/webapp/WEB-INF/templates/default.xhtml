@@ -34,6 +34,8 @@
 		<!--                                         -->
 	
 	    <ui:include src="/WEB-INF/pages/status.xhtml" />
+	    
+	    <h:form id="quoteForm" ajaxSubmit="true">
 	
 		<div id="container">
 			
@@ -41,14 +43,32 @@
 				<!--                H E A D E R              -->
 				<!--                                         -->
 
-				<div id="header">
+				<div id="header" style="text-align:center">
 
-				    <h:panelGrid width="100%" columns="2" cellspacing="10"
-		                columnClasses="column1,column2">
-		                <h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
-		                <h:graphicImage id="qb_logo" alt="qb_logo" url="/images/qb_logo.png" />
+				    <h:panelGrid width="100%" columns="3" columnClasses="column1,column2,column3">
+		                
+		                <h:panelGrid columns="1" cellspacing="5" >
+		                    <h:graphicImage id="qb_logo" alt="qb_logo" url="/images/qb_logo.png" />
+		                </h:panelGrid>
+		                
+		                <h:panelGrid columns="2" cellspacing="5" >		                
+		                    <h:inputText value="" style="width: 200px;"/>
+		                    <a4j:commandButton value="Search" />		                
+		                </h:panelGrid>
+		                
+		                <h:panelGrid columns="2"  
+		                    columnClasses="userNameColumn,smallPicColumn">
+		                    <h:outputText value="#{user.name} (#{user.profileName})"
+					            rendered="#{sessionManager.loggedIn}" />
+						
+					        <h:graphicImage value="#{user.smallPhotoUrl}" 
+					            height="40" width="40"
+					            rendered="#{sessionManager.loggedIn}" />
+		                
+		                </h:panelGrid>
+		                		                
 	                </h:panelGrid>
-
+	                	                
 				</div>
 
 				<!--                                         -->
@@ -66,7 +86,7 @@
 				<!--                B O D Y                  -->
 				<!--                                         -->
 				
-				<div id="content">
+				<div id="content">							
 
 				    <ui:insert name="content">
                         [Template content will be inserted here]
@@ -84,7 +104,9 @@
 
                 </h:panelGrid>
                 
-		</div>		
+		</div>	
+		</h:form>
+			
 	</h:body>
 </f:view>
 </html>

@@ -10,9 +10,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-
 import javax.enterprise.inject.Produces;
-
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
@@ -73,7 +71,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 						
 		} catch (ConnectionException e) {
 			log.error(e);
-		}
+		}	
 	}
 
 	public List<String> queryCurrencyIsoCodes() throws ConnectionException {

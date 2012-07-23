@@ -19,7 +19,6 @@ import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.util.JsfUtil;
 import com.sforce.ws.ConnectionException;
 
 @Named(value="sessionManager")
