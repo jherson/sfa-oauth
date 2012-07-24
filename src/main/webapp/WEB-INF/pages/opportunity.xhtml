@@ -1,49 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:rich="http://richfaces.org/rich"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
 
-<h:head></h:head> 
-<body>
+	<rich:panel id="opportunityPanel">
 
-<rich:panel id="viewOpportunityPanel">
-	
-	<h:panelGrid styleClass="rf-dt" width="100%"
-		style="border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-		columnClasses="label-column,column-l-align,label-column,column-l-align"
-		columns="4">
+		<h:panelGrid styleClass="rf-dt" width="100%"
+			style="border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
+			columnClasses="label-column,column-l-align,label-column,column-l-align"
+			columns="4">
 
-		<h:outputText value="#{msgs.name}" />
-		<h:outputText value="#{model.opportunity.name}" />
+			<h:outputText value="#{msgs.name}" />
+			<a4j:commandLink value="#{selectedQuote.opportunity.name}"
+				onclick="window.open('#{sessionManager.frontDoorUrl}#{selectedQuote.opportunity.id}');" />
 
-		<h:outputText value="#{msgs.number}" />
-		<h:outputText value="#{model.opportunity.opportunityNumber}" />
-		
-		<h:outputText value="#{msgs.amount}" />
-		<h:panelGroup >
-		<h:outputText value="(#{model.opportunity.currencyIsoCode}) " />
-		<h:outputText value="#{model.opportunity.amount}" >
-			<f:convertNumber locale="#{sessionUser.locale}"
-				pattern="#,##0;(#,##0)" type="number" />
-		</h:outputText>
-		</h:panelGroup >
-		
-		<h:outputText value="#{msgs.closeDate}" />
-		<h:outputText value="#{model.opportunity.closeDate}" > 
-		    <f:convertDateTime locale="#{sessionUser.locale}"
-			    pattern="#{sessionUser.dateFormatPattern}"
-			    type="date" />
-		</h:outputText>			
-		
-		<h:outputText value="#{msgs.fulfillmentChannel}" />
-		<h:outputText value="#{model.opportunity.fulfillmentChannel}" />
+			<h:outputText value="#{msgs.number}" />
+			<h:outputText value="#{selectedQuote.opportunity.opportunityNumber}" />
 
-		<h:outputText value="#{msgs.payNow}" />
-		<h:outputText value="#{model.opportunity.payNow}" />
-		
+			<h:outputText value="#{msgs.amount}" />
+			<h:panelGroup>
+				<h:outputText
+					value="(#{selectedQuote.opportunity.currencyIsoCode}) " />
+				<h:outputText value="#{selectedQuote.opportunity.amount}">
+					<f:convertNumber locale="#{user.locale}" pattern="#,##0;(#,##0)"
+						type="number" />
+				</h:outputText>
+			</h:panelGroup>
+
+			<h:outputText value="#{msgs.closeDate}" />
+			<h:outputText value="#{selectedQuote.opportunity.closeDate}">
+				<f:convertDateTime locale="#{user.locale}"
+					pattern="#{user.dateFormatPattern}" type="date" />
+			</h:outputText>
+
+			<h:outputText value="#{msgs.fulfillmentChannel}" />
+			<h:outputText value="#{selectedQuote.opportunity.fulfillmentChannel}" />
+
+			<h:outputText value="#{msgs.payNow}" />
+			<h:outputText value="#{selectedQuote.opportunity.payNow}" />
+
 
 			<h:outputText value="#{msgs.billingAddress}" />
 			<h:outputText value="#{opportunity.billingAddress}" />
@@ -74,9 +72,8 @@
 
 			<h:outputText value="#{msgs.shippingCountry}" />
 			<h:outputText value="#{opportunity.shippingCountry}" />
-		
-	</h:panelGrid>
-</rich:panel>
 
-</body> 
-</html>
+		</h:panelGrid>
+	</rich:panel>
+
+</ui:composition>

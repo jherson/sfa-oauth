@@ -68,8 +68,13 @@
 
 		<rich:column width="350px">
 			<f:facet name="header">#{msgs.opportunity}</f:facet>
-			<a4j:commandLink value="#{quote.opportunity.name}"
-				onclick="window.open('#{sessionManager.frontDoorUrl}#{quote.opportunity.id}');" />
+			<a4j:commandLink value="#{quote.opportunity.name}">
+				<f:attribute name="quote" value="#{quote}" />
+				<a4j:ajax execute="@this" event="click"
+					listener="#{quoteManagerController.viewOpportunity}"
+					render="mainArea">
+				</a4j:ajax>
+			</a4j:commandLink>
 		</rich:column>
 
 		<rich:column width="80px" style="text-align: center;">

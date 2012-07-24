@@ -7,13 +7,56 @@
 	xmlns:rich="http://richfaces.org/rich"
 	template="/WEB-INF/templates/default.xhtml">
 
-	<ui:define name="content">
+	<ui:define name="header">
 
-		<rich:toolbar height="20px" itemSeparator="line">
+		<ui:include src="/WEB-INF/pages/profile.xhtml" />
+
+		<h:panelGrid width="100%" columns="3"
+			columnClasses="column1,column2,column3">
+
+
+			<h:panelGrid columns="1" cellspacing="5" width="100%">
+				<h:graphicImage id="qb_logo" alt="qb_logo" url="/images/qb_logo.png" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" cellspacing="5" width="100%"
+				columnClasses="userNameColumn,searchButtonColumn">
+
+				<h:inputText value="search" style="width: 200px;"
+					rendered="#{sessionManager.loggedIn}" />
+				<a4j:commandButton value="Search" styleClass="commandButton"
+					rendered="#{sessionManager.loggedIn}" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" width="100%" cellspacing="0"
+				columnClasses="userNameColumn,smallPicColumn">
+
+				<a4j:commandLink value="#{user.name} (#{user.profileName})"
+					rendered="#{sessionManager.loggedIn}"
+					style="font: 16px arial,sans-serif; text-decoration: none; text-align: center; color: black"
+					oncomplete="#{rich:component('quoteForm:profilePanel')}.show()"
+					status="waitstatus"
+					rerender="#{rich:clientId('quoteForm:profilePanel')}"
+					ajaxSingle="true">
+
+				</a4j:commandLink>
+
+				<a4j:commandLink rendered="#{sessionManager.loggedIn}"
+					oncomplete="#{rich:component('profilePanel')}.show()"
+					status="waitstatus" rerender="#{rich:clientId('profilePanel')}"
+					ajaxSingle="true">
+					<h:graphicImage value="#{user.smallPhotoUrl}" height="40"
+						width="40">
+					</h:graphicImage>
+				</a4j:commandLink>
+
+			</h:panelGrid>
+
+		</h:panelGrid>
+
+			<rich:toolbar height="20px" itemSeparator="line">
 
 			<rich:toolbarGroup location="left">
-
-
 
 			</rich:toolbarGroup>
 
@@ -35,15 +78,13 @@
 
 		</rich:toolbar>
 
+	</ui:define>
 
-		<h:panelGroup layout="block">
-			<h:panelGroup id="mainArea" layout="block">
-				<h:panelGroup layout="block">
-					<ui:include src="#{sessionManager.mainArea.template}" />
-				</h:panelGroup>
-			</h:panelGroup>
-		</h:panelGroup>
-
+	<ui:define name="content">
+	
+		<h:panelGrid id="mainArea" width="100%" columns="1">
+			<ui:include src="#{sessionManager.mainArea.template}" />
+		</h:panelGrid>
 
 	</ui:define>
 

@@ -14,99 +14,72 @@
 		<link rel="shortcut icon"
 			href="#{request.contextPath}/images/favicon.ico" />
 		<h:outputStylesheet name="css/style.css" />
-		
+
 		<style type="text/css">
-	
-        html {
-	        margin: 0px;
-	        padding: 0px;
-	        min-height: 100%;
-	        overflow-y: scroll;
-        }
-        
-        </style>
+html {
+	margin: 0px;
+	padding: 0px;
+	min-height: 100%;
+	overflow-y: scroll;
+}
+</style>
 
 	</h:head>
 	<h:body>
-	
+
 		<!--                                         -->
 		<!--                S T A T U S              -->
 		<!--                                         -->
-	
-	    <ui:include src="/WEB-INF/pages/status.xhtml" />
-	    
-	    <h:form id="quoteForm" ajaxSubmit="true">
-	
+
+		<ui:include src="/WEB-INF/pages/status.xhtml" />
+
 		<div id="container">
-			
+
+			<h:form id="quoteForm" ajaxSubmit="true">
+
 				<!--                                         -->
 				<!--                H E A D E R              -->
 				<!--                                         -->
 
-				<div id="header" style="text-align:center">
+				<div id="header">
 
-				    <h:panelGrid width="100%" columns="3" columnClasses="column1,column2,column3">
-		                
-		                <h:panelGrid columns="1" cellspacing="5" >
-		                    <h:graphicImage id="qb_logo" alt="qb_logo" url="/images/qb_logo.png" />
-		                </h:panelGrid>
-		                
-		                <h:panelGrid columns="2" cellspacing="5" >		                
-		                    <h:inputText value="" style="width: 200px;"/>
-		                    <a4j:commandButton value="Search" />		                
-		                </h:panelGrid>
-		                
-		                <h:panelGrid columns="2"  
-		                    columnClasses="userNameColumn,smallPicColumn">
-		                    <h:outputText value="#{user.name} (#{user.profileName})"
-					            rendered="#{sessionManager.loggedIn}" />
-						
-					        <h:graphicImage value="#{user.smallPhotoUrl}" 
-					            height="40" width="40"
-					            rendered="#{sessionManager.loggedIn}" />
-		                
-		                </h:panelGrid>
-		                		                
-	                </h:panelGrid>
-	                	                
+					<ui:insert name="header">
+                        [Template header will be inserted here]
+                    </ui:insert>
+
 				</div>
 
 				<!--                                         -->
 				<!--                S I D E B A R            -->
 				<!--                                         -->
 
-<!--
-				<div id="sidebar">
+				<!--<div id="sidebar">
 				
 				
-				</div>
--->				
+				</div>-->
 
 				<!--                                         -->
 				<!--                B O D Y                  -->
 				<!--                                         -->
-				
-				<div id="content">							
 
-				    <ui:insert name="content">
+				<div id="content">
+
+					<ui:insert name="content">
                         [Template content will be inserted here]
                     </ui:insert>
 
-			    </div>
+				</div>
 
-			<!--                                         -->
-			<!--                F O O T E R              -->
-			<!--                                         -->
+				<!--                                         -->
+				<!--                F O O T E R              -->
+				<!--                                         -->
 
-			<div id="footer"></div>
+				<div id="footer"></div>
 
-                <h:panelGrid width="100%" >
+			</h:form>
 
-                </h:panelGrid>
-                
-		</div>	
-		</h:form>
-			
-	</h:body>
+		</div>
+
+	</h:body>	
 </f:view>
 </html>

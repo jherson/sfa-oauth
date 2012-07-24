@@ -68,6 +68,12 @@ public class QuoteManagerController {
     	sessionManager.setMainArea(TemplatesEnum.QUOTE_DETAILS);
     }
     
+    public void viewOpportunity(AjaxBehaviorEvent event) {
+    	Quote quote = (Quote) event.getComponent().getAttributes().get("quote");    	
+    	quoteEvent.select(VIEW_QUOTE).fire(quote);		
+    	sessionManager.setMainArea(TemplatesEnum.OPPORTUNITY);    	
+    }
+    
 	public void deleteQuote(AjaxBehaviorEvent event) {
 		Quote quote = (Quote) event.getComponent().getAttributes().get("quote");		
 		quoteManager.delete(quote);
