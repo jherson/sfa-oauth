@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich"
-	template="/WEB-INF/templates/default.xhtml">
+	template="/WEB-INF/templates/default.xhtml">	
 
 	<ui:define name="header">
 
@@ -27,7 +27,7 @@
 					rendered="#{sessionManager.loggedIn}" />
 			</h:panelGrid>
 
-			<h:panelGrid columns="2" width="100%" cellspacing="0"
+			<h:panelGrid columns="3" width="100%" cellspacing="0"
 				columnClasses="userNameColumn,smallPicColumn,smallPicColumn">
 
 				<a4j:commandLink value="#{user.name} (#{user.profileName})"
@@ -47,25 +47,25 @@
 						width="40">
 					</h:graphicImage>
 				</a4j:commandLink>
-				
-				<h:panelGroup>
-				<a4j:commandLink value="#{msgs.logout}"
-					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
-					rendered="#{sessionManager.loggedIn}"
-					action="#{sessionManager.logout()}">
-				</a4j:commandLink>
 
-				<a4j:commandLink value="#{msgs.login}"
-					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
-					rendered="#{not sessionManager.loggedIn}"
-					action="#{sessionManager.login()}">
-				</a4j:commandLink>
-</h:panelGroup>
+				<h:panelGroup>
+					<a4j:commandLink value="#{msgs.logout}"
+						style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
+						rendered="#{sessionManager.loggedIn}"
+						action="#{sessionManager.logout()}">
+					</a4j:commandLink>
+
+					<a4j:commandLink value="#{msgs.login}"
+						style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
+						rendered="#{not sessionManager.loggedIn}"
+						action="#{sessionManager.login()}">
+					</a4j:commandLink>
+				</h:panelGroup>
 			</h:panelGrid>
 
 		</h:panelGrid>
 
-			<rich:toolbar height="20px" itemSeparator="line">
+		<rich:toolbar height="20px" itemSeparator="line">
 
 			<rich:toolbarGroup location="left">
 
@@ -73,20 +73,22 @@
 
 			<rich:toolbarGroup location="right">
 
-				
+
 
 			</rich:toolbarGroup>
 
 		</rich:toolbar>
 
-	</ui:define>
+	</ui:define>		
 
-	<ui:define name="body">
-	
+	<ui:define name="body">		    
+
 		<a4j:outputPanel id="mainArea" style="border: none">
 			<ui:include src="#{sessionManager.mainArea.template}" />
 		</a4j:outputPanel>
 
 	</ui:define>
+	
+	<rich:jQuery selector="#body" timing="onload" query="$('#body').jqxSplitter({orientation: 'vertical', width: 400, height: 400, panels: [{ size: 200 }, { size: 200}] });" />
 
 </ui:composition>
