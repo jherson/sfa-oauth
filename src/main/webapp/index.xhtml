@@ -14,7 +14,6 @@
 		<h:panelGrid width="100%" columns="3"
 			columnClasses="column1,column2,column3">
 
-
 			<h:panelGrid columns="1" cellspacing="5" width="100%">
 				<h:graphicImage id="qb_logo" alt="qb_logo" url="/images/qb_logo.png" />
 			</h:panelGrid>
@@ -29,7 +28,7 @@
 			</h:panelGrid>
 
 			<h:panelGrid columns="2" width="100%" cellspacing="0"
-				columnClasses="userNameColumn,smallPicColumn">
+				columnClasses="userNameColumn,smallPicColumn,smallPicColumn">
 
 				<a4j:commandLink value="#{user.name} (#{user.profileName})"
 					rendered="#{sessionManager.loggedIn}"
@@ -38,7 +37,6 @@
 					status="waitstatus"
 					rerender="#{rich:clientId('quoteForm:profilePanel')}"
 					ajaxSingle="true">
-
 				</a4j:commandLink>
 
 				<a4j:commandLink rendered="#{sessionManager.loggedIn}"
@@ -49,7 +47,20 @@
 						width="40">
 					</h:graphicImage>
 				</a4j:commandLink>
+				
+				<h:panelGroup>
+				<a4j:commandLink value="#{msgs.logout}"
+					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
+					rendered="#{sessionManager.loggedIn}"
+					action="#{sessionManager.logout()}">
+				</a4j:commandLink>
 
+				<a4j:commandLink value="#{msgs.login}"
+					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
+					rendered="#{not sessionManager.loggedIn}"
+					action="#{sessionManager.login()}">
+				</a4j:commandLink>
+</h:panelGroup>
 			</h:panelGrid>
 
 		</h:panelGrid>
@@ -62,17 +73,7 @@
 
 			<rich:toolbarGroup location="right">
 
-				<a4j:commandLink value="#{msgs.logout}"
-					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
-					rendered="#{sessionManager.loggedIn}"
-					action="#{sessionManager.logout()}">
-				</a4j:commandLink>
-
-				<a4j:commandLink value="#{msgs.login}"
-					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
-					rendered="#{not sessionManager.loggedIn}"
-					action="#{sessionManager.login()}">
-				</a4j:commandLink>
+				
 
 			</rich:toolbarGroup>
 
@@ -80,11 +81,11 @@
 
 	</ui:define>
 
-	<ui:define name="content">
+	<ui:define name="body">
 	
-		<h:panelGrid id="mainArea" width="100%" columns="1">
+		<a4j:outputPanel id="mainArea" style="border: none">
 			<ui:include src="#{sessionManager.mainArea.template}" />
-		</h:panelGrid>
+		</a4j:outputPanel>
 
 	</ui:define>
 

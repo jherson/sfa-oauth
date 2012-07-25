@@ -37,29 +37,29 @@ body {
 	height: 80px;
 }
 
-#content {
-	width: 100%;
+#body {
+	left: 75px;
+	position: absolute;
+	top: 80px;
+	bottom: 0px;
+	overflow-y: scroll;
 	margin: 0 auto;
 	border: none;
 	overflow: auto;
 }
-
-#leftcol {display: block; top: 61; bottom: 0; width: 230px; position: absolute
-		 margin-left: -1600px; padding-left: 1600px; 
-	        overflow: auto;}
 		 
 #sidebar {
+	position: absolute;
+	top: 80px;
+	bottom: 0px;
+	overflow-y: scroll;
     font-size: 0.9em;
-    width: 225px;
-    height: 100%;
+    width: 75px;
     float: left;
-    border: 1px solid #666666;
     background: #EAECEE;
     padding: 0 15px 5px 15px;
 }
-#sidebar ul {
-    padding-left: 30px;
-}
+
 #footer {
     clear: both;
     text-align: center;

@@ -85,7 +85,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void init() {
 		log.info("init");
 
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 				
 		if (session.getAttribute("SessionId") != null) {
 			
@@ -128,7 +128,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public void login() {
 		
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
        	session.invalidate();
 		
 	    try {

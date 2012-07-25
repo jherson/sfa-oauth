@@ -66,7 +66,7 @@ public class AuthorizeServlet extends HttpServlet {
 							+ getClientId() + "&redirect_uri="
 							+ URLEncoder.encode(getRedirectUri(), "UTF-8")
 							+ "&scope=full";
-
+					
 					response.sendRedirect(authUrl);
 					return;
 
