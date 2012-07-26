@@ -1,7 +1,7 @@
 #!/bin/ksh
 
-DEPLOYMENT_DIR=$HOME/workspace/sfa-qb/deployments
-TARGET_DIR=$HOME/workspace/sfa-qb/target
+DEPLOYMENT_DIR=$HOME/Documents/workspace/sfa-qb/deployments
+TARGET_DIR=$HOME/Documents/workspace/sfa-qb/target
 
 rm  $DEPLOYMENT_DIR/*
 cp $TARGET_DIR/quotebuilder.war $DEPLOYMENT_DIR
