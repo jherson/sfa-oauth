@@ -6,73 +6,77 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 	<rich:popupPanel id="profilePanel" modal="false" autosized="true"
-        resizeable="false" width="400" height="250">
+		resizeable="false" width="400" height="250">
 
 		<f:facet name="header">
-			<h:outputText value="Profile" />
+			<h:outputText value="#{msgs.profile}" />
 		</f:facet>
 		<f:facet name="controls">
-			<h:outputLink value="#"
-			    status="waitStatus"
+			<h:outputLink value="#" status="waitStatus"
 				onclick="#{rich:component('profilePanel')}.hide(); return false;">
                     X
                 </h:outputLink>
 		</f:facet>
 
-			<a4j:outputPanel layout="block">
-			
-			    <h:panelGrid width="100%" columns="2" cellpadding="3" style="vertical-align: top">
-			    
-			    <h:panelGroup>
-			    
-			    <h:graphicImage value="#{user.fullPhotoUrl}" 
-					            height="160" width="160" />
-					            
-			    </h:panelGroup>
-			    
-			    <h:panelGroup>
-					            
-			    <table style="width: 100%">
-				<tr>
-					<td width="200">#{user.name}</td>
-				</tr>
-				<tr>
-					<td width="200">#{user.title}</td>
-				</tr>
-				<tr>
-					<td width="200">#{user.email}</td>
-				</tr>
-				<tr>
-					<td width="200">#{user.phone} #{user.extension}</td>
-				</tr>
-				<tr>
-					<td width="200">#{user.street}</td>
-				</tr>
-				<tr>
-					<td width="200">#{user.city}, #{user.state} #{user.postalCode}</td>
-				</tr>
-				</table>
-				
-				</h:panelGroup>
-			    
-			    </h:panelGrid>				
+		<a4j:outputPanel layout="block">
 
-				<br />
+			<h:panelGrid width="100%" columns="2" cellpadding="3"
+				style="vertical-align: top">
 
-				<h:panelGroup style="display: block; text-align: right">
+				<h:panelGroup>
 
-					<h:outputText value="  " escape="false" />
-
-					<a4j:commandButton value="#{msgs.close}" 
-					    styleClass="commandButton"
-					    status="waitStatus"
-						oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
+					<h:graphicImage value="#{user.fullPhotoUrl}" height="160"
+						width="160" />
 
 				</h:panelGroup>
 
-			</a4j:outputPanel>
+				<h:panelGroup>
+
+					<table style="width: 100%">
+						<tr>
+							<td width="200">
+							    <a4j:commandLink value="#{user.name}" onclick="window.open('#{sessionManager.frontDoorUrl}#{user.id}');"/>
+							</td>							
+						</tr>
+						<tr>
+							<td width="200">#{user.title}</td>
+						</tr>
+						<tr>
+							<td width="200">#{user.email}</td>
+						</tr>
+						<tr>
+							<td width="200">#{user.phone} #{user.extension}</td>
+						</tr>
+						<tr>
+							<td width="200">#{user.street}</td>
+						</tr>
+						<tr>
+							<td width="200">#{user.city}, #{user.state}
+								#{user.postalCode}</td>
+						</tr>
+					</table>
+
+				</h:panelGroup>
+
+			</h:panelGrid>
+
+			<br />
+
+			<h:panelGroup style="display: block; text-align: right">
 			
-			
+			    <a4j:commandButton styleClass="commandButton" value="#{msgs.salesforceHome}" onclick="window.open('#{sessionManager.frontDoorUrl}home/home.jsp');"/>
+
+				<h:outputText value="  " escape="false" />
+
+				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
+					status="waitStatus"
+					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
+
+			</h:panelGroup>
+
+		</a4j:outputPanel>
+
+
 	</rich:popupPanel>
 
 </ui:composition>

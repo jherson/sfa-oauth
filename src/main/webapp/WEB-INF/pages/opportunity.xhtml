@@ -6,74 +6,90 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:panel id="opportunityPanel">
+	<a4j:outputPanel id="opportunitydetails">
 
-		<h:panelGrid styleClass="rf-dt" width="100%"
-			style="border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
-			columnClasses="label-column,column-l-align,label-column,column-l-align"
-			columns="4">
+		<rich:panel id="viewOpportunityPanel">
 
-			<h:outputText value="#{msgs.name}" />
-			<a4j:commandLink value="#{selectedQuote.opportunity.name}"
-				onclick="window.open('#{sessionManager.frontDoorUrl}#{selectedQuote.opportunity.id}');" />
+			<table style="width: 100%">
+				<tr>
 
-			<h:outputText value="#{msgs.number}" />
-			<h:outputText value="#{selectedQuote.opportunity.opportunityNumber}" />
+				</tr>
 
-			<h:outputText value="#{msgs.amount}" />
-			<h:panelGroup>
-				<h:outputText
-					value="(#{selectedQuote.opportunity.currencyIsoCode}) " />
-				<h:outputText value="#{selectedQuote.opportunity.amount}">
-					<f:convertNumber locale="#{user.locale}" pattern="#,##0;(#,##0)"
-						type="number" />
+			</table>
+
+			<h:panelGrid styleClass="rf-dt" width="100%"
+				style="border-right-style: hidden; border-top-style: hidden; border-left-style: hidden; border-bottom-style: hidden;"
+				columnClasses="label-column,column-l-align,label-column,column-l-align"
+				columns="4">
+
+				<h:outputText value="#{msgs.name}" />
+				<a4j:commandLink value="#{selectedQuote.opportunity.name}"
+					onclick="window.open('#{sessionManager.frontDoorUrl}#{selectedQuote.opportunity.id}');" />
+
+				<h:outputText value="#{msgs.number}" />
+				<h:outputText value="#{selectedQuote.opportunity.opportunityNumber}" />
+
+				<h:outputText value="#{msgs.amount}" />
+				<h:panelGroup>
+					<h:outputText
+						value="(#{selectedQuote.opportunity.currencyIsoCode}) " />
+					<h:outputText value="#{selectedQuote.opportunity.amount}">
+						<f:convertNumber locale="#{user.locale}" pattern="#,##0;(#,##0)"
+							type="number" />
+					</h:outputText>
+				</h:panelGroup>
+
+				<h:outputText value="#{msgs.closeDate}" />
+				<h:outputText value="#{selectedQuote.opportunity.closeDate}">
+					<f:convertDateTime locale="#{user.locale}"
+						pattern="#{user.dateFormatPattern}" type="date" />
 				</h:outputText>
-			</h:panelGroup>
 
-			<h:outputText value="#{msgs.closeDate}" />
-			<h:outputText value="#{selectedQuote.opportunity.closeDate}">
-				<f:convertDateTime locale="#{user.locale}"
-					pattern="#{user.dateFormatPattern}" type="date" />
-			</h:outputText>
+				<h:outputText value="#{msgs.fulfillmentChannel}" />
+				<h:outputText
+					value="#{selectedQuote.opportunity.fulfillmentChannel}" />
 
-			<h:outputText value="#{msgs.fulfillmentChannel}" />
-			<h:outputText value="#{selectedQuote.opportunity.fulfillmentChannel}" />
-
-			<h:outputText value="#{msgs.payNow}" />
-			<h:outputText value="#{selectedQuote.opportunity.payNow}" />
+				<h:outputText value="#{msgs.payNow}" />
+				<h:outputText value="#{selectedQuote.opportunity.payNow}" />
 
 
-			<h:outputText value="#{msgs.billingAddress}" />
-			<h:outputText value="#{selectedQuote.opportunity.billingAddress}" />
+				<h:outputText value="#{msgs.billingAddress}" />
+				<h:outputText value="#{selectedQuote.opportunity.billingAddress}" />
 
-			<h:outputText value="#{msgs.shippingAddress}" />
-			<h:outputText value="#{selectedQuote.opportunity.shippingAddress}" />
+				<h:outputText value="#{msgs.shippingAddress}" />
+				<h:outputText value="#{selectedQuote.opportunity.shippingAddress}" />
 
-			<h:outputText value="#{msgs.billingCity}" />
-			<h:outputText value="#{selectedQuote.opportunity.billingCity}" />
+				<h:outputText value="#{msgs.billingCity}" />
+				<h:outputText value="#{selectedQuote.opportunity.billingCity}" />
 
-			<h:outputText value="#{msgs.shippingCity}" />
-			<h:outputText value="#{selectedQuote.opportunity.shippingCity}" />
+				<h:outputText value="#{msgs.shippingCity}" />
+				<h:outputText value="#{selectedQuote.opportunity.shippingCity}" />
 
-			<h:outputText value="#{msgs.billingState}" />
-			<h:outputText value="#{selectedQuote.opportunity.billingState}" />
+				<h:outputText value="#{msgs.billingState}" />
+				<h:outputText value="#{selectedQuote.opportunity.billingState}" />
 
-			<h:outputText value="#{msgs.shippingState}" />
-			<h:outputText value="#{selectedQuote.opportunity.shippingState}" />
+				<h:outputText value="#{msgs.shippingState}" />
+				<h:outputText value="#{selectedQuote.opportunity.shippingState}" />
 
-			<h:outputText value="#{msgs.billingZipPostalCode}" />
-			<h:outputText value="#{selectedQuote.opportunity.billingZipPostalCode}" />
+				<h:outputText value="#{msgs.billingZipPostalCode}" />
+				<h:outputText
+					value="#{selectedQuote.opportunity.billingZipPostalCode}" />
 
-			<h:outputText value="#{msgs.shippingZipPostalCode}" />
-			<h:outputText value="#{selectedQuote.opportunity.shippingZipPostalCode}" />
+				<h:outputText value="#{msgs.shippingZipPostalCode}" />
+				<h:outputText
+					value="#{selectedQuote.opportunity.shippingZipPostalCode}" />
 
-			<h:outputText value="#{msgs.billingCountry}" />
-			<h:outputText value="#{selectedQuote.opportunity.billingCountry}" />
+				<h:outputText value="#{msgs.billingCountry}" />
+				<h:outputText value="#{selectedQuote.opportunity.billingCountry}" />
 
-			<h:outputText value="#{msgs.shippingCountry}" />
-			<h:outputText value="#{selectedQuote.opportunity.shippingCountry}" />
+				<h:outputText value="#{msgs.shippingCountry}" />
+				<h:outputText value="#{selectedQuote.opportunity.shippingCountry}" />
 
-		</h:panelGrid>
-	</rich:panel>
+			</h:panelGrid>
+
+
+		</rich:panel>
+
+	</a4j:outputPanel>
 
 </ui:composition>

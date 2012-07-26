@@ -126,14 +126,14 @@ public class QuoteController {
 	}
 
 	public void backToViewQuote() {
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		setMainArea(TemplatesEnum.QUOTE);
 	}
 
 	public void newQuote(Opportunity opportunity) {
 		Quote quote = new Quote(opportunity);
 		quoteEvent.select(VIEW_QUOTE).fire(quote);
 		setEditMode(Boolean.TRUE);
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		setMainArea(TemplatesEnum.QUOTE);
 	}
 
 	public void editQuote() {
@@ -195,7 +195,7 @@ public class QuoteController {
 	public void calculateQuote(Quote quote) {
 		quoteManager.calculate(quote);
 		quoteEvent.select(UPDATE_QUOTE).fire(quote);
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		setMainArea(TemplatesEnum.QUOTE);
 	}
 
 	public void save() {	
@@ -209,13 +209,13 @@ public class QuoteController {
 
 		setEditMode(Boolean.FALSE);
 		setGoalSeek(Boolean.FALSE);
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		setMainArea(TemplatesEnum.QUOTE);
 	}
 
 	public void cancelEdit() {
 		if (selectedQuote.getId() != null) {
 			quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);
-			setMainArea(TemplatesEnum.QUOTE_DETAILS);
+			setMainArea(TemplatesEnum.QUOTE);
 		} else {
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);
 		}
@@ -230,7 +230,7 @@ public class QuoteController {
 	public void addOpportunityLineItems() {
         quoteManager.add(selectedQuote, selectedQuote.getOpportunity().getOpportunityLineItems());
 		quoteEvent.select(UPDATE_QUOTE).fire(selectedQuote);	
-		setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		setMainArea(TemplatesEnum.QUOTE);
 	}
 
 	public void newQuoteLineItem() {

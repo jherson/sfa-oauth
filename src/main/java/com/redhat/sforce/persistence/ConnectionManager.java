@@ -7,10 +7,15 @@ import java.util.Properties;
 
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.soap.partner.SessionHeader_element;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
+import com.sforce.ws.SessionRenewer;
 
-public class ConnectionManager {	
+public class ConnectionManager implements SessionRenewer {	
+	
+	public static final javax.xml.namespace.QName SESSION_HEADER_QNAME =
+	        new javax.xml.namespace.QName("urn:partner.soap.sforce.com", "SessionHeader");
 
     private static final ThreadLocal<PartnerConnection> threadLocal;
 
@@ -25,6 +30,7 @@ public class ConnectionManager {
     	config.setAuthEndpoint(MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
     	config.setUsername(properties.getProperty("salesforce.username"));
 		config.setPassword(properties.getProperty("salesforce.password"));
+		config.setSessionRenewer(this);
 						
 		PartnerConnection connection = Connector.newConnection(config);
 		
@@ -86,5 +92,24 @@ public class ConnectionManager {
 			throw new ConnectionException("Unable to load quotebuilder.properties file");
 		}
 		return properties;
+    }
+
+    @Override
+    public SessionRenewalHeader renewSession(ConnectorConfig connectorConfig) throws ConnectionException {
+        if (connectorConfig.getPassword() != null) {
+            connectorConfig.setSessionId(null);
+            
+            //close();
+            setConnectorConfig((ForceConnectorConfig) connectorConfig);
+            getConnection();
+
+            SessionRenewalHeader ret = new SessionRenewalHeader();
+            ret.name = SESSION_HEADER_QNAME;
+            SessionHeader_element se = new SessionHeader_element();
+            se.setSessionId(connectorConfig.getSessionId());
+            ret.headerElement = se;
+            return ret;
+        }
+        return null;
     }
 }

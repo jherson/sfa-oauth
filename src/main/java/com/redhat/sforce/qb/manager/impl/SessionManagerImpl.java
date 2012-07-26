@@ -99,7 +99,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		} else {
 			
 			setLoggedIn(Boolean.FALSE);
-			setMainArea(TemplatesEnum.HOME);
+			setMainArea(TemplatesEnum.SIGN_IN);
 			
 		}			
 	}

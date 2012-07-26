@@ -6,10 +6,6 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:hotKey key="ctrl+s" enabledInInput="true">
-		<a4j:ajax listener="#{quoteController.save()}" render="quotedetails" />
-	</rich:hotKey>
-
 	<a4j:outputPanel id="quotedetails">
 
 		<rich:panel id="viewQuotePanel">

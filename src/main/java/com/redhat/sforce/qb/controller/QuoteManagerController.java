@@ -59,13 +59,13 @@ public class QuoteManagerController {
 		Quote quote = (Quote) event.getComponent().getAttributes().get("quote");
 		quoteEvent.select(VIEW_QUOTE).fire(quote);	
 		sessionManager.setEditMode(Boolean.TRUE);
-		sessionManager.setMainArea(TemplatesEnum.QUOTE_DETAILS);
+		sessionManager.setMainArea(TemplatesEnum.QUOTE);
 	}
 
     public void viewQuote(AjaxBehaviorEvent event) {
     	Quote quote = (Quote) event.getComponent().getAttributes().get("quote");    	
     	quoteEvent.select(VIEW_QUOTE).fire(quote);		
-    	sessionManager.setMainArea(TemplatesEnum.QUOTE_DETAILS);
+    	sessionManager.setMainArea(TemplatesEnum.QUOTE);
     }
     
     public void viewOpportunity(AjaxBehaviorEvent event) {
