@@ -12,7 +12,7 @@ import org.jboss.resteasy.client.ClientResponse;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.redhat.sforce.persistence.ConnectionProperties;
+import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.ServicesManager;
 

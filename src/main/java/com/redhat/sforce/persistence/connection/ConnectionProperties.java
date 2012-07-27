@@ -1,4 +1,4 @@
-package com.redhat.sforce.persistence;
+package com.redhat.sforce.persistence.connection;
 
 import java.util.Locale;
 

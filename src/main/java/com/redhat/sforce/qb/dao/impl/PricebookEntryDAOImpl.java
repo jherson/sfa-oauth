@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 
-import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
+import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.qb.dao.PricebookEntryDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.PricebookEntry;

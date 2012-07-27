@@ -15,8 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.persistence.ConnectionManager;
-import com.redhat.sforce.persistence.ConnectionProperties;
+import com.redhat.sforce.persistence.connection.ConnectionManager;
+import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.sforce.ws.ConnectionException;

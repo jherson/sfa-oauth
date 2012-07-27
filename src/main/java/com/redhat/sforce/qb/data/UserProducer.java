@@ -15,7 +15,7 @@ import javax.inject.Named;
 import org.jboss.logging.Logger;
 import org.json.JSONException;
 
-import com.redhat.sforce.persistence.ConnectionManager;
+import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;

@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
+import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;

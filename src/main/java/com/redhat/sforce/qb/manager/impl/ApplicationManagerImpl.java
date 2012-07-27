@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 
 import org.jboss.logging.Logger;
 
-import com.redhat.sforce.persistence.ConnectionProperties;
+import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.manager.ApplicationManager;
 import com.redhat.sforce.qb.qualifiers.CurrencyIsoCodes;
 import com.sforce.soap.partner.Connector;

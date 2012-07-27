@@ -18,7 +18,7 @@ import org.json.JSONException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.redhat.sforce.persistence.ConnectionManager;
+import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.QueryException;

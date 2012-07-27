@@ -1,4 +1,4 @@
-package com.redhat.sforce.persistence;
+package com.redhat.sforce.persistence.connection;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,7 @@ import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
 
-public class ConnectionManager implements SessionRenewer {	
+public class Connection implements SessionRenewer {	
 	
 	public static final javax.xml.namespace.QName SESSION_HEADER_QNAME =
 	        new javax.xml.namespace.QName("urn:partner.soap.sforce.com", "SessionHeader");
@@ -23,7 +23,7 @@ public class ConnectionManager implements SessionRenewer {
         threadLocal = new ThreadLocal<PartnerConnection>();
     }
     
-    public static void openConnection() throws ConnectionException {
+    public void openConnection() throws ConnectionException {
     	Properties properties = getProperties();
     	
     	ConnectorConfig config = new ConnectorConfig();
@@ -39,25 +39,27 @@ public class ConnectionManager implements SessionRenewer {
 		setConnection(connection);
     }
     
-    public static void openConnection(String sessionId) throws ConnectionException {
+    public void openConnection(String sessionId) throws ConnectionException {
     	    	
     	ConnectorConfig config = new ConnectorConfig();
     	config.setServiceEndpoint(ConnectionProperties.getServiceEndpoint());
     	config.setManualLogin(Boolean.TRUE);
     	config.setSessionId(sessionId);
+    	config.setSessionRenewer(this);
     	
     	PartnerConnection connection = Connector.newConnection(config);
     	    	
     	setConnection(connection);
     }
     
-    public static void openConnection(String username, String password) throws ConnectionException {
+    public void openConnection(String username, String password) throws ConnectionException {
     	Properties properties = getProperties();
     	
     	ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
     	config.setUsername(username);
 		config.setPassword(password);
+		config.setSessionRenewer(this);
 						
 		PartnerConnection connection = Connector.newConnection(config);
 		
@@ -66,24 +68,24 @@ public class ConnectionManager implements SessionRenewer {
 		setConnection(connection);
     }
     
-    public static void setConnection(PartnerConnection connection) {
+    public void setConnection(PartnerConnection connection) {
     	threadLocal.set(connection);
     }
 
-    public static PartnerConnection getConnection() {
+    public PartnerConnection getConnection() {
     	return threadLocal.get();
     }
     
-    public static void closeConnection() throws ConnectionException {
+    public void closeConnection() throws ConnectionException {
     	threadLocal.remove();
     }
     
-    public static void logout() throws ConnectionException {
+    public void logout() throws ConnectionException {
     	if (getConnection() != null)
     		getConnection().logout();
     }
     
-    private static Properties getProperties() throws ConnectionException {
+    private Properties getProperties() throws ConnectionException {
     	InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
 		Properties properties = new Properties();
 		try {
@@ -100,7 +102,7 @@ public class ConnectionManager implements SessionRenewer {
             connectorConfig.setSessionId(null);
             
             //close();
-            setConnectorConfig((ForceConnectorConfig) connectorConfig);
+            //setConnectorConfig(connectorConfig);
             getConnection();
 
             SessionRenewalHeader ret = new SessionRenewalHeader();

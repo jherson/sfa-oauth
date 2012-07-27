@@ -8,8 +8,8 @@ import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
 
-import com.redhat.sforce.persistence.ConnectionManager;
 import com.redhat.sforce.persistence.Query;
+import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
