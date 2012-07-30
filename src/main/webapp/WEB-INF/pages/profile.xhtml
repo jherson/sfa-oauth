@@ -64,13 +64,15 @@
 
 			<h:panelGroup style="display: block; text-align: right">
 			
-			    <a4j:commandButton styleClass="commandButton" value="#{msgs.salesforceHome}" onclick="window.open('#{sessionManager.frontDoorUrl}home/home.jsp');"/>
+			    <a4j:commandButton value="#{msgs.salesforceHome}" styleClass="commandButton"  
+			        onclick="window.open('#{sessionManager.frontDoorUrl}home/home.jsp');"
+			        oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
 
 				<h:outputText value="  " escape="false" />
 
-				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
-					status="waitStatus"
-					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
+				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"					
+					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" 
+					status="waitStatus" />
 
 			</h:panelGroup>
 

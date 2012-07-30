@@ -61,11 +61,11 @@ public class AuthorizeServlet extends HttpServlet {
 
 				String authUrl = null;
 				try {
-					authUrl = getEnvironment()
-							+ "/services/oauth2/authorize?response_type=code&client_id="
-							+ getClientId() + "&redirect_uri="
-							+ URLEncoder.encode(getRedirectUri(), "UTF-8")
-							+ "&scope=full";
+					authUrl = getEnvironment() + "/services/oauth2/authorize?"
+							+ "response_type=code&client_id=" + getClientId() 
+							+ "&redirect_uri=" + URLEncoder.encode(getRedirectUri(), "UTF-8")
+							+ "&scope=" + URLEncoder.encode("api refresh_token", "UTF-8")
+							+ "&display=popup";
 					
 					response.sendRedirect(authUrl);
 					return;
@@ -92,7 +92,8 @@ public class AuthorizeServlet extends HttpServlet {
 					ClientResponse<String> clientResponse = clientRequest.post(String.class);
 					if (clientResponse.getResponseStatus() == Status.OK) {
 						JSONObject authResponse = new JSONObject(new JSONTokener(clientResponse.getEntity()));
-						sessionId = authResponse.getString("access_token");
+						sessionId = authResponse.getString("access_token");						
+						log.info(authResponse.toString(1));
 					}
 				} catch (Exception e) {
 					log.error(e);

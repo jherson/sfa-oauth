@@ -97,21 +97,18 @@ public class Connection implements SessionRenewer {
     }
 
     @Override
-    public SessionRenewalHeader renewSession(ConnectorConfig connectorConfig) throws ConnectionException {
-        if (connectorConfig.getPassword() != null) {
-            connectorConfig.setSessionId(null);
-            
-            //close();
-            //setConnectorConfig(connectorConfig);
-            getConnection();
-
-            SessionRenewalHeader ret = new SessionRenewalHeader();
-            ret.name = SESSION_HEADER_QNAME;
-            SessionHeader_element se = new SessionHeader_element();
-            se.setSessionId(connectorConfig.getSessionId());
-            ret.headerElement = se;
-            return ret;
-        }
-        return null;
+    public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
+    	config.setManualLogin(Boolean.TRUE);
+    	
+    	PartnerConnection connection = Connector.newConnection(config);
+    	
+    	System.out.println("renewing session");
+        SessionRenewalHeader ret = new SessionRenewalHeader();
+        ret.name = SESSION_HEADER_QNAME;
+        SessionHeader_element se = new SessionHeader_element();
+        se.setSessionId(connection.getConfig().getSessionId());
+        System.out.println("renewing session: " + se.getSessionId());
+        ret.headerElement = se;
+        return ret;
     }
 }
