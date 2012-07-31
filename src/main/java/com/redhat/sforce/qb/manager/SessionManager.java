@@ -1,13 +1,14 @@
 package com.redhat.sforce.qb.manager;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
+import com.redhat.sforce.qb.model.quotebuilder.Token;
 
 public interface SessionManager {
 
 	public void logout();
 	public void login();
+	public Token getToken();
 	public String getFrontDoorUrl();
-	public String getOpportunityId();
 	public String getSessionId();
 	public Boolean getLoggedIn();
 	public void setEditMode(Boolean editMode);

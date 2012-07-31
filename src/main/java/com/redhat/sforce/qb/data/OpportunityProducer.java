@@ -1,7 +1,6 @@
 package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +16,6 @@ import org.jboss.logging.Logger;
 
 import com.redhat.sforce.qb.dao.OpportunityDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.Opportunity;
 
 @SessionScoped
@@ -28,9 +26,6 @@ public class OpportunityProducer implements Serializable {
 
 	@Inject
 	private Logger log;
-
-	@Inject
-	private SessionManager sessionManager;
 	
 	@Inject
 	private OpportunityDAO opportunityDAO;
@@ -52,11 +47,8 @@ public class OpportunityProducer implements Serializable {
 		log.info("queryOpportunity");
 		
 		try {		
-		    opportunityList = new ArrayList<Opportunity>();
-		    
-			if (sessionManager.getOpportunityId() != null) {
-				opportunityList.add(opportunityDAO.queryOpportunityById(sessionManager.getOpportunityId()));
-			}
+		    opportunityList = opportunityDAO.queryOpenOpportunities();
+		    		    
 			
 		} catch (QueryException e) {
 			log.info("QueryOpportunityException: " + e.getMessage());

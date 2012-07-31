@@ -15,8 +15,10 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+
+import com.google.gson.Gson;
+import com.redhat.sforce.qb.model.quotebuilder.SessionUser;
+import com.redhat.sforce.qb.model.quotebuilder.Token;
 
 @WebServlet("/authorize")
 public class AuthorizeServlet extends HttpServlet {
@@ -50,6 +52,8 @@ public class AuthorizeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String sessionId = request.getParameter("sessionId");
+		Token token = null;
+		SessionUser sessionUser = null;
 		
 		if (sessionId == null) {
 
@@ -77,34 +81,62 @@ public class AuthorizeServlet extends HttpServlet {
 
 			} else {
 								
-				String tokenUrl = getEnvironment() + "/services/oauth2/token";
-				
-				ClientRequest clientRequest = new ClientRequest(tokenUrl);
-				clientRequest.header("Authorization", "OAuth " + sessionId);
-				clientRequest.header("Content-type", "application/json");
-				clientRequest.queryParameter("code", code);
-				clientRequest.queryParameter("grant_type", "authorization_code");
-				clientRequest.queryParameter("client_id", getClientId());
-				clientRequest.queryParameter("client_secret", getClientSecret());
-				clientRequest.queryParameter("redirect_uri", getRedirectUri());
-				
 				try {
-					ClientResponse<String> clientResponse = clientRequest.post(String.class);
-					if (clientResponse.getResponseStatus() == Status.OK) {
-						JSONObject authResponse = new JSONObject(new JSONTokener(clientResponse.getEntity()));
-						sessionId = authResponse.getString("access_token");						
-						log.info(authResponse.toString(1));
-					}
-				} catch (Exception e) {
-					log.error(e);
-				}
-			}
-		}		
-				
-		log.info("SessionId: " + sessionId);			
+					String authResponse = getAuthResponse(code);
+					token = new Gson().fromJson(authResponse, Token.class);
 					
-		request.getSession().setAttribute("SessionId", sessionId);
+					String userInfo = getUserInfo(token);
+					sessionUser = new Gson().fromJson(userInfo, SessionUser.class);
+					
+					log.info("Locale: " + sessionUser.getLocale());
+					
+				} catch (Exception e) {
+					log.error("Exception", e);
+					throw new ServletException(e);
+				}				
+			}
+		}
+				
+		log.info("SessionId: " + token.getAccessToken());				
+							
+		request.getSession().setAttribute("Token", token);
+		request.getSession().setAttribute("SessionUser", sessionUser);
+		
 		response.sendRedirect(request.getContextPath() + "/index.jsf");
+	}
+		
+	private String getAuthResponse(String code) throws Exception {
+        String url = getEnvironment() + "/services/oauth2/token";
+        
+		ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/json");		
+		request.queryParameter("grant_type", "authorization_code");		
+		request.queryParameter("client_id", getClientId());
+		request.queryParameter("client_secret", getClientSecret());
+		request.queryParameter("redirect_uri", getRedirectUri());
+		request.queryParameter("code", code);
+		
+		ClientResponse<String> response = request.post(String.class);
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		}
+		
+		return null;
+	}
+	
+	private String getUserInfo(Token token) throws Exception {
+		String url = token.getInstanceUrl() + "/" + token.getId().substring(token.getId().indexOf("id"));
+
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + token.getAccessToken());
+		request.header("Content-type", "application/json");
+		
+		ClientResponse<String> response = request.get(String.class);
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		}
+		
+		return null;
 	}
 
 	private String getRedirectUri() {

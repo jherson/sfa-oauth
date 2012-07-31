@@ -1,12 +1,29 @@
 package com.redhat.sforce.qb.model.quotebuilder;
 
-public class Token {
+import java.io.Serializable;
 
+import com.google.gson.annotations.SerializedName;
+
+public class Token implements Serializable {
+
+	private static final long serialVersionUID = 3368118911132237013L;
+
+	@SerializedName("id")
 	private String id;
+	
+	@SerializedName("issued_at")	
 	private String issuedAt;
+	
+	@SerializedName("refresh_token")	
 	private String refreshToken;
+	
+	@SerializedName("instance_url")
 	private String instanceUrl;
+	
+	@SerializedName("signature")
 	private String signature;
+	
+	@SerializedName("access_token")
 	private String accessToken;
 
 	public String getId() {

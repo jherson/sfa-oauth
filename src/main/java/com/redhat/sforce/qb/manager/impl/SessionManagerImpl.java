@@ -19,6 +19,7 @@ import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.quotebuilder.Token;
 import com.sforce.ws.ConnectionException;
 
 @Named(value="sessionManager")
@@ -31,7 +32,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Inject
 	private Logger log;	
 	
-	private String opportunityId;
+	private Token token;
 	
 	private TemplatesEnum mainArea;
 	
@@ -87,20 +88,20 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 				
-		if (session.getAttribute("SessionId") != null) {
+		if (session.getAttribute("Token") != null) {
 			
-			setSessionId(session.getAttribute("SessionId").toString());											
+			setToken((Token) session.getAttribute("Token")); 			
+			setSessionId(token.getAccessToken());											
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", getSessionId()));							
 			setLoggedIn(Boolean.TRUE);								
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);
 			
-			session.setAttribute("SessionId", null);
+			session.removeAttribute("Token");									
 
 		} else {
 			
 			setLoggedIn(Boolean.FALSE);
-			setMainArea(TemplatesEnum.SIGN_IN);
-			
+			setMainArea(TemplatesEnum.SIGN_IN);			
 		}			
 	}
 	
@@ -141,6 +142,15 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	}
 	
 	@Override
+	public Token getToken() {
+		return token;
+	}
+	
+	private void setToken(Token token) {
+		this.token = token;
+	}
+	
+	@Override
 	public void setMainArea(TemplatesEnum mainArea) {
 		this.mainArea = mainArea;
 	}
@@ -148,16 +158,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public TemplatesEnum getMainArea() {
 		return mainArea;
-	}
-
-	@SuppressWarnings("unused")
-	private void setOpportunityId(String opportunityId) {
-		this.opportunityId = opportunityId;
-	}
-
-	@Override
-	public String getOpportunityId() {
-		return opportunityId;
 	}
 	
 	@Override
