@@ -6,6 +6,7 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.FacesException;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -19,7 +20,8 @@ import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.quotebuilder.Token;
+import com.redhat.sforce.qb.model.identity.SessionUser;
+import com.redhat.sforce.qb.model.identity.Token;
 import com.sforce.ws.ConnectionException;
 
 @Named(value="sessionManager")
@@ -33,6 +35,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private Logger log;	
 	
 	private Token token;
+	
+	private SessionUser sessionUser;
 	
 	private TemplatesEnum mainArea;
 	
@@ -118,8 +122,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			ConnectionManager.openConnection(getSessionId());
 			ConnectionManager.logout();
 		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("ConnectionException", e);
+		    throw new FacesException(e);
 		}
 		
 		setLoggedIn(Boolean.FALSE);
@@ -136,8 +140,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
 	    } catch (IOException e) {
-	    	// TODO Auto-generated catch block
-		    e.printStackTrace();
+		    log.error("IOException", e);
+		    throw new FacesException(e);
 	    } 
 	}
 	

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
 
+import com.redhat.sforce.qb.model.identity.Token;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SessionHeader_element;
@@ -66,6 +67,10 @@ public class Connection implements SessionRenewer {
 		ConnectionProperties.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
 		
 		setConnection(connection);
+    }
+    
+    public void openConnection(Token token) throws ConnectionException {
+    	
     }
     
     public void setConnection(PartnerConnection connection) {

@@ -17,8 +17,8 @@ import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
-import com.redhat.sforce.qb.model.quotebuilder.SessionUser;
-import com.redhat.sforce.qb.model.quotebuilder.Token;
+import com.redhat.sforce.qb.model.identity.SessionUser;
+import com.redhat.sforce.qb.model.identity.Token;
 
 @WebServlet("/authorize")
 public class AuthorizeServlet extends HttpServlet {
@@ -51,57 +51,48 @@ public class AuthorizeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String sessionId = request.getParameter("sessionId");
-		Token token = null;
-		SessionUser sessionUser = null;
-		
-		if (sessionId == null) {
+		response.setContentType("text/html");
 
-			response.setContentType("text/html");
+		String code = request.getParameter("code");
 
-			String code = request.getParameter("code");
+		if (code == null) {
 
-			if (code == null) {
-
-				String authUrl = null;
-				try {
-					authUrl = getEnvironment() + "/services/oauth2/authorize?"
-							+ "response_type=code&client_id=" + getClientId() 
-							+ "&redirect_uri=" + URLEncoder.encode(getRedirectUri(), "UTF-8")
-							+ "&scope=" + URLEncoder.encode("api refresh_token", "UTF-8")
-							+ "&display=popup";
-					
-					response.sendRedirect(authUrl);
-					return;
-
-				} catch (UnsupportedEncodingException e) {
-					log.error("UnsupportedEncodingException", e);
-					throw new ServletException(e);
-				}
-
-			} else {
-								
-				try {
-					String authResponse = getAuthResponse(code);
-					token = new Gson().fromJson(authResponse, Token.class);
-					
-					String userInfo = getUserInfo(token);
-					sessionUser = new Gson().fromJson(userInfo, SessionUser.class);
-					
-					log.info("Locale: " + sessionUser.getLocale());
-					
-				} catch (Exception e) {
-					log.error("Exception", e);
-					throw new ServletException(e);
-				}				
-			}
-		}
+			String authUrl = null;
+			try {
+				authUrl = getEnvironment() + "/services/oauth2/authorize?"
+						+ "response_type=code&client_id=" + getClientId() 
+						+ "&redirect_uri=" + URLEncoder.encode(getRedirectUri(), "UTF-8")
+						+ "&scope=" + URLEncoder.encode("api refresh_token", "UTF-8")
+						+ "&display=popup";
 				
-		log.info("SessionId: " + token.getAccessToken());				
+				response.sendRedirect(authUrl);
+				return;
+
+			} catch (UnsupportedEncodingException e) {
+				log.error("UnsupportedEncodingException", e);
+				throw new ServletException(e);
+			}
+
+		} else {
 							
-		request.getSession().setAttribute("Token", token);
-		request.getSession().setAttribute("SessionUser", sessionUser);
-		
+			try {
+				String authResponse = getAuthResponse(code);
+				Token token = new Gson().fromJson(authResponse, Token.class);
+				
+				String userInfo = getUserInfo(token);
+				SessionUser sessionUser = new Gson().fromJson(userInfo, SessionUser.class);
+				
+				request.getSession().setAttribute("Token", token);
+				request.getSession().setAttribute("SessionUser", sessionUser);
+				
+				log.info("SessionId: " + token.getAccessToken());
+				
+			} catch (Exception e) {
+				log.error("Exception", e);
+				throw new ServletException(e);
+			}				
+		}				
+							
 		response.sendRedirect(request.getContextPath() + "/index.jsf");
 	}
 		

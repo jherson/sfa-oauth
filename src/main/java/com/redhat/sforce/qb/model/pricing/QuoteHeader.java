@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.pricing.xml;
+package com.redhat.sforce.qb.model.pricing;
 
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 package com.redhat.sforce.qb.manager;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
-import com.redhat.sforce.qb.model.quotebuilder.Token;
+import com.redhat.sforce.qb.model.identity.Token;
 
 public interface SessionManager {
 

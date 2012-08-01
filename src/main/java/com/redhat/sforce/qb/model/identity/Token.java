@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.quotebuilder;
+package com.redhat.sforce.qb.model.identity;
 
 import java.io.Serializable;
 
