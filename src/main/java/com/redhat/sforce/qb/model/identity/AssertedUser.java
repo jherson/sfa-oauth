@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
-import com.redhat.sforce.qb.model.chatter.Photos;
-import com.redhat.sforce.qb.model.chatter.Status;
 
-public class SessionUser implements Serializable {
+public class AssertedUser implements Serializable {
 	
 	private static final long serialVersionUID = -7017386453277977427L;
 	

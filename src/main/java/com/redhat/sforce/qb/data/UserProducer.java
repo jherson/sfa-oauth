@@ -42,8 +42,8 @@ public class UserProducer implements Serializable {
 	private User user;
 
 	@Produces
-	@LoggedIn
 	@Named
+	@LoggedIn
 	public User getUser() {
 		return user;
 	}

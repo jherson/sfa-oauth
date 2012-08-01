@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.chatter;
+package com.redhat.sforce.qb.model.identity;
 
 import java.io.Serializable;
 import java.util.Date;

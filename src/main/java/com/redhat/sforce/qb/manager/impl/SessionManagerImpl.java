@@ -20,7 +20,7 @@ import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.identity.SessionUser;
+import com.redhat.sforce.qb.model.identity.AssertedUser;
 import com.redhat.sforce.qb.model.identity.Token;
 import com.sforce.ws.ConnectionException;
 
@@ -36,7 +36,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private Token token;
 	
-	private SessionUser sessionUser;
+	private AssertedUser assertedUser;
 	
 	private TemplatesEnum mainArea;
 	
@@ -90,17 +90,19 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void init() {
 		log.info("init");
 
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);		
 				
 		if (session.getAttribute("Token") != null) {
 			
-			setToken((Token) session.getAttribute("Token")); 			
+			setToken((Token) session.getAttribute("Token")); 	
+			setAssertedUser((AssertedUser) session.getAttribute("AssertedUser"));
 			setSessionId(token.getAccessToken());											
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", getSessionId()));							
 			setLoggedIn(Boolean.TRUE);								
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);
 			
-			session.removeAttribute("Token");									
+			session.removeAttribute("Token");			
+			session.removeAttribute("AssertedUser");
 
 		} else {
 			
@@ -152,6 +154,14 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private void setToken(Token token) {
 		this.token = token;
+	}
+	
+	public AssertedUser getAssertedUser() {
+		return assertedUser;
+	}
+	
+	private void setAssertedUser(AssertedUser assertedUser) {
+		this.assertedUser = assertedUser;
 	}
 	
 	@Override

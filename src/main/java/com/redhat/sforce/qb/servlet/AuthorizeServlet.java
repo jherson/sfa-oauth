@@ -1,8 +1,10 @@
 package com.redhat.sforce.qb.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -10,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
@@ -17,7 +20,7 @@ import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
-import com.redhat.sforce.qb.model.identity.SessionUser;
+import com.redhat.sforce.qb.model.identity.AssertedUser;
 import com.redhat.sforce.qb.model.identity.Token;
 
 @WebServlet("/authorize")
@@ -50,21 +53,20 @@ public class AuthorizeServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		response.setContentType("text/html");
-
+		
 		String code = request.getParameter("code");
 
 		if (code == null) {
-
+			
 			String authUrl = null;
 			try {
 				authUrl = getEnvironment() + "/services/oauth2/authorize?"
 						+ "response_type=code&client_id=" + getClientId() 
 						+ "&redirect_uri=" + URLEncoder.encode(getRedirectUri(), "UTF-8")
-						+ "&scope=" + URLEncoder.encode("api refresh_token", "UTF-8")
+						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
 						+ "&display=popup";
-				
+								
 				response.sendRedirect(authUrl);
 				return;
 
@@ -74,26 +76,49 @@ public class AuthorizeServlet extends HttpServlet {
 			}
 
 		} else {
-							
-			try {
-				String authResponse = getAuthResponse(code);
-				Token token = new Gson().fromJson(authResponse, Token.class);
+			
+			HttpSession session = request.getSession(true);	
+			PrintWriter out = response.getWriter();
+			ResourceBundle messages = ResourceBundle.getBundle("com.redhat.sforce.qb.resources.messages", request.getLocale());
+			
+			if (session.getAttribute("waitPage") == null) {
 				
-				String userInfo = getUserInfo(token);
-				SessionUser sessionUser = new Gson().fromJson(userInfo, SessionUser.class);
-				
-				request.getSession().setAttribute("Token", token);
-				request.getSession().setAttribute("SessionUser", sessionUser);
-				
-				log.info("SessionId: " + token.getAccessToken());
-				
-			} catch (Exception e) {
-				log.error("Exception", e);
-				throw new ServletException(e);
-			}				
-		}				
-							
-		response.sendRedirect(request.getContextPath() + "/index.jsf");
+		        session.setAttribute("waitPage", Boolean.TRUE);
+		        
+		        out.println("<html><head>");
+		        out.println("<title>" + messages.getString("waitMessage") + "...</title>");
+		        out.println("<meta http-equiv=\"Refresh\" content=\"0\">");
+		        out.println("</head><body>");
+		        out.println("<br><br><br>");
+		        out.println("<center><h1>" + messages.getString("apptitle") + "<br>");
+		        out.println(messages.getString("waitMessage") + "</h1></center>");
+		        out.close();
+		        
+			} else {
+			
+				try {
+					
+					session.removeAttribute("waitPage");
+					
+					String authResponse = getAuthResponse(code);
+					Token token = new Gson().fromJson(authResponse, Token.class);
+					
+					String userInfo = getUserInfo(token);
+					AssertedUser sessionUser = new Gson().fromJson(userInfo, AssertedUser.class);
+					
+					request.getSession().setAttribute("Token", token);
+					request.getSession().setAttribute("AssertedUser", sessionUser);
+					
+					log.info("SessionId: " + token.getAccessToken());
+					
+					response.sendRedirect(request.getContextPath() + "/index.jsf");
+					
+				} catch (Exception e) {
+					log.error("Exception", e);
+					throw new ServletException(e);
+				}					
+		    }
+		}													
 	}
 		
 	private String getAuthResponse(String code) throws Exception {
