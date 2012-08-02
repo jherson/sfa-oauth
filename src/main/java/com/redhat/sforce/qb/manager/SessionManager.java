@@ -1,6 +1,7 @@
 package com.redhat.sforce.qb.manager;
 
 import com.redhat.sforce.qb.controller.TemplatesEnum;
+import com.redhat.sforce.qb.model.identity.AssertedUser;
 import com.redhat.sforce.qb.model.identity.Token;
 
 public interface SessionManager {
@@ -8,8 +9,10 @@ public interface SessionManager {
 	public void logout();
 	public void login();
 	public Token getToken();
+	public AssertedUser getAssertedUser();
+	
 	public String getFrontDoorUrl();
-	public String getSessionId();
+
 	public Boolean getLoggedIn();
 	public void setEditMode(Boolean editMode);
 	public Boolean getEditMode();	

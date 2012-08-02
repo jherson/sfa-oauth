@@ -55,7 +55,7 @@ public class AuthorizeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
-		String code = request.getParameter("code");
+		String code = request.getParameter("code");		
 
 		if (code == null) {
 			
@@ -65,6 +65,7 @@ public class AuthorizeServlet extends HttpServlet {
 						+ "response_type=code&client_id=" + getClientId() 
 						+ "&redirect_uri=" + URLEncoder.encode(getRedirectUri(), "UTF-8")
 						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
+						+ "&immediate=false"
 						+ "&display=popup";
 								
 				response.sendRedirect(authUrl);
@@ -109,7 +110,7 @@ public class AuthorizeServlet extends HttpServlet {
 					request.getSession().setAttribute("Token", token);
 					request.getSession().setAttribute("AssertedUser", sessionUser);
 					
-					log.info("SessionId: " + token.getAccessToken());
+					log.info("SessionId: " + token.getAccessToken());	
 					
 					response.sendRedirect(request.getContextPath() + "/index.jsf");
 					
@@ -118,7 +119,7 @@ public class AuthorizeServlet extends HttpServlet {
 					throw new ServletException(e);
 				}					
 		    }
-		}													
+		}																	
 	}
 		
 	private String getAuthResponse(String code) throws Exception {

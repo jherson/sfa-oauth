@@ -28,6 +28,10 @@ public class QuoteBuilderObjectFactory {
 	    if ("PricebookEntry".equals(sobject.getType())) {
 	    	return PricebookEntryFactory.parse(sobject);
 	    }
+	    
+	    if ("User".equals(sobject.getType())) {
+	    	return UserFactory.parse(sobject);
+	    }
 		
 		return null;
 	}	

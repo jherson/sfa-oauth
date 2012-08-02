@@ -14,15 +14,12 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
-import org.json.JSONException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.dao.SessionUserDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.identity.Token;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.User;
@@ -43,9 +40,6 @@ public class QuoteBuilderRestResources extends Application {
 	@Inject
 	private QuoteDAO quoteDAO;
 	
-	@Inject
-	private SessionUserDAO userDAO;
-
 	@GET
 	@Path("/get_current_user")
 	@Produces("application/json")
@@ -57,15 +51,12 @@ public class QuoteBuilderRestResources extends Application {
 		
 		Gson gson = new Gson();	
 		User user = null;
-		try {
-			user = userDAO.querySessionUser();
-		} catch (SalesforceServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			user = userDAO.querySessionUser("x");
+//		} catch (QueryException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		return gson.toJson(user);
 	}

@@ -34,7 +34,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		
 		try {
 			
-			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());			
 			Query q = em.createQuery(queryString);				
 			return q.getResultList();
 			
@@ -57,7 +57,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		String queryString = quoteQuery + "Where " + whereClause;
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());			
 			Query q = em.createQuery(queryString);				
 			return q.getResultList();
 			
@@ -81,7 +81,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 				+ "Where OpportunityId__c = ':opportunityId'";
 						
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());			
 			Query q = em.createQuery(queryString);
 			q.addParameter("opportunityId", opportunityId);			
 			return q.getResultList();
@@ -106,7 +106,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 				+ "Where QuoteId__c = ':quoteId'";
 									
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());			
 			Query q = em.createQuery(queryString);
 			q.addParameter("quoteId", quoteId);			
 			return q.getResultList();
@@ -131,7 +131,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 				+ "Where Id = ':quoteId'";
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());		
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());		
 		    Query q = em.createQuery(queryString);				
 		    q.addParameter("quoteId", quoteId);		    		    		
 		    return q.getSingleResult();
@@ -155,7 +155,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		String queryString = quoteLineItemQuery + "Where Id = ':quoteLineItemId'";
 										
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());			
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());			
 			Query q = em.createQuery(queryString);
 			q.addParameter("quoteLineItemId", quoteLineItemId);			
 			return q.getSingleResult();	
@@ -179,7 +179,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		String queryString = "Select Id, ListPrice__c, ProductDescription__c, Code__c, Message__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
 						
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    Query q = em.createQuery(queryString);		
 		    List<QuoteLineItem> quoteLineItems = q.getResultList();
 		    
@@ -208,7 +208,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    Query q = em.createQuery(queryString);		
             Quote quote = q.getSingleResult();
 		    return Double.valueOf(quote.getAmount());
@@ -231,7 +231,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
 		SaveResult[] saveResult = null;	
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
@@ -252,7 +252,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException {
 		SaveResult[] saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    saveResult = em.persist(convertQuotePriceAdjustmentsToSObjects(quotePriceAdjustmentList));
 		
 		} catch (ConnectionException e) {
@@ -273,7 +273,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) throws ConnectionException {
 		SaveResult[] saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    saveResult = em.persist(convertQuoteLineItemPriceAdjustmentsToSObjects(quoteLineItemPriceAdjustmentList));
 		    
 		} catch (ConnectionException e) {
@@ -299,7 +299,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		
 		DeleteResult[] deleteResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    deleteResult = em.delete(ids);
 		
 		} catch (ConnectionException e) {
@@ -333,7 +333,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 		
 		SaveResult[] saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
@@ -354,7 +354,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException {
 		DeleteResult deleteResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
             deleteResult = em.delete(quoteLineItem.getId());
         
 		} catch (ConnectionException e) {
@@ -375,7 +375,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	public SaveResult saveQuote(Quote quote) throws ConnectionException {	
 		SaveResult saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    saveResult = em.persist(convertQuoteToSObject(quote));
 		
 		} catch (ConnectionException e) {
@@ -396,7 +396,7 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException {
 		DeleteResult deleteResult = null;
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		    deleteResult = em.delete(quote.getId());	
 		
 		} catch (ConnectionException e) {
@@ -415,22 +415,22 @@ public class QuoteDAOImpl extends QuoteBuilderObjectDAO implements QuoteDAO, Ser
 	
 	@Override
 	public String copyQuote(String quoteId) {
-		return servicesManager.copyQuote(sessionManager.getSessionId(), quoteId);		
+		return servicesManager.copyQuote(sessionManager.getToken().getAccessToken(), quoteId);		
 	}
 
 	@Override
 	public void activateQuote(String quoteId) {
-		servicesManager.activateQuote(sessionManager.getSessionId(), quoteId);		
+		servicesManager.activateQuote(sessionManager.getToken().getAccessToken(), quoteId);		
 	}
 
 	@Override
 	public void calculateQuote(String quoteId) {
-		servicesManager.calculateQuote(sessionManager.getSessionId(), quoteId);		
+		servicesManager.calculateQuote(sessionManager.getToken().getAccessToken(), quoteId);		
 	}
 
 	@Override
 	public void priceQuote(Quote quote) {
-		servicesManager.priceQuote(sessionManager.getSessionId(), MessageFactory.createPricingMessage(quote));		
+		servicesManager.priceQuote(sessionManager.getToken().getAccessToken(), MessageFactory.createPricingMessage(quote));		
 	}
 
 	private SObject convertQuoteToSObject(Quote quote) {

@@ -22,7 +22,7 @@ public class PricebookEntryDAOImpl extends QuoteBuilderObjectDAO implements Pric
 		String queryString = getQueryString(pricebookId, productCode, "false", currencyIsoCode);
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getSessionId());
+			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
 		
 		    Query q = em.createQuery(queryString);	
 		
