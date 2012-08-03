@@ -25,7 +25,7 @@
 
 				<h:panelGroup>
 
-					<h:graphicImage value="#{user.fullPhotoUrl}" height="160"
+					<h:graphicImage value="#{user.fullPhotoUrl}?oauth_token=#{sessionManager.token.accessToken}" height="160"
 						width="160" />
 
 				</h:panelGroup>

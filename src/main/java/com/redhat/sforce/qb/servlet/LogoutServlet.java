@@ -35,6 +35,8 @@ public class LogoutServlet extends HttpServlet {
 		
 		response.setContentType("text/html");		
 		
+		
+		
 		if (request.getSession(false) != null) {
             request.getSession(false).invalidate();
         }

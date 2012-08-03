@@ -51,7 +51,7 @@
 						oncomplete="#{rich:component('profilePanel')}.show()"
 						status="waitstatus" rerender="#{rich:clientId('profilePanel')}"
 						ajaxSingle="true">
-						<h:graphicImage value="#{user.smallPhotoUrl}" height="40"
+						<h:graphicImage value="#{user.smallPhotoUrl}?oauth_token=#{sessionManager.token.accessToken}" height="40"
 							width="40">
 						</h:graphicImage>
 					</a4j:commandLink>

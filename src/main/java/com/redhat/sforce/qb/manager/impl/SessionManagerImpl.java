@@ -14,8 +14,11 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.persistence.Query;
@@ -139,6 +142,27 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public void logout() {
 		log.info("logout");
+		
+		String revokeUrl = System.getProperty("salesforce.environment") + "/services/oauth2/revoke?token=" + token.getAccessToken();
+		
+		log.info(revokeUrl);
+		
+		ClientRequest request = new ClientRequest(revokeUrl);
+		request.header("Content-type", "application/x-www-form-urlencoded");	
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		log.info("RESPONSE: " + response.getResponseStatus());
+		log.info(response.getEntity());
+		if (response.getResponseStatus() == Status.OK) {
+			log.info(response.getEntity());
+		}
 		
 //		try {
 //			ConnectionManager.openConnection(getSessionId());
