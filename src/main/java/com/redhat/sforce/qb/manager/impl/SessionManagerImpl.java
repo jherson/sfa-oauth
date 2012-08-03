@@ -27,8 +27,8 @@ import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.SessionManager;
-import com.redhat.sforce.qb.model.identity.AssertedUser;
-import com.redhat.sforce.qb.model.identity.Token;
+import com.redhat.sforce.qb.model.auth.OAuth;
+import com.redhat.sforce.qb.model.auth.SessionUser;
 import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.redhat.sforce.qb.qualifiers.LoggedIn;
 import com.sforce.ws.ConnectionException;
@@ -46,23 +46,19 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Inject
 	private EntityManager em;
 	
-	private Token token;
-	
-	private AssertedUser assertedUser;
-	
 	private TemplatesEnum mainArea;
 	
 	private String frontDoorUrl;	
 	
 	private Boolean loggedIn;
 	
-	private User user;
+	private SessionUser sessionUser;
 
 	@Produces
 	@LoggedIn
 	@Named
-	public User getUser() {
-		return user;
+	public SessionUser getUser() {
+		return sessionUser;
 	}
 	
 	@Override	
@@ -102,27 +98,26 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);		
 				
-		if (session.getAttribute("Token") != null) {
+		if (session.getAttribute("OAuth") != null) {
 			
-			setToken((Token) session.getAttribute("Token")); 	
-			setAssertedUser((AssertedUser) session.getAttribute("AssertedUser"));
+			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 	
 			
 			try {
-				querySessionUser();
+				querySessionUser(oauth);
 			} catch (QueryException e) {
 				log.error("QueryException", e);
 				throw new FacesException(e);
 			}
 			
-			if (user.getLocale() != null) {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(user.getLocale());			
+			if (sessionUser.getLocale() != null) {
+				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
 			} else {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(getAssertedUser().getLocale());		
+				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getOAuth().getLocale());		
 			}
 														
-			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", token.getAccessToken()));									
+			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
 			setLoggedIn(Boolean.TRUE);								
-			setMainArea(TemplatesEnum.HOME);
+			setMainArea(TemplatesEnum.QUOTE_MANAGER);
 			
 			session.removeAttribute("Token");			
 			session.removeAttribute("AssertedUser");
@@ -143,7 +138,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void logout() {
 		log.info("logout");
 		
-		String revokeUrl = System.getProperty("salesforce.environment") + "/services/oauth2/revoke?token=" + token.getAccessToken();
+		String revokeUrl = System.getProperty("salesforce.environment") 
+				+ "/services/oauth2/revoke?" 
+				+ "token=" + sessionUser.getOAuth().getAccessToken();
 		
 		log.info(revokeUrl);
 		
@@ -200,24 +197,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	}
 	
 	@Override
-	public Token getToken() {
-		return token;
-	}
-	
-	private void setToken(Token token) {
-		this.token = token;
-	}
-	
-	@Override
-	public AssertedUser getAssertedUser() {
-		return assertedUser;
-	}
-	
-	private void setAssertedUser(AssertedUser assertedUser) {
-		this.assertedUser = assertedUser;
-	}
-	
-	@Override
 	public void setMainArea(TemplatesEnum mainArea) {
 		this.mainArea = mainArea;
 	}
@@ -236,7 +215,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		this.frontDoorUrl = frontDoorUrl;
 	}
 	
-	public void querySessionUser() throws QueryException {
+	public void querySessionUser(OAuth auth) throws QueryException {
 		String queryString = "Select " +
 				"Id, " +
 				"Username, " +
@@ -270,10 +249,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
         try {
 			
-			ConnectionManager.openConnection(getToken().getAccessToken());
+			ConnectionManager.openConnection(auth.getAccessToken());
 			Query q = em.createQuery(queryString);
-			q.addParameter("userId", getAssertedUser().getUserId());
-			user = q.getSingleResult();
+			q.addParameter("userId", auth.getUserId());
+			User user = q.getSingleResult();
+			sessionUser = new SessionUser(user);
 			
         } catch (ConnectionException e) {
             log.error("ConnectionException", e);

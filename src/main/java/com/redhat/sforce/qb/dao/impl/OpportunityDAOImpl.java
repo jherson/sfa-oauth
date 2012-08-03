@@ -24,7 +24,7 @@ public class OpportunityDAOImpl extends QuoteBuilderObjectDAO implements Opportu
 				+ "Where Id = ':opportunityId'";
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
+			ConnectionManager.openConnection(sessionUser);
 		
 		    Query q = em.createQuery(queryString);				
 		    q.addParameter("opportunityId", opportunityId);
@@ -52,7 +52,7 @@ public class OpportunityDAOImpl extends QuoteBuilderObjectDAO implements Opportu
 				+ "Where IsClosed = false";
 		
 		try {
-			ConnectionManager.openConnection(sessionManager.getToken().getAccessToken());
+			ConnectionManager.openConnection(sessionUser);
 			
 		    Query q = em.createQuery(queryString);
 

@@ -12,7 +12,6 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.manager.QuoteManager;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
-import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.redhat.sforce.qb.qualifiers.DeleteQuote;
 import com.redhat.sforce.qb.qualifiers.ListQuotes;
 import com.redhat.sforce.qb.qualifiers.ViewQuote;
@@ -38,9 +37,6 @@ public class QuoteManagerController {
 	
 	@Inject
 	private QuoteManager quoteManager;
-		
-	@Inject
-	private Event<User> userEvent;
 	
 	@Inject
 	private Event<Quote> quoteEvent;	
@@ -51,7 +47,6 @@ public class QuoteManagerController {
 	}
 	
 	public void refresh() {
-		userEvent.fire(new User());
 		quoteEvent.select(LIST_QUOTES).fire(new Quote());		
 	}
 	

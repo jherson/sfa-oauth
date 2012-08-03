@@ -1,5 +1,6 @@
 package com.redhat.sforce.persistence.connection;
 
+import com.redhat.sforce.qb.model.auth.SessionUser;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 
@@ -19,11 +20,15 @@ public class ConnectionManager {
 		connection.openConnection(sessionId);
 	}
 	
-	public void openConnection(String username, String password) throws ConnectionException {
+	public static void openConnection(String username, String password) throws ConnectionException {
 		connection.openConnection(username, password);
 	}
 	
-    public void setConnection(PartnerConnection partnerConnection) {
+    public static void openConnection(SessionUser sessionUser) throws ConnectionException {
+    	connection.openConnection(sessionUser);
+    }
+	
+    public static void setConnection(PartnerConnection partnerConnection) {
     	connection.setConnection(partnerConnection);
     }
 

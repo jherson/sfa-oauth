@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.qb.dao.QuoteDAO;
 import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.identity.Token;
+import com.redhat.sforce.qb.model.auth.OAuth;
 import com.redhat.sforce.qb.model.quotebuilder.Quote;
 import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.sforce.ws.ConnectionException;
@@ -33,33 +33,30 @@ public class QuoteBuilderRestResources extends Application {
 
 	@Inject
 	Logger log;
-		
-	@Inject
-	private Token token;	
 	
 	@Inject
 	private QuoteDAO quoteDAO;
 	
-	@GET
-	@Path("/get_current_user")
-	@Produces("application/json")
-	public String getCurrentUserInfo(
-			@HeaderParam("SessionId") String sessionId) {
-		
-		token.setAccessToken(sessionId);
-		//httpRequest.getSession().setAttribute("SessionId", sessionId);
-		
-		Gson gson = new Gson();	
-		User user = null;
-//		try {
-//			user = userDAO.querySessionUser("x");
-//		} catch (QueryException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		return gson.toJson(user);
-	}
+//	@GET
+//	@Path("/get_current_user")
+//	@Produces("application/json")
+//	public String getCurrentUserInfo(
+//			@HeaderParam("SessionId") String sessionId) {
+//		
+//		token.setAccessToken(sessionId);
+//		//httpRequest.getSession().setAttribute("SessionId", sessionId);
+//		
+//		Gson gson = new Gson();	
+//		User user = null;
+////		try {
+////			user = userDAO.querySessionUser("x");
+////		} catch (QueryException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+//		
+//		return gson.toJson(user);
+//	}
 //
 //	@GET()
 //	@Path("/get_opportunity")
@@ -178,25 +175,25 @@ public class QuoteBuilderRestResources extends Application {
 //		sm.calculateQuote(accessToken, quoteId);
 //	}
 
-	@GET
-	@Path("/get_quote")
-	@Produces("application/json")
-	public String queryQuoteById(
-			@QueryParam("accessToken") String accessToken, 
-			@QueryParam("quoteId") String quoteId) {
-		
-		Gson gson = new Gson();			
-		try {
-			Quote quote = quoteDAO.queryQuoteById(quoteId); 
-			return gson.toJson(quote); 			
-			
-		} catch (QueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
-		return null;
-	}
+//	@GET
+//	@Path("/get_quote")
+//	@Produces("application/json")
+//	public String queryQuoteById(
+//			@QueryParam("accessToken") String accessToken, 
+//			@QueryParam("quoteId") String quoteId) {
+//		
+//		Gson gson = new Gson();			
+//		try {
+//			Quote quote = quoteDAO.queryQuoteById(quoteId); 
+//			return gson.toJson(quote); 			
+//			
+//		} catch (QueryException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
+//		
+//		return null;
+//	}
 
 //	public void deleteQuoteLineItems(String accessToken, JSONArray jsonArray) {
 //		try {

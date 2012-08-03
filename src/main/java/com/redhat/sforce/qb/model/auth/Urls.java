@@ -1,4 +1,4 @@
-package com.redhat.sforce.qb.model.identity;
+package com.redhat.sforce.qb.model.auth;
 
 import java.io.Serializable;
 

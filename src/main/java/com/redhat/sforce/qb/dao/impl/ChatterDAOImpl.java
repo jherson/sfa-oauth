@@ -10,7 +10,7 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 
 	@Override
 	public Followers getQuoteFollowers(String quoteId) {
-		Followers followers = new Gson().fromJson(servicesManager.getFollowers(sessionManager.getToken().getAccessToken(), quoteId).toString(), Followers.class);
+		Followers followers = new Gson().fromJson(servicesManager.getFollowers(sessionUser.getOAuth().getAccessToken(), quoteId).toString(), Followers.class);
 		followers.setIsCurrentUserFollowing(Boolean.FALSE);
 		if (followers.getTotal() > 0 && followers.getFollowers().get(0).getSubject().getMySubscription() != null) {
 			followers.setIsCurrentUserFollowing(Boolean.TRUE);
@@ -20,16 +20,16 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 
 	@Override
 	public String getQuoteFeed() {
-		return servicesManager.getQuoteFeed(sessionManager.getToken().getAccessToken()).toString();
+		return servicesManager.getQuoteFeed(sessionUser.getOAuth().getAccessToken()).toString();
 	}
 
 	@Override
 	public void followQuote(String quoteId) {
-		servicesManager.follow(sessionManager.getToken().getAccessToken(), quoteId);
+		servicesManager.follow(sessionUser.getOAuth().getAccessToken(), quoteId);
 	}
 
 	@Override
 	public void unfollowQuote(String quoteId) {
-		servicesManager.unfollow(sessionManager.getToken().getAccessToken(), quoteId);
+		servicesManager.unfollow(sessionUser.getOAuth().getAccessToken(), quoteId);
 	}
 }

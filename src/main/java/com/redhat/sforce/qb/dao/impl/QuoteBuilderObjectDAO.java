@@ -8,7 +8,8 @@ import org.jboss.logging.Logger;
 
 import com.redhat.sforce.persistence.EntityManager;
 import com.redhat.sforce.qb.manager.ServicesManager;
-import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.auth.SessionUser;
+import com.redhat.sforce.qb.qualifiers.LoggedIn;
 
 public class QuoteBuilderObjectDAO implements Serializable {
 
@@ -19,12 +20,13 @@ public class QuoteBuilderObjectDAO implements Serializable {
 
 	@Inject
 	protected ServicesManager servicesManager;
+	
+	@Inject
+	@LoggedIn
+	protected SessionUser sessionUser;
 		
 	@Inject
 	protected EntityManager em;
-	
-	@Inject
-	protected SessionManager sessionManager;
 		
 	public QuoteBuilderObjectDAO() {
 		

@@ -18,10 +18,10 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
+import org.json.JSONObject;
 
 import com.google.gson.Gson;
-import com.redhat.sforce.qb.model.identity.AssertedUser;
-import com.redhat.sforce.qb.model.identity.Token;
+import com.redhat.sforce.qb.model.auth.OAuth;
 
 @WebServlet("/authorize")
 public class AuthorizeServlet extends HttpServlet {
@@ -30,14 +30,6 @@ public class AuthorizeServlet extends HttpServlet {
 
 	@Inject
 	private Logger log;
-		
-	private String redirectUri;
-
-	private String clientId;
-
-	private String clientSecret;
-
-	private String environment;
 
 	public AuthorizeServlet() {
 		super();
@@ -45,10 +37,7 @@ public class AuthorizeServlet extends HttpServlet {
 
 	@Override
 	public void init() {
-		setClientId(System.getProperty("salesforce.oauth.clientId"));
-		setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
-		setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
-		setEnvironment(System.getProperty("salesforce.environment"));
+
 	}
 	
 	@Override
@@ -61,9 +50,10 @@ public class AuthorizeServlet extends HttpServlet {
 			
 			String authUrl = null;
 			try {
-				authUrl = getEnvironment() + "/services/oauth2/authorize?"
-						+ "response_type=code&client_id=" + getClientId() 
-						+ "&redirect_uri=" + URLEncoder.encode(getRedirectUri(), "UTF-8")
+				authUrl = System.getProperty("salesforce.environment")
+						+ "/services/oauth2/authorize?response_type=code"
+						+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
+						+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
 						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
 						+ "&immediate=false"
 						+ "&display=popup";
@@ -99,18 +89,17 @@ public class AuthorizeServlet extends HttpServlet {
 			
 				try {
 					
-					session.removeAttribute("waitPage");
+					session.removeAttribute("waitPage");					
 					
 					String authResponse = getAuthResponse(code);
-					Token token = new Gson().fromJson(authResponse, Token.class);
+					OAuth auth = new Gson().fromJson(authResponse, OAuth.class);
 					
-					String userInfo = getUserInfo(token);
-					AssertedUser sessionUser = new Gson().fromJson(userInfo, AssertedUser.class);
+					String userInfo = getIdentity(auth);
+					//auth = new Gson().fromJson(userInfo, OAuth.class);
 					
-					request.getSession().setAttribute("Token", token);
-					request.getSession().setAttribute("AssertedUser", sessionUser);
+					request.getSession().setAttribute("OAuth", auth);
 					
-					log.info("SessionId: " + token.getAccessToken());	
+					log.info("SessionId: " + auth.getAccessToken());	
 					
 					response.sendRedirect(request.getContextPath() + "/index.jsf");
 					
@@ -123,14 +112,14 @@ public class AuthorizeServlet extends HttpServlet {
 	}
 		
 	private String getAuthResponse(String code) throws Exception {
-        String url = getEnvironment() + "/services/oauth2/token";
+        String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
         
 		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/json");		
 		request.queryParameter("grant_type", "authorization_code");		
-		request.queryParameter("client_id", getClientId());
-		request.queryParameter("client_secret", getClientSecret());
-		request.queryParameter("redirect_uri", getRedirectUri());
+		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
+		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
+		request.queryParameter("redirect_uri", System.getProperty("salesforce.oauth.redirectUri"));
 		request.queryParameter("code", code);
 		
 		ClientResponse<String> response = request.post(String.class);
@@ -141,50 +130,20 @@ public class AuthorizeServlet extends HttpServlet {
 		return null;
 	}
 	
-	private String getUserInfo(Token token) throws Exception {
-		String url = token.getInstanceUrl() + "/" + token.getId().substring(token.getId().indexOf("id"));
-
+	private String getIdentity(OAuth auth) throws Exception {
+		String url = auth.getInstanceUrl() + "/" + auth.getId().substring(auth.getId().indexOf("id"));
+		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + token.getAccessToken());
+		request.header("Authorization", "OAuth " + auth.getAccessToken());
+		//request.header("Content-type", "application/xml");
 		request.header("Content-type", "application/json");
 		
 		ClientResponse<String> response = request.get(String.class);
+		response = request.get(String.class);		
 		if (response.getResponseStatus() == Status.OK) {
 			return response.getEntity();
 		}
-		
+						
 		return null;
-	}
-
-	private String getRedirectUri() {
-		return redirectUri;
-	}
-
-	private void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
-	}
-
-	private String getClientId() {
-		return clientId;
-	}
-
-	private void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	private String getClientSecret() {
-		return clientSecret;
-	}
-
-	private void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-
-	private String getEnvironment() {
-		return environment;
-	}
-
-	private void setEnvironment(String environment) {
-		this.environment = environment;
 	}
 }

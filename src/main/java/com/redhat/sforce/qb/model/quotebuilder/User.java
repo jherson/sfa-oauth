@@ -5,7 +5,7 @@ import java.util.Locale;
 public class User extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = -5495949651775917498L;
-	private String sessionId;
+
 	private String userName;
 	private String firstName;
 	private String lastName;
@@ -39,14 +39,6 @@ public class User extends QuoteBuilderObject {
 
 	public User() {
 		super();
-	}
-	
-	public String getSessionId() {
-		return sessionId;
-	}
-	
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
 	}
 
 	public String getUserName() {
@@ -264,15 +256,15 @@ public class User extends QuoteBuilderObject {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-	
+
 	public String getTimeZone() {
 		return timeZone;
 	}
-	
+
 	public void setTimeZone(String timeZone) {
 		this.timeZone = timeZone;
 	}
-	
+
 	public String getDateFormatPattern() {
 		return dateFormatPattern;
 	}

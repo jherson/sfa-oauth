@@ -4,8 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
+import java.util.logging.Logger;
 
-import com.redhat.sforce.qb.model.identity.Token;
+import javax.ws.rs.core.Response.Status;
+
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
+
+import com.google.gson.Gson;
+import com.redhat.sforce.qb.model.auth.OAuth;
+import com.redhat.sforce.qb.model.auth.SessionUser;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SessionHeader_element;
@@ -15,13 +23,18 @@ import com.sforce.ws.SessionRenewer;
 
 public class Connection implements SessionRenewer {	
 	
+	private static final Logger log = Logger.getLogger(Connection.class.getName());
+	
 	public static final javax.xml.namespace.QName SESSION_HEADER_QNAME =
 	        new javax.xml.namespace.QName("urn:partner.soap.sforce.com", "SessionHeader");
 
-    private static final ThreadLocal<PartnerConnection> threadLocal;
+    private static final ThreadLocal<PartnerConnection> PARTNER_CONNECTION;
+    
+    private static final ThreadLocal<SessionUser> SESSION_USER;
 
     static {
-        threadLocal = new ThreadLocal<PartnerConnection>();
+    	PARTNER_CONNECTION = new ThreadLocal<PartnerConnection>();
+        SESSION_USER = new ThreadLocal<SessionUser>();
     }
     
     public void openConnection() throws ConnectionException {
@@ -69,20 +82,35 @@ public class Connection implements SessionRenewer {
 		setConnection(connection);
     }
     
-    public void openConnection(Token token) throws ConnectionException {
+    public void openConnection(SessionUser sessionUser) throws ConnectionException {    	
     	
+    	ConnectorConfig config = new ConnectorConfig();
+    	config.setServiceEndpoint(ConnectionProperties.getServiceEndpoint());
+    	config.setManualLogin(Boolean.TRUE);
+    	config.setSessionId(sessionUser.getOAuth().getAccessToken());
+    	config.setSessionRenewer(this);
+    	
+    	PartnerConnection connection = Connector.newConnection(config);
+    	    	
+    	setConnection(connection);
+    	
+    	setSessionUser(sessionUser);
+    }
+    
+    public void setSessionUser(SessionUser sessionUser) {
+    	SESSION_USER.set(sessionUser);
     }
     
     public void setConnection(PartnerConnection connection) {
-    	threadLocal.set(connection);
+    	PARTNER_CONNECTION.set(connection);
     }
 
     public PartnerConnection getConnection() {
-    	return threadLocal.get();
+    	return PARTNER_CONNECTION.get();
     }
     
     public void closeConnection() throws ConnectionException {
-    	threadLocal.remove();
+    	PARTNER_CONNECTION.remove();
     }
     
     public void logout() throws ConnectionException {
@@ -103,15 +131,41 @@ public class Connection implements SessionRenewer {
 
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
-    	config.setManualLogin(Boolean.TRUE);
+    	log.info("renewing session");
     	
-    	PartnerConnection connection = Connector.newConnection(config);
+    	if (config.getPassword() != null) {
+    		PartnerConnection connection = Connector.newConnection(config);	
+    		config = connection.getConfig();
+    	} else {
+    		config.setManualLogin(Boolean.TRUE);
+    		
+    		String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
+            
+    		ClientRequest request = new ClientRequest(url);
+    		request.header("Content-type", "application/json");		
+    		request.queryParameter("grant_type", "refresh_token");		
+    		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
+    		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
+    		request.queryParameter("refresh_token", SESSION_USER.get().getOAuth().getRefreshToken());
+    		
+    		ClientResponse<String> response = null;
+			try {
+				response = request.post(String.class);
+			} catch (Exception e) {
+				log.severe(e.getMessage());
+				throw new ConnectionException(e.getMessage());
+			}
+			
+    		if (response.getResponseStatus() == Status.OK) {
+    			OAuth token = new Gson().fromJson(response.toString(), OAuth.class);
+    			config.setSessionId(token.getAccessToken());
+    		}
+    	}
     	
-    	System.out.println("renewing session");
         SessionRenewalHeader ret = new SessionRenewalHeader();
         ret.name = SESSION_HEADER_QNAME;
         SessionHeader_element se = new SessionHeader_element();
-        se.setSessionId(connection.getConfig().getSessionId());
+        se.setSessionId(config.getSessionId());
         System.out.println("renewing session: " + se.getSessionId());
         ret.headerElement = se;
         return ret;
