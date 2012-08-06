@@ -2,7 +2,6 @@ package com.redhat.sforce.qb.controller;
 
 public enum TemplatesEnum {
 
-	INIT("/WEB-INF/pages/init.xhtml"),
 	HOME("/WEB-INF/pages/home.xhtml"), 
 	QUOTE_MANAGER("/WEB-INF/pages/quotemanager.xhtml"), 
 	QUOTE("/WEB-INF/pages/quote.xhtml"), 

@@ -1,6 +1,5 @@
 package com.redhat.sforce.qb.model.auth;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.redhat.sforce.persistence.EntityManager;
@@ -114,7 +113,9 @@ public class SessionUser extends User {
 			return user;
 			
         } catch (ConnectionException e) {
+        	
 			throw new QueryException("ConnectionException", e);
+			
 		} finally {
 			
 			try {

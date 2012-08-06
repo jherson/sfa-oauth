@@ -20,9 +20,6 @@ import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
-import com.redhat.sforce.persistence.EntityManager;
-import com.redhat.sforce.persistence.Query;
-import com.redhat.sforce.persistence.connection.ConnectionManager;
 import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.exception.QueryException;
@@ -30,9 +27,7 @@ import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.auth.Identity;
 import com.redhat.sforce.qb.model.auth.OAuth;
 import com.redhat.sforce.qb.model.auth.SessionUser;
-import com.redhat.sforce.qb.model.quotebuilder.User;
 import com.redhat.sforce.qb.qualifiers.LoggedIn;
-import com.sforce.ws.ConnectionException;
 
 @Named(value="sessionManager")
 @SessionScoped
@@ -43,9 +38,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	@Inject
 	private Logger log;	
-	
-	@Inject
-	private EntityManager em;
 	
 	private TemplatesEnum mainArea;
 	
@@ -58,7 +50,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Produces
 	@LoggedIn
 	@Named
-	public SessionUser getUser() {
+	public SessionUser getSessionUser() {
 		return sessionUser;
 	}
 	
@@ -103,7 +95,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			
 			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 
 			Identity identity = (Identity) session.getAttribute("Identity");
-			
+						
 			try {
 				sessionUser = new SessionUser(oauth, identity);
 			} catch (QueryException e) {
@@ -119,7 +111,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 														
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
 			setLoggedIn(Boolean.TRUE);								
-			setMainArea(TemplatesEnum.QUOTE_MANAGER);
+			setMainArea(TemplatesEnum.HOME);
 			
 			session.removeAttribute("OAuth");			
 			session.removeAttribute("Identity");
@@ -147,11 +139,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		log.info(revokeUrl);
 		
 		ClientRequest request = new ClientRequest(revokeUrl);
-		request.header("Content-type", "application/x-www-form-urlencoded");	
 		
 		ClientResponse<String> response = null;
-		try {
-			response = request.post(String.class);
+		try {			
+			response = request.get(String.class);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -163,14 +154,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			log.info(response.getEntity());
 		}
 		
-//		try {
-//			ConnectionManager.openConnection(getSessionId());
-//			ConnectionManager.logout();
-//		} catch (ConnectionException e) {
-//			log.error("ConnectionException", e);
-//		    throw new FacesException(e);
-//		}
-//		
 		setLoggedIn(Boolean.FALSE);
 //		setMainArea(TemplatesEnum.HOME);
 													

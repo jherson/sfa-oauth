@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.Response.Status;
@@ -101,6 +102,10 @@ public class Connection implements SessionRenewer {
     	SESSION_USER.set(sessionUser);
     }
     
+    public SessionUser getSessionUser() {
+    	return SESSION_USER.get();
+    }
+    
     public void setConnection(PartnerConnection connection) {
     	PARTNER_CONNECTION.set(connection);
     }
@@ -136,7 +141,7 @@ public class Connection implements SessionRenewer {
     	if (config.getPassword() != null) {
     		PartnerConnection connection = Connector.newConnection(config);	
     		config = connection.getConfig();
-    	} else {
+    	} else if (getSessionUser() != null){
     		config.setManualLogin(Boolean.TRUE);
     		
     		String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
@@ -146,13 +151,13 @@ public class Connection implements SessionRenewer {
     		request.queryParameter("grant_type", "refresh_token");		
     		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
     		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
-    		request.queryParameter("refresh_token", SESSION_USER.get().getOAuth().getRefreshToken());
+    		request.queryParameter("refresh_token", getSessionUser().getOAuth().getRefreshToken());
     		
     		ClientResponse<String> response = null;
 			try {
 				response = request.post(String.class);
 			} catch (Exception e) {
-				log.severe(e.getMessage());
+				log.log(Level.SEVERE, "Exception", e);
 				throw new ConnectionException(e.getMessage());
 			}
 			
@@ -160,6 +165,8 @@ public class Connection implements SessionRenewer {
     			OAuth token = new Gson().fromJson(response.toString(), OAuth.class);
     			config.setSessionId(token.getAccessToken());
     		}
+    	} else {
+    		return null;
     	}
     	
         SessionRenewalHeader ret = new SessionRenewalHeader();

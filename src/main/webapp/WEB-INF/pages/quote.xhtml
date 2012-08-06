@@ -26,7 +26,7 @@
 					<h:outputText value= " " /> 
 					<h:outputText
 							value="#{selectedQuote.amount}">
-							<f:convertNumber locale="#{user.locale}"
+							<f:convertNumber locale="#{sessionUser.locale}"
 								pattern="#,##0.00;(#,##0.00)" />
 						</h:outputText></td>
 					<td width="200"><b>#{msgs.type}</b><br />
@@ -215,7 +215,7 @@
 
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.amount}">
-							<f:convertNumber locale="#{user.locale}"
+							<f:convertNumber locale="#{sessionUser.locale}"
 								pattern="#,##0.00;(#,##0.00)" />
 						</h:outputText></td>
 				</tr>
@@ -247,11 +247,11 @@
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.effectiveDate}"
 							rendered="#{not quoteController.editMode}">
-							<f:convertDateTime locale="#{user.locale}"
-								pattern="#{user.dateFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sessionUser.locale}"
+								pattern="#{sessionUser.dateFormatPattern}" type="date" />
 						</h:outputText> <rich:calendar value="#{selectedQuote.effectiveDate}"
 							id="effectiveDate" locale="en_US" popup="true"
-							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
+							datePattern="#{sessionUser.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
 							disabled="false" rendered="#{quoteController.editMode}">
 						</rich:calendar></td>
@@ -261,11 +261,11 @@
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.expirationDate}"
 							rendered="#{not quoteController.editMode}">
-							<f:convertDateTime locale="#{user.locale}"
-								pattern="#{user.dateFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sessionUser.locale}"
+								pattern="#{sessionUser.dateFormatPattern}" type="date" />
 						</h:outputText> <rich:calendar value="#{selectedQuote.expirationDate}"
-							id="expirationDate" locale="#{user.locale}" popup="true"
-							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
+							id="expirationDate" locale="#{sessionUser.locale}" popup="true"
+							datePattern="#{sessionUser.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
 							disabled="false" rendered="#{quoteController.editMode}">
 						</rich:calendar></td>
@@ -286,7 +286,7 @@
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.term}"
 							rendered="#{not quoteController.editMode or selectedQuote.type != 'Standard'}">
-							<f:convertNumber locale="#{user.locale}" pattern="#,##0" />
+							<f:convertNumber locale="#{sessionUser.locale}" pattern="#,##0" />
 						</h:outputText> <h:selectOneMenu value="#{selectedQuote.term}"
 							rendered="#{quoteController.editMode and selectedQuote.type == 'Standard'}"
 							style="width: 75px">
@@ -306,11 +306,11 @@
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.startDate}"
 							rendered="#{not quoteController.editMode or selectedQuote.type != 'Standard'}">
-							<f:convertDateTime locale="#{user.locale}"
-								pattern="#{user.dateFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sessionUser.locale}"
+								pattern="#{sessionUser.dateFormatPattern}" type="date" />
 						</h:outputText> <rich:calendar value="#{selectedQuote.startDate}" id="startDate"
-							locale="#{user.locale}" popup="true"
-							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
+							locale="#{sessionUser.locale}" popup="true"
+							datePattern="#{sessionUser.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
 							rendered="#{quoteController.editMode and selectedQuote.type == 'Standard'}"
 							disabled="false">
@@ -325,11 +325,11 @@
 					<td class="column-l-align"><h:outputText
 							value="#{selectedQuote.endDate}"
 							rendered="#{not quoteController.editMode or selectedQuote.type != 'Co-Term'}">
-							<f:convertDateTime locale="#{user.locale}"
-								pattern="#{user.dateFormatPattern}" type="date" />
+							<f:convertDateTime locale="#{sessionUser.locale}"
+								pattern="#{sessionUser.dateFormatPattern}" type="date" />
 						</h:outputText> <rich:calendar value="#{selectedQuote.endDate}" id="endDate"
-							locale="#{user.locale}" popup="true"
-							datePattern="#{user.dateFormatPattern}" showApplyButton="false"
+							locale="#{sessionUser.locale}" popup="true"
+							datePattern="#{sessionUser.dateFormatPattern}" showApplyButton="false"
 							cellWidth="24px" cellHeight="22px" style="width:200px"
 							rendered="#{quoteController.editMode and selectedQuote.type == 'Co-Term'}"
 							disabled="false">
@@ -346,9 +346,9 @@
 								rendered="#{not quoteController.editMode and not empty selectedQuote}" />
 							<h:outputText value="#{selectedQuote.createdDate}"
 								rendered="#{not quoteController.editMode and not empty selectedQuote}">
-								<f:convertDateTime locale="#{user.locale}"
-									timeZone="#{user.timeZone}"
-									pattern="#{user.dateTimeFormatPattern}" type="date" />
+								<f:convertDateTime locale="#{sessionUser.locale}"
+									timeZone="#{sessionUser.timeZone}"
+									pattern="#{sessionUser.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
 							<h:outputText value=" " rendered="#{empty selectedQuote}" />
 						</h:panelGroup></td>
@@ -362,9 +362,9 @@
 								rendered="#{not quoteController.editMode and not empty selectedQuote}" />
 							<h:outputText value="#{selectedQuote.lastModifiedDate}"
 								rendered="#{not quoteController.editMode and not empty selectedQuote}">
-								<f:convertDateTime locale="#{user.locale}"
-									timeZone="#{user.timeZone}"
-									pattern="#{user.dateTimeFormatPattern}" type="date" />
+								<f:convertDateTime locale="#{sessionUser.locale}"
+									timeZone="#{sessionUser.timeZone}"
+									pattern="#{sessionUser.dateTimeFormatPattern}" type="date" />
 							</h:outputText>
 							<h:outputText value=" " rendered="#{empty selectedQuote}" />
 						</h:panelGroup></td>

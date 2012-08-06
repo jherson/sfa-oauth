@@ -122,13 +122,13 @@
 				<f:facet name="header">#{msgs.startDate}</f:facet>
 				<h:outputText value="#{lineItem.startDate}"
 					rendered="#{not quoteController.editMode or selectedQuote.type == 'Standard'}">
-					<f:convertDateTime locale="#{user.locale}"
-						pattern="#{user.dateFormatPattern}" type="date" />
+					<f:convertDateTime locale="#{sessionUser.locale}"
+						pattern="#{sessionUser.dateFormatPattern}" type="date" />
 				</h:outputText>
 				<rich:calendar value="#{lineItem.startDate}"
 					rendered="#{quoteController.editMode and selectedQuote.type != 'Standard'}"
-					id="lineStartDate" locale="#{user.locale}" popup="true"
-					enableManualInput="true" datePattern="#{user.dateFormatPattern}"
+					id="lineStartDate" locale="#{sessionUser.locale}" popup="true"
+					enableManualInput="true" datePattern="#{sessionUser.dateFormatPattern}"
 					showApplyButton="false" cellWidth="24px" cellHeight="22px"
 					inputStyle="width:68px" disabled="false">
 				</rich:calendar>
@@ -138,13 +138,13 @@
 				<f:facet name="header">#{msgs.endDate}</f:facet>
 				<h:outputText value="#{lineItem.endDate}"
 					rendered="#{not quoteController.editMode or selectedQuote.type != 'Non Standard'}">
-					<f:convertDateTime locale="#{user.locale}"
-						pattern="#{user.dateFormatPattern}" type="date" />
+					<f:convertDateTime locale="#{sessionUser.locale}"
+						pattern="#{sessionUser.dateFormatPattern}" type="date" />
 				</h:outputText>
 				<rich:calendar value="#{lineItem.endDate}"
 					rendered="#{quoteController.editMode and selectedQuote.type == 'Non Standard'}"
-					id="lineEndDate" locale="#{user.locale}" popup="true"
-					enableManualInput="true" datePattern="#{user.dateFormatPattern}"
+					id="lineEndDate" locale="#{sessionUser.locale}" popup="true"
+					enableManualInput="true" datePattern="#{sessionUser.dateFormatPattern}"
 					showApplyButton="false" cellWidth="24px" cellHeight="22px"
 					inputStyle="width:68px" disabled="false">
 				</rich:calendar>
@@ -156,7 +156,7 @@
 					rendered="#{not quoteController.editMode}" />
 				<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
 					rendered="#{quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}" pattern="#,##0;(#,##0)"
+					<f:convertNumber locale="#{sessionUser.locale}" pattern="#,##0;(#,##0)"
 						type="number" />
 				</h:inputText>
 			</rich:column>
@@ -164,7 +164,7 @@
 			<rich:column style="text-align: right; width: 6%;">
 				<f:facet name="header">#{msgs.listPrice}</f:facet>
 				<h:outputText value="#{lineItem.listPrice}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<s>  </s>
@@ -184,12 +184,12 @@
 				<f:facet name="header">#{msgs.discountPercent}</f:facet>
 				<h:outputText value="#{lineItem.discountPercent}"
 					rendered="#{not quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<h:inputText value="#{lineItem.discountPercent}"
 					style="width: 70px;" rendered="#{quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />
 				</h:inputText>
 			</rich:column>
@@ -198,12 +198,12 @@
 				<f:facet name="header">#{msgs.discountAmount}</f:facet>
 				<h:outputText value="#{lineItem.discountAmount}"
 					rendered="#{not quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<h:inputText value="#{lineItem.discountAmount}" style="width: 70px;"
 					rendered="#{quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />
 				</h:inputText>
 			</rich:column>
@@ -212,14 +212,14 @@
 				<f:facet name="header">#{msgs.salesPrice}</f:facet>				
 				<h:outputText value="#{lineItem.yearlySalesPrice}"
 				    rendered="#{not quoteController.editMode}">
-				    <f:convertNumber locale="#{user.locale}"
+				    <f:convertNumber locale="#{sessionUser.locale}"
 					    pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<h:inputText 
 				    value="#{lineItem.yearlySalesPrice}"
 					style="width: 70px;" 
 					rendered="#{quoteController.editMode}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />					
 				</h:inputText>								
 			</rich:column>
@@ -228,12 +228,12 @@
 				<f:facet name="header">#{msgs.unitPrice}</f:facet>
 				<h:outputText value="#{lineItem.unitPrice}"
 					rendered="#{not sessionManager.goalSeek}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
 				<h:inputText value="#{lineItem.unitPrice}" style="width: 70px;"
 					rendered="#{sessionManager.goalSeek}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />
 				</h:inputText>
 			</rich:column>
@@ -242,12 +242,12 @@
 				<f:facet name="header">#{msgs.totalPrice}</f:facet>
 				<h:outputText value="#{lineItem.totalPrice}"
 				    rendered="#{not sessionManager.goalSeek}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>		
 				<h:inputText value="#{lineItem.totalPrice}" style="width: 70px;"
 					rendered="#{sessionManager.goalSeek}">
-					<f:convertNumber locale="#{user.locale}"
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />
 				</h:inputText>	
 			</rich:column>			
@@ -266,7 +266,7 @@
 			<f:facet name="footer">
 			    <h:outputText value="#{msgs.lineCount}: #{selectedQuote.quoteLineItems.size()}, #{msgs.amount}: (#{selectedQuote.currencyIsoCode}) "/>
 			    <h:outputText value="#{selectedQuote.amount}">
-                    <f:convertNumber locale="#{user.locale}"
+                    <f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
                     </h:outputText>
 			</f:facet>

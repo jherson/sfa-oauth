@@ -34,7 +34,7 @@
 		<rich:column style="text-align: right; width: 6%;">
 			<f:facet name="header">#{msgs.preAdjustedTotal}</f:facet>
 			<h:outputText value="#{adjustment.preAdjustedTotal}" >
-			    <f:convertNumber locale="#{user.locale}"
+			    <f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>	
 				</h:outputText>
@@ -60,7 +60,7 @@
 			<f:facet name="header">#{msgs.percent}</f:facet>
 			<h:outputText value="#{adjustment.percent}"
 			    rendered="#{not quoteController.editMode or adjustment.operator == 'Amount'}" >
-			    <f:convertNumber locale="#{user.locale}"
+			    <f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>	
 			</h:outputText>
@@ -68,7 +68,7 @@
 			    value="#{adjustment.percent}"
 				rendered="#{quoteController.editMode and adjustment.operator != 'Amount'}"
 				style="width: 50px;">
-				<f:convertNumber locale="#{user.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>	
 				<f:attribute name="rowIndex" value="#{it.index}"/>
@@ -86,7 +86,7 @@
 			    value="#{adjustment.amount}"
 				rendered="#{quoteController.editMode and adjustment.operator != 'Percent'}"
 				style="width: 50px;">
-				<f:convertNumber locale="#{user.locale}"
+				<f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>		
                 <f:attribute name="rowIndex" value="#{it.index}"/>
@@ -100,7 +100,7 @@
 		<rich:column style="text-align: right; width: 7%;">
 			<f:facet name="header">#{msgs.adjustedTotal}</f:facet>
 			<h:outputText value="#{adjustment.adjustedTotal}" >
-			 <f:convertNumber locale="#{user.locale}"
+			 <f:convertNumber locale="#{sessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"
 					type="number"/>	
 				</h:outputText>

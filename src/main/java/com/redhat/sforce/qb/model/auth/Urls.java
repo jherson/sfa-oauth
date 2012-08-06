@@ -34,6 +34,18 @@ public class Urls implements Serializable  {
 	
 	@SerializedName("profile")
 	private String profile;
+	
+	@SerializedName("feeds")
+	private String feeds;
+	
+	@SerializedName("feedItems")
+	private String feedItems;
+
+	@SerializedName("groups")
+	private String groups; 
+
+	@SerializedName("user")
+	private String user;
 
 	public String getEnterprise() {
 		return enterprise;
@@ -105,5 +117,37 @@ public class Urls implements Serializable  {
 
 	public void setProfile(String profile) {
 		this.profile = profile;
+	}
+
+	public String getFeeds() {
+		return feeds;
+	}
+
+	public void setFeeds(String feeds) {
+		this.feeds = feeds;
+	}
+
+	public String getFeedItems() {
+		return feedItems;
+	}
+
+	public void setFeedItems(String feedItems) {
+		this.feedItems = feedItems;
+	}
+
+	public String getGroups() {
+		return groups;
+	}
+
+	public void setGroups(String groups) {
+		this.groups = groups;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 }

@@ -30,8 +30,8 @@
 		<rich:column style="text-align: center;">
 			<f:facet name="header">#{msgs.startDate}</f:facet>
 			<h:outputText value="#{lineItemSchedule.startDate}">
-				<f:convertDateTime locale="#{sessionUser.locale}"
-					pattern="#{sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionsessionUser.locale}"
+					pattern="#{sessionsessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</rich:column>
@@ -39,8 +39,8 @@
 		<rich:column style="text-align: center;">
 			<f:facet name="header">#{msgs.endDate}</f:facet>
 			<h:outputText value="#{lineItemSchedule.endDate}">
-				<f:convertDateTime locale="#{sessionUser.locale}"
-					pattern="#{sessionUser.dateFormatPattern}"
+				<f:convertDateTime locale="#{sessionsessionUser.locale}"
+					pattern="#{sessionsessionUser.dateFormatPattern}"
 					type="date" />
 			</h:outputText>
 		</rich:column>
@@ -53,7 +53,7 @@
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItemSchedule.quoteLineItem.yearlySalesPrice}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				<f:convertNumber locale="#{sessionsessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>
@@ -61,7 +61,7 @@
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.unitPrice}</f:facet>
 			<h:outputText value="#{lineItemSchedule.prorateYearUnitPrice}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				<f:convertNumber locale="#{sessionsessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>
@@ -69,7 +69,7 @@
 		<rich:column style="text-align: right;">
 			<f:facet name="header">#{msgs.totalPrice}</f:facet>
 			<h:outputText value="#{lineItemSchedule.prorateYearTotalPrice}">
-				<f:convertNumber locale="#{sessionUser.locale}"
+				<f:convertNumber locale="#{sessionsessionUser.locale}"
 					pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 			</h:outputText>
 		</rich:column>

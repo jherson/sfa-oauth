@@ -34,15 +34,15 @@
 					<h:outputText
 						value="(#{selectedQuote.opportunity.currencyIsoCode}) " />
 					<h:outputText value="#{selectedQuote.opportunity.amount}">
-						<f:convertNumber locale="#{user.locale}" pattern="#,##0;(#,##0)"
+						<f:convertNumber locale="#{sessionsessionUser.locale}" pattern="#,##0;(#,##0)"
 							type="number" />
 					</h:outputText>
 				</h:panelGroup>
 
 				<h:outputText value="#{msgs.closeDate}" />
 				<h:outputText value="#{selectedQuote.opportunity.closeDate}">
-					<f:convertDateTime locale="#{user.locale}"
-						pattern="#{user.dateFormatPattern}" type="date" />
+					<f:convertDateTime locale="#{sessionsessionUser.locale}"
+						pattern="#{sessionUser.dateFormatPattern}" type="date" />
 				</h:outputText>
 
 				<h:outputText value="#{msgs.fulfillmentChannel}" />

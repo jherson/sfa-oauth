@@ -39,7 +39,7 @@
 				<h:panelGrid columns="3" width="100%" cellspacing="0"
 					columnClasses="hdr-sessionUser-name,hdr-sessionUser-pic,hdr-sessionUser-logout">
 
-					<a4j:commandLink value="#{sessionUser.name} (#{sessionsessionUser.profileName})"
+					<a4j:commandLink value="#{sessionUser.name} (#{sessionUser.profileName})"
 						rendered="#{sessionManager.loggedIn}"
 						style="font: 16px arial,sans-serif; text-decoration: none; text-align: center; color: black"
 						oncomplete="#{rich:component('profilePanel')}.show()"
@@ -51,7 +51,7 @@
 						oncomplete="#{rich:component('profilePanel')}.show()"
 						status="waitstatus" rerender="#{rich:clientId('profilePanel')}"
 						ajaxSingle="true">
-						<h:graphicImage value="#{sessionUser.smallPhotoUrl}?oauth_token=#{sessionUser.oauth.accessToken}" height="40"
+						<h:graphicImage value="#{sessionUser.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}" height="40"
 							width="40">
 						</h:graphicImage>
 					</a4j:commandLink>

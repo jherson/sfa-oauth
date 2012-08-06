@@ -6,6 +6,16 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 	
-	<img src="images/256x256/quote.png" alt="some_text"/>
+	<a4j:outputPanel>
+
+		<rich:panel>
+		
+		<h:outputText value="#{sessionUser.identity.status.body}"/>
+		
+		</rich:panel>
+		
+	</a4j:outputPanel>
+
+		
 		
 </ui:composition>

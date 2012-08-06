@@ -136,11 +136,11 @@ public class AuthorizeServlet extends HttpServlet {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + auth.getAccessToken());
-		request.header("Content-type", "application/xml");
-		//request.header("Content-type", "application/json");
+		request.header("Content-type", "application/json");
 		
 		ClientResponse<String> response = request.get(String.class);		
 		if (response.getResponseStatus() == Status.OK) {
+			log.info(response.getEntity().toString());
 			return response.getEntity();
 		}
 						

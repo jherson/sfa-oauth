@@ -14,7 +14,7 @@
 						<span> <h:outputText value="#{opportunity.currencyIsoCode}" />
 							<h:outputText value="  " escape="false" /> <h:outputText
 								value="#{opportunity.amount}">
-								<f:convertNumber locale="#{user.locale}"
+								<f:convertNumber locale="#{sessionUser.locale}"
 									pattern="#,##0.00;(#,##0.00)"></f:convertNumber>
 							</h:outputText>
 					</span>
