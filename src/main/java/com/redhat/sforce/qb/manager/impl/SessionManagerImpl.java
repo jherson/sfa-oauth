@@ -2,6 +2,8 @@ package com.redhat.sforce.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -132,9 +134,15 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void logout() {
 		log.info("logout");
 		
-		String revokeUrl = System.getProperty("salesforce.environment") 
-				+ "/services/oauth2/revoke?" 
-				+ "token=" + sessionUser.getOAuth().getAccessToken();
+		String revokeUrl = null;
+		try {
+			revokeUrl = System.getProperty("salesforce.environment") 
+					+ "/services/oauth2/revoke?" 
+					+ "token=" + URLEncoder.encode(sessionUser.getOAuth().getAccessToken(), "UTF-8");
+		} catch (UnsupportedEncodingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		
 		log.info(revokeUrl);
 		

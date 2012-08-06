@@ -38,14 +38,14 @@ public class Urls implements Serializable  {
 	@SerializedName("feeds")
 	private String feeds;
 	
-	@SerializedName("feedItems")
+	@SerializedName("feed_items")
 	private String feedItems;
 
 	@SerializedName("groups")
 	private String groups; 
 
-	@SerializedName("user")
-	private String user;
+	@SerializedName("users")
+	private String users;
 
 	public String getEnterprise() {
 		return enterprise;
@@ -143,11 +143,11 @@ public class Urls implements Serializable  {
 		this.groups = groups;
 	}
 
-	public String getUser() {
-		return user;
+	public String getUsers() {
+		return users;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUsers(String users) {
+		this.users = users;
 	}
 }
