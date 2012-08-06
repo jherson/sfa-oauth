@@ -27,6 +27,7 @@ import com.redhat.sforce.persistence.connection.ConnectionProperties;
 import com.redhat.sforce.qb.controller.TemplatesEnum;
 import com.redhat.sforce.qb.exception.QueryException;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.auth.Identity;
 import com.redhat.sforce.qb.model.auth.OAuth;
 import com.redhat.sforce.qb.model.auth.SessionUser;
 import com.redhat.sforce.qb.model.quotebuilder.User;
@@ -98,12 +99,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);		
 				
-		if (session.getAttribute("OAuth") != null) {
+		if (session.getAttribute("OAuth") != null && session.getAttribute("Identity") != null) {
 			
-			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 	
+			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 
+			Identity identity = (Identity) session.getAttribute("Identity");
 			
 			try {
-				querySessionUser(oauth);
+				sessionUser = new SessionUser(oauth, identity);
 			} catch (QueryException e) {
 				log.error("QueryException", e);
 				throw new FacesException(e);
@@ -112,15 +114,15 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			if (sessionUser.getLocale() != null) {
 				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
 			} else {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getOAuth().getLocale());		
+				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
 			}
 														
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
 			setLoggedIn(Boolean.TRUE);								
 			setMainArea(TemplatesEnum.QUOTE_MANAGER);
 			
-			session.removeAttribute("Token");			
-			session.removeAttribute("AssertedUser");
+			session.removeAttribute("OAuth");			
+			session.removeAttribute("Identity");
 
 		} else {
 			
@@ -213,59 +215,5 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private void setFrontDoorUrl(String frontDoorUrl) {
 		this.frontDoorUrl = frontDoorUrl;
-	}
-	
-	public void querySessionUser(OAuth auth) throws QueryException {
-		String queryString = "Select " +
-				"Id, " +
-				"Username, " +
-				"LastName, " +
-				"FirstName, " +
-				"Name, " +
-				"CompanyName, " +
-				"Division, " +
-				"Department, " +
-				"Title, " +
-				"Street, " +
-				"City, " +
-				"State, " +
-				"PostalCode, " +
-				"Country, " +
-				"TimeZoneSidKey, " +
-				"Email, " +
-				"Phone, " +
-				"Fax, " +
-				"MobilePhone, " +
-				"Alias, " +
-				"DefaultCurrencyIsoCode, " +
-				"Extension, " +
-				"LocaleSidKey, " +
-				"FullPhotoUrl, " +
-				"SmallPhotoUrl, " +
-				"Region__c, " +
-				"UserRole.Name, " +
-				"Profile.Name " +
-				"From  User Where Id = ':userId'";
-		
-        try {
-			
-			ConnectionManager.openConnection(auth.getAccessToken());
-			Query q = em.createQuery(queryString);
-			q.addParameter("userId", auth.getUserId());
-			User user = q.getSingleResult();
-			sessionUser = new SessionUser(user);
-			
-        } catch (ConnectionException e) {
-            log.error("ConnectionException", e);
-			throw new QueryException("ConnectionException", e);
-			
-		} finally {
-			
-			try {
-				ConnectionManager.closeConnection();
-			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
-			}
-		}						
 	}
 }

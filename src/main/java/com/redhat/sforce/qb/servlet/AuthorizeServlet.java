@@ -18,9 +18,9 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.redhat.sforce.qb.model.auth.Identity;
 import com.redhat.sforce.qb.model.auth.OAuth;
 
 @WebServlet("/authorize")
@@ -94,10 +94,11 @@ public class AuthorizeServlet extends HttpServlet {
 					String authResponse = getAuthResponse(code);
 					OAuth auth = new Gson().fromJson(authResponse, OAuth.class);
 					
-					String userInfo = getIdentity(auth);
-					//auth = new Gson().fromJson(userInfo, OAuth.class);
+					String identityResponse = getIdentity(auth);
+					Identity identity = new Gson().fromJson(identityResponse, Identity.class);
 					
 					request.getSession().setAttribute("OAuth", auth);
+					request.getSession().setAttribute("Identity", identity);
 					
 					log.info("SessionId: " + auth.getAccessToken());	
 					
@@ -135,11 +136,10 @@ public class AuthorizeServlet extends HttpServlet {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + auth.getAccessToken());
-		//request.header("Content-type", "application/xml");
-		request.header("Content-type", "application/json");
+		request.header("Content-type", "application/xml");
+		//request.header("Content-type", "application/json");
 		
-		ClientResponse<String> response = request.get(String.class);
-		response = request.get(String.class);		
+		ClientResponse<String> response = request.get(String.class);		
 		if (response.getResponseStatus() == Status.OK) {
 			return response.getEntity();
 		}
