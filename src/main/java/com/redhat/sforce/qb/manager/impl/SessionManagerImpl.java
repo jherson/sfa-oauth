@@ -2,8 +2,6 @@ package com.redhat.sforce.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,7 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
@@ -134,36 +131,24 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void logout() {
 		log.info("logout");
 		
-		String revokeUrl = null;
-		try {
-			revokeUrl = System.getProperty("salesforce.environment") 
+		String revokeUrl = System.getProperty("salesforce.environment") 
 					+ "/services/oauth2/revoke?" 
-					+ "token=" + URLEncoder.encode(sessionUser.getOAuth().getAccessToken(), "UTF-8");
-		} catch (UnsupportedEncodingException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		
+					+ "token=" + sessionUser.getOAuth().getAccessToken();
+					
 		log.info(revokeUrl);
 		
 		ClientRequest request = new ClientRequest(revokeUrl);
 		
-		ClientResponse<String> response = null;
 		try {			
-			response = request.get(String.class);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		log.info("RESPONSE: " + response.getResponseStatus());
-		log.info(response.getEntity());
-		if (response.getResponseStatus() == Status.OK) {
+			ClientResponse<String> response = request.get(String.class);
+			log.info("RESPONSE: " + response.getResponseStatus());
 			log.info(response.getEntity());
+		} catch (Exception e) {
+			log.error("Exception", e);
+			throw new FacesException(e);
 		}
 		
 		setLoggedIn(Boolean.FALSE);
-//		setMainArea(TemplatesEnum.HOME);
 													
 		try {
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();

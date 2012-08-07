@@ -55,7 +55,7 @@ public class AuthorizeServlet extends HttpServlet {
 						+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
 						+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
 						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
-						+ "&immediate=false"
+						+ "&prompt=login"
 						+ "&display=popup";
 								
 				response.sendRedirect(authUrl);
@@ -140,7 +140,6 @@ public class AuthorizeServlet extends HttpServlet {
 		
 		ClientResponse<String> response = request.get(String.class);		
 		if (response.getResponseStatus() == Status.OK) {
-			log.info(response.getEntity().toString());
 			return response.getEntity();
 		}
 						

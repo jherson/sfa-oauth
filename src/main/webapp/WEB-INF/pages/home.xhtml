@@ -12,7 +12,7 @@
 
 			<h:outputText value="#{sessionUser.identity.status.body}" width="120"/>
 
-			<table>
+			<table style="cellspacing: 5px">
 
 				<ui:repeat var="feedItems" value="#{feed.items}" varStatus="status">
 					<tr>
@@ -21,7 +21,15 @@
 								value="#{feedItems.actor.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
 								height="40" width="40">
 							</h:graphicImage></td>
-						<td>#{feedItems.actor.name}</td>
+						<td>
+						<a4j:commandLink value="#{feedItems.actor.name}"
+						style="text-decoration: none; color: black"
+						status="waitstatus"
+						ajaxSingle="true">
+					</a4j:commandLink>
+						
+						</td>
+						<td>#{feedItems.body.text}</td>
 					</tr>
 				</ui:repeat>
 

@@ -3,6 +3,7 @@ package com.redhat.sforce.qb.data;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -10,6 +11,8 @@ import javax.inject.Named;
 import com.google.gson.Gson;
 import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.model.chatter.Feed;
+
+@SessionScoped
 
 public class ChatterProducer implements Serializable {
 
