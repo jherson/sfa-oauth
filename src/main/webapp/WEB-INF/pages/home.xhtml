@@ -5,17 +5,32 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	
+
 	<a4j:outputPanel>
 
 		<rich:panel>
-		
-		<h:outputText value="#{sessionUser.identity.status.body}"/>
-		
+
+			<h:outputText value="#{sessionUser.identity.status.body}" width="120"/>
+
+			<table>
+
+				<ui:repeat var="feedItems" value="#{feed.items}" varStatus="status">
+					<tr>
+
+						<td><h:graphicImage
+								value="#{feedItems.actor.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+								height="40" width="40">
+							</h:graphicImage></td>
+						<td>#{feedItems.actor.name}</td>
+					</tr>
+				</ui:repeat>
+
+			</table>
+
 		</rich:panel>
-		
+
 	</a4j:outputPanel>
 
-		
-		
+
+
 </ui:composition>

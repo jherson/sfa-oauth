@@ -92,15 +92,15 @@ public class AuthorizeServlet extends HttpServlet {
 					session.removeAttribute("waitPage");					
 					
 					String authResponse = getAuthResponse(code);
-					OAuth auth = new Gson().fromJson(authResponse, OAuth.class);
+					OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
 					
-					String identityResponse = getIdentity(auth);
+					String identityResponse = getIdentity(oauth);
 					Identity identity = new Gson().fromJson(identityResponse, Identity.class);
 					
-					request.getSession().setAttribute("OAuth", auth);
+					request.getSession().setAttribute("OAuth", oauth);
 					request.getSession().setAttribute("Identity", identity);
 					
-					log.info("SessionId: " + auth.getAccessToken());	
+					log.info("SessionId: " + oauth.getAccessToken());	
 					
 					response.sendRedirect(request.getContextPath() + "/index.jsf");
 					
