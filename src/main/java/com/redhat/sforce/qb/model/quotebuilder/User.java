@@ -35,6 +35,7 @@ public class User extends QuoteBuilderObject {
 	private Locale locale;
 	private String timeZone;
 	private String dateFormatPattern;
+	private String timeFormatPattern;
 	private String dateTimeFormatPattern;
 
 	public User() {
@@ -271,6 +272,14 @@ public class User extends QuoteBuilderObject {
 
 	public void setDateFormatPattern(String dateFormatPattern) {
 		this.dateFormatPattern = dateFormatPattern;
+	}
+	
+	public String getTimeFormatPattern() {
+		return timeFormatPattern;
+	}
+	
+	public void setTimeFormatPattern(String timeFormatPattern) {
+		this.timeFormatPattern = timeFormatPattern;
 	}
 
 	public String getDateTimeFormatPattern() {

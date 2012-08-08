@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.model.chatter.Feed;
 
@@ -31,8 +32,8 @@ public class ChatterProducer implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		feed = new Gson().fromJson(chatterDAO.getQuoteFeed(), Feed.class);
-		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS'Z'").create();		
+		feed = gson.fromJson(chatterDAO.getQuoteFeed(), Feed.class);		
 	}
 
 }

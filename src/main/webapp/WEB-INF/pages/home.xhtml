@@ -10,7 +10,7 @@
 
 		<rich:panel>
 
-			<h:outputText value="#{sessionUser.identity.status.body}" width="120"/>
+			<h:outputText value="#{sessionUser.identity.status.body}" width="120" />
 
 			<table style="cellspacing: 5px">
 
@@ -21,15 +21,20 @@
 								value="#{feedItems.actor.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
 								height="40" width="40">
 							</h:graphicImage></td>
-						<td>
-						<a4j:commandLink value="#{feedItems.actor.name}"
-						style="text-decoration: none; color: black"
-						status="waitstatus"
-						ajaxSingle="true">
-					</a4j:commandLink>
-						
-						</td>
+						<td><a4j:commandLink value="#{feedItems.actor.name}"
+								style="text-decoration: none; color: black" status="waitstatus"
+								ajaxSingle="true">
+							</a4j:commandLink></td>
 						<td>#{feedItems.body.text}</td>
+						<td><h:outputText value="#{feedItems.createdDate}">
+								<f:convertDateTime locale="#{sessionUser.locale}"
+									pattern="#{sessionUser.dateFormatPattern}" type="date" />
+							</h:outputText> at <h:outputText value="#{feedItems.createdDate}">
+								<f:convertDateTime locale="#{sessionUser.locale}"
+									timeZone="#{sessionUser.timeZone}"
+									pattern="#{sessionUser.timeFormatPattern}" type="time" />
+							</h:outputText></td>
+
 					</tr>
 				</ui:repeat>
 

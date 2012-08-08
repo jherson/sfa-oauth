@@ -35,9 +35,9 @@ public class SessionUser extends User {
 		this.setCreatedByLastName(user.getCreatedByLastName());
 		this.setCreatedByName(user.getCreatedByName());
 		this.setCreatedDate(user.getCreatedDate());
-		this.setCurrencyIsoCode(user.getCurrencyIsoCode());
+		this.setCurrencyIsoCode(user.getCurrencyIsoCode());		
 		this.setDateFormatPattern(user.getDateFormatPattern());
-		this.setDateTimeFormatPattern(user.getDateTimeFormatPattern());
+		this.setDateTimeFormatPattern(user.getDateTimeFormatPattern());		
 		this.setDefaultCurrencyIsoCode(user.getDefaultCurrencyIsoCode());
 		this.setDepartment(user.getDepartment());
 		this.setDivision(user.getDivision());
@@ -63,6 +63,7 @@ public class SessionUser extends User {
 		this.setSmallPhotoUrl(user.getSmallPhotoUrl());
 		this.setState(user.getState());
 		this.setStreet(user.getStreet());
+		this.setTimeFormatPattern(user.getTimeFormatPattern());
 		this.setTimeZone(user.getTimeZone());
 		this.setTitle(user.getTitle());
 		this.setUserName(user.getUserName());

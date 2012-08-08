@@ -89,5 +89,5 @@ public class Util {
 			pattern = pattern.replace("M", "MM");
 
 		return pattern;
-	}
+	}	
 }
