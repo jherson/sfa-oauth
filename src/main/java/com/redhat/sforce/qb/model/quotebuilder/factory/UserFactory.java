@@ -69,7 +69,7 @@ public class UserFactory {
 			SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, user.getLocale());
 			SimpleDateFormat dateTimeFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,user.getLocale());
 			SimpleDateFormat timeFormat = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, user.getLocale());
-
+			
 			user.setDateFormatPattern(Util.formatPattern(dateFormat));
 			user.setDateTimeFormatPattern(Util.formatPattern(dateTimeFormat));
 			user.setTimeFormatPattern(timeFormat.toPattern());			

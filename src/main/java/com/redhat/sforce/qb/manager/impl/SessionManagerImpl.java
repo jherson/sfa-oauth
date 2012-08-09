@@ -106,7 +106,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
 			} else {
 				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
-			}
+			}			
 														
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
 			setLoggedIn(Boolean.TRUE);								

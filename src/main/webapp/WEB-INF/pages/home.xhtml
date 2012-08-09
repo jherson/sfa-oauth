@@ -28,6 +28,7 @@
 						<td>#{feedItems.body.text}</td>
 						<td><h:outputText value="#{feedItems.createdDate}">
 								<f:convertDateTime locale="#{sessionUser.locale}"
+								    timeZone="#{sessionUser.timeZone}"
 									pattern="#{sessionUser.dateFormatPattern}" type="date" />
 							</h:outputText> at <h:outputText value="#{feedItems.createdDate}">
 								<f:convertDateTime locale="#{sessionUser.locale}"

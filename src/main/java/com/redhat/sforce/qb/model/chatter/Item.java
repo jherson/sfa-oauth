@@ -57,8 +57,7 @@ public class Item implements Serializable  {
 		return createdDate;
 	}
 	
-	public void setCreatedDate(Date createdDate) {
-		System.out.println(createdDate.toString());
+	public void setCreatedDate(Date createdDate) {		
 		this.createdDate = createdDate;
 	}
 	

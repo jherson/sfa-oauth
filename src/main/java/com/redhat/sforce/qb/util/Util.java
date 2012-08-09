@@ -9,38 +9,53 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 public class Util {
-	//private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSSZ");
-	private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS'Z'");
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private static DateFormat dateTimeFormat;
+	private static DateFormat dateFormat;
+	
+	private static DateFormat getDateFormat() {
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return dateFormat;
+	}
+	
+	private static DateFormat getDateTimeFormat() {
+		dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS'Z'");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return dateTimeFormat;
+	}
 
 	public static String dateFormat(Date value) {
 		if (value == null)
 			return null;
 
-		return value != null ? dateFormat.format(value) : null;
+		return value != null ? getDateFormat().format(value) : null;
 	}
 
 	public static String dateTimeFormat(Date value) {
 		if (value == null)
 			return null;
 
-		return value != null ? dateTimeFormat.format(value) : null;
+		return value != null ? getDateTimeFormat().format(value) : null;
 	}
 
 	public static Date parseDate(String value) throws ParseException {
 		if (value == null)
 			return null;
 
-		return value != null ? dateFormat.parse(value) : null;
+		return value != null ? getDateFormat().parse(value) : null;
 	}
 
 	public static Date parseDateTime(String value) throws ParseException {
 		if (value == null)
 			return null;
+		
+		dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-		return value != null ? dateTimeFormat.parse(value) : null;
+		return value != null ? getDateTimeFormat().parse(value) : null;
 	}
 	
 	public static String covertResponseToString(InputStream is) throws IOException {

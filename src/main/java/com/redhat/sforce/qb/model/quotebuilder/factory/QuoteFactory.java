@@ -73,7 +73,7 @@ public class QuoteFactory {
 		quote.setLastPricedDate(wrapper.getDateTime("LastPricedDate__c"));
 		quote.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
 		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
-		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
+		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));				
 		quote.setLink(wrapper.getString("Link__c"));
 		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
