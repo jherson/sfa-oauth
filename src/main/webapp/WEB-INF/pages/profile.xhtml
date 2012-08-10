@@ -20,17 +20,16 @@
 
 		<a4j:outputPanel layout="block">
 
-			<h:panelGrid width="100%" columns="2" cellpadding="3"
-				style="vertical-align: top">
+			<h:panelGrid width="100%" columns="2" cellpadding="3">
 
-				<h:panelGroup>
+				<h:panelGroup styleClass="grid_panels">
 
 					<h:graphicImage value="#{sessionUser.fullPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}" height="160"
 						width="160" />
 
 				</h:panelGroup>
 
-				<h:panelGroup>
+				<h:panelGroup styleClass="grid_panels">
 
 					<table style="width: 100%">
 						<tr>

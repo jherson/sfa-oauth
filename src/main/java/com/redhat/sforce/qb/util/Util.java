@@ -12,9 +12,15 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 public class Util {
-	
+		
 	private static DateFormat dateTimeFormat;
 	private static DateFormat dateFormat;
+	
+	public static String getShortTimeFormat(Locale locale) {
+		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return format.toPattern();
+	}
 	
 	private static DateFormat getDateFormat() {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -24,7 +30,7 @@ public class Util {
 	
 	private static DateFormat getDateTimeFormat() {
 		dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS'Z'");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return dateTimeFormat;
 	}
 
@@ -52,8 +58,6 @@ public class Util {
 	public static Date parseDateTime(String value) throws ParseException {
 		if (value == null)
 			return null;
-		
-		dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		return value != null ? getDateTimeFormat().parse(value) : null;
 	}

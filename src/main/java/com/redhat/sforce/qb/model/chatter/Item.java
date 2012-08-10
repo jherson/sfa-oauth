@@ -1,34 +1,44 @@
 package com.redhat.sforce.qb.model.chatter;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Item implements Serializable  {
 
-	private static final long serialVersionUID = 3929304800186045369L;
-	private User actor;
-	private Body body;
-	private ClientInfo clientInfo;
-	//private List<Comment> comments;
-	private Date createdDate;
-	private Boolean event;
+	private static final long serialVersionUID = 3929304800186045369L;	
+	
+	private User parent;
 	private String id;
+	private String type;
+	private ClientInfo clientInfo;
+	private String url;	
+	private Body body;
+	private Date createdDate;
+	private Date modifiedDate;
+	private String photoUrl;	
+	//private List<Comment> comments;
+	//private Likes likes;
 	private Boolean isBookmarkedByCurrentUser;
 	private Boolean isDeleteRestricted;
 	private Boolean isLikedByCurrentUser;
-	private Date modifiedDate;
-	//private String myLike;
+	// private MyLike
+	private User actor;		
+	private Boolean event;
+	//private Attachement;
 	private String originalFeedItem;
 	private String originalFeedItemActor;
 	
-	public User getActor() {
-		return actor;
+	public User getParent() {
+		return parent;
 	}
 	
-	public void setActor(User actor) {
-		this.actor = actor;
+	public void setParent(User parent) {
+		this.parent = parent;
 	}
-	
+		
 	public Body getBody() {
 		return body;
 	}
@@ -53,8 +63,18 @@ public class Item implements Serializable  {
 //		this.comments = comments;
 //	}
 	
-	public Date getCreatedDate() {
-		return createdDate;
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getCreatedDate() {
+		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return format.format(createdDate);
 	}
 	
 	public void setCreatedDate(Date createdDate) {		
@@ -77,6 +97,14 @@ public class Item implements Serializable  {
 		this.id = id;
 	}
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public Boolean getIsBookmarkedByCurrentUser() {
 		return isBookmarkedByCurrentUser;
 	}
@@ -101,6 +129,14 @@ public class Item implements Serializable  {
 		this.isLikedByCurrentUser = isLikedByCurrentUser;
 	}
 	
+	public User getActor() {
+		return actor;
+	}
+
+	public void setActor(User actor) {
+		this.actor = actor;
+	}
+
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -117,6 +153,14 @@ public class Item implements Serializable  {
 //		this.myLike = myLike;
 //	}
 	
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
 	public String getOriginalFeedItem() {
 		return originalFeedItem;
 	}

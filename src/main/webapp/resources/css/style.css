@@ -42,7 +42,7 @@ body {
 #body {
 	left: 85px;
 	position: absolute;
-	top: 70px;
+	top: 64px;
 	bottom: 0px;
 	margin: 0 auto;
 	border: none;
@@ -51,7 +51,7 @@ body {
 		 
 #sidebar {
 	position: absolute;
-	top: 70px;
+	top: 64px;
 	bottom: 0px;
     font-size: 0.9em;
     width: 80px;
@@ -166,48 +166,4 @@ span.invalid {
 
 .commandButton {
 	cursor: pointer;
-}
-
-#links {
-        width:205px;
-        overflow:auto;
-        min-height: 100%;
-}
-#links ul {
- list-style-type:none;
- margin:0;
- padding:0;
- width:200px;
-}
-#links li {
- border:1px dotted #999;
- border-width:1px 0;
- margin:5px 0;
-}
-#links li a {
- color:#000066;
- display:block;
- font:bold 14px Arial, Helvetica, sans-serif;
- padding:5px;
- text-decoration:none;
-}
-* html #links li a {width:200px;} /*Necessary to works with IE6*/
-#links li a:hover {
- background-color:#F0F8FF;
-}
-#links a em {
- color:#333;
- display:block;
- font:normal 11px Verdana, Arial, Helvetica, sans-serif;
- line-height:125%;
-}
-#links a span {
- color:#125F15;
- font:normal 9px Verdana, Arial, Helvetica, sans-serif;
- line-height:150%;
-}
-
-.pic {
-    margin-bottom: -4px;
-    margin-right: 2px;
 }

@@ -266,6 +266,33 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
+	public String getFeed(String sessionId) throws SalesforceServiceException {		
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feeds/user-profile/me/feed-items";
+		
+		log.info("Status url: " + url);
+
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/json");
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.get(String.class);
+		} catch (Exception e) {
+			log.error(e);
+		}
+
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new SalesforceServiceException(response.getEntity());
+		}
+	}
+	
+	@Override
 	public void priceQuote(String sessionId, String xml) {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"

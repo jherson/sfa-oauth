@@ -1,8 +1,6 @@
 package com.redhat.sforce.qb.data;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -10,9 +8,8 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.redhat.sforce.qb.dao.ChatterDAO;
+import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.chatter.Feed;
 
 @SessionScoped
@@ -34,16 +31,13 @@ public class ChatterProducer implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		String jsonString = chatterDAO.getQuoteFeed();
 
-		SimpleDateFormat format = new SimpleDateFormat(
-				"yyyy-MM-dd'T'kk:mm:ss.SSS'Z'");
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-		Gson gson = new GsonBuilder().setDateFormat(format.toPattern())
-				.setPrettyPrinting().create();
-
-		feed = gson.fromJson(jsonString, Feed.class);
+		try {
+			feed = chatterDAO.getFeed();
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 }

@@ -63,7 +63,7 @@ public class SessionUser extends User {
 		this.setSmallPhotoUrl(user.getSmallPhotoUrl());
 		this.setState(user.getState());
 		this.setStreet(user.getStreet());
-		this.setTimeFormatPattern(user.getTimeFormatPattern());
+		this.setShortTimeFormat(user.getShortTimeFormat());
 		this.setTimeZone(user.getTimeZone());
 		this.setTitle(user.getTitle());
 		this.setUserName(user.getUserName());

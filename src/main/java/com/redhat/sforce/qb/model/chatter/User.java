@@ -11,7 +11,7 @@ public class User implements Serializable  {
 	private Boolean isActive;
 	private Boolean isChatterGuest;
 	private String lastName;
-	private String mySubscription;
+	private MySubscription mySubscription;
 	private String name;
 	private Photo photo;
 	private String title;
@@ -66,11 +66,11 @@ public class User implements Serializable  {
 		this.lastName = lastName;
 	}
 	
-	public String getMySubscription() {
+	public MySubscription getMySubscription() {
 		return mySubscription;
 	}
 	
-	public void setMySubscription(String mySubscription) {
+	public void setMySubscription(MySubscription mySubscription) {
 		this.mySubscription = mySubscription;
 	}
 	

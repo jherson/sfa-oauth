@@ -1,5 +1,9 @@
 package com.redhat.sforce.qb.controller;
 
+import javax.enterprise.inject.Model;
+
+@Model
+
 public enum TemplatesEnum {
 
 	HOME("/WEB-INF/pages/home.xhtml"), 
