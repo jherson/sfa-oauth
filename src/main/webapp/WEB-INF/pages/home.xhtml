@@ -8,23 +8,23 @@
 
 	<a4j:outputPanel>
 
-		<rich:panel>
+		<rich:panel id="chatterFeed">
 
 			<table style="cellspacing: 5px">
+
 				<tr>
-					<td><h:outputText value="#{sessionUser.identity.status.body}" /></td>
+					<td><h:inputText id="status" style="width:300px" /> <a4j:commandButton
+							value="#{msgs.share}" styleClass="commandButton">
+							<a4j:ajax execute="@form" event="click"
+								listener="#{homeController.post}" render="chatterFeed">
+							</a4j:ajax>
+						</a4j:commandButton></td>
 				</tr>
-				<tr>
-					<td><h:inputText style="width:300px" /> <a4j:commandButton
-							value="#{msgs.share}" styleClass="commandButton" /></td>
-							
-						
-				</tr>
-				
+
 			</table>
-							
-            <table style="cellspacing: 5px">
-				<ui:repeat var="feedItems" value="#{feed.items}">
+
+			<ui:repeat var="feedItems" value="#{feed.items}">
+				<table style="cellspacing: 5px">
 					<tr>
 
 						<td><h:graphicImage
@@ -47,9 +47,10 @@
 							</h:outputText></td>
 
 					</tr>
-				</ui:repeat>
 
-			</table>
+				</table>
+				<hr />
+			</ui:repeat>
 
 		</rich:panel>
 

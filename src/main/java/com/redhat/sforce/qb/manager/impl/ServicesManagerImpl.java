@@ -270,9 +270,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
-				+ "/chatter/feeds/user-profile/me/feed-items";
-		
-		log.info("Status url: " + url);
+				+ "/chatter/feeds/news/me/feed-items";
 
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
@@ -282,10 +280,36 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		try {
 			response = request.get(String.class);
 		} catch (Exception e) {
-			log.error(e);
+			throw new SalesforceServiceException(e);
 		}
 
 		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new SalesforceServiceException(response.getEntity());
+		}
+	}
+	
+	@Override
+	public String postItem(String sessionId, String text) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feeds/news/me/feed-items";
+
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/x-www-form-urlencoded");
+		request.queryParameter("text", text);
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.CREATED) {
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -303,7 +327,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("application/xml", "application/json");
 		request.body("application/xml", xml);
 		
 		try {

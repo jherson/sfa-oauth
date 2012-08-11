@@ -48,9 +48,6 @@ public class Identity implements Serializable {
 	@SerializedName("utcOffset")
 	private String utcOffset; 
 	
-	@SerializedName("status")
-	private Status status;
-	
 	@SerializedName("photos")
 	private Photos photos;
 	
@@ -168,14 +165,6 @@ public class Identity implements Serializable {
 
 	public void setUtcOffset(String utcOffset) {
 		this.utcOffset = utcOffset;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
 	}
 
 	public Photos getPhotos() {

@@ -48,10 +48,9 @@ public class OpportunityProducer implements Serializable {
 		
 		try {		
 		    opportunityList = opportunityDAO.queryOpenOpportunities();
-		    		    
 			
 		} catch (QueryException e) {
-			log.info("QueryOpportunityException: " + e.getMessage());
+			log.info("QueryException: " + e.getMessage());
 			throw new FacesException(e);
 		}
 	}

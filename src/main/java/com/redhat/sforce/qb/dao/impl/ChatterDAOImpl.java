@@ -6,6 +6,7 @@ import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Followers;
+import com.redhat.sforce.qb.model.chatter.Item;
 
 public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO {
 	
@@ -21,6 +22,16 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 				.create();
 				
 		return gson.fromJson(servicesManager.getFeed(sessionUser.getOAuth().getAccessToken()), Feed.class);
+	}
+	
+	@Override
+	public Item postItem(String text) throws SalesforceServiceException {
+		
+		Gson gson = new GsonBuilder().setDateFormat(ISO_8061_FORMAT)
+				.setPrettyPrinting()
+				.create();
+		
+		return gson.fromJson(servicesManager.postItem(sessionUser.getOAuth().getAccessToken(), text), Item.class);
 	}
 
 	@Override
