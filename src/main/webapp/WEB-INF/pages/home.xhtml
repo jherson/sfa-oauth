@@ -27,28 +27,64 @@
 				<table style="cellspacing: 5px">
 					<tr>
 
-						<td><h:graphicImage
+						<td style="width: 40px"><h:graphicImage
 								value="#{feedItems.photoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
 								height="40" width="40">
 							</h:graphicImage></td>
 						<td><a4j:commandLink value="#{feedItems.parent.name}"
-								style="text-decoration: none; color: black" status="waitstatus"
-								ajaxSingle="true">
-							</a4j:commandLink></td>
-						<td>#{feedItems.body.text}</td>
+								style="text-decoration: none; color: black; font-weight:bold;"
+								status="waitstatus" ajaxSingle="true">
+							</a4j:commandLink> #{feedItems.body.text}</td>
+					</tr>
+					<tr>
 						<td><h:outputText value="#{feedItems.createdDate}">
 								<f:convertDateTime locale="#{sessionUser.locale}"
 									timeZone="#{sessionUser.timeZone}"
 									pattern="#{sessionUser.dateFormatPattern}" type="date" />
-							</h:outputText> at <h:outputText value="#{feedItems.createdDate}">
+							</h:outputText>
+							<h:outputText value="#{msgs.at}" />
+							<h:outputText value="#{feedItems.createdDate}">
 								<f:convertDateTime locale="#{sessionUser.locale}"
 									timeZone="#{sessionUser.timeZone}"
 									pattern="#{sessionUser.shortTimeFormat}" type="time" />
-							</h:outputText></td>
+							</h:outputText>
+							<h:outputText value="#{msgs.by}" />
+							<h:outputText value="#{feedItems.clientInfo.applicationName}"/></td>
 
+
+						<ui:repeat var="comments" value="#{feedItems.comments.comments}">
+							<table style="cellspacing: 5px">
+								<tr>
+									<td style="width: 40px"></td>
+									<td style="width: 40px"><h:graphicImage
+											value="#{comments.user.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+											height="40" width="40">
+										</h:graphicImage></td>
+									<td><a4j:commandLink value="#{comments.user.name}"
+											style="text-decoration: none; color: black; font-weight:bold;"
+											status="waitstatus" ajaxSingle="true">
+										</a4j:commandLink> #{comments.body.text}</td>
+								</tr>
+								<tr>
+									<td><h:outputText value="#{comments.createdDate}">
+											<f:convertDateTime locale="#{sessionUser.locale}"
+												timeZone="#{sessionUser.timeZone}"
+												pattern="#{sessionUser.dateFormatPattern}" type="date" />
+										</h:outputText>
+										<h:outputText value="#{msgs.at}" />
+										<h:outputText value="#{comments.createdDate}">
+											<f:convertDateTime locale="#{sessionUser.locale}"
+												timeZone="#{sessionUser.timeZone}"
+												pattern="#{sessionUser.shortTimeFormat}" type="time" />
+										</h:outputText>
+										<h:outputText value="#{msgs.by}" />
+										<h:outputText value="#{feedItems.clientInfo.applicationName}"/></td>
+								</tr>
+							</table>
+						</ui:repeat>
 					</tr>
-					
-					
+
+
 
 				</table>
 				<hr />

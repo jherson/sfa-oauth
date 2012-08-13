@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
-public class Item implements Serializable  {
+public class Item implements Serializable {
 
 	private static final long serialVersionUID = 3929304800186045369L;	
 	
@@ -20,7 +19,7 @@ public class Item implements Serializable  {
 	private Date createdDate;
 	private Date modifiedDate;
 	private String photoUrl;	
-	//private List<Comment> comments;
+	private Comments comments;
 	//private Likes likes;
 	private Boolean isBookmarkedByCurrentUser;
 	private Boolean isDeleteRestricted;
@@ -56,13 +55,13 @@ public class Item implements Serializable  {
 		this.clientInfo = clientInfo;
 	}
 	
-//	public List<Comment> getComments() {
-//		return comments;
-//	}
-//	
-//	public void setComments(List<Comment> comments) {
-//		this.comments = comments;
-//	}
+	public Comments getComments() {
+		return comments;
+	}
+	
+	public void setComments(Comments comments) {
+		this.comments = comments;
+	}
 	
 	public String getUrl() {
 		return url;

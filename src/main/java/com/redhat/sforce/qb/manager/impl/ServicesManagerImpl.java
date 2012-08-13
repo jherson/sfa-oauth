@@ -279,7 +279,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		ClientResponse<String> response = null;
 		try {
 			response = request.get(String.class);
-			log.info(response.getEntity());
+			JSONObject jsonObject = new JSONObject(new JSONTokener(response.getEntity()));
+			log.info(jsonObject.toString(2));
 		} catch (Exception e) {
 			throw new SalesforceServiceException(e);
 		}
