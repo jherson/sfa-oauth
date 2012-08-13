@@ -70,6 +70,8 @@ public class HomeController {
 		
 		if (status == null || status.trim().length() == 0)
 			return;
+		
+		inputText.setValue("");
 					
 		try {
 			Item item = chatterDAO.postItem(status);

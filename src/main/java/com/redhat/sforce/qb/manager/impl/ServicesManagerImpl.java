@@ -279,6 +279,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		ClientResponse<String> response = null;
 		try {
 			response = request.get(String.class);
+			log.info(response.getEntity());
 		} catch (Exception e) {
 			throw new SalesforceServiceException(e);
 		}
