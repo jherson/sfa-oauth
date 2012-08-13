@@ -37,18 +37,23 @@
 							</a4j:commandLink> #{feedItems.body.text}</td>
 					</tr>
 					<tr>
+					    <td />
 						<td><h:outputText value="#{feedItems.createdDate}">
 								<f:convertDateTime locale="#{sessionUser.locale}"
 									timeZone="#{sessionUser.timeZone}"
 									pattern="#{sessionUser.dateFormatPattern}" type="date" />
 							</h:outputText>
+							<h:outputText value=" " />
 							<h:outputText value="#{msgs.at}" />
+							<h:outputText value=" " />
 							<h:outputText value="#{feedItems.createdDate}">
 								<f:convertDateTime locale="#{sessionUser.locale}"
 									timeZone="#{sessionUser.timeZone}"
 									pattern="#{sessionUser.shortTimeFormat}" type="time" />
 							</h:outputText>
+							<h:outputText value=" " />
 							<h:outputText value="#{msgs.by}" />
+							<h:outputText value=" " />
 							<h:outputText value="#{feedItems.clientInfo.applicationName}"/></td>
 
 
@@ -66,18 +71,24 @@
 										</a4j:commandLink> #{comments.body.text}</td>
 								</tr>
 								<tr>
+								    <td />
+								    <td />
 									<td><h:outputText value="#{comments.createdDate}">
 											<f:convertDateTime locale="#{sessionUser.locale}"
 												timeZone="#{sessionUser.timeZone}"
 												pattern="#{sessionUser.dateFormatPattern}" type="date" />
 										</h:outputText>
+										<h:outputText value=" " />
 										<h:outputText value="#{msgs.at}" />
+										<h:outputText value=" " />
 										<h:outputText value="#{comments.createdDate}">
 											<f:convertDateTime locale="#{sessionUser.locale}"
 												timeZone="#{sessionUser.timeZone}"
 												pattern="#{sessionUser.shortTimeFormat}" type="time" />
 										</h:outputText>
+										<h:outputText value=" " />
 										<h:outputText value="#{msgs.by}" />
+										<h:outputText value=" " />
 										<h:outputText value="#{feedItems.clientInfo.applicationName}"/></td>
 								</tr>
 							</table>
