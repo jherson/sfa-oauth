@@ -55,7 +55,7 @@ public class AuthorizeServlet extends HttpServlet {
 						+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
 						+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
 						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
-						+ "&prompt=login"
+						//+ "&prompt=login"
 						+ "&display=popup";
 								
 				response.sendRedirect(authUrl);
