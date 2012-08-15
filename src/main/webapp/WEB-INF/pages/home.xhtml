@@ -25,14 +25,14 @@
 
 			<ui:repeat var="feedItems" value="#{feed.items}">
 
-				<h:panelGroup layout="block" class="feedItem">
-					<h:panelGroup layout="block" class="feedItemPic">
+				<h:panelGroup layout="block" class="feed-item">
+					<h:panelGroup layout="block" class="feed-item-pic">
 						<h:graphicImage
 							value="#{feedItems.photoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
 							height="45" width="45">
 						</h:graphicImage>
 					</h:panelGroup>
-					<h:panelGroup layout="block" class="feedItemText">
+					<h:panelGroup layout="block" class="feed-item-text">
 						<a4j:commandLink value="#{feedItems.parent.name}"
 							style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
 							status="waitstatus" ajaxSingle="true"></a4j:commandLink>
@@ -56,10 +56,9 @@
 						<h:outputText value=" " />
 						<h:outputText value="#{msgs.via} #{feedItems.clientInfo.applicationName}" rendered="#{not empty feedItems.clientInfo}"/>
 					</h:panelGroup>
+					<div style="clear: both;" />
 				</h:panelGroup>
-				
-				<hr class="style-seven" />
-
+               
 			</ui:repeat>
 
 
