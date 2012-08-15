@@ -1,13 +1,14 @@
 package com.redhat.sforce.qb.controller;
 
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.Model;
 import javax.faces.FacesException;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
@@ -18,7 +19,8 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
 import com.redhat.sforce.qb.model.chatter.Item;
 
-@Model
+@ManagedBean
+@ViewScoped
 
 public class HomeController {	
 
@@ -34,9 +36,13 @@ public class HomeController {
 	@Inject
 	private Event<Item> postItemEvent;
 	
+	public void calulate() {
+		log.info("calculate text");
+	}
+	
 	private String postText;
 	
-	public void setPostText(String postText) {
+	public void setPostText(String postText) {		
 		this.postText = postText;
 	}
 	
@@ -53,6 +59,18 @@ public class HomeController {
 		sessionManager.setMainArea(mainArea);
 	}
 	
+	public void actionListener(ActionEvent event) throws AbortProcessingException {
+        log.info("Method expression listener called");
+        
+        String page = (String) event.getComponent().getAttributes().get("page");
+
+		if ("home".equals(page)) {
+			setMainArea(TemplatesEnum.HOME);	
+		} else if ("quotemanager".equals(page)) {
+			setMainArea(TemplatesEnum.QUOTE_MANAGER);
+		}
+    }
+	
 	public void showPage(AjaxBehaviorEvent event) {
 		String page = (String) event.getComponent().getAttributes().get("page");
 
@@ -63,7 +81,7 @@ public class HomeController {
 		}	    	
 	}
 	
-	public void post(AjaxBehaviorEvent event) {
+	public void post(ActionEvent event) {
 		HtmlInputText inputText = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:status");
 		
 		String status = inputText.getValue().toString();
