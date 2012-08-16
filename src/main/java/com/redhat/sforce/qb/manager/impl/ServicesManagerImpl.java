@@ -319,6 +319,33 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
+	public String deleteItem(String sessionId, String itemId) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feed-items/" + itemId;
+		
+		log.info("sessionId: " + sessionId);
+		log.info("url: " + url);
+		log.info("id: " + itemId);
+
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/json");
+		//request.header("Content-type", "application/x-www-form-urlencoded");
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.delete(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+		
+		return null;
+
+	}
+	
+	@Override
 	public void priceQuote(String sessionId, String xml) {
 		String url = ConnectionProperties.getApiEndpoint() 
 				+ "/apexrest/"

@@ -9,6 +9,7 @@ public interface ChatterDAO {
 	
 	public Feed getFeed() throws SalesforceServiceException;
 	public Item postItem(String text) throws SalesforceServiceException;
+	public void deleteItem(String itemId) throws SalesforceServiceException;
 
 	public Followers getQuoteFollowers(String quoteId);	
 	public String getQuoteFeed();

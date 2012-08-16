@@ -33,6 +33,12 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 		
 		return gson.fromJson(servicesManager.postItem(sessionUser.getOAuth().getAccessToken(), text), Item.class);
 	}
+	
+	@Override
+	public void deleteItem(String itemId) throws SalesforceServiceException {
+		
+		log.info(servicesManager.deleteItem(sessionUser.getOAuth().getAccessToken(), itemId));
+	}
 
 	@Override
 	public Followers getQuoteFollowers(String quoteId) {

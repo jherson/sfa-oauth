@@ -17,6 +17,8 @@ import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Item;
+import com.redhat.sforce.qb.qualifiers.DeleteItem;
+import com.redhat.sforce.qb.qualifiers.PostItem;
 
 @SessionScoped
 
@@ -49,7 +51,11 @@ public class ChatterProducer implements Serializable {
 		}
 	}
 	
-	public void onPostItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) final Item item) {
+	public void onPostItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PostItem final Item item) {
 		feed.getItems().add(0, item);
+	}
+	
+	public void onDeleteItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteItem final Item item) {
+		feed.getItems().remove(item);
 	}
 }
