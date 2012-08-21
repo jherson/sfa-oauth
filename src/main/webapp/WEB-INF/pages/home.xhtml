@@ -20,7 +20,7 @@
 						styleClass="commandButton">
 						<a4j:ajax execute="@this postText" event="click"
 							render="chatterFeed" />
-						<a4j:actionListener listener="#{homeController.sharePost}" />
+						<a4j:actionListener listener="#{homeController.postItem}" />
 					</a4j:commandButton>
 				</h:panelGroup>
 			</h:panelGroup>
@@ -59,6 +59,14 @@
 						<h:outputText
 							value="#{msgs.via} #{feedItem.clientInfo.applicationName}"
 							rendered="#{not empty feedItem.clientInfo}" />
+							
+						<br />
+						<a4j:commandLink value="Like" 
+						    style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+							status="waitstatus" ajaxSingle="true">
+							<a4j:ajax execute="@this" event="click" render="chatterFeed" />
+							<a4j:actionListener listener="#{homeController.likeItem(feedItem)}" />
+						</a4j:commandLink>
 
 						<br />
 

@@ -314,35 +314,53 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		if (response.getResponseStatus() == Status.CREATED) {
 			return response.getEntity();
 		} else {
+			log.info("2");
 			throw new SalesforceServiceException(response.getEntity());
 		}
 	}
 	
 	@Override
-	public String deleteItem(String sessionId, String itemId) throws SalesforceServiceException {
+	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feed-items/" + itemId;
-		
-		log.info("sessionId: " + sessionId);
-		log.info("url: " + url);
-		log.info("id: " + itemId);
 
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
 		request.header("Content-type", "application/json");
-		//request.header("Content-type", "application/x-www-form-urlencoded");
+				
+		try {
+			request.delete(String.class);
+		} catch (Exception e) {
+			//if ({"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"})
+			throw new SalesforceServiceException(e);
+		}
+	}
+	
+	@Override
+	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feed-items/" + itemId + "/likes";
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/json");
 		
 		ClientResponse<String> response = null;
 		try {
-			response = request.delete(String.class);
+			response = request.post(String.class);
 		} catch (Exception e) {
 			throw new SalesforceServiceException(e);
 		}
-		
-		return null;
 
+		if (response.getResponseStatus() == Status.CREATED) {
+			return response.getEntity();
+		} else {
+			throw new SalesforceServiceException(response.getEntity());
+		}				
 	}
 	
 	@Override

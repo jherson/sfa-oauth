@@ -36,8 +36,12 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 	
 	@Override
 	public void deleteItem(String itemId) throws SalesforceServiceException {
-		
-		log.info(servicesManager.deleteItem(sessionUser.getOAuth().getAccessToken(), itemId));
+        servicesManager.deleteItem(sessionUser.getOAuth().getAccessToken(), itemId);
+	}
+	
+	@Override
+	public String likeItem(String itemId) throws SalesforceServiceException {
+		return servicesManager.likeItem(sessionUser.getOAuth().getAccessToken(), itemId);
 	}
 
 	@Override

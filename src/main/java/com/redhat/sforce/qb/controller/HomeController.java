@@ -64,7 +64,7 @@ public class HomeController {
 		}
     }
 	
-	public void sharePost(ActionEvent event) {
+	public void postItem(ActionEvent event) {
 		HtmlInputText inputText = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:postText");
 		
 		String text = inputText.getValue().toString();
@@ -81,6 +81,16 @@ public class HomeController {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
+	}
+	
+	public void likeItem(Item item) {
+		log.info("ItemId: " + item.getId());
+		try {
+			chatterDAO.likeItem(item.getId());
+		} catch (SalesforceServiceException e) {
+			log.info("SalesforceServiceException: " + e.getMessage());
+			throw new FacesException(e);
+		}		
 	}
 	
 	public void deleteItem(Item item) {
