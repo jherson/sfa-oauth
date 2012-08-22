@@ -24,7 +24,7 @@ public class Item implements Serializable {
 	private Boolean isBookmarkedByCurrentUser;
 	private Boolean isDeleteRestricted;
 	private Boolean isLikedByCurrentUser;
-	// private MyLike
+	private MyLike myLike;
 	private User actor;		
 	private Boolean event;
 	//private Attachement;
@@ -127,6 +127,14 @@ public class Item implements Serializable {
 	
 	public void setIsLikedByCurrentUser(Boolean isLikedByCurrentUser) {
 		this.isLikedByCurrentUser = isLikedByCurrentUser;
+	}
+	
+	public MyLike getMyLike() {
+		return myLike;
+	}
+	
+	public void setMyLike(MyLike myLike) {
+		this.myLike = myLike;
 	}
 	
 	public User getActor() {

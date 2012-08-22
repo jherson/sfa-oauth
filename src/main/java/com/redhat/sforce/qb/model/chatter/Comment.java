@@ -15,7 +15,7 @@ public class Comment implements Serializable {
 	private String id;
 	private Boolean isDeleteRestricted;
 	private Likes likes;
-	//private myLike
+	private MyLike myLike;
 	private Parent parent;
 	private String type;
 	private String url;
@@ -83,6 +83,14 @@ public class Comment implements Serializable {
 	
 	public void setLikes(Likes likes) {
 		this.likes = likes;
+	}
+	
+	public MyLike getMyLike() {
+		return myLike;
+	}
+	
+	public void setMyLike(MyLike myLike) {
+		this.myLike = myLike;
 	}
 	
 	public Parent getParent() {

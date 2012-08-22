@@ -30,6 +30,7 @@ body {
     padding-left: 2;
     padding-top: 2;
     padding-right: 2;
+    overflow: auto;
 }
 
 #header {
@@ -37,7 +38,7 @@ body {
 	margin: 0 auto;
 	height: 60px;
 	top: 0px;
-	border-bottom-width: 1px;
+	border-bottom-width: 1px;	
 }
 
 #body {
@@ -76,29 +77,61 @@ body {
 	padding-right: 10px;
 	padding-bottom: 10px;
 	padding-left: 0;
-	width: 500px;
-	overflow-x: hidden;
+	width: 530px;
+}
+
+.feed-item-post {
+	padding-bottom: 10px;
 }
 
 .feed-item-pic {
     float: left;
     width: 50px;    
-    padding-right: 5px;	
+    padding-right: 5px;	 
 }
 
 .feed-item-text {
 	float: left;
 	width: 390px;
+	padding-bottom: 5px;	
 }
 
 .feed-item-tools {
+	vertical-align: top;
 	float: right;
 	width: 20px;
 }
 
+.feed-item-info {
+	float: left;
+	padding-top: 3px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0;
+	color: gray; 
+	font-size: -1
+}
+
+.feed-item-action {
+	float: left;
+	padding-top: 3px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 8px;
+}
+
 .feed-item-comment {
-	float: right;
-	width: 330px;
+	border-top: 2px solid #F0F0F0;
+	float: left;
+	width: 370px;
+	padding: 5px;
+	background-color: #EFF8FB;
+}
+
+.feed-item-comment-pic {
+    float: left;
+    width: 40px;    
+    padding-right: 5px;	
 }
 
 code {

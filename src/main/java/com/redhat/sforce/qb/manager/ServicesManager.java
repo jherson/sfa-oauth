@@ -20,6 +20,7 @@ public interface ServicesManager {
 	public String postItem(String sessionId, String text) throws SalesforceServiceException;
 	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException;
 	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException;
+	public void unlikeItem(String sessionId, String likeId) throws SalesforceServiceException;
 	
 	public void follow(String sessionId, String subjectId);
 	public void unfollow(String sessionId, String subscriptionId);

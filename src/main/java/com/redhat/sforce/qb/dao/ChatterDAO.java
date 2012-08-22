@@ -4,13 +4,15 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.chatter.Item;
+import com.redhat.sforce.qb.model.chatter.MyLike;
 
 public interface ChatterDAO {
 	
 	public Feed getFeed() throws SalesforceServiceException;
 	public Item postItem(String text) throws SalesforceServiceException;
 	public void deleteItem(String itemId) throws SalesforceServiceException;
-	public String likeItem(String itemId) throws SalesforceServiceException;
+	public MyLike likeItem(String itemId) throws SalesforceServiceException;
+	public void unlikeItem(String likeId) throws SalesforceServiceException;
 
 	public Followers getQuoteFollowers(String quoteId);	
 	public String getQuoteFeed();

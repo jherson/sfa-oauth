@@ -7,6 +7,7 @@ import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.chatter.Item;
+import com.redhat.sforce.qb.model.chatter.MyLike;
 
 public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO {
 	
@@ -40,8 +41,18 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 	}
 	
 	@Override
-	public String likeItem(String itemId) throws SalesforceServiceException {
-		return servicesManager.likeItem(sessionUser.getOAuth().getAccessToken(), itemId);
+	public MyLike likeItem(String itemId) throws SalesforceServiceException {
+		
+		Gson gson = new GsonBuilder().setDateFormat(ISO_8061_FORMAT)
+				.setPrettyPrinting()
+				.create();
+		
+		return gson.fromJson(servicesManager.likeItem(sessionUser.getOAuth().getAccessToken(), itemId), MyLike.class);
+	}
+	
+	@Override
+	public void unlikeItem(String likeId) throws SalesforceServiceException {
+		servicesManager.unlikeItem(sessionUser.getOAuth().getAccessToken(), likeId);
 	}
 
 	@Override

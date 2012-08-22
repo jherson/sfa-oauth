@@ -3,12 +3,12 @@ package com.redhat.sforce.qb.model.chatter;
 import java.io.Serializable;
 import java.util.List;
 
-public class Likes implements Serializable  {
+public class Likes implements Serializable {
 
 	private static final long serialVersionUID = 1387521524107898555L;
 	
 	private String currentPageUrl;
-    private List<Like> like;
+    private List<Like> likes;
     private String nextPageUrl;
     private String previousPageUrl;
     private Long total;
@@ -22,11 +22,11 @@ public class Likes implements Serializable  {
 	}
 	
 	public List<Like> getLike() {
-		return like;
+		return likes;
 	}
 
-	public void setLike(List<Like> like) {
-		this.like = like;
+	public void setLike(List<Like> likes) {
+		this.likes = likes;
 	}
 
 	public String getNextPageUrl() {

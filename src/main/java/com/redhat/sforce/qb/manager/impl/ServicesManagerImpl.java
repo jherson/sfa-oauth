@@ -314,7 +314,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		if (response.getResponseStatus() == Status.CREATED) {
 			return response.getEntity();
 		} else {
-			log.info("2");
 			throw new SalesforceServiceException(response.getEntity());
 		}
 	}
@@ -357,10 +356,29 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.CREATED) {
+			log.info(response.getEntity());
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
 		}				
+	}
+	
+	@Override
+	public void unlikeItem(String sessionId, String likeId) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/likes/" + likeId;
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/json");
+		
+		try {
+			request.delete(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
 	}
 	
 	@Override

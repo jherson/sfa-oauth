@@ -22,7 +22,7 @@ import com.redhat.sforce.qb.qualifiers.PostItem;
 
 @SessionScoped
 
-public class ChatterProducer implements Serializable {
+public class ChatterFeedProducer implements Serializable {
 
 	private static final long serialVersionUID = -4332972430559450566L;
 	
@@ -49,6 +49,10 @@ public class ChatterProducer implements Serializable {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
+	}
+	
+	public void refreshFeed(@Observes(during=TransactionPhase.AFTER_SUCCESS) final Feed feed) {
+		queryFeed();
 	}
 	
 	public void onPostItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PostItem final Item item) {
