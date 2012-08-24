@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.enterprise.inject.Produces;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.logging.Logger;
+import org.richfaces.cdi.push.Push;
 
 import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
@@ -31,6 +33,10 @@ public class ChatterFeedProducer implements Serializable {
 
 	@Inject
 	private ChatterDAO chatterDAO;
+	
+//	@Inject
+//    @Push(topic = "salesforce", subtopic = "feed")
+//    private Event<Feed> pushEvent;
 
 	private Feed feed;
 
@@ -50,6 +56,11 @@ public class ChatterFeedProducer implements Serializable {
 			throw new FacesException(e);
 		}
 	}
+	
+//	public void pushFeed() {
+//		pushEvent.fire(feed);
+//		queryFeed();
+//	}
 	
 	public void refreshFeed(@Observes(during=TransactionPhase.AFTER_SUCCESS) final Feed feed) {
 		queryFeed();

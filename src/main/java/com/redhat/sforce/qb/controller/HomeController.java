@@ -2,11 +2,10 @@ package com.redhat.sforce.qb.controller;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
+import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.FacesException;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.component.html.HtmlInputText;
+import javax.faces.component.html.HtmlInputTextarea;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -23,8 +22,7 @@ import com.redhat.sforce.qb.model.chatter.MyLike;
 import com.redhat.sforce.qb.qualifiers.DeleteItem;
 import com.redhat.sforce.qb.qualifiers.PostItem;
 
-@ManagedBean
-@ViewScoped
+@Model
 
 public class HomeController {	
 
@@ -59,8 +57,9 @@ public class HomeController {
 	}
 	
 	public void showPageView(ActionEvent event) throws AbortProcessingException {
-        
-        String pageView = (String) event.getComponent().getAttributes().get("pageView");
+		
+        FacesContext context = FacesContext.getCurrentInstance();
+        String pageView = context.getExternalContext().getRequestParameterMap().get("pageView"); 
 
 		if ("home".equals(pageView)) {
 			setMainArea(TemplatesEnum.HOME);	
@@ -69,12 +68,8 @@ public class HomeController {
 		}
     }
 	
-	public void refreshFeed() {
-		feedEvent.fire(new Feed());
-	}
-	
 	public void postItem(ActionEvent event) {
-		HtmlInputText inputText = (HtmlInputText) FacesContext.getCurrentInstance().getViewRoot().findComponent("quoteForm:postText");
+		HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:postText");
 		
 		String text = inputText.getValue().toString();
 		
@@ -90,6 +85,10 @@ public class HomeController {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
+	}
+	
+	public void refreshFeed() {
+		feedEvent.fire(new Feed());
 	}
 	
 	public void deleteItem(Item item) {		

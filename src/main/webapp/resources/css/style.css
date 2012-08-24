@@ -101,7 +101,7 @@ body {
 	padding-right: 10px;
 	padding-bottom: 10px;
 	padding-left: 0;
-	width: 530px;
+	width: 510px;
 }
 
 .feed-item-post {
@@ -111,36 +111,39 @@ body {
 .feed-item-pic {
     float: left;
     width: 50px;    
-    padding-right: 5px;	 
 }
 
 .feed-item-text {
+	position: relative;
 	float: left;
 	width: 390px;
+	left: 5px;
 	padding-bottom: 5px;	
 }
 
 .feed-item-tools {
-	vertical-align: top;
+	display: inline-block;
+	vertical-align: top; 	
 	float: right;
-	width: 20px;
+	text-align: right;
+	width: 22px;
 }
 
 .feed-item-info {
 	float: left;
 	padding-top: 3px;
 	padding-right: 0px;
-	padding-bottom: 0px;
+	padding-bottom: 3px;
 	padding-left: 0;
 	color: gray; 
-	font-size: -1
+	font-size: -1;
 }
 
 .feed-item-action {
 	float: left;
 	padding-top: 3px;
 	padding-right: 0px;
-	padding-bottom: 0px;
+	padding-bottom: 3px;
 	padding-left: 8px;
 }
 
@@ -154,9 +157,18 @@ body {
 
 .feed-item-comment-pic {
     float: left;
-    width: 40px;    
-    padding-right: 5px;	
+    width: 40px;    	
 }
+
+.feed-item-comment-text {
+	position: relative;
+	float: left;
+	width: 300px;
+	left: 5px;
+	padding-bottom: 5px;	
+}
+
+
 
 code {
     font-size: 1.1em;
@@ -194,25 +206,6 @@ span.invalid {
 .column3 {
 	width: 30%;
 	text-align: right;	
-}
-
-.hdr-user-name {
-	width: 200px;
-	height: 40px;
-	text-align: right;
-	font: 15px arial,sans-serif;
-}
-
-.hdr-user-pic {
-	width: 25px;
-	height: 40px;
-	text-align: center;
-}
-
-.hdr-user-logout {
-	width: 25px;
-	height: 40px;
-	text-align: center;
 }
 
 .column75 {
