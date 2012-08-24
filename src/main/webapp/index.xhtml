@@ -19,17 +19,14 @@
 			<div class="header-cell">
 				<h:graphicImage id="logo" alt="logo" url="/images/logo.png" />
 			</div>
+
 			<div class="header-cell">
 				<h:outputText value="#{msgs.apptitle}"
 					style="font: bold 20px liberation,serif; text-decoration: none; color: black" />
 			</div>
 
-		</div>
-
-		<div id="header-center">
-
 			<div class="header-cell">
-				<h:inputText style="width: 200px;"
+				<h:inputText style="width: 300px; height: 18px;"
 					rendered="#{sessionManager.loggedIn}" />
 			</div>
 
@@ -46,7 +43,7 @@
 				<a4j:commandLink
 					value="#{sessionUser.name} (#{sessionUser.profileName})"
 					rendered="#{sessionManager.loggedIn}"
-					style="font: 16px arial,sans-serif; text-decoration: none; color: black"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;"
 					oncomplete="#{rich:component('profilePanel')}.show()"
 					status="waitstatus" rerender="#{rich:clientId('profilePanel')}"
 					ajaxSingle="true">
@@ -67,19 +64,21 @@
 
 			<div class="header-cell">
 				<a4j:commandLink value="#{msgs.logout}"
-					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
-					rendered="#{sessionManager.loggedIn}"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;"
+					render="quoteForm" rendered="#{sessionManager.loggedIn}"
 					action="#{sessionManager.logout()}">
 				</a4j:commandLink>
 
 				<a4j:commandLink value="#{msgs.login}"
-					style="color:#{a4jSkin.generalTextColor};" render="quoteForm"
-					rendered="#{not sessionManager.loggedIn}"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;"
+					render="quoteForm" rendered="#{not sessionManager.loggedIn}"
 					action="#{sessionManager.login()}">
 				</a4j:commandLink>
 			</div>
 
 		</div>
+
+		<div style="clear: both;" />
 
 	</ui:define>
 
