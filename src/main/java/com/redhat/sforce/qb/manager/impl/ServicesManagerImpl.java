@@ -356,7 +356,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.CREATED) {
-			log.info(response.getEntity());
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -378,6 +377,33 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			request.delete(String.class);
 		} catch (Exception e) {
 			throw new SalesforceServiceException(e);
+		}
+	}
+	
+	@Override
+	public String postComment(String sessionId, String itemId, String text) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feed-items/" + itemId + "/comments";
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/json");
+		request.queryParameter("text", text);
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.CREATED) {
+			log.info(response.getEntity());
+			return response.getEntity();
+		} else {
+			throw new SalesforceServiceException(response.getEntity());
 		}
 	}
 	

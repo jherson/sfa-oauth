@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.model.chatter.Comment;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Followers;
 import com.redhat.sforce.qb.model.chatter.Item;
@@ -53,6 +54,16 @@ public class ChatterDAOImpl extends QuoteBuilderObjectDAO implements ChatterDAO 
 	@Override
 	public void unlikeItem(String likeId) throws SalesforceServiceException {
 		servicesManager.unlikeItem(sessionUser.getOAuth().getAccessToken(), likeId);
+	}
+	
+	@Override
+	public Comment postComment(String itemId, String text) throws SalesforceServiceException {
+		
+		Gson gson = new GsonBuilder().setDateFormat(ISO_8061_FORMAT)
+				.setPrettyPrinting()
+				.create();
+		
+		return gson.fromJson(servicesManager.postComment(sessionUser.getOAuth().getAccessToken(), itemId, text), Comment.class);
 	}
 
 	@Override

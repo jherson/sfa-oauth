@@ -5,7 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	
+
 	<rich:panel id="chatterFeed">
 
 		<h:panelGroup layout="block">
@@ -77,6 +77,13 @@
 								<h:outputText value=" " />
 							</h:panelGroup>
 							<h:panelGroup layout="block" class="feed-item-action">
+								<a4j:commandLink value="#{msgs.comment}"
+									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+									status="waitstatus" ajaxSingle="true">
+									<a4j:ajax execute="@this" event="click" render="chatterFeed" rerender="postComment"/>
+									<a4j:actionListener
+										listener="#{homeController.comment(feedItem)}" />
+								</a4j:commandLink>
 								<a4j:commandLink value="#{msgs.like}"
 									rendered="#{empty feedItem.myLike}"
 									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
@@ -100,8 +107,29 @@
 							<h:panelGroup layout="block">
 
 								<ui:repeat var="comment" value="#{feedItem.comments.comments}">
-
-									<h:panelGroup layout="block" class="feed-item-comment">
+									<h:panelGroup layout="block" class="feed-item-comment"
+										rendered="#{empty comment.body.text}">
+										<h:panelGroup layout="block" class="feed-item-comment-pic">
+											<h:graphicImage
+												value="#{sessionUser.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+												height="35" width="35">
+											</h:graphicImage>
+										</h:panelGroup>
+										<h:panelGroup layout="block" class="feed-item-comment-text">
+											<h:inputTextarea value="#{comment.body.text}"
+												style="width: 320px;" maxlength="1000" rows="3" />
+											<h:panelGroup layout="block"
+												style="text-align: right; width: 320px; padding-bottom: 5px;">
+												<a4j:commandButton id="postComment" value="#{msgs.comment}"
+													status="waitstatus" styleClass="commandButton"
+													render="chatterFeed"
+													action="#{homeController.postComment(feedItem)}">
+												</a4j:commandButton>
+											</h:panelGroup>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" class="feed-item-comment"
+										rendered="#{not empty comment.body.text}">
 										<h:panelGroup layout="block" class="feed-item-comment-pic">
 											<h:graphicImage
 												value="#{comment.user.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
@@ -110,12 +138,13 @@
 										</h:panelGroup>
 										<h:panelGroup layout="block" class="feed-item-comment-text">
 											<a4j:commandLink value="#{comment.user.name}"
-												style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+												style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: 10; vertical-align: top;"
 												status="waitstatus" ajaxSingle="true">
 											</a4j:commandLink>
 											<h:outputText value="#{comment.body.text}" escape="false" />
 											<br />
-											<h:panelGroup layout="block" class="feed-item-info">
+											<h:panelGroup layout="block" class="feed-item-info"
+												rendered="#{not empty comment.body.text}">
 												<h:outputText value="#{comment.createdDate}">
 													<f:convertDateTime locale="#{sessionUser.locale}"
 														timeZone="#{sessionUser.timeZone}"
@@ -155,6 +184,9 @@
 														listener="#{homeController.unlikeItem(feedItem.myLike)}" />
 												</a4j:commandLink>
 											</h:panelGroup>
+
+
+
 										</h:panelGroup>
 									</h:panelGroup>
 								</ui:repeat>
