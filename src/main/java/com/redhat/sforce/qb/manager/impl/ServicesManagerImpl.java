@@ -327,7 +327,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Content-type", "application/json");
 				
 		try {
 			request.delete(String.class);
@@ -346,7 +345,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Content-type", "application/json");
 		
 		ClientResponse<String> response = null;
 		try {
@@ -371,7 +369,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Content-type", "application/json");
 		
 		try {
 			request.delete(String.class);
@@ -389,7 +386,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Content-type", "application/json");
+		request.header("Content-type", "application/x-www-form-urlencoded");		
 		request.queryParameter("text", text);
 		
 		ClientResponse<String> response = null;

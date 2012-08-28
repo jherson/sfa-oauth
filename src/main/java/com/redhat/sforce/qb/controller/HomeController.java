@@ -16,6 +16,7 @@ import org.jboss.logging.Logger;
 import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
 import com.redhat.sforce.qb.manager.SessionManager;
+import com.redhat.sforce.qb.model.chatter.Body;
 import com.redhat.sforce.qb.model.chatter.Comment;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Item;
@@ -70,7 +71,9 @@ public class HomeController {
     }
 	
 	public void comment(Item item) {
-		item.getComments().getComments().add(new Comment());
+		Comment comment = new Comment();
+		comment.setBody(new Body());
+		item.getComments().getComments().add(comment);
 	}
 	
 	public void postItem(ActionEvent event) {
@@ -94,11 +97,17 @@ public class HomeController {
 	
 	public void postComment(Item item) {
 		int index = item.getComments().getComments().size() -1;
-		log.info(item.getId());
-		log.info(item.getComments().getComments().get(index).getBody().getText());
+        HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:commentText");
+		
+		String text = inputText.getValue().toString();
+		
+		if (text == null || text.trim().length() == 0)
+			return;
+		
+		inputText.setValue("");
 		
 		try {
-			Comment comment = chatterDAO.postComment(item.getId(), item.getComments().getComments().get(index).getBody().getText());
+			Comment comment = chatterDAO.postComment(item.getId(), text);
 			item.getComments().getComments().set(index, comment);
 		} catch (SalesforceServiceException e) {
 			log.info("SalesforceServiceException: " + e.getMessage());

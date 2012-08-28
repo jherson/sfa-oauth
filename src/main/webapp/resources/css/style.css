@@ -178,21 +178,6 @@ span.invalid {
     color: red;
 }
 
-.header-logo-column {
-	width: 80px;
-	text-align: left;
-}
-
-.header-search-field-column {
-	width: 100px;
-	text-align: right;
-}
-
-.header-search-button-column {
-	width: 100px;
-	text-align: left;
-}
-
 .column1 {
 	width: 30%;
 	text-align: left;
