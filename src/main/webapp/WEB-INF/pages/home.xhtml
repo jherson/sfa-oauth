@@ -38,7 +38,7 @@
 
 			<h:panelGroup layout="block">
 
-				<ui:repeat var="feedItem" value="#{feed.items}">
+				<a4j:repeat var="feedItem" value="#{feed.items}">
 
 					<h:panelGroup layout="block" class="feed-item">
 						<h:panelGroup layout="block" class="feed-item-pic">
@@ -50,7 +50,7 @@
 
 						<h:panelGroup layout="block" class="feed-item-text">
 							<a4j:commandLink value="#{feedItem.parent.name}"
-								style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+								style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; vertical-align: top;"
 								status="waitstatus" ajaxSingle="true"></a4j:commandLink>
 							<h:outputText value="#{feedItem.body.text}"
 								style="vertical-align: top;" escape="false" />
@@ -78,7 +78,7 @@
 							</h:panelGroup>
 							<h:panelGroup layout="block" class="feed-item-action">
 								<a4j:commandLink value="#{msgs.comment}"
-									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; vertical-align: top;"
 									status="waitstatus" ajaxSingle="true">
 									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
 									<a4j:actionListener
@@ -86,7 +86,7 @@
 								</a4j:commandLink>
 								<a4j:commandLink value="#{msgs.like}"
 									rendered="#{empty feedItem.myLike}"
-									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; vertical-align: top;"
 									status="waitstatus" ajaxSingle="true">
 									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
 									<a4j:actionListener
@@ -94,19 +94,11 @@
 								</a4j:commandLink>
 								<a4j:commandLink value="#{msgs.unlike}"
 									rendered="#{not empty feedItem.myLike}"
-									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; vertical-align: top;"
 									status="waitstatus" ajaxSingle="true">
 									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
 									<a4j:actionListener
 										listener="#{homeController.unlikeItem(feedItem)}" />
-								</a4j:commandLink>
-								<a4j:commandLink value="Post"
-									rendered="#{empty comment.body.text}"
-									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
-									status="waitstatus" ajaxSingle="true">
-									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
-									<a4j:actionListener
-										listener="#{homeController.postComment(feedItem)}" />
 								</a4j:commandLink>
 							</h:panelGroup>
 
@@ -114,28 +106,9 @@
 
 							<h:panelGroup layout="block">
 
-								<ui:repeat var="comment" value="#{feedItem.comments.comments}">
-								
-									<h:panelGroup layout="block" class="feed-item-comment"
-										rendered="#{empty comment.body.text}">
-										
-										<h:panelGroup layout="block" class="feed-item-comment-text">
-											<h:inputTextarea id="commentText" value="#{comment.body.text}"
-												style="width: 320px;" maxlength="1000" rows="3" />
-											<h:panelGroup layout="block"
-												style="text-align: right; width: 320px; padding-bottom: 5px;">
-												<a4j:commandButton value="#{msgs.comment}"
-													styleClass="commandButton" status="waitstatus"
-													ajaxSingle="true">
-													<a4j:ajax execute="@this" event="click"
-														render="chatterFeed" />
-													<a4j:actionListener
-														listener="#{homeController.postComment(feedItem)}" />
-												</a4j:commandButton>
-											</h:panelGroup>
-										</h:panelGroup>
-									</h:panelGroup>
-									
+								<a4j:repeat var="comment"
+									value="#{feedItem.comments.comments}">
+
 									<h:panelGroup layout="block" class="feed-item-comment"
 										rendered="#{not empty comment.body.text}">
 										<h:panelGroup layout="block" class="feed-item-comment-pic">
@@ -149,10 +122,10 @@
 												style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: 10; vertical-align: top;"
 												status="waitstatus" ajaxSingle="true">
 											</a4j:commandLink>
-											<h:outputText value="#{comment.body.text}" escape="false" />
+											<h:outputText value="#{comment.body.text}"
+												escape="false" />
 											<br />
-											<h:panelGroup layout="block" class="feed-item-info"
-												rendered="#{not empty comment.body.text}">
+											<h:panelGroup layout="block" class="feed-item-info">
 												<h:outputText value="#{comment.createdDate}">
 													<f:convertDateTime locale="#{sessionUser.locale}"
 														timeZone="#{sessionUser.timeZone}"
@@ -170,8 +143,10 @@
 												<h:outputText value=" " />
 												<h:outputText value="#{msgs.via}" />
 												<h:outputText value=" " />
-												<h:outputText value="#{comment.clientInfo.applicationName}" />
+												<h:outputText
+													value="#{comment.clientInfo.applicationName}" />
 											</h:panelGroup>
+											
 											<h:panelGroup layout="block" class="feed-item-action">
 												<a4j:commandLink value="#{msgs.like}"
 													rendered="#{empty comment.myLike}"
@@ -180,7 +155,7 @@
 													<a4j:ajax execute="@this" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
-														listener="#{homeController.likeItem(feedItem)}" />
+														listener="#{homeController.likeComment(comment)}" />
 												</a4j:commandLink>
 												<a4j:commandLink value="#{msgs.unlike}"
 													rendered="#{not empty comment.myLike}"
@@ -189,18 +164,54 @@
 													<a4j:ajax execute="@this" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
-														listener="#{homeController.unlikeItem(feedItem.myLike)}" />
+														listener="#{homeController.unlikeComment(comment)}" />
+												</a4j:commandLink>
+												<a4j:commandLink value="#{msgs.delete}"
+													rendered="#{not comment.isDeleteRestricted}"
+													style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: +1; vertical-align: top;"
+													status="waitstatus" ajaxSingle="true">
+													<a4j:ajax execute="@this" event="click"
+														render="chatterFeed" />
+													<a4j:actionListener
+														listener="#{homeController.deleteComment(comment)}" />
 												</a4j:commandLink>
 											</h:panelGroup>
 
-
-
 										</h:panelGroup>
 									</h:panelGroup>
-								</ui:repeat>
+
+
+									<h:panelGroup layout="block" class="feed-item-comment"
+										rendered="#{empty comment.body.text}">
+
+										<h:panelGroup layout="block" class="feed-item-comment-pic">
+											<h:graphicImage
+												value="#{sessionUser.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+												height="35" width="35">
+											</h:graphicImage>
+										</h:panelGroup>
+
+										<h:panelGroup layout="block" class="feed-item-comment-text">
+											<h:inputTextarea id="commentText"
+												value="#{comment.body.text}" style="width: 320px;"
+												maxlength="1000" rows="3" />
+											<h:panelGroup layout="block"
+												style="text-align: right; width: 320px; padding-bottom: 5px;">
+												<a4j:commandButton value="#{msgs.comment}"
+													styleClass="commandButton" status="waitstatus"
+													ajaxSingle="true">
+													<a4j:ajax execute="@this" event="click"
+														render="chatterFeed" />
+													<a4j:actionListener
+														listener="#{homeController.postComment(feedItem)}" />
+												</a4j:commandButton>
+											</h:panelGroup>
+										</h:panelGroup>
+									</h:panelGroup>
+									
+								</a4j:repeat>
 
 							</h:panelGroup>
-
 
 						</h:panelGroup>
 
@@ -224,7 +235,7 @@
 
 					</h:panelGroup>
 
-				</ui:repeat>
+				</a4j:repeat>
 
 			</h:panelGroup>
 

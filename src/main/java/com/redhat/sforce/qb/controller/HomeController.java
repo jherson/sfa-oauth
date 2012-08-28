@@ -96,17 +96,21 @@ public class HomeController {
 	}
 	
 	public void postComment(Item item) {
-		int index = item.getComments().getComments().size() -1;
-        HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:commentText");
 		
-		String text = inputText.getValue().toString();
+	    int index = item.getComments().getComments().size() -1;
+	    String text = item.getComments().getComments().get(index).getBody().getText();
+	    
+        //HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent(":commentText");
 		
-		if (text == null || text.trim().length() == 0)
-			return;
-		
-		inputText.setValue("");
-		
-		try {
+		//String text = inputText.getValue().toString();
+	    
+	    log.info("index: " + index);
+	    log.info("text: " + text);
+	    
+	    if (text == null || text.trim().length() == 0) 
+	    	return;
+		        		
+		try {						
 			Comment comment = chatterDAO.postComment(item.getId(), text);
 			item.getComments().getComments().set(index, comment);
 		} catch (SalesforceServiceException e) {
@@ -149,5 +153,17 @@ public class HomeController {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
+	}
+	
+	public void likeComment(Comment comment) {
+		log.info("Comment Id: " + comment.getId());
+	}
+	
+	public void unlikeComment(Comment comment) {
+		log.info("Comment Id: " + comment.getMyLike().getId());
+	}
+	
+	public void deleteComment(Comment comment) {
+		log.info("Comment Id: " + comment.getId());
 	}
 }

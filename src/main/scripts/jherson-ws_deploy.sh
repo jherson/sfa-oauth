@@ -3,6 +3,8 @@
 DEPLOYMENT_DIR=$HOME/workspace/sfa-qb/deployments
 TARGET_DIR=$HOME/workspace/sfa-qb/target
 
+echo "Deploying at:" `date`
+
 rm  $DEPLOYMENT_DIR/*
 cp $TARGET_DIR/quotebuilder.war $DEPLOYMENT_DIR
 touch $DEPLOYMENT_DIR/quotebuilder.war.dodeploy
