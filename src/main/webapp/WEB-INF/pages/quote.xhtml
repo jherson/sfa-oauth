@@ -99,7 +99,7 @@
 						action="#{quoteController.editQuote()}" styleClass="commandButton"
 						rendered="#{not quoteController.editMode}" ajaxSingle="true"
 						disabled="#{empty selectedQuote}" render="quotedetails"
-						oncomplete="#{rich:element('quoteForm:quoteName')}.focus()">
+						oncomplete="#{rich:element('mainForm:quoteName')}.focus()">
 					</a4j:commandButton>
 
 					<a4j:commandButton id="activate" value="#{msgs.activate}"

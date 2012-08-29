@@ -9,8 +9,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
-import com.redhat.sforce.qb.data.QuoteListProducer;
-import com.redhat.sforce.qb.data.QuoteProducer;
+import com.sfa.qb.data.QuoteListProducer;
+import com.sfa.qb.data.QuoteProducer;
 
 public class QuoteListProducerTest {
 

@@ -5,10 +5,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.redhat.sforce.persistence.connection.ConnectionManager;
-import com.redhat.sforce.qb.dao.QuoteDAO;
-import com.redhat.sforce.qb.exception.QueryException;
-import com.redhat.sforce.qb.model.quotebuilder.Quote;
+import com.sfa.persistence.connection.ConnectionManager;
+import com.sfa.qb.dao.QuoteDAO;
+import com.sfa.qb.exception.QueryException;
+import com.sfa.qb.model.sobject.Quote;
 import com.sforce.ws.ConnectionException;
 
 public class QuoteListProducerTest {
