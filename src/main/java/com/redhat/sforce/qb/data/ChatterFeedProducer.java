@@ -17,6 +17,8 @@ import org.richfaces.cdi.push.Push;
 
 import com.redhat.sforce.qb.dao.ChatterDAO;
 import com.redhat.sforce.qb.exception.SalesforceServiceException;
+import com.redhat.sforce.qb.model.chatter.Body;
+import com.redhat.sforce.qb.model.chatter.Comment;
 import com.redhat.sforce.qb.model.chatter.Feed;
 import com.redhat.sforce.qb.model.chatter.Item;
 import com.redhat.sforce.qb.qualifiers.DeleteItem;
@@ -39,11 +41,25 @@ public class ChatterFeedProducer implements Serializable {
 //    private Event<Feed> pushEvent;
 
 	private Feed feed;
+	
+	private Comment comment;
 
 	@Produces
 	@Named
 	public Feed getFeed() {
 		return feed;
+	}
+	
+	@Produces
+	@Named
+	public Comment getComment() {
+		return comment;
+	}
+	
+	public void addComment(Item item) {
+		comment = new Comment();
+		comment.setBody(new Body());
+		item.getComments().getComments().add(comment);
 	}
 
 	@PostConstruct

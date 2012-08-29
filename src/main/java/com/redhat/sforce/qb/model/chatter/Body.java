@@ -22,6 +22,7 @@ public class Body implements Serializable {
 	}
 	
 	public void setText(String text) {
+		System.out.println("Setting text: " + text);
 		this.text = text;
 	}	
 }

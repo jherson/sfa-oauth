@@ -72,6 +72,7 @@ public class HomeController {
 	
 	public void comment(Item item) {
 		Comment comment = new Comment();
+        comment.setId("myid");
 		comment.setBody(new Body());
 		item.getComments().getComments().add(comment);
 	}
@@ -104,7 +105,7 @@ public class HomeController {
 		
 		//String text = inputText.getValue().toString();
 	    
-	    log.info("index: " + index);
+	    //log.info("index: " + index);
 	    log.info("text: " + text);
 	    
 	    if (text == null || text.trim().length() == 0) 

@@ -180,7 +180,6 @@
 										</h:panelGroup>
 									</h:panelGroup>
 
-
 									<h:panelGroup layout="block" class="feed-item-comment"
 										rendered="#{empty comment.body.text}">
 
@@ -197,9 +196,8 @@
 												maxlength="1000" rows="3" />
 											<h:panelGroup layout="block"
 												style="text-align: right; width: 320px; padding-bottom: 5px;">
-												<a4j:commandButton value="#{msgs.comment}"
-													styleClass="commandButton" status="waitstatus"
-													ajaxSingle="true">
+												<a4j:commandButton value="#{msgs.comment}" ajaxSingle="true"
+													styleClass="commandButton" status="waitstatus">
 													<a4j:ajax execute="@this" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
