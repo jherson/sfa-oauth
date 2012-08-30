@@ -54,16 +54,10 @@ public class ChatterFeedProducer implements Serializable {
 		try {
 			feed = chatterDAO.getFeed();
 			chatterDAO.getQuoteFeed();
-		} catch (SalesforceServiceException sse) {
-			log.info("SalesforceServiceException: " + sse.getMessage());
-			try {
-				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
-			} catch (IOException e) {
-				log.error("IOException", e);
-				FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "SalesforceServiceException: " + e.getMessage());
-			    FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-			}			
+		} catch (SalesforceServiceException e) {
+			log.info("SalesforceServiceException: " + e.getMessage());
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
+		    FacesContext.getCurrentInstance().addMessage(null, facesMessage);			
 		}
 	}
 	

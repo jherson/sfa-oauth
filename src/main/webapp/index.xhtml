@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich"
-	template="/WEB-INF/templates/default.xhtml">	
+	template="/WEB-INF/templates/default.xhtml">
 
 	<ui:define name="header">
 
@@ -14,7 +14,8 @@
 		<div id="header-left">
 
 			<div class="header-cell">
-				<h:graphicImage id="logo" alt="logo" url="/resources/images/logo.png" />
+				<h:graphicImage id="logo" alt="logo"
+					url="/resources/images/logo.png" />
 			</div>
 
 			<div class="header-cell">
@@ -84,9 +85,9 @@
 		<h:panelGrid layout="block" width="100%" columns="1">
 
 			<a4j:commandLink id="homeLink" rendered="#{sessionManager.loggedIn}"
-				status="waitstatus">			
-				<a4j:ajax render="mainArea" execute="@this" event="click" />	
-				<f:param name="pageView" value="home" />				
+				status="waitstatus">
+				<a4j:ajax render="mainArea" execute="@this" event="click" />
+				<f:param name="pageView" value="home" />
 				<a4j:actionListener listener="#{homeController.showPageView}" />
 
 				<h:graphicImage id="home" alt="home"
@@ -95,9 +96,9 @@
 			</a4j:commandLink>
 
 			<a4j:commandLink id="quotemanagerLink"
-				rendered="#{sessionManager.loggedIn}" status="waitstatus" >
+				rendered="#{sessionManager.loggedIn}" status="waitstatus">
 				<a4j:ajax render="mainArea" execute="@this" event="click" />
-				<f:param name="pageView" value="quotemanager" />				
+				<f:param name="pageView" value="quotemanager" />
 				<a4j:actionListener listener="#{homeController.showPageView}" />
 
 				<h:graphicImage id="quotemanager" alt="quotemanager"
@@ -110,6 +111,12 @@
 	</ui:define>
 
 	<ui:define name="body">
+
+		<h:panelGroup layout="block" id="messagePanel" ajaxRendered="true"
+			style="border-color: red; padding: 5px;"
+			render="#{facesContext.maximumSeverity != null}">
+			<rich:messages />
+		</h:panelGroup>
 
 		<a4j:outputPanel id="mainArea">
 			<ui:include src="#{sessionManager.mainArea.template}" />
