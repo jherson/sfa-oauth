@@ -16,7 +16,7 @@ public class ChatterDAOImpl extends DAO implements ChatterDAO {
 	
 	private static final String ISO_8061_FORMAT = "yyyy-MM-dd'T'kk:mm:ss.SSS'Z'";
 	
-	private static final Gson gson = new GsonBuilder().setDateFormat(ISO_8061_FORMAT).setPrettyPrinting().create();	
+	private static final Gson gson = new GsonBuilder().setDateFormat(ISO_8061_FORMAT).create();	
 	
 	@Override
 	public Feed getFeed() throws SalesforceServiceException {
