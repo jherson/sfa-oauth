@@ -52,18 +52,20 @@
 							<a4j:commandLink value="#{feedItem.parent.name}"
 								style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; vertical-align: top;"
 								status="waitstatus" ajaxSingle="true"></a4j:commandLink>
-							<h:outputText value="#{feedItem.body.text}"
-								style="vertical-align: top;" escape="#{false}" />
+							<h:outputText value="#{feedItem.body.text}" escape="#{false}" />
 							<br />
 							<h:panelGroup layout="block" class="feed-item-info">
-								<h:outputText value="#{feedItem.createdDate}"
-									style="vertical-align: top;">
+								<h:outputText value="#{feedItem.createdDate}">
 									<f:convertDateTime locale="#{sessionUser.locale}"
 										timeZone="#{sessionUser.timeZone}"
-										pattern="#{sessionUser.dateFormatPattern}" type="date" />
+										pattern="#{sessionUser.dateTimeFormatPattern}" type="date" />
 								</h:outputText>
 								<h:outputText value=" " />
-								<h:outputText value="#{msgs.at}" style="vertical-align: top;" />
+								<h:outputText value="#{feedItem.dateString}">
+									
+								</h:outputText>
+								<h:outputText value=" " />
+								<h:outputText value="#{msgs.at}" />
 								<h:outputText value=" " />
 								<h:outputText value="#{feedItem.createdDate}">
 									<f:convertDateTime locale="#{sessionUser.locale}"

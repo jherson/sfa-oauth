@@ -83,12 +83,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/subscriptions/" + subscriptionId;
 		
-		log.info(sessionId);
-		log.info(url);
-		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Accept-Type", "application/json");
 		
 		try {
 			ClientResponse<String> response = request.delete(String.class);
@@ -112,7 +108,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Content-type", "application/json");
 		
 		JSONObject jsonObject = null;
 		try {
@@ -139,7 +134,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
-		request.header("Content-type", "application/json");
 		
 		JSONObject jsonObject = null;
 		try {
@@ -250,7 +244,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 		
 		if (response.getResponseStatus() == Status.OK) {
-			logResponse(response);
+			//logResponse(response);
 		    return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -275,7 +269,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.OK) {
-			logResponse(response);
+			//logResponse(response);
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());

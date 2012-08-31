@@ -3,6 +3,7 @@ package com.sfa.qb.model.chatter;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -20,7 +21,7 @@ public class Item implements Serializable {
 	private Date modifiedDate;
 	private String photoUrl;	
 	private Comments comments;
-	//private Likes likes;
+	private Likes likes;
 	private Boolean isBookmarkedByCurrentUser;
 	private Boolean isDeleteRestricted;
 	private Boolean isLikedByCurrentUser;
@@ -30,6 +31,7 @@ public class Item implements Serializable {
 	//private Attachement;
 	private String originalFeedItem;
 	private String originalFeedItemActor;
+	private String dateString;
 	
 	public User getParent() {
 		return parent;
@@ -63,6 +65,14 @@ public class Item implements Serializable {
 		this.comments = comments;
 	}
 	
+	public Likes getLikes() {
+		return likes;
+	}
+	
+	public void setLikes(Likes likes) {
+		this.likes = likes;
+	}
+	
 	public String getUrl() {
 		return url;
 	}
@@ -71,13 +81,12 @@ public class Item implements Serializable {
 		this.url = url;
 	}
 
-	public String getCreatedDate() {
-		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
-		return format.format(createdDate);
+	public Date getCreatedDate() {
+        return createdDate;
 	}
 	
 	public void setCreatedDate(Date createdDate) {		
+		System.out.println(createdDate);
 		this.createdDate = createdDate;
 	}
 	
@@ -153,14 +162,6 @@ public class Item implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 	
-//	public String getMyLike() {
-//		return myLike;
-//	}
-	
-//	public void setMyLike(String myLike) {
-//		this.myLike = myLike;
-//	}
-	
 	public String getPhotoUrl() {
 		return photoUrl;
 	}
@@ -183,5 +184,20 @@ public class Item implements Serializable {
 	
 	public void setOriginalFeedItemActor(String originalFeedItemActor) {
 		this.originalFeedItemActor = originalFeedItemActor;
+	}
+	
+	public String getDateString() {
+		TimeZone tz = TimeZone.getTimeZone("America/New_York");
+		Calendar cal = Calendar.getInstance(tz); //returns a calendar set to the local time in New York
+		cal.setTime(createdDate);
+		SimpleDateFormat format = new SimpleDateFormat("hh:mma z");
+		format.setCalendar(cal);  //explicitly set the calendar into the date formatter
+		dateString = format.format(cal.getTime());
+		
+//		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+//		format.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+//		dateString = format.format(createdDate);
+		System.out.println("date string: " + dateString);
+		return dateString;
 	}
 }

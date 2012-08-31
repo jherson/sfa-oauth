@@ -18,7 +18,7 @@ public class Util {
 	
 	public static String getShortTimeFormat(Locale locale) {
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		format.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		return format.toPattern();
 	}
 	
