@@ -9,8 +9,6 @@
 
 	<ui:define name="header">
 
-		<ui:include src="/WEB-INF/pages/profile.xhtml" />
-
 		<div id="header-left">
 
 			<div class="header-cell">
@@ -36,6 +34,8 @@
 		</div>
 
 		<div id="header-right">
+
+			<ui:include src="/WEB-INF/pages/profile.xhtml" />
 
 			<div class="header-cell">
 				<a4j:commandLink
@@ -82,45 +82,55 @@
 
 	<ui:define name="sidebar">
 
-		<h:panelGrid layout="block" width="100%" columns="1">
+		<h:panelGroup layout="block" style="padding: 20px 15px 5px 15px;">
 
-			<a4j:commandLink id="homeLink" rendered="#{sessionManager.loggedIn}"
-				status="waitstatus">
-				<a4j:ajax render="mainArea" execute="@this" event="click" />
-				<f:param name="pageView" value="home" />
-				<a4j:actionListener listener="#{homeController.showPageView}" />
+			<h:panelGroup layout="block" style="padding: 5px;">
 
-				<h:graphicImage id="home" alt="home"
-					url="/images/menubar/home48x48.png" />
+				<a4j:commandLink id="homeLink" rendered="#{sessionManager.loggedIn}"
+					status="waitstatus">
+					<a4j:ajax render="mainArea" execute="@this" event="click" />
+					<f:param name="pageView" value="home" />
+					<a4j:actionListener listener="#{homeController.showPageView}" />
 
-			</a4j:commandLink>
+					<h:graphicImage id="home" alt="home"
+						url="/images/menubar/home48x48.png" />
 
-			<a4j:commandLink id="quotemanagerLink"
-				rendered="#{sessionManager.loggedIn}" status="waitstatus">
-				<a4j:ajax render="mainArea" execute="@this" event="click" />
-				<f:param name="pageView" value="quotemanager" />
-				<a4j:actionListener listener="#{homeController.showPageView}" />
+				</a4j:commandLink>
 
-				<h:graphicImage id="quotemanager" alt="quotemanager"
-					url="/images/menubar/quote48x48.png" />
+			</h:panelGroup>
 
-			</a4j:commandLink>
+			<h:panelGroup layout="block" style="padding: 5px;">
 
-		</h:panelGrid>
+				<a4j:commandLink id="quotemanagerLink"
+					rendered="#{sessionManager.loggedIn}" status="waitstatus">
+					<a4j:ajax render="mainArea" execute="@this" event="click" />
+					<f:param name="pageView" value="quotemanager" />
+					<a4j:actionListener listener="#{homeController.showPageView}" />
+
+					<h:graphicImage id="quotemanager" alt="quotemanager"
+						url="/images/menubar/quote48x48.png" />
+
+				</a4j:commandLink>
+
+			</h:panelGroup>
+
+		</h:panelGroup>
 
 	</ui:define>
 
 	<ui:define name="body">
 
-		<h:panelGroup layout="block" id="messagePanel" ajaxRendered="true"
-			style="border-color: red; padding: 5px;"
-			render="#{facesContext.maximumSeverity != null}">
-			<rich:messages />
-		</h:panelGroup>
+		<rich:panel id="mainArea">
+		
+			<h:panelGroup layout="block" id="messagePanel" ajaxRendered="true"
+				style="border-color: red; padding: 5px;"
+				render="#{facesContext.maximumSeverity != null}">
+				<rich:messages />
+			</h:panelGroup>
 
-		<a4j:outputPanel id="mainArea">
 			<ui:include src="#{sessionManager.mainArea.template}" />
-		</a4j:outputPanel>
+			
+		</rich:panel>
 
 	</ui:define>
 

@@ -1,5 +1,7 @@
 package com.sfa.qb.dao.impl;
 
+import java.util.Date;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sfa.qb.dao.ChatterDAO;
@@ -9,15 +11,15 @@ import com.sfa.qb.model.chatter.Feed;
 import com.sfa.qb.model.chatter.Followers;
 import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.chatter.MyLike;
+import com.sfa.qb.util.DateAdapter;
 
 public class ChatterDAOImpl extends DAO implements ChatterDAO {
 	
-	private static final long serialVersionUID = -7783099077179755846L;
+	private static final long serialVersionUID = -7783099077179755846L;	
 	
-	private static final String ISO_8061_FORMAT = "yyyy-MM-dd'T'kk:mm:ss.SSS'Z'";
-	
-	private static final Gson gson = new GsonBuilder().setDateFormat(ISO_8061_FORMAT).create();	
-	
+	private static final Gson gson = new GsonBuilder().setPrettyPrinting()
+			.registerTypeAdapter(Date.class, new DateAdapter()).create();
+
 	@Override
 	public Feed getFeed() throws SalesforceServiceException {
 		return getGson().fromJson(servicesManager.getFeed(getSessionId()), Feed.class);

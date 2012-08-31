@@ -18,18 +18,18 @@
                 </h:outputLink>
 		</f:facet>
 
-		<a4j:outputPanel layout="block">
+		<a4j:outputPanel>
 
-			<h:panelGrid width="100%" columns="2" cellpadding="3">
+			<h:panelGrid width="100%" columns="2" cellpadding="3" layout="inline-block">
 
-				<h:panelGroup styleClass="grid_panels">
+				<h:panelGroup>
 
 					<h:graphicImage value="#{sessionUser.fullPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}" height="160"
 						width="160" />
 
 				</h:panelGroup>
 
-				<h:panelGroup styleClass="grid_panels">
+				<h:panelGroup>
 
 					<table style="width: 100%">
 						<tr>
