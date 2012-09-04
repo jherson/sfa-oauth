@@ -1,9 +1,10 @@
 body {
     margin: 0;
     padding: 0;    
-    background-color: #EAECEE;
+    background-color: #f9fafa;
     font-family: Verdana, sans-serif;
     font-size: 0.9em;
+    width: 100%;
 }
 
 h2,h3 {
@@ -21,7 +22,7 @@ div#header {
 	display: block;
 	clear: both;
 	overflow: hidden;	
-	background: #EAECEE;    
+	background: #f9fafa;    
 }
 
 div#container {
@@ -30,6 +31,7 @@ div#container {
     margin: 0;
     padding: 0 0px 0px 0px;
     width: 100%;     
+    background: #f9fafa;
     padding-left: 2;
     padding-top: 2;
     padding-right: 2;
@@ -43,23 +45,22 @@ div#sidebar {
     font-size: 0.9em;
     width: 80px;
     float: left;
-    background: #EAECEE;
+    background: #f9fafa;
     overflow: auto;
 }
 
 div#body {
 	left: 85px;
 	position: fixed;
-	width: 2000px;
 	top: 70px;
 	bottom: 0px;
 	margin: 0 auto;
 	float: left;
 	overflow: auto;
-	padding: 0px;
+	padding-left: 10px;
 	background: #FFFFFF;    
-	border-top: 2px solid #F0F0F0;
-	border-left: 2px solid #F0F0F0;
+	border-top: 2px solid #EAECEE;
+	border-left: 2px solid #EAECEE;
 }
 
 div#footer {
@@ -67,7 +68,7 @@ div#footer {
     width: 750px;
     clear: both;
     margin-top: 100px;
-    background-color: #EAECEE;
+    background-color: #f9fafa;
 }
 
 .header-cell {

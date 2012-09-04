@@ -120,7 +120,7 @@
 
 	<ui:define name="body">
 
-		<rich:panel id="mainArea">
+		<h:panelGroup id="mainArea">
 		
 			<h:panelGroup layout="block" id="messagePanel" ajaxRendered="true"
 				style="border-color: red; padding: 5px;"
@@ -130,7 +130,7 @@
 
 			<ui:include src="#{sessionManager.mainArea.template}" />
 			
-		</rich:panel>
+		</h:panelGroup>
 
 	</ui:define>
 
