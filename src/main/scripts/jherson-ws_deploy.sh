@@ -2,6 +2,7 @@
 
 DEPLOYMENT_DIR=$HOME/workspace/sfa-qb/deployments
 TARGET_DIR=$HOME/workspace/sfa-qb/target
+JBOSS_HOME=/usr/local/bin/jboss
 
 echo "Deploying at:" `date`
 
