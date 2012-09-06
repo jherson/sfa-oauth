@@ -6,7 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-		<h:panelGroup id="chatterFeed" layout="block">
+		<rich:panel style="border: 0px" id="chatterFeed" layout="block">
 
 			<h:panelGroup layout="block" style="width: 500px;">
 
@@ -64,7 +64,7 @@
 									<h:outputText value=" " />
 									<h:outputText value="#{msgs.at}" />
 									<h:outputText value=" " />
-									<h:outputText value="#{feedItem.createdDate}">
+									<h:outputText value="#{feedItem.createdDate}" >
 										<f:convertDateTime locale="#{sessionUser.locale}"
 											timeZone="#{sessionUser.timeZone}"
 											pattern="#{sessionUser.shortTimeFormat}" type="time" />
@@ -121,7 +121,7 @@
 											</h:panelGroup>
 											<h:panelGroup layout="block" class="feed-item-comment-text">
 												<a4j:commandLink value="#{comment.user.name}"
-													style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold; font-size: 10;"
+													style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold;"
 													status="waitstatus" ajaxSingle="true">
 												</a4j:commandLink>
 												<h:outputText value="#{comment.body.text}" escape="#{false}" />
@@ -242,6 +242,6 @@
 
 			</h:panelGroup>
 
-		</h:panelGroup>
+		</rich:panel>
 
 </ui:composition>
