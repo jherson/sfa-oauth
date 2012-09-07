@@ -1,10 +1,9 @@
-body {
-    margin: 0;
-    padding: 0;    
-    background-color: #f9fafa;
-    font-family: Verdana, sans-serif;
-    font-size: 0.9em;
+html, body {
+	margin: 0px;
+    height: 100%;
     width: 100%;
+    padding: 0;     
+    overflow-y: hidden;    
 }
 
 h2,h3 {
@@ -16,51 +15,54 @@ div#header {
 	position: absolute;
 	width: 100%;
 	margin: 0 auto;	
-	height: 60px;	
+	height: 70px;	
 	top: 0px;	
-	left:0px;
+	left: 0px;
 	display: block;
-	clear: both;
 	overflow: hidden;	
-	background: #f9fafa;    
+	min-width: 1000px;  
+	background-color: #f9fafa;        
 }
 
-div#container {
-	top: 65px;
+div#container {	
+	position: absolute;
+	width: 100%;
+	margin: 0 auto;		
+	top: 70px;
 	left: 0px;
-    margin: 0;
-    padding: 0 0px 0px 0px;
-    width: 100%;     
-    background: #f9fafa;
+	bottom: 0px;     
     padding-left: 2;
     padding-top: 2;
     padding-right: 2;
+    min-width: 1000px;   
+    overflow: hidden;
 }
 
 div#sidebar {
-	position: fixed;
-	top: 70px;
+	position: absolute;
+	top: 0px;
     left:0px;
 	bottom: 0px;
-    font-size: 0.9em;
-    width: 80px;
-    float: left;
-    background: #f9fafa;
-    overflow: auto;
+	float: left;
+    width: 100px;
+    background-color: #f9fafa;
+    overflow-x: hidden;
+	overflow-y: auto;
 }
 
-div#body {
-	left: 85px;
-	position: fixed;
-	top: 70px;
+div#body {	
+	position: absolute;
+	left: 100px;	
+	top: 0px;
 	bottom: 0px;
-	margin: 0 auto;
-	float: left;
-	overflow: auto;
+	right: 0px;
+    float: left;
 	padding-left: 10px;
 	background: #FFFFFF;    
 	border-top: 2px solid #EAECEE;
 	border-left: 2px solid #EAECEE;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 div#footer {
@@ -80,7 +82,7 @@ div#footer {
 #header-left {
 	float: left;
 	display: inline-block;
-    width: 400px;
+    width: 560px;
     height: 100%;
     white-space: nowrap;	
     vertical-align: middle;

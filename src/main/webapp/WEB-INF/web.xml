@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.0">
 
 	<display-name>Quote Builder</display-name>
-	
+			
 	<context-param>
 		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
 		<param-value>false</param-value>
@@ -48,5 +48,7 @@
 	<welcome-file-list>
 		<welcome-file>authorize</welcome-file>
 	</welcome-file-list>
+	
+	<distributable/>
 
 </web-app>         

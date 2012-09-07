@@ -9,30 +9,22 @@
 
 <f:view>
 	<h:head>
+
 		<title>#{msgs.apptitle}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon"
 			href="#{request.contextPath}/images/favicon.ico" />
 		<h:outputStylesheet name="css/style.css" />
 
-		<style type="text/css">
-html {
-	margin: 0px;
-	padding: 0px;
-	min-height: 100%;
-	overflow-y: hidden;
-	width: 100%;
-}
-</style>
-
 	</h:head>
+
 	<h:body>
 
 		<!--                                         -->
 		<!--                S T A T U S              -->
 		<!--                                         -->
 
-		<ui:include src="/WEB-INF/pages/status.xhtml" />	
+		<ui:include src="/WEB-INF/pages/status.xhtml" />
 
 		<!--                                         -->
 		<!--                M A I N F O R M          -->
@@ -46,24 +38,24 @@ html {
 
 			<rich:hotKey key="backspace" handler="return false;"
 				disableInInput="true" />
-			
 
-				<!--                                         -->
-				<!--                H E A D E R              -->
-				<!--                                         -->
 
-				<div id="header">
+			<!--                                         -->
+			<!--                H E A D E R              -->
+			<!--                                         -->
 
-					<ui:insert name="header">
+			<div id="header">
+
+				<ui:insert name="header">
                         [Template header will be inserted here]
                     </ui:insert>
 
-				</div>
-				
-							<!--                                         -->
+			</div>
+
+			<!--                                         -->
 			<!--                C O N T A I N E R        -->
 			<!--                                         -->
-			
+
 			<div id="container">
 
 				<!--                                         -->
@@ -94,7 +86,7 @@ html {
 				<!--                F O O T E R              -->
 				<!--                                         -->
 
-				<div id="footer"></div>
+				<!--<div id="footer"></div>-->
 
 			</div>
 

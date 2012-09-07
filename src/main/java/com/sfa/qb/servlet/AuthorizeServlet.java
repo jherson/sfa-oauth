@@ -81,8 +81,8 @@ public class AuthorizeServlet extends HttpServlet {
 		        out.println("<meta http-equiv=\"Refresh\" content=\"0\">");
 		        out.println("</head><body>");
 		        out.println("<br><br><br>");
-		        out.println("<center><h1>" + messages.getString("apptitle") + "<br>");
-		        out.println(messages.getString("waitMessage") + "</h1></center>");
+		        out.println("<center><h1>" + messages.getString("initializing") + "<br>");
+		        out.println(messages.getString("waitMessage") + "</h2></center>");
 		        out.close();
 		        
 			} else {
