@@ -1,10 +1,8 @@
 package com.sfa.qb.data;
 
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
@@ -13,14 +11,6 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
-import com.mongodb.util.JSON;
-import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.dao.QuoteDAO;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.Quote;
@@ -42,7 +32,7 @@ public class QuoteListProducer implements Serializable {
 
 	@Produces
 	@Named
-	public List<Quote> getQuoteList() {
+	public List<Quote> getQuoteList() {		
 		if (quoteList == null)
 			queryQuotes();
 		

@@ -93,6 +93,8 @@ public class QuoteController {
 	
 	@Inject
 	private Event<QuoteLineItem> quoteLineItemEvent;	
+	
+	private List<Integer> lineNumberList;
 		 
 	@PostConstruct
 	public void init() {
@@ -129,6 +131,14 @@ public class QuoteController {
 
 	public void backToViewQuote() {
 		setMainArea(TemplatesEnum.QUOTE);
+	}
+	
+	public List<Integer> getLineNumberList() {
+		lineNumberList = new ArrayList<Integer>();
+		for (QuoteLineItem quoteLineItem : selectedQuote.getQuoteLineItems()) {
+			lineNumberList.add(quoteLineItem.getLineNumber());
+		}
+		return lineNumberList;
 	}
 
 	public void newQuote(Opportunity opportunity) {

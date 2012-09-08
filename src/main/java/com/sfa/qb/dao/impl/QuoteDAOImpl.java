@@ -109,7 +109,8 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		try {
 			ConnectionManager.openConnection(sessionUser);			
 			Query q = em.createQuery(queryString);
-			q.addParameter("quoteId", quoteId);			
+			q.addParameter("quoteId", quoteId);		
+			q.addOrderBy("LineNumber__c, CreatedDate");
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
@@ -494,7 +495,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			sobject.setField("Product__c", quoteLineItem.getProduct().getId());
 			sobject.setField("Pricing_Attributes__c", quoteLineItem.getPricingAttributes());
 			sobject.setField("Quantity__c", quoteLineItem.getQuantity());			
-			sobject.setField("SortOrder__c", quoteLineItem.getSortOrder());
+			sobject.setField("LineNumber__c", quoteLineItem.getLineNumber());
 			sobject.setField("StartDate__c", quoteLineItem.getStartDate());
 			sobject.setField("Term__c", quoteLineItem.getTerm());
 			sobject.setField("UnitPrice__c", quoteLineItem.getUnitPrice());
@@ -571,7 +572,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			+ "        OpportunityId__c, "
 			+ "        Term__c, "
 			+ "        UnitPrice__c, "
-			+ "        SortOrder__c, "
+			+ "        LineNumber__c, "
 			+ "        YearlySalesPrice__c, "
 			+ "        NewOrRenewal__c, "
 			+ "        QuoteId__c, "
@@ -844,7 +845,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			+ "        OpportunityId__c, "
 			+ "        Term__c, "
 			+ "        UnitPrice__c, "
-			+ "        SortOrder__c, "
+			+ "        LineNumber__c, "
 			+ "        YearlySalesPrice__c, "
 			+ "        NewOrRenewal__c, "
 			+ "        QuoteId__c, "
@@ -868,7 +869,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			+ "        Code__c, "
 			+ "        Message__c "
 			+ " From   QuoteLineItem__r "
-			+ "Order By CreatedDate), "
+			+ "Order By LineNumber__c, CreatedDate), "
 			+ "(Select Id, "
 			+ "        QuoteId__c, "
 			+ "        Amount__c, "

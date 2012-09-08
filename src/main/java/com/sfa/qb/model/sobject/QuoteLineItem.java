@@ -31,7 +31,7 @@ public class QuoteLineItem extends QuoteBuilderObject {
 	private Double basePrice;
 	private Double discountAmount;
 	private Double discountPercent;
-	private Integer sortOrder;
+	private Integer lineNumber;
 	@NotNull
 	private Product product;
 	private Boolean selected;
@@ -245,12 +245,12 @@ public class QuoteLineItem extends QuoteBuilderObject {
 		this.discountPercent = discountPercent;
 	}
 
-	public Integer getSortOrder() {
-		return sortOrder;
+	public Integer getLineNumber() {
+		return lineNumber;
 	}
 
-	public void setSortOrder(Integer sortOrder) {
-		this.sortOrder = sortOrder;
+	public void setLineNumber(Integer lineNumber) {
+		this.lineNumber = lineNumber;
 	}
 
 	public Product getProduct() {

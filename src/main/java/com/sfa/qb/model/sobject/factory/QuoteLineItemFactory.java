@@ -63,8 +63,7 @@ public class QuoteLineItemFactory {
 		quoteLineItem.setPricebookEntryId(wrapper.getString("PricebookEntryId__c"));
 		quoteLineItem.setPricingAttributes(wrapper.getString("Pricing_Attributes__c"));
 		quoteLineItem.setQuantity(wrapper.getInteger("Quantity__c"));
-		quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));
-		quoteLineItem.setSortOrder(wrapper.getInteger("SortOrder__c"));
+		quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));		
 		quoteLineItem.setStartDate(wrapper.getDate("StartDate__c"));
 		quoteLineItem.setTerm(wrapper.getInteger("Term__c"));
 		quoteLineItem.setTotalPrice(wrapper.getDouble("TotalPrice__c"));
@@ -75,6 +74,10 @@ public class QuoteLineItemFactory {
 		quoteLineItem.setCode(wrapper.getString("Code__c"));
 		quoteLineItem.setMessage(wrapper.getString("Message__c"));
 		quoteLineItem.setProduct(ProductFactory.parse(wrapper.getXmlObject("Product__r")));
+		
+		if (quoteLineItem.getLineNumber() == null) {
+			quoteLineItem.setLineNumber(1);
+		}
 		
 		if (quoteLineItem.getConfiguredSku() != null) {
 			quoteLineItem.setSku(quoteLineItem.getConfiguredSku());
@@ -121,7 +124,7 @@ public class QuoteLineItemFactory {
 		quoteLineItem.setPricingAttributes(wrapper.getString("Pricing_Attributes__c"));
 		quoteLineItem.setQuantity(wrapper.getInteger("Quantity__c"));
 		quoteLineItem.setQuoteId(wrapper.getString("QuoteId__c"));
-		quoteLineItem.setSortOrder(wrapper.getInteger("SortOrder__c"));
+		quoteLineItem.setLineNumber(wrapper.getInteger("LineNumber__c"));
 		quoteLineItem.setStartDate(wrapper.getDate("StartDate__c"));
 		quoteLineItem.setTerm(wrapper.getInteger("Term__c"));
 		quoteLineItem.setTotalPrice(wrapper.getDouble("TotalPrice__c"));
@@ -175,7 +178,7 @@ public class QuoteLineItemFactory {
 				jsonObject.put("Pricing_Attributes__c",quoteLineItem.getPricingAttributes());
 				jsonObject.put("Quantity__c", quoteLineItem.getQuantity());
 				jsonObject.put("QuoteId__c", quoteLineItem.getQuoteId());
-				jsonObject.put("SortOrder__c", quoteLineItem.getSortOrder());
+				jsonObject.put("LineNumber__c", quoteLineItem.getLineNumber());
 				jsonObject.put("StartDate__c",Util.dateFormat(quoteLineItem.getStartDate()));
 				jsonObject.put("Term__c", quoteLineItem.getTerm());
 				jsonObject.put("TotalPrice__c", quoteLineItem.getTotalPrice());

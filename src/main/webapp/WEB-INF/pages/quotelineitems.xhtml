@@ -92,12 +92,34 @@
 				<h:selectBooleanCheckbox value="#{lineItem.selected}"
 					rendered="#{quoteController.editMode}" />
 			</rich:column>
+			
+			<rich:column style="text-align: center; width: 3%;">
+			    <f:facet name="header">#{msgs.lineNumber}</f:facet>
+			
+			<h:outputText value="#{lineItem.lineNumber}"
+					rendered="#{not quoteController.editMode}" />
+					
+					<h:selectOneMenu
+						value="#{lineItem.lineNumber}"
+						rendered="#{quoteController.editMode}">
+						<f:selectItems value="#{quoteController.lineNumberList}" />
+						<f:attribute name="quoteLineItem" value="#{lineItem}" />
+						<a4j:ajax execute="@this" event="valueChange"
+							render="quoteProductsTable" status="waitstatus" />
+						<a4j:actionListener listener="#{quoteLineItemListDataTableBean.reorderQuoteLineItem}" />
+					</h:selectOneMenu>	
+					
+					<f:attribute name="quoteId" value="#{feedItem.parent.id}" />
+								<a4j:ajax execute="@this" event="click" render="mainArea" />
+								<a4j:actionListener listener="#{homeController.viewQuote}" />												
+			
+			</rich:column>
 
 			<rich:column style="text-align: center; width: 9%;">
 				<f:facet name="header">#{msgs.productCode}</f:facet>				
 				
 				<h:outputText value="#{lineItem.sku}"
-					rendered="#{not quoteController.editMode}" />					
+					rendered="#{not quoteController.editMode}" />		
 					
 				<h:inputText id="productCode"
 					value="#{lineItem.sku}" style="width: 100px;"

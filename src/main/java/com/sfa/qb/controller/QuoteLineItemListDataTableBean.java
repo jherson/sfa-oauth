@@ -4,6 +4,7 @@ import javax.faces.FacesException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.html.HtmlInputText;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
@@ -88,5 +89,15 @@ public class QuoteLineItemListDataTableBean {
 		int rowIndex = Integer.valueOf(event.getComponent().getAttributes().get("rowIndex").toString());
 		QuoteLineItem quoteLineItem = selectedQuote.getQuoteLineItems().get(rowIndex);
 		quoteLineItem.setYearlySalesPrice(quoteLineItem.getListPrice());		
+	}
+	
+	
+	public void reorderQuoteLineItem(ActionEvent event) {
+		QuoteLineItem quoteLineItem = (QuoteLineItem) event.getComponent().getAttributes().get("quoteLineItem");
+		selectedQuote.getQuoteLineItems().set(quoteLineItem.getLineNumber(), quoteLineItem);
+		for (int i = 0; i < selectedQuote.getQuoteLineItems().size(); i++) {
+			quoteLineItem = selectedQuote.getQuoteLineItems().get(i);
+			quoteLineItem.setLineNumber(i + 1);
+		}
 	}
 }

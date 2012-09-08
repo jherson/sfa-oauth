@@ -46,6 +46,11 @@ public class QueryImpl<X> implements Query {
 	public void setLimit(Integer limit) {
 		query = query + " Limit " + limit;
 	}
+	
+	@Override
+	public void addOrderBy(String columns) {
+		query = query + " Order By " + columns;
+	}
 		
 	@Override
 	@SuppressWarnings("unchecked")
