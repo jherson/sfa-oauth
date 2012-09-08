@@ -43,6 +43,9 @@ public class QuoteListProducer implements Serializable {
 	@Produces
 	@Named
 	public List<Quote> getQuoteList() {
+		if (quoteList == null)
+			queryQuotes();
+		
 		return quoteList;
 	}
 
@@ -50,7 +53,6 @@ public class QuoteListProducer implements Serializable {
 		queryQuotes();
 	}
 
-	@PostConstruct
 	public void queryQuotes() {
 		log.info("queryQuotes");
 		

@@ -52,8 +52,8 @@ public class ChatterFeedProducer implements Serializable {
 	public void queryFeed() {
 
 		try {
-			feed = chatterDAO.getFeed();
-			chatterDAO.getQuoteFeed();
+			//feed = chatterDAO.getFeed();
+			feed = chatterDAO.getQuoteFeed();
 		} catch (SalesforceServiceException e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());

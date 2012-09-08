@@ -6,242 +6,255 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-		<rich:panel style="border: 0px; width: 500px;'" id="chatterFeed" layout="block">
+	<rich:panel id="chatterFeed" layout="block"
+		style="border: 0px; width: 500px;'">
+
+		<h:panelGroup layout="block">
+
+			<h:outputText value="#{msgs.quoteFeed}"
+				style="font-weight: bold; font-size: 18; text-decoration: none; color: black" />
+
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" style="padding-bottom: 3px;">
+					<h:inputTextarea id="postText" style="width: 420px;"
+						maxlength="1000" cols="200" rows="3" />
+
+				</h:panelGroup>
+				<h:panelGroup layout="block"
+					style="text-align: right; width: 430px; padding-bottom: 5px;">
+					<a4j:commandButton value="#{msgs.share}" status="waitstatus"
+						styleClass="commandButton">
+						<a4j:ajax execute="@this postText" event="click"
+							render="chatterFeed" />
+						<a4j:actionListener listener="#{homeController.postItem}" />
+					</a4j:commandButton>
+				</h:panelGroup>
+			</h:panelGroup>
+
+			<br />
+			<hr />
+			<br />
+
+			<h:panelGroup layout="block">
+				<a4j:commandButton id="refreshFeed" styleClass="commandButton"
+					value="#{msgs.refresh}" ajaxSingle="true"
+					action="#{homeController.refreshFeed()}" render="chatterFeed" />
+			</h:panelGroup>
 
 			<h:panelGroup layout="block">
 
-				<h:panelGroup layout="block">
-					<h:panelGroup layout="block" style="padding-bottom: 3px;">
-						<h:inputTextarea id="postText" style="width: 420px;"
-							maxlength="1000" cols="200" rows="3" />
+				<a4j:repeat id="feedItems" var="feedItem" value="#{feed.items}"
+					rowKeyVar="idx">
 
-					</h:panelGroup>
-					<h:panelGroup layout="block"
-						style="text-align: right; width: 430px; padding-bottom: 5px;">
-						<a4j:commandButton value="#{msgs.share}" status="waitstatus"
-							styleClass="commandButton">
-							<a4j:ajax execute="@this postText" event="click"
-								render="chatterFeed" />
-							<a4j:actionListener listener="#{homeController.postItem}" />
-						</a4j:commandButton>
-					</h:panelGroup>
-				</h:panelGroup>
+					<h:panelGroup layout="block" class="feed-item">
+						<h:panelGroup layout="block" class="feed-item-pic">
+							<h:graphicImage
+								value="#{feedItem.photoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+								height="45" width="45">
+							</h:graphicImage>
+						</h:panelGroup>
 
-				<br />
-				<hr />
-
-				<h:panelGroup layout="block">
-					<a4j:commandButton id="refreshFeed" styleClass="commandButton"
-						value="#{msgs.refresh}" ajaxSingle="true"
-						action="#{homeController.refreshFeed()}" render="chatterFeed" />
-				</h:panelGroup>
-
-				<h:panelGroup layout="block">
-
-					<a4j:repeat id="feedItems" var="feedItem" value="#{feed.items}"
-						rowKeyVar="idx">
-
-						<h:panelGroup layout="block" class="feed-item">
-							<h:panelGroup layout="block" class="feed-item-pic">
-								<h:graphicImage
-									value="#{feedItem.photoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
-									height="45" width="45">
-								</h:graphicImage>
+						<h:panelGroup layout="block" class="feed-item-text">
+							<a4j:commandLink value="#{feedItem.parent.name}"
+								style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold;"
+								ajaxSingle="true">
+								<f:attribute name="quoteId" value="#{feedItem.parent.id}" />
+								<a4j:ajax execute="@this" event="click" render="mainArea" />
+								<a4j:actionListener listener="#{homeController.viewQuote}" />
+							</a4j:commandLink>
+							<h:outputText value="—" style="padding-right: 5px;" />
+							<a4j:commandLink value="#{feedItem.actor.name}"
+								style="text-decoration: none; color: #336699;"
+								status="waitstatus" ajaxSingle="true"></a4j:commandLink>
+							<h:outputText value=" " />
+							<h:outputText value="#{feedItem.body.text}" escape="#{false}" />
+							<br />
+							<h:panelGroup layout="block" class="feed-item-info">
+								<h:outputText value="#{feedItem.createdDate}">
+									<f:convertDateTime locale="#{sessionUser.locale}"
+										timeZone="#{sessionUser.timeZone}"
+										pattern="#{sessionUser.dateFormatPattern}" type="date" />
+								</h:outputText>
+								<h:outputText value=" " />
+								<h:outputText value="#{msgs.at}" />
+								<h:outputText value=" " />
+								<h:outputText value="#{feedItem.createdDate}">
+									<f:convertDateTime locale="#{sessionUser.locale}"
+										timeZone="#{sessionUser.timeZone}"
+										pattern="#{sessionUser.shortTimeFormat}" type="time" />
+								</h:outputText>
+								<h:outputText value=" " />
+								<h:outputText
+									value="#{msgs.via} #{feedItem.clientInfo.applicationName}"
+									rendered="#{not empty feedItem.clientInfo}" />
+								<h:outputText value=" " />
 							</h:panelGroup>
-
-							<h:panelGroup layout="block" class="feed-item-text">
-								<a4j:commandLink value="#{feedItem.parent.name}"
-									style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold;"
-									status="waitstatus" ajaxSingle="true"></a4j:commandLink>
-								<h:outputText value="#{feedItem.body.text}" escape="#{false}" />
-								<br />
-								<h:panelGroup layout="block" class="feed-item-info">
-									<h:outputText value="#{feedItem.createdDate}">
-										<f:convertDateTime locale="#{sessionUser.locale}"
-											timeZone="#{sessionUser.timeZone}"
-											pattern="#{sessionUser.dateFormatPattern}" type="date" />
-									</h:outputText>
-									<h:outputText value=" " />
-									<h:outputText value="#{msgs.at}" />
-									<h:outputText value=" " />
-									<h:outputText value="#{feedItem.createdDate}" >
-										<f:convertDateTime locale="#{sessionUser.locale}"
-											timeZone="#{sessionUser.timeZone}"
-											pattern="#{sessionUser.shortTimeFormat}" type="time" />
-									</h:outputText>
-									<h:outputText value=" " />
-									<h:outputText
-										value="#{msgs.via} #{feedItem.clientInfo.applicationName}"
-										rendered="#{not empty feedItem.clientInfo}" />
-									<h:outputText value=" " />
-								</h:panelGroup>
-								<h:panelGroup layout="block" class="feed-item-action">
-									<f:verbatim escape="#{true}">&#8226;</f:verbatim>
-									<a4j:commandLink value="#{msgs.comment}"
-										style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-										status="waitstatus" ajaxSingle="true"
-										focus="#{rich:element('mainForm:postText')}">
-										<a4j:ajax execute="@this" event="click" render="chatterFeed" />
-										<a4j:actionListener
-											listener="#{homeController.comment(feedItem)}" />
-									</a4j:commandLink>
-									<f:verbatim escape="#{true}">&#8226;</f:verbatim>
-									<a4j:commandLink value="#{msgs.like}"
-										rendered="#{empty feedItem.myLike}"
-										style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-										status="waitstatus" ajaxSingle="true">
-										<a4j:ajax execute="@this" event="click" render="chatterFeed" />
-										<a4j:actionListener
-											listener="#{homeController.likeItem(feedItem)}" />
-									</a4j:commandLink>
-									<a4j:commandLink value="#{msgs.unlike}"
-										rendered="#{not empty feedItem.myLike}"
-										style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-										status="waitstatus" ajaxSingle="true">
-										<a4j:ajax execute="@this" event="click" render="chatterFeed" />
-										<a4j:actionListener
-											listener="#{homeController.unlikeItem(feedItem)}" />
-									</a4j:commandLink>
-								</h:panelGroup>
-
-								<br />
-
-								<h:panelGroup layout="block">
-
-									<a4j:repeat id="comments" var="comment"
-										value="#{feedItem.comments.comments}" rowKeyVar="commentsRow">
-
-										<h:panelGroup layout="block" class="feed-item-comment"
-											rendered="#{not empty comment.body.text}">
-											<h:panelGroup layout="block" class="feed-item-comment-pic">
-												<h:graphicImage
-													value="#{comment.user.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
-													height="35" width="35">
-												</h:graphicImage>
-											</h:panelGroup>
-											<h:panelGroup layout="block" class="feed-item-comment-text">
-												<a4j:commandLink value="#{comment.user.name}"
-													style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold;"
-													status="waitstatus" ajaxSingle="true">
-												</a4j:commandLink>
-												<h:outputText value="#{comment.body.text}" escape="#{false}" />
-												<br />
-												<h:panelGroup layout="block" class="feed-item-info">
-													<h:outputText value="#{comment.createdDate}">
-														<f:convertDateTime locale="#{sessionUser.locale}"
-															timeZone="#{sessionUser.timeZone}"
-															pattern="#{sessionUser.dateFormatPattern}" type="date" />
-													</h:outputText>
-													<h:outputText value=" " />
-													<h:outputText value="#{msgs.at}" />
-													<h:outputText value=" " />
-													<h:outputText value="#{comment.createdDate}">
-														<f:convertDateTime locale="#{sessionUser.locale}"
-															timeZone="#{sessionUser.timeZone}"
-															pattern="#{sessionUser.shortTimeFormat}" type="time" />
-													</h:outputText>
-													<h:outputText value=" " />
-													<h:outputText
-														value="#{msgs.via} #{comment.clientInfo.applicationName}"
-														rendered="#{not empty comment.clientInfo}" />
-													<h:outputText value=" " />
-												</h:panelGroup>
-
-												<h:panelGroup layout="block" class="feed-item-action">
-													<f:verbatim escape="#{true}">&#8226;</f:verbatim>
-													<a4j:commandLink value="#{msgs.like}"
-														rendered="#{empty comment.myLike}"
-														style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-														status="waitstatus" ajaxSingle="true">
-														<a4j:ajax execute="@this" event="click"
-															render="chatterFeed" />
-														<a4j:actionListener
-															listener="#{homeController.likeComment(comment)}" />
-													</a4j:commandLink>
-													<a4j:commandLink value="#{msgs.unlike}"
-														rendered="#{not empty comment.myLike}"
-														style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-														status="waitstatus" ajaxSingle="true">
-														<a4j:ajax execute="@this" event="click"
-															render="chatterFeed" />
-														<a4j:actionListener
-															listener="#{homeController.unlikeComment(comment)}" />
-													</a4j:commandLink>
-													<f:verbatim escape="#{true}">&#8226;</f:verbatim>
-													<a4j:commandLink value="#{msgs.delete}"
-														rendered="#{not comment.isDeleteRestricted}"
-														style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-														status="waitstatus" ajaxSingle="true">
-														<a4j:ajax execute="@this" event="click"
-															render="chatterFeed" />
-														<a4j:actionListener
-															listener="#{homeController.deleteComment(feedItem, comment)}" />
-													</a4j:commandLink>
-												</h:panelGroup>
-
-											</h:panelGroup>
-										</h:panelGroup>
-
-										<h:panelGroup layout="block" class="feed-item-comment"
-											rendered="#{empty comment.body.text}">
-
-											<h:panelGroup layout="block" class="feed-item-comment-pic">
-												<h:graphicImage
-													value="#{sessionUser.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
-													height="35" width="35">
-												</h:graphicImage>
-											</h:panelGroup>
-
-											<h:panelGroup layout="block" class="feed-item-comment-text">
-												<h:inputTextarea id="commentText"
-													value="#{comment.body.text}" style="width: 320px;"
-													maxlength="1000" rows="3" />
-												<h:panelGroup layout="block"
-													style="text-align: right; width: 320px; padding-bottom: 5px;">
-													<a4j:commandButton value="#{msgs.comment}"
-														ajaxSingle="true" styleClass="commandButton"
-														status="waitstatus">
-														<a4j:ajax execute="@this commentText" event="click"
-															render="chatterFeed" />
-														<a4j:actionListener
-															listener="#{homeController.postComment(feedItem)}" />
-													</a4j:commandButton>
-												</h:panelGroup>
-											</h:panelGroup>
-										</h:panelGroup>
-
-									</a4j:repeat>
-
-								</h:panelGroup>
-
-							</h:panelGroup>
-
-							<h:panelGroup layout="block" class="feed-item-tools">
-
-								<a4j:commandLink status="waitstatus"
-									render="#{not feedItem.isDeleteRestricted}"
-									actionListener="#{homeController.showPageView}">
+							<h:panelGroup layout="block" class="feed-item-action">
+								<f:verbatim escape="#{true}">&#8226;</f:verbatim>
+								<a4j:commandLink value="#{msgs.comment}"
+									style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
+									status="waitstatus" ajaxSingle="true"
+									focus="#{rich:element('mainForm:postText')}">
 									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
 									<a4j:actionListener
-										listener="#{homeController.deleteItem(feedItem)}" />
-
-									<h:graphicImage id="quotemanager" alt="quotemanager"
-										url="/resources/images/delete.png" height="20" width="20" />
-
+										listener="#{homeController.comment(feedItem)}" />
 								</a4j:commandLink>
-
+								<f:verbatim escape="#{true}">&#8226;</f:verbatim>
+								<a4j:commandLink value="#{msgs.like}"
+									rendered="#{empty feedItem.myLike}"
+									style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
+									status="waitstatus" ajaxSingle="true">
+									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
+									<a4j:actionListener
+										listener="#{homeController.likeItem(feedItem)}" />
+								</a4j:commandLink>
+								<a4j:commandLink value="#{msgs.unlike}"
+									rendered="#{not empty feedItem.myLike}"
+									style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
+									status="waitstatus" ajaxSingle="true">
+									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
+									<a4j:actionListener
+										listener="#{homeController.unlikeItem(feedItem)}" />
+								</a4j:commandLink>
 							</h:panelGroup>
 
-							<div style="clear: both;" />
+							<br />
+
+							<h:panelGroup layout="block">
+
+								<a4j:repeat id="comments" var="comment"
+									value="#{feedItem.comments.comments}" rowKeyVar="commentsRow">
+
+									<h:panelGroup layout="block" class="feed-item-comment"
+										rendered="#{not empty comment.body.text}">
+										<h:panelGroup layout="block" class="feed-item-comment-pic">
+											<h:graphicImage
+												value="#{comment.user.photo.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+												height="35" width="35">
+											</h:graphicImage>
+										</h:panelGroup>
+										<h:panelGroup layout="block" class="feed-item-comment-text">
+											<a4j:commandLink value="#{comment.user.name}"
+												style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold;"
+												status="waitstatus" ajaxSingle="true">
+											</a4j:commandLink>
+											<h:outputText value="#{comment.body.text}" escape="#{false}" />
+											<br />
+											<h:panelGroup layout="block" class="feed-item-info">
+												<h:outputText value="#{comment.createdDate}">
+													<f:convertDateTime locale="#{sessionUser.locale}"
+														timeZone="#{sessionUser.timeZone}"
+														pattern="#{sessionUser.dateFormatPattern}" type="date" />
+												</h:outputText>
+												<h:outputText value=" " />
+												<h:outputText value="#{msgs.at}" />
+												<h:outputText value=" " />
+												<h:outputText value="#{comment.createdDate}">
+													<f:convertDateTime locale="#{sessionUser.locale}"
+														timeZone="#{sessionUser.timeZone}"
+														pattern="#{sessionUser.shortTimeFormat}" type="time" />
+												</h:outputText>
+												<h:outputText value=" " />
+												<h:outputText
+													value="#{msgs.via} #{comment.clientInfo.applicationName}"
+													rendered="#{not empty comment.clientInfo}" />
+												<h:outputText value=" " />
+											</h:panelGroup>
+
+											<h:panelGroup layout="block" class="feed-item-action">
+												<f:verbatim escape="#{true}">&#8226;</f:verbatim>
+												<a4j:commandLink value="#{msgs.like}"
+													rendered="#{empty comment.myLike}"
+													style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
+													status="waitstatus" ajaxSingle="true">
+													<a4j:ajax execute="@this" event="click"
+														render="chatterFeed" />
+													<a4j:actionListener
+														listener="#{homeController.likeComment(comment)}" />
+												</a4j:commandLink>
+												<a4j:commandLink value="#{msgs.unlike}"
+													rendered="#{not empty comment.myLike}"
+													style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
+													status="waitstatus" ajaxSingle="true">
+													<a4j:ajax execute="@this" event="click"
+														render="chatterFeed" />
+													<a4j:actionListener
+														listener="#{homeController.unlikeComment(comment)}" />
+												</a4j:commandLink>
+												<f:verbatim escape="#{true}">&#8226;</f:verbatim>
+												<a4j:commandLink value="#{msgs.delete}"
+													rendered="#{not comment.isDeleteRestricted}"
+													style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
+													status="waitstatus" ajaxSingle="true">
+													<a4j:ajax execute="@this" event="click"
+														render="chatterFeed" />
+													<a4j:actionListener
+														listener="#{homeController.deleteComment(feedItem, comment)}" />
+												</a4j:commandLink>
+											</h:panelGroup>
+
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<h:panelGroup layout="block" class="feed-item-comment"
+										rendered="#{empty comment.body.text}">
+
+										<h:panelGroup layout="block" class="feed-item-comment-pic">
+											<h:graphicImage
+												value="#{sessionUser.smallPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+												height="35" width="35">
+											</h:graphicImage>
+										</h:panelGroup>
+
+										<h:panelGroup layout="block" class="feed-item-comment-text">
+											<h:inputTextarea id="commentText"
+												value="#{comment.body.text}" style="width: 320px;"
+												maxlength="1000" rows="3" />
+											<h:panelGroup layout="block"
+												style="text-align: right; width: 320px; padding-bottom: 5px;">
+												<a4j:commandButton value="#{msgs.comment}" ajaxSingle="true"
+													styleClass="commandButton" status="waitstatus">
+													<a4j:ajax execute="@this commentText" event="click"
+														render="chatterFeed" />
+													<a4j:actionListener
+														listener="#{homeController.postComment(feedItem)}" />
+												</a4j:commandButton>
+											</h:panelGroup>
+										</h:panelGroup>
+									</h:panelGroup>
+
+								</a4j:repeat>
+
+							</h:panelGroup>
 
 						</h:panelGroup>
 
-					</a4j:repeat>
+						<h:panelGroup layout="block" class="feed-item-tools">
 
-				</h:panelGroup>
+							<a4j:commandLink status="waitstatus"
+								render="#{not feedItem.isDeleteRestricted}"
+								actionListener="#{homeController.showPageView}">
+								<a4j:ajax execute="@this" event="click" render="chatterFeed" />
+								<a4j:actionListener
+									listener="#{homeController.deleteItem(feedItem)}" />
+
+								<h:graphicImage id="quotemanager" alt="quotemanager"
+									url="/resources/images/delete.png" height="20" width="20" />
+
+							</a4j:commandLink>
+
+						</h:panelGroup>
+
+						<div style="clear: both;" />
+
+					</h:panelGroup>
+
+				</a4j:repeat>
 
 			</h:panelGroup>
 
-		</rich:panel>
+		</h:panelGroup>
+
+	</rich:panel>
 
 </ui:composition>

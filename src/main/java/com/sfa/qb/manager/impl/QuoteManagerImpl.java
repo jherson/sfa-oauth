@@ -18,7 +18,6 @@ import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;
 import com.sfa.qb.model.sobject.QuoteLineItemPriceAdjustment;
 import com.sfa.qb.model.sobject.QuotePriceAdjustment;
-import com.sfa.qb.util.JsfUtil;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.ws.ConnectionException;
@@ -105,6 +104,9 @@ public class QuoteManagerImpl implements QuoteManager {
 		quote.setIsCalculated(Boolean.FALSE);
 		if (quote.getQuoteLineItems() != null && quote.getQuoteLineItems().size() > 0) {
 			quote.setHasQuoteLineItems(Boolean.TRUE);
+			if ("New".equalsIgnoreCase(quote.getStatus())) {
+				quote.setStatus("In Progress");				
+			}
 		} 
 		
 		try {									
@@ -120,9 +122,7 @@ public class QuoteManagerImpl implements QuoteManager {
 												
 				saveQuoteLineItemPriceAdjustments(addQuoteLineItemPriceAdjustments(quote));
 								
-				log.info("Quote save successful: " + saveResult.getId());
-				
-				JsfUtil.addInformationMessage("Quote saved successfully");				
+				log.info("Quote save successful: " + saveResult.getId());			
 				
 			} else {
 				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());

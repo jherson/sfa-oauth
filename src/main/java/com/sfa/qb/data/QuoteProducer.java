@@ -52,8 +52,11 @@ public class QuoteProducer implements Serializable {
 	@Inject
 	private ChatterDAO chatterDAO;
 	
+	//@Inject
+	//private List<Quote> quoteList;
+	
 	@Inject
-	private List<Quote> quoteList;
+	private QuoteListProducer quoteListProducer;
 
 	private Quote selectedQuote;
 
@@ -73,24 +76,24 @@ public class QuoteProducer implements Serializable {
 	public void onCreateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
-		quoteList.add(selectedQuote);
+		quoteListProducer.getQuoteList().add(selectedQuote);
 	}
 	
 	public void onUpdateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuote final Quote quote) {
 		int index = getQuoteIndex(quote.getId());
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
-		quoteList.set(index, selectedQuote);
+		quoteListProducer.getQuoteList().set(index, selectedQuote);
 	}
 	
 	public void onCopyQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CopyQuote final Quote quote) {		
 		selectedQuote = queryQuoteById(quote.getId());
 		selectedQuote.setOpportunity(queryOpportunity(quote.getOpportunity().getId()));
-		quoteList.add(quote);
+		quoteListProducer.getQuoteList().add(quote);
 	}
 	
 	public void onDeleteQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuote final Quote quote) {
-		quoteList.remove(quote);
+		quoteListProducer.getQuoteList().remove(quote);
 	}
 	
 	public void onDeleteQuoteLineItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @DeleteQuoteLineItem final QuoteLineItem quoteLineItem) {
@@ -104,7 +107,7 @@ public class QuoteProducer implements Serializable {
 	public void onUpdateQuoteAmount(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UpdateQuoteAmount final Quote quote) {
 		int index = getQuoteIndex(quote.getId());
 		selectedQuote.setAmount(getQuoteAmount(quote.getId()));
-		quoteList.set(index, selectedQuote);
+		quoteListProducer.getQuoteList().set(index, selectedQuote);
 	}
 	
 	public void onPriceQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PriceQuote final Quote quote) {
@@ -204,8 +207,8 @@ public class QuoteProducer implements Serializable {
 	}
 	
 	private int getQuoteIndex(String quoteId) {
-		for (int i = 0; i < quoteList.size(); i++) {
-			Quote quote = quoteList.get(i);
+		for (int i = 0; i < quoteListProducer.getQuoteList().size(); i++) {
+			Quote quote = quoteListProducer.getQuoteList().get(i);
 			if (quoteId.equals(quote.getId())) {
 				return i;
 			}
