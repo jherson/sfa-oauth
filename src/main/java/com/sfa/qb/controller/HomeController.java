@@ -93,7 +93,9 @@ public class HomeController {
 		if (text == null || text.trim().length() == 0)
 			return;
 		
-		inputText.setValue("");
+		log.info(text);
+		
+		inputText.setValue("");		
 					
 		try {
 			Item item = chatterDAO.postItem(text);

@@ -30,8 +30,13 @@ public class QuoteLineItemFactory {
 	public static List<QuoteLineItem> parse(Iterator<XmlObject> iterator) throws ParseException {
 		List<QuoteLineItem> quoteLineItemList = new ArrayList<QuoteLineItem>();
 		
+		int i = 0;
 		while (iterator.hasNext()) {
-			quoteLineItemList.add(parse(iterator.next()));			
+			quoteLineItemList.add(parse(iterator.next()));
+			if (quoteLineItemList.get(i).getLineNumber() == null) {
+				quoteLineItemList.get(i).setLineNumber(i + 1);
+			}
+			i++;
 		}
 		
 		return quoteLineItemList;
@@ -71,13 +76,14 @@ public class QuoteLineItemFactory {
 		quoteLineItem.setYearlySalesPrice(wrapper.getDouble("YearlySalesPrice__c"));
 		quoteLineItem.setDiscountAmount(wrapper.getDouble("DiscountAmount__c"));
 		quoteLineItem.setDiscountPercent(wrapper.getDouble("DiscountPercent__c"));
+		quoteLineItem.setLineNumber(wrapper.getInteger("LineNumber__c"));
 		quoteLineItem.setCode(wrapper.getString("Code__c"));
 		quoteLineItem.setMessage(wrapper.getString("Message__c"));
 		quoteLineItem.setProduct(ProductFactory.parse(wrapper.getXmlObject("Product__r")));
 		
-		if (quoteLineItem.getLineNumber() == null) {
-			quoteLineItem.setLineNumber(1);
-		}
+//		if (quoteLineItem.getLineNumber() == null) {
+//			quoteLineItem.setLineNumber(1);
+//		}
 		
 		if (quoteLineItem.getConfiguredSku() != null) {
 			quoteLineItem.setSku(quoteLineItem.getConfiguredSku());

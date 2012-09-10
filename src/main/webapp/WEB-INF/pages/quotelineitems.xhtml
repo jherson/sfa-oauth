@@ -14,45 +14,41 @@
 
 		<br />
 
-		<rich:panel style="text-align: center; border: 0px;">		
-				
+		<rich:panel style="text-align: center; border: 0px;">
+
 			<a4j:commandButton value="#{msgs.copySelected}"
-			    styleClass="commandButton"
-			    rendered="#{quoteController.editMode}"
+				styleClass="commandButton" rendered="#{quoteController.editMode}"
 				action="#{quoteController.copyQuoteLineItems()}"
 				disabled="#{empty selectedQuote.quoteLineItems}"
-				render="quotedetails" ajaxSingle="true" />				
-				
+				render="quotedetails" ajaxSingle="true" />
+
 			<a4j:commandButton value="#{msgs.deleteSelected}"
-			    styleClass="commandButton"
-			    rendered="#{quoteController.editMode}"
+				styleClass="commandButton" rendered="#{quoteController.editMode}"
 				action="#{quoteController.deleteQuoteLineItems()}"
 				disabled="#{empty selectedQuote.quoteLineItems}"
-				render="quotedetails" ajaxSingle="true" 
-				onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };"/>	
-				
-			<a4j:commandButton value="#{msgs.reset}"
-			    styleClass="commandButton" 
-			    immediate="true"
-			    rendered="#{quoteController.editMode}"
+				render="quotedetails" ajaxSingle="true"
+				onclick="if (! window.confirm('#{msgs.confirmDelete}')) { return false };" />
+
+			<a4j:commandButton value="#{msgs.reset}" styleClass="commandButton"
+				immediate="true" rendered="#{quoteController.editMode}"
 				disabled="#{empty selectedQuote.quoteLineItems}"
 				action="#{quoteController.cancelEdit()}" render="quotedetails"
 				ajaxSingle="true" />
-				
-			<a4j:commandButton value="#{msgs.getPrice}" 
-			    styleClass="commandButton"
+
+			<a4j:commandButton value="#{msgs.getPrice}"
+				styleClass="commandButton"
 				rendered="#{not quoteController.editMode}"
 				disabled="#{empty selectedQuote.quoteLineItems}"
 				action="#{quoteController.priceQuote()}" ajaxSingle="true"
-				render="quotedetails" />				
-								
+				render="quotedetails" />
+
 			<a4j:commandButton value="#{msgs.calculate}"
-			    styleClass="commandButton" 
+				styleClass="commandButton"
 				rendered="#{not quoteController.editMode}"
 				disabled="#{empty selectedQuote.quoteLineItems}"
 				action="#{quoteController.calculateQuote()}" ajaxSingle="true"
-				render="quotedetails"/>
-            				
+				render="quotedetails" />
+
 			<a4j:commandButton value="#{msgs.addOpportunityProducts}"
 				styleClass="commandButton"
 				rendered="#{not quoteController.editMode}"
@@ -74,13 +70,10 @@
 
 		</rich:panel>
 
-		<rich:dataTable id="quoteProductsTable" 
-		    style="width: 100%"
-			var="lineItem" 
-			noDataLabel="#{msgs.noRecords}"
-			iterationStatusVar="it" 
-			value="#{selectedQuote.quoteLineItems}">
-
+		<rich:dataTable id="quoteProductsTable" style="width: 100%"
+			var="lineItem" noDataLabel="#{msgs.noRecords}"
+			iterationStatusVar="it" value="#{selectedQuote.quoteLineItems}">
+			
 			<rich:column style="text-align: center; width: 3%;">
 				<f:facet name="header">#{msgs.action}</f:facet>
 				<a4j:commandLink id="deleteLineItem" value="#{msgs.delete}"
@@ -92,39 +85,35 @@
 				<h:selectBooleanCheckbox value="#{lineItem.selected}"
 					rendered="#{quoteController.editMode}" />
 			</rich:column>
-			
+
 			<rich:column style="text-align: center; width: 3%;">
-			    <f:facet name="header">#{msgs.lineNumber}</f:facet>
-			
-			<h:outputText value="#{lineItem.lineNumber}"
+				<f:facet name="header">#{msgs.lineNumber}</f:facet>
+
+				<h:outputText value="#{lineItem.lineNumber}"
 					rendered="#{not quoteController.editMode}" />
-					
-					<h:selectOneMenu
-						value="#{lineItem.lineNumber}"
-						rendered="#{quoteController.editMode}">
-						<f:selectItems value="#{quoteController.lineNumberList}" />
-						<f:attribute name="quoteLineItem" value="#{lineItem}" />
-						<a4j:ajax execute="@this" event="valueChange"
-							render="quoteProductsTable" status="waitstatus" />
-						<a4j:actionListener listener="#{quoteLineItemListDataTableBean.reorderQuoteLineItem}" />
-					</h:selectOneMenu>	
-					
-					<f:attribute name="quoteId" value="#{feedItem.parent.id}" />
-								<a4j:ajax execute="@this" event="click" render="mainArea" />
-								<a4j:actionListener listener="#{homeController.viewQuote}" />												
-			
+
+				<h:selectOneMenu value="#{lineItem.lineNumber}"
+					rendered="#{quoteController.editMode}">
+					<f:selectItems value="#{selectedQuote.quoteLineItems}" var="lines"
+						itemValue="#{lines.lineNumber}" itemLabel="#{lines.lineNumber}" />
+					<f:attribute name="quoteLineItem" value="#{lineItem}" />
+					<a4j:ajax execute="@row" event="valueChange"
+						listener="#{quoteLineItemListDataTableBean.reorderQuoteLineItem}"
+						render="quoteProductsTable" status="waitstatus">
+					</a4j:ajax>
+				</h:selectOneMenu>
+
 			</rich:column>
 
 			<rich:column style="text-align: center; width: 9%;">
-				<f:facet name="header">#{msgs.productCode}</f:facet>				
-				
+				<f:facet name="header">#{msgs.productCode}</f:facet>
+
 				<h:outputText value="#{lineItem.sku}"
-					rendered="#{not quoteController.editMode}" />		
-					
-				<h:inputText id="productCode"
-					value="#{lineItem.sku}" style="width: 100px;"
-					rendered="#{quoteController.editMode}" execute="immediate"
-					ajaxSingle="true">
+					rendered="#{not quoteController.editMode}" />
+
+				<h:inputText id="productCode" value="#{lineItem.sku}"
+					style="width: 100px;" rendered="#{quoteController.editMode}"
+					execute="immediate" ajaxSingle="true">
 					<f:attribute name="rowIndex" value="#{it.index}" />
 					<a4j:ajax execute="@this" event="valueChange"
 						listener="#{quoteLineItemListDataTableBean.validateProduct}"
@@ -150,7 +139,8 @@
 				<rich:calendar value="#{lineItem.startDate}"
 					rendered="#{quoteController.editMode and selectedQuote.type != 'Standard'}"
 					id="lineStartDate" locale="#{sessionUser.locale}" popup="true"
-					enableManualInput="true" datePattern="#{sessionUser.dateFormatPattern}"
+					enableManualInput="true"
+					datePattern="#{sessionUser.dateFormatPattern}"
 					showApplyButton="false" cellWidth="24px" cellHeight="22px"
 					inputStyle="width:68px" disabled="false">
 				</rich:calendar>
@@ -166,7 +156,8 @@
 				<rich:calendar value="#{lineItem.endDate}"
 					rendered="#{quoteController.editMode and selectedQuote.type == 'Non Standard'}"
 					id="lineEndDate" locale="#{sessionUser.locale}" popup="true"
-					enableManualInput="true" datePattern="#{sessionUser.dateFormatPattern}"
+					enableManualInput="true"
+					datePattern="#{sessionUser.dateFormatPattern}"
 					showApplyButton="false" cellWidth="24px" cellHeight="22px"
 					inputStyle="width:68px" disabled="false">
 				</rich:calendar>
@@ -178,8 +169,8 @@
 					rendered="#{not quoteController.editMode}" />
 				<h:inputText value="#{lineItem.quantity}" style="width: 50px;"
 					rendered="#{quoteController.editMode}">
-					<f:convertNumber locale="#{sessionUser.locale}" pattern="#,##0;(#,##0)"
-						type="number" />
+					<f:convertNumber locale="#{sessionUser.locale}"
+						pattern="#,##0;(#,##0)" type="number" />
 				</h:inputText>
 			</rich:column>
 
@@ -189,12 +180,12 @@
 					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>
-				<s>  </s>
+				<s> </s>
 				<a4j:commandLink id="copyprice"
-				    rendered="#{not empty lineItem.listPrice and quoteController.editMode}"
-				    status="waitstatus">
-				    <h:graphicImage value="./images/right-arrow.png" />
-				    <f:attribute name="rowIndex" value="#{it.index}" />
+					rendered="#{not empty lineItem.listPrice and quoteController.editMode}"
+					status="waitstatus">
+					<h:graphicImage value="./images/right-arrow.png" />
+					<f:attribute name="rowIndex" value="#{it.index}" />
 					<a4j:ajax execute="@this" event="click"
 						listener="#{quoteLineItemListDataTableBean.copyPrice}"
 						render="yearlySalesPrice">
@@ -231,19 +222,17 @@
 			</rich:column>
 
 			<rich:column style="text-align: right; width: 6%;">
-				<f:facet name="header">#{msgs.salesPrice}</f:facet>				
+				<f:facet name="header">#{msgs.salesPrice}</f:facet>
 				<h:outputText value="#{lineItem.yearlySalesPrice}"
-				    rendered="#{not quoteController.editMode}">
-				    <f:convertNumber locale="#{sessionUser.locale}"
-					    pattern="#,##0.00;(#,##0.00)" />
-				</h:outputText>
-				<h:inputText 
-				    value="#{lineItem.yearlySalesPrice}"
-					style="width: 70px;" 
-					rendered="#{quoteController.editMode}">
+					rendered="#{not quoteController.editMode}">
 					<f:convertNumber locale="#{sessionUser.locale}"
-						pattern="#,##0.00;(#,##0.00)" type="number" />					
-				</h:inputText>								
+						pattern="#,##0.00;(#,##0.00)" />
+				</h:outputText>
+				<h:inputText value="#{lineItem.yearlySalesPrice}"
+					style="width: 70px;" rendered="#{quoteController.editMode}">
+					<f:convertNumber locale="#{sessionUser.locale}"
+						pattern="#,##0.00;(#,##0.00)" type="number" />
+				</h:inputText>
 			</rich:column>
 
 			<rich:column style="text-align: right; width: 6%;">
@@ -263,34 +252,35 @@
 			<rich:column style="text-align: right; width: 6%;">
 				<f:facet name="header">#{msgs.totalPrice}</f:facet>
 				<h:outputText value="#{lineItem.totalPrice}"
-				    rendered="#{not sessionManager.goalSeek}">
+					rendered="#{not sessionManager.goalSeek}">
 					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
-				</h:outputText>		
+				</h:outputText>
 				<h:inputText value="#{lineItem.totalPrice}" style="width: 70px;"
 					rendered="#{sessionManager.goalSeek}">
 					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" type="number" />
-				</h:inputText>	
-			</rich:column>			
-			
+				</h:inputText>
+			</rich:column>
+
 			<rich:column style="text-align: center; width: 2%;">
 				<f:facet name="header"></f:facet>
-				<h:graphicImage value="./images/bullet-yellow.png" 
-					rendered="#{empty lineItem.code or lineItem.code == 'NOT PRICED'}"/>
-				<h:graphicImage value="./images/bullet-green.png" 
-					rendered="#{lineItem.code == 'SUCCESS'}"/>
-				<h:graphicImage value="./images/bullet-red.png" 
+				<h:graphicImage value="./images/bullet-yellow.png"
+					rendered="#{empty lineItem.code or lineItem.code == 'NOT PRICED'}" />
+				<h:graphicImage value="./images/bullet-green.png"
+					rendered="#{lineItem.code == 'SUCCESS'}" />
+				<h:graphicImage value="./images/bullet-red.png"
 					rendered="#{lineItem.code == 'FAILURE'}"
-					tooltip="#{lineItem.message}"/>		
-			</rich:column>					
-						
+					tooltip="#{lineItem.message}" />
+			</rich:column>
+
 			<f:facet name="footer">
-			    <h:outputText value="#{msgs.lineCount}: #{selectedQuote.quoteLineItems.size()}, #{msgs.amount}: (#{selectedQuote.currencyIsoCode}) "/>
-			    <h:outputText value="#{selectedQuote.amount}">
-                    <f:convertNumber locale="#{sessionUser.locale}"
+				<h:outputText
+					value="#{msgs.lineCount}: #{selectedQuote.quoteLineItems.size()}, #{msgs.amount}: (#{selectedQuote.currencyIsoCode}) " />
+				<h:outputText value="#{selectedQuote.amount}">
+					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
-                    </h:outputText>
+				</h:outputText>
 			</f:facet>
 
 		</rich:dataTable>
