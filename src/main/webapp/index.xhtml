@@ -86,15 +86,13 @@
 
 			<h:panelGroup layout="block" style="padding: 5px;">
 
-				<a4j:commandLink id="homeLink" rendered="#{sessionManager.loggedIn}"
-					status="waitstatus">
-					<a4j:ajax render="mainArea" execute="@this" event="click" />
+				<a4j:commandLink id="homeLink" 
+				    rendered="#{sessionManager.loggedIn}" status="waitstatus"
+				    render="mainArea" execute="@this"
+				    actionListener="#{homeController.showPageView}">
 					<f:param name="pageView" value="home" />
-					<a4j:actionListener listener="#{homeController.showPageView}" />
-
 					<h:graphicImage id="home" alt="home"
 						url="/images/menubar/home48x48.png" />
-
 				</a4j:commandLink>
 
 			</h:panelGroup>
@@ -102,14 +100,12 @@
 			<h:panelGroup layout="block" style="padding: 5px;">
 
 				<a4j:commandLink id="quotemanagerLink"
-					rendered="#{sessionManager.loggedIn}" status="waitstatus">
-					<a4j:ajax render="mainArea" execute="@this" event="click" />
-					<f:param name="pageView" value="quotemanager" />
-					<a4j:actionListener listener="#{homeController.showPageView}" />
-
+					rendered="#{sessionManager.loggedIn}" status="waitstatus"
+					render="mainArea" execute="@this"
+					actionListener="#{homeController.showPageView}">
+					<f:param name="pageView" value="quotemanager" />					
 					<h:graphicImage id="quotemanager" alt="quotemanager"
 						url="/images/menubar/quote48x48.png" />
-
 				</a4j:commandLink>
 
 			</h:panelGroup>

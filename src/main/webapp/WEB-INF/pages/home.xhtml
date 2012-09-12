@@ -16,18 +16,19 @@
 
 			<h:panelGroup layout="block">
 				<h:panelGroup layout="block" style="padding-bottom: 3px;">
-					<h:inputTextarea id="postText" style="width: 420px;"
+					<h:inputTextarea id="postText" value="" style="width: 420px;"
 						maxlength="1000" cols="200" rows="3" />
 
 				</h:panelGroup>
 				<h:panelGroup layout="block"
 					style="text-align: right; width: 430px; padding-bottom: 5px;">
+					
 					<a4j:commandButton value="#{msgs.share}" status="waitstatus"
-						styleClass="commandButton">
-						<a4j:ajax execute="@this postText" event="click"
-							render="chatterFeed" />
-						<a4j:actionListener listener="#{homeController.postItem}" />
+						styleClass="commandButton" execute="@this postText"
+						render="chatterFeed postText"
+						actionListener="#{homeController.postItem}" >
 					</a4j:commandButton>
+					
 				</h:panelGroup>
 			</h:panelGroup>
 
@@ -55,14 +56,16 @@
 						</h:panelGroup>
 
 						<h:panelGroup layout="block" class="feed-item-text">
+						
 							<a4j:commandLink value="#{feedItem.parent.name}"
 								style="padding-right: 5px; text-decoration: none; color: #336699; font-weight: bold;"
-								ajaxSingle="true">
+								ajaxSingle="true" execute="@this" render="mainArea"
+								actionListener="#{homeController.viewQuote}">
 								<f:attribute name="quoteId" value="#{feedItem.parent.id}" />
-								<a4j:ajax execute="@this" event="click" render="mainArea" />
-								<a4j:actionListener listener="#{homeController.viewQuote}" />
 							</a4j:commandLink>
+							
 							<h:outputText value="—" style="padding-right: 5px;" />
+							
 							<a4j:commandLink value="#{feedItem.actor.name}"
 								style="text-decoration: none; color: #336699;"
 								status="waitstatus" ajaxSingle="true"></a4j:commandLink>
