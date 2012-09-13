@@ -21,6 +21,7 @@ public class QueryImpl<X> implements Query {
 	private String query;
 	private String type;
 	private Integer totalSize; 
+	private Boolean showQuery = Boolean.FALSE;
 	
 	public QueryImpl(PartnerConnection connection, String query) {
 		this.connection = connection;        
@@ -51,6 +52,11 @@ public class QueryImpl<X> implements Query {
 	public void addOrderBy(String columns) {
 		query = query + " Order By " + columns;
 	}
+	
+	@Override
+	public void showQuery() {
+		showQuery = Boolean.TRUE;
+	}
 		
 	@Override
 	@SuppressWarnings("unchecked")
@@ -63,12 +69,17 @@ public class QueryImpl<X> implements Query {
 	public List<X> getResultList() throws QueryException {
 		List<X> resultList = new ArrayList<X>();
 		
-		try {
+		if (showQuery) {
 			log.info(query);
+		}
+		
+		try {			
 			
 			QueryResult qr = connection.query(query);
-									
-			log.info("QueryResult Size: " + qr.getSize());			
+															
+			totalSize = qr.getSize();
+			
+			log.info("QueryResult Size: " + totalSize);	
 			
 			if (qr.getSize() == 0)
 				return null;
@@ -84,9 +95,7 @@ public class QueryImpl<X> implements Query {
 							    			    
 			    done = qr.getDone();
 			}
-			
-			totalSize = resultList.size();
-			
+									
 			return resultList;
 			
 		} catch (ConnectionException e) {

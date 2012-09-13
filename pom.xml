@@ -16,7 +16,7 @@
 		<jboss-as-maven-plugin-version>7.1.2.Final</jboss-as-maven-plugin-version>
 		<version.arquillian_core>1.0.0.CR4</version.arquillian_core>
 		<seam.solder.version>3.0.0.Final</seam.solder.version>
-		<force.api.version>25.0.0</force.api.version>
+		<force.api.version>25.0.1</force.api.version>
 	</properties>
 
 	<repositories>
@@ -185,12 +185,14 @@
 			<groupId>com.force.api</groupId>
 			<artifactId>force-wsc</artifactId>
 			<version>${force.api.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.force.api</groupId>
 			<artifactId>force-partner-api</artifactId>
 			<version>${force.api.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -232,7 +234,7 @@
 			</plugin>
 
 		</plugins>
-		
+	
 	</build>
 
 </project>

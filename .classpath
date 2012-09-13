@@ -34,8 +34,8 @@
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/sourceforge/cssparser/cssparser/0.9.5/cssparser-0.9.5.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/force/api/force-partner-api/25.0.0/force-partner-api-25.0.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/force/api/force-wsc/25.0.0/force-wsc-25.0.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/force/api/force-partner-api/25.0.1/force-partner-api-25.0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/force/api/force-wsc/25.0.1/force-wsc-25.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/collections/google-collections/1.0/google-collections-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/10.0.1/guava-10.0.1.jar"/>

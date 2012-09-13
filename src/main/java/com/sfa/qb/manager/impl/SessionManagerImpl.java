@@ -113,7 +113,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			setMainArea(TemplatesEnum.HOME);
 			
 			session.removeAttribute("OAuth");			
-			session.removeAttribute("Identity");
+			session.removeAttribute("Identity");			
 
 		} else {
 			
@@ -124,7 +124,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@PreDestroy
 	public void destroy() {
-		log.info("destroy");		
+		log.info("destroy");
+		if (getLoggedIn())
+		    logout();
 	}
 	
 	@Override
@@ -139,8 +141,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		try {			
 			ClientResponse<String> response = request.get(String.class);
-			log.info("RESPONSE: " + response.getResponseStatus());
-			log.info(response.getEntity());
+			log.info("Logout Response: " + response.getResponseStatus());
 		} catch (Exception e) {
 			log.error("Exception", e);
 			throw new FacesException(e);

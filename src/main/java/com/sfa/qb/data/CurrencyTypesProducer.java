@@ -22,7 +22,7 @@ import com.sforce.ws.ConnectionException;
 @Startup
 @Singleton
 
-public class CurrencyIsoCodesProducer implements Serializable {
+public class CurrencyTypesProducer implements Serializable {
 
 	private static final long serialVersionUID = 1674767844758379451L;
 	
