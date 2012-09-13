@@ -1,6 +1,7 @@
 package com.sfa.qb.dao.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 
@@ -19,27 +20,60 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 
 	@Override
 	public PricebookEntry queryPricebookEntry(String pricebookId, String productCode, String currencyIsoCode) throws QueryException {		
-		String queryString = getQueryString(pricebookId, productCode, "false", currencyIsoCode);
+		String queryString = "Select Id, "
+		        + "CurrencyIsoCode, "
+		        + "UnitPrice, "
+		        + "Product2.Id, "
+		        + "Product2.Description, "
+		        + "Product2.Name, "
+		        + "Product2.Family, "                      
+		        + "Product2.ProductCode, "
+		        + "Product2.Primary_Business_Unit__c, "
+		        + "Product2.Product_Line__c, "
+		        + "Product2.Unit_Of_Measure__c, "
+		        + "Product2.Term__c, "
+		        + "Product2.Configurable__c, "
+		        + "Product2.IsActive "
+		        + "From PricebookEntry "
+		        + "Where Pricebook2.Id = ':pricebookId' " 
+		        + "And Product2.ProductCode = ':productCode' "
+		        + "And Product2.Configurable__c = :configurable " 
+		        + "And CurrencyIsoCode = ':currencyIsoCode' "
+		        + "And IsActive = true "
+		        + "And Product2.IsActive = true limit 1";
+		
+		Query q = null;
+		PricebookEntry pricebookEntry = null;
 		
 		try {
 			ConnectionManager.openConnection(sessionUser);
 		
-		    Query q = em.createQuery(queryString);	
+		    q = em.createQuery(queryString);
+		    q.addParameter("pricebookId", pricebookId);
+		    q.addParameter("productCode", productCode);
+		    q.addParameter("configurable", "false");
+		    q.addParameter("currencyIsoCode", currencyIsoCode);
 		
-		    PricebookEntry pricebookEntry = q.getSingleResult();				
+		    pricebookEntry = q.getSingleResult();				
 		
-		    if (pricebookEntry == null) {
-			    queryString = getQueryString(pricebookId, productCode.substring(0,4), "true", currencyIsoCode);
-			    q = em.createQuery(queryString);	
+		    if (pricebookEntry == null) {		    	
+		    	
+			    q = em.createQuery(queryString);
+			    q.addParameter("pricebookId", pricebookId);
+			    q.addParameter("productCode", productCode.substring(0,4));
+			    q.addParameter("configurable", "true");
+			    q.addParameter("currencyIsoCode", currencyIsoCode);
+			    
 			    pricebookEntry = q.getSingleResult();
 		    }
 		    
 		    return pricebookEntry;
 		    
 		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("ConnectionException", e);
+			throw new QueryException("ConnectionException", e);
 		} finally {
+			
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
@@ -47,18 +81,39 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 				e.printStackTrace();
 			}
 		}
-		
+	}
+	
+	@Override
+	public List<PricebookEntry> queryPricebook(String priceBook) throws QueryException {
 		return null;
 	}
 	
 	private String getQueryString(String pricebookId, String productCode, String configurable, String currencyIsoCode) {
-		String query = pricebookEntryQuery.replace("#pricebookId#", pricebookId);
-		query = query.replace("#productCode#", productCode);
-		query = query.replace("#configurable#", configurable);
-		query = query.replace("#currencyIsoCode#", currencyIsoCode);
+		String query = pricebookEntryQuery.replace(":pricebookId", pricebookId);
+		query = query.replace(":productCode", productCode);
+		query = query.replace(":configurable", configurable);
+		query = query.replace(":currencyIsoCode", currencyIsoCode);
 		
 		return query;
 	}
+	
+	String pricebookQuery = "Select Id, "
+        + "CurrencyIsoCode, "
+        + "UnitPrice, "
+        + "Product2.Id, "
+        + "Product2.Description, "
+        + "Product2.Name, "
+        + "Product2.Family, "                      
+        + "Product2.ProductCode, "
+        + "Product2.Primary_Business_Unit__c, "
+        + "Product2.Product_Line__c, "
+        + "Product2.Unit_Of_Measure__c, "
+        + "Product2.Term__c, "
+        + "Product2.Configurable__c, "
+        + "Product2.IsActive "
+        + "From PricebookEntry "
+        + "Where Pricebook2.Name = '#pricebook#' " 
+        + "And IsActive = true ";
 	
 	String pricebookEntryQuery = "Select Id, "
         + "CurrencyIsoCode, "
@@ -75,10 +130,10 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
         + "Product2.Configurable__c, "
         + "Product2.IsActive "
         + "From PricebookEntry "
-        + "Where Pricebook2.Id = '#pricebookId#' " 
-        + "And Product2.ProductCode = '#productCode#' "
-        + "And Product2.Configurable__c = #configurable# " 
-        + "And CurrencyIsoCode = '#currencyIsoCode#' "
+        + "Where Pricebook2.Id = ':pricebookId' " 
+        + "And Product2.ProductCode = ':productCode' "
+        + "And Product2.Configurable__c = :configurable " 
+        + "And CurrencyIsoCode = ':currencyIsoCode' "
         + "And IsActive = true "
         + "And Product2.IsActive = true limit 1";	
 }

@@ -64,6 +64,8 @@ public class QueryImpl<X> implements Query {
 		List<X> resultList = new ArrayList<X>();
 		
 		try {
+			log.info(query);
+			
 			QueryResult qr = connection.query(query);
 									
 			log.info("QueryResult Size: " + qr.getSize());			
@@ -82,6 +84,8 @@ public class QueryImpl<X> implements Query {
 							    			    
 			    done = qr.getDone();
 			}
+			
+			totalSize = resultList.size();
 			
 			return resultList;
 			

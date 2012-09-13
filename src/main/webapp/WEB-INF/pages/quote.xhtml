@@ -6,8 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:panel id="quoteDetails" layout="block"
-		style="border: 0px;">
+	<rich:panel id="quoteDetails" layout="block" style="border: 0px;">
 
 		<table style="width: 100%">
 			<tr>
@@ -180,11 +179,14 @@
 				<td class="column-l-align"><h:outputText
 						value="#{selectedQuote.currencyIsoCode}"
 						rendered="#{not quoteController.editMode or selectedQuote.hasQuoteLineItems}" />
+						
 					<h:selectOneMenu value="#{selectedQuote.currencyIsoCode}"
 						style="width: 75px;"
 						rendered="#{quoteController.editMode and not selectedQuote.hasQuoteLineItems}">
 
-						<f:selectItems value="#{currencyIsoCodes}" />
+						<f:selectItems value="#{currencyTypes}" var="currencyCodes"
+							itemValue="#{currencyCodes.isoCode}"
+							itemLabel="#{currencyCodes.isoCode}" />
 
 						<a4j:ajax execute="@this" event="valueChange"
 							render="viewQuoteProducts">

@@ -49,8 +49,6 @@ public class Connection implements SessionRenewer {
 						
 		PartnerConnection connection = Connector.newConnection(config);
 		
-		ConnectionProperties.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
-		
 		setConnection(connection);
     }
     
