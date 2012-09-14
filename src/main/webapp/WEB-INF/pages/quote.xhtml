@@ -40,7 +40,7 @@
 
 				<a4j:commandLink value="#{msgs.back}"
 					disabled="#{quoteController.editMode}" status="waitstatus"
-					render="mainArea" action="#{quoteController.backToQuoteManager()}">
+					render="mainArea" action="#{quoteController.backToQuoteManager}">
 				</a4j:commandLink>
 
 				<h:outputText value=" " escape="false" />
@@ -54,7 +54,7 @@
 					<h:outputText value=" " escape="false" />
 
 					<a4j:commandLink id="followQuote"
-						action="#{quoteController.followQuote()}" status="waitstatus"
+						action="#{quoteController.followQuote}" status="waitstatus"
 						rerender="@region"
 						rendered="#{not selectedQuote.followers.isCurrentUserFollowing}">
 						<h:graphicImage url="./images/list-add.png" />#{msgs.follow}
@@ -63,7 +63,7 @@
 					<h:outputText value=" " escape="false" />
 
 					<a4j:commandLink id="unfollowQuote"
-						action="#{quoteController.unfollowQuote()}" status="waitstatus"
+						action="#{quoteController.unfollowQuote}" status="waitstatus"
 						rendered="#{selectedQuote.followers.isCurrentUserFollowing}"
 						rerender="@region">
 						<h:graphicImage url="./images/list-remove.png" />#{msgs.unfollow}
@@ -187,10 +187,6 @@
 						<f:selectItems value="#{currencyTypes}" var="currencyCodes"
 							itemValue="#{currencyCodes.isoCode}"
 							itemLabel="#{currencyCodes.isoCode}" />
-
-						<a4j:ajax execute="@this" event="valueChange"
-							render="viewQuoteProducts">
-						</a4j:ajax>
 
 					</h:selectOneMenu></td>
 			</tr>

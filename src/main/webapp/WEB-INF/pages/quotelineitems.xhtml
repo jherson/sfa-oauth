@@ -275,9 +275,9 @@
 			</rich:column>
 
 			<f:facet name="footer">
-				<h:outputText
+				<h:outputText render="#{not empty selectedQuote.quoteLineItems}"
 					value="#{msgs.lineCount}: #{selectedQuote.quoteLineItems.size()}, #{msgs.amount}: (#{selectedQuote.currencyIsoCode}) " />
-				<h:outputText value="#{selectedQuote.amount}">
+				<h:outputText value="#{selectedQuote.amount}" render="#{not empty selectedQuote.quoteLineItems}">
 					<f:convertNumber locale="#{sessionUser.locale}"
 						pattern="#,##0.00;(#,##0.00)" />
 				</h:outputText>

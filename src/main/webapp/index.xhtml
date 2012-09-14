@@ -35,8 +35,6 @@
 
 		<div id="header-right">
 
-			<ui:include src="/WEB-INF/pages/profile.xhtml" />
-
 			<div class="header-cell">
 				<a4j:commandLink
 					value="#{sessionUser.name} (#{sessionUser.profileName})"
@@ -64,13 +62,13 @@
 				<a4j:commandLink value="#{msgs.logout}"
 					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;"
 					render="quoteForm" rendered="#{sessionManager.loggedIn}"
-					action="#{sessionManager.logout()}">
+					action="#{sessionManager.logout}">
 				</a4j:commandLink>
 
 				<a4j:commandLink value="#{msgs.login}"
 					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;"
 					render="quoteForm" rendered="#{not sessionManager.loggedIn}"
-					action="#{sessionManager.login()}">
+					action="#{sessionManager.login}">
 				</a4j:commandLink>
 			</div>
 
@@ -80,16 +78,26 @@
 
 	</ui:define>
 
+	<ui:define name="topbar">
+
+		<h:panelGroup layout="block">
+
+			<h:outputText value="#{msgs.quoteFeed}"
+				style="font-weight: bold; font-size: 18; text-decoration: none; color: black" />
+
+		</h:panelGroup>
+
+	</ui:define>
+
 	<ui:define name="sidebar">
 
 		<h:panelGroup layout="block" style="padding: 20px 15px 5px 15px;">
 
 			<h:panelGroup layout="block" style="padding: 5px;">
 
-				<a4j:commandLink id="homeLink" 
-				    rendered="#{sessionManager.loggedIn}" status="waitstatus"
-				    render="mainArea" execute="@this"
-				    actionListener="#{homeController.showPageView}">
+				<a4j:commandLink id="homeLink" rendered="#{sessionManager.loggedIn}"
+					status="waitstatus" render="mainArea" execute="@this"
+					actionListener="#{homeController.showPageView}">
 					<f:param name="pageView" value="home" />
 					<h:graphicImage id="home" alt="home"
 						url="/images/menubar/home48x48.png" />
@@ -103,7 +111,7 @@
 					rendered="#{sessionManager.loggedIn}" status="waitstatus"
 					render="mainArea" execute="@this"
 					actionListener="#{homeController.showPageView}">
-					<f:param name="pageView" value="quotemanager" />					
+					<f:param name="pageView" value="quotemanager" />
 					<h:graphicImage id="quotemanager" alt="quotemanager"
 						url="/images/menubar/quote48x48.png" />
 				</a4j:commandLink>
@@ -114,19 +122,9 @@
 
 	</ui:define>
 
-	<ui:define name="body">
+	<ui:define name="content">
 
-		<h:panelGroup id="mainArea">
-		
-			<h:panelGroup layout="block" id="messagePanel" ajaxRendered="true"
-				style="border-color: red; padding: 5px;"
-				render="#{facesContext.maximumSeverity != null}">
-				<rich:messages />
-			</h:panelGroup>
-
-			<ui:include src="#{sessionManager.mainArea.template}" />
-			
-		</h:panelGroup>
+		<ui:include src="/WEB-INF/pages/content.xhtml" />
 
 	</ui:define>
 

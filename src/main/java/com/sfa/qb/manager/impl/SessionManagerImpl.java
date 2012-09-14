@@ -140,8 +140,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		ClientRequest request = new ClientRequest(revokeUrl);
 		
 		try {			
-			ClientResponse<String> response = request.get(String.class);
-			log.info("Logout Response: " + response.getResponseStatus());
+			request.post();
 		} catch (Exception e) {
 			log.error("Exception", e);
 			throw new FacesException(e);

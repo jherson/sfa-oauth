@@ -39,7 +39,6 @@
 			<rich:hotKey key="backspace" handler="return false;"
 				disableInInput="true" />
 
-
 			<!--                                         -->
 			<!--                H E A D E R              -->
 			<!--                                         -->
@@ -59,26 +58,38 @@
 			<div id="container">
 
 				<!--                                         -->
-				<!--                S I D E B A R            -->
-				<!--                                         -->
-
-				<div id="sidebar">
-
-					<ui:insert name="sidebar">
-				          [Template sidebar will be inserted here]
-				      </ui:insert>
-
-				</div>
-
-				<!--                                         -->
 				<!--                B O D Y                  -->
 				<!--                                         -->
 
 				<div id="body">
 
-					<ui:insert name="body">
+					<div id="topbar">
+
+						<ui:insert name="topbar">
+				          [Template topbar will be inserted here]
+				        </ui:insert>
+
+					</div>
+
+					<!--                                         -->
+					<!--                S I D E B A R            -->
+					<!--                                         -->
+
+					<div id="sidebar">
+
+						<ui:insert name="sidebar">
+				          [Template sidebar will be inserted here]
+				        </ui:insert>
+
+					</div>
+
+					<div id="content">
+
+						<ui:insert name="content">
                         [Template content will be inserted here]
                     </ui:insert>
+
+					</div>
 
 				</div>
 

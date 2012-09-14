@@ -2,7 +2,7 @@ html, body {
 	margin: 0px;
     height: 100%;
     width: 100%;
-    padding: 0;     
+    padding: 0, 20px, 0, 20px;     
     overflow-y: hidden;    
 }
 
@@ -21,48 +21,66 @@ div#header {
 	display: block;
 	overflow: hidden;	
 	min-width: 1000px;  
-	background-color: #f9fafa;        
+	background-color: #F9FAFA;
+	border-bottom: 2px solid #EAECEE;        
 }
 
 div#container {	
 	position: absolute;
 	width: 100%;
 	margin: 0 auto;		
-	top: 70px;
+	top: 75px;
 	left: 0px;
 	bottom: 0px;     
-    padding-left: 2;
-    padding-top: 2;
-    padding-right: 2;
     min-width: 1000px;   
     overflow: hidden;
 }
 
+div#body {	
+	position: absolute;
+	left: 0px;	
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+    float: left;
+	background: #FFFFFF;    
+	overflow: hidden;
+}
+
+div#topbar {
+	display: block; 
+	position: absolute;
+	left: 0px;	
+	top: 0px;
+	height: 50px;
+	width: 100%;
+    float: left;
+	background: #FFFFFF;    
+	overflow: hidden;
+	border-bottom: 1px solid #EAECEE;
+	padding-left: 100px;    
+}
+
 div#sidebar {
 	position: absolute;
-	top: 0px;
+	top: 55px;
     left:0px;
 	bottom: 0px;
 	float: left;
     width: 100px;
-    background-color: #f9fafa;
-    overflow-x: hidden;
-	overflow-y: auto;
+    background-color: #FFFFFF;
 }
 
-div#body {	
+div#content {	
 	position: absolute;
 	left: 100px;	
-	top: 0px;
+	top: 55px;
 	bottom: 0px;
 	right: 0px;
-    float: left;
-	padding-left: 10px;
-	background: #FFFFFF;    
-	border-top: 2px solid #EAECEE;
-	border-left: 2px solid #EAECEE;
+    float: left;        
+	background: #FFFFFF;
+	overflow-y: auto;    
 	overflow-x: hidden;
-	overflow-y: auto;
 }
 
 div#footer {
@@ -70,7 +88,7 @@ div#footer {
     width: 750px;
     clear: both;
     margin-top: 100px;
-    background-color: #f9fafa;
+    background-color: #F9FAFA;
 }
 
 .header-cell {
@@ -253,4 +271,5 @@ div#footer {
 
 .commandButton {
 	cursor: pointer;
+	height: 22px;	
 }

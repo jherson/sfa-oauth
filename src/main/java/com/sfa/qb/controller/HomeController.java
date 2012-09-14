@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.sfa.qb.dao.ChatterDAO;
-import com.sfa.qb.data.QuoteListProducer;
 import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.chatter.Body;
@@ -85,7 +84,7 @@ public class HomeController {
 		item.getComments().getComments().add(comment);
 	}
 	
-	public void postItem(ActionEvent event) {
+	public void postItem() {
 		HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:postText");
 		
 		String text = inputText.getValue().toString();
@@ -93,7 +92,7 @@ public class HomeController {
 		if (text == null || text.trim().length() == 0)
 			return;
 		
-		log.info(text);	
+		inputText.setValue("");
 					
 		try {
 			Item item = chatterDAO.postItem(text);

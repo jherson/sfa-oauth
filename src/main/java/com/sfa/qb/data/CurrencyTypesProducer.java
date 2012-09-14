@@ -46,7 +46,6 @@ public class CurrencyTypesProducer implements Serializable {
 	}
 	
 	public void queryCurrencyTypes() {
-		log.info("queryCurrencyTypes");
 		
 		String queryString = "Select Id, IsoCode from CurrencyType Where IsActive = true";
 		
