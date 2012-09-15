@@ -69,6 +69,11 @@ public class ChatterDAOImpl extends DAO implements ChatterDAO {
 	public Feed getQuoteFeed() throws SalesforceServiceException {
 		return getGson().fromJson(servicesManager.getQuoteFeed(getSessionId()), Feed.class);
 	}
+	
+	@Override
+	public Feed getFeedForQuote(String quoteId) throws SalesforceServiceException {
+		return getGson().fromJson(servicesManager.getRecordFeed(getSessionId(), quoteId), Feed.class);
+	}
 
 	@Override
 	public Followers getQuoteFollowers(String quoteId) {

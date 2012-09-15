@@ -51,7 +51,7 @@ public class QuoteProducer implements Serializable {
 	
 	@Inject
 	private ChatterDAO chatterDAO;
-	
+		
 	@Inject
 	private List<Quote> quoteList;
 

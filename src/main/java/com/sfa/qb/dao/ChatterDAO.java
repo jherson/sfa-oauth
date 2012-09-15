@@ -19,6 +19,7 @@ public interface ChatterDAO {
 	public void unlikeComment(String commentId) throws SalesforceServiceException;	
 	public void deleteComment(String commentId) throws SalesforceServiceException;
 	public Feed getQuoteFeed() throws SalesforceServiceException;
+	public Feed getFeedForQuote(String quoteId) throws SalesforceServiceException;
 
 	public Followers getQuoteFollowers(String quoteId);		
 	public void followQuote(String quoteId);

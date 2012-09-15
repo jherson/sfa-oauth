@@ -9,28 +9,7 @@
 	<rich:panel id="chatterFeed" layout="block"
 		style="border: 0px; width: 500px;">
 
-		<h:panelGroup layout="block">
-
-			<h:panelGroup layout="block">
-				<h:panelGroup layout="block" style="padding-bottom: 3px;">
-					<h:inputTextarea id="postText" value="" style="width: 420px;"
-						maxlength="1000" cols="200" rows="3" />
-
-				</h:panelGroup>
-				<h:panelGroup layout="block"
-					style="text-align: right; width: 430px; padding-bottom: 5px;">
-
-					<a4j:commandButton value="#{msgs.share}" status="waitstatus"
-						styleClass="commandButton" execute="@this postText"
-						render="chatterFeed" actionListener="#{homeController.postItem}">
-					</a4j:commandButton>
-
-				</h:panelGroup>
-			</h:panelGroup>
-
-			<br />
-			<hr />
-			<br />
+		<h:panelGroup layout="block">			
 
 			<h:panelGroup layout="block">
 				<a4j:commandButton id="refreshFeed" styleClass="commandButton"

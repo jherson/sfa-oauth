@@ -5,14 +5,45 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+	
+	<br />
+	
+	<rich:tabPanel switchType="client">
+        <rich:tab header="Quote">
+        
+        <a4j:outputPanel>			
 
-	<rich:panel id="quoteDetails" layout="block" style="border: 0px;">
+        <ui:include src="feed.xhtml" />
+		
+	</a4j:outputPanel>
+        
+        
+            <rich:panel id="quoteDetails" layout="block" style="border: 0px;">
+
+		<h:panelGroup layout="block">
+			<h:panelGroup layout="block" style="padding-bottom: 3px;">
+				<h:inputTextarea id="postText" value="" style="width: 420px;"
+					maxlength="1000" cols="200" rows="3" />
+
+			</h:panelGroup>
+			<h:panelGroup layout="block"
+				style="text-align: right; width: 430px; padding-bottom: 5px;">
+
+				<a4j:commandButton value="#{msgs.share}" status="waitstatus"
+					styleClass="commandButton" execute="@this postText"
+					render="chatterFeed" actionListener="#{homeController.postItem}">
+				</a4j:commandButton>
+
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<br />
+		<hr />
+		<br />
 
 		<table style="width: 100%">
 			<tr>
-				<td><h:graphicImage value="./images/quote.png"
-						style="vertical-align: middle" /> <h:outputText value=" "
-						escape="false" /> <h:outputText value="#{selectedQuote.name}"
+				<td><h:outputText value="#{selectedQuote.name}"
 						style="font-weight:bold; font-size: 18px;" /></td>
 			</tr>
 		</table>
@@ -179,7 +210,7 @@
 				<td class="column-l-align"><h:outputText
 						value="#{selectedQuote.currencyIsoCode}"
 						rendered="#{not quoteController.editMode or selectedQuote.hasQuoteLineItems}" />
-						
+
 					<h:selectOneMenu value="#{selectedQuote.currencyIsoCode}"
 						style="width: 75px;"
 						rendered="#{quoteController.editMode and not selectedQuote.hasQuoteLineItems}">
@@ -367,15 +398,22 @@
 			</tr>
 
 		</table>
-
+		
 		<br />
 		<ui:include src="quotepriceadjustments.xhtml" />
 
 		<br />
-
-		<ui:include src="quotelineitems.xhtml" />
-
 		<ui:include src="owners.xhtml" />
 		<ui:include src="contacts.xhtml" />
-	</rich:panel>
+		
+		</rich:panel>
+
+        </rich:tab>
+        <rich:tab header="Quote Products">
+            <ui:include src="quotelineitems.xhtml" />
+        </rich:tab>
+        <rich:tab header="Discounts">
+            Here is tab #3
+        </rich:tab>
+    </rich:tabPanel>	
 </ui:composition>

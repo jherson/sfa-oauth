@@ -244,7 +244,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 		
 		if (response.getResponseStatus() == Status.OK) {
-			logResponse(response);
+			//logResponse(response);
 		    return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -444,6 +444,31 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		} catch (Exception e) {
 			//if ({"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"})
 			throw new SalesforceServiceException(e);
+		}
+	}
+	
+	@Override
+	public String getRecordFeed(String sessionId, String recordId) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feeds/" + recordId;
+
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.get(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.OK) {
+			logResponse(response);
+			return response.getEntity();
+		} else {
+			throw new SalesforceServiceException(response.getEntity());
 		}
 	}
 	

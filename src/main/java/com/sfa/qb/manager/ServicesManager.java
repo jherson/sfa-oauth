@@ -18,6 +18,7 @@ public interface ServicesManager {
 	// chatter services
 	public String getFeed(String sessionId) throws SalesforceServiceException;
 	public String postItem(String sessionId, String text) throws SalesforceServiceException;
+	
 	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException;
 	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException;
 	public void unlikeItem(String sessionId, String likeId) throws SalesforceServiceException;
@@ -26,6 +27,7 @@ public interface ServicesManager {
 	public void unlikeComment(String sessionId, String commentId) throws SalesforceServiceException;
 	public void deleteComment(String sessionId, String commentId) throws SalesforceServiceException;
 	public String getQuoteFeed(String sessionId) throws SalesforceServiceException;
+	public String getRecordFeed(String sessionId, String recordId) throws SalesforceServiceException;
 	
 	public void follow(String sessionId, String subjectId);
 	public void unfollow(String sessionId, String subscriptionId);

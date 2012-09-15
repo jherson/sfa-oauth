@@ -84,25 +84,6 @@ public class HomeController {
 		item.getComments().getComments().add(comment);
 	}
 	
-	public void postItem() {
-		HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:postText");
-		
-		String text = inputText.getValue().toString();
-		
-		if (text == null || text.trim().length() == 0)
-			return;
-		
-		inputText.setValue("");
-					
-		try {
-			Item item = chatterDAO.postItem(text);
-			itemEvent.select(POST_ITEM).fire(item);
-		} catch (SalesforceServiceException e) {
-			log.info("SalesforceServiceException: " + e.getMessage());
-			throw new FacesException(e);
-		}
-	}
-	
 	public void postComment(Item item) {		
 	    int index = item.getComments().getComments().size() -1;
 	    
