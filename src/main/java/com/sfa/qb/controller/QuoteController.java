@@ -85,6 +85,9 @@ public class QuoteController {
 	private SessionManager sessionManager;
 	
 	@Inject
+	private MainController mainController;
+	
+	@Inject
 	private QuoteManager quoteManager;
 	
 	@Inject
@@ -119,11 +122,11 @@ public class QuoteController {
 	}
 
 	public void setMainArea(TemplatesEnum mainArea) {
-		sessionManager.setMainArea(mainArea);
+		mainController.setMainArea(mainArea);
 	}
 
 	public TemplatesEnum getMainArea() {
-		return sessionManager.getMainArea();
+		return mainController.getMainArea();
 	}
 
 	public void backToQuoteManager() {

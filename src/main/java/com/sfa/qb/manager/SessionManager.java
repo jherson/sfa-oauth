@@ -1,7 +1,5 @@
 package com.sfa.qb.manager;
 
-import com.sfa.qb.controller.TemplatesEnum;
-
 public interface SessionManager {
 
 	public void logout();
@@ -13,7 +11,5 @@ public interface SessionManager {
 	public void setEditMode(Boolean editMode);
 	public Boolean getEditMode();	
 	public void setGoalSeek(Boolean goalSeek);
-	public Boolean getGoalSeek();
-	public void setMainArea(TemplatesEnum mainArea);
-	public TemplatesEnum getMainArea();		
+	public Boolean getGoalSeek();	
 }

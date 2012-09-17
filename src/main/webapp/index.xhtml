@@ -123,8 +123,14 @@
 	</ui:define>
 
 	<ui:define name="content">
+	
+		<h:panelGroup id="mainArea">
 
-		<ui:include src="/WEB-INF/pages/content.xhtml" />
+		<ui:include src="/WEB-INF/pages/#{mainController.mainArea.template}" />
+
+	</h:panelGroup>
+
+	
 
 	</ui:define>
 

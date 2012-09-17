@@ -36,6 +36,9 @@ public class QuoteManagerController {
 	private SessionManager sessionManager;
 	
 	@Inject
+	private MainController mainController;
+	
+	@Inject
 	private QuoteManager quoteManager;
 	
 	@Inject
@@ -54,19 +57,19 @@ public class QuoteManagerController {
 		Quote quote = (Quote) event.getComponent().getAttributes().get("quote");
 		quoteEvent.select(VIEW_QUOTE).fire(quote);	
 		sessionManager.setEditMode(Boolean.TRUE);
-		sessionManager.setMainArea(TemplatesEnum.QUOTE);
+		mainController.setMainArea(TemplatesEnum.QUOTE);
 	}
 
     public void viewQuote(AjaxBehaviorEvent event) {
     	Quote quote = (Quote) event.getComponent().getAttributes().get("quote");    	
     	quoteEvent.select(VIEW_QUOTE).fire(quote);		
-    	sessionManager.setMainArea(TemplatesEnum.QUOTE);
+    	mainController.setMainArea(TemplatesEnum.QUOTE);
     }
     
     public void viewOpportunity(AjaxBehaviorEvent event) {
     	Quote quote = (Quote) event.getComponent().getAttributes().get("quote");    	
     	quoteEvent.select(VIEW_QUOTE).fire(quote);		
-    	sessionManager.setMainArea(TemplatesEnum.OPPORTUNITY);    	
+    	mainController.setMainArea(TemplatesEnum.OPPORTUNITY);    	
     }
     
 	public void deleteQuote(AjaxBehaviorEvent event) {

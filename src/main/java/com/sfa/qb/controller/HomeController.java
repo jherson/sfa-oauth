@@ -5,7 +5,6 @@ import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.FacesException;
-import javax.faces.component.html.HtmlInputTextarea;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -15,7 +14,6 @@ import org.jboss.logging.Logger;
 
 import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.exception.SalesforceServiceException;
-import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.chatter.Body;
 import com.sfa.qb.model.chatter.Comment;
 import com.sfa.qb.model.chatter.Feed;
@@ -34,7 +32,7 @@ public class HomeController {
 	private Logger log;
 	
 	@Inject
-	private SessionManager sessionManager;	
+	private MainController mainController;
 	
 	@Inject
 	private ChatterDAO chatterDAO;
@@ -63,7 +61,7 @@ public class HomeController {
 	}
 	
 	public void setMainArea(TemplatesEnum mainArea) {
-		sessionManager.setMainArea(mainArea);
+		mainController.setMainArea(mainArea);
 	}
 	
 	public void showPageView(ActionEvent event) throws AbortProcessingException {
@@ -108,7 +106,7 @@ public class HomeController {
 		quote.setId(quoteId);
 		
 		quoteEvent.select(VIEW_QUOTE).fire(quote);		
-    	sessionManager.setMainArea(TemplatesEnum.QUOTE);
+		mainController.setMainArea(TemplatesEnum.QUOTE);
 	}
 	
 	public void refreshFeed() {

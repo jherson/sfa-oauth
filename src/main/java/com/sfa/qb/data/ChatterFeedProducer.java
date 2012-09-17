@@ -3,7 +3,7 @@ package com.sfa.qb.data;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.enterprise.inject.Produces;
@@ -14,10 +14,8 @@ import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
-import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.exception.SalesforceServiceException;
-import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.chatter.Feed;
 import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.sobject.Quote;
@@ -25,7 +23,7 @@ import com.sfa.qb.qualifiers.DeleteItem;
 import com.sfa.qb.qualifiers.PostItem;
 import com.sfa.qb.qualifiers.SelectedQuote;
 
-@RequestScoped
+@SessionScoped
 
 public class ChatterFeedProducer implements Serializable {
 
@@ -36,13 +34,6 @@ public class ChatterFeedProducer implements Serializable {
 
 	@Inject
 	private ChatterDAO chatterDAO;
-	
-	@Inject
-	private SessionManager sessionManager;
-	
-	@Inject
-	@SelectedQuote
-	private Quote selectedQuote;
 	
 //	@Inject
 //    @Push(topic = "salesforce", subtopic = "feed")
@@ -58,11 +49,7 @@ public class ChatterFeedProducer implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		if (sessionManager.getMainArea().getTemplate().equals(TemplatesEnum.HOME)) {
-		    queryFeed();
-		} else if (sessionManager.getMainArea().getTemplate().equals(TemplatesEnum.QUOTE)) {
-			queryFeedForQuote();
-		}
+        log.info("init");
 	}
 	
 	
@@ -81,7 +68,7 @@ public class ChatterFeedProducer implements Serializable {
 	public void queryFeedForQuote() {
 		log.info("queryFeedForQuote");
 		try {
-			feed = chatterDAO.getFeedForQuote(selectedQuote.getId());
+			feed = chatterDAO.getFeedForQuote("iiii");
 		} catch (SalesforceServiceException e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());

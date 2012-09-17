@@ -17,9 +17,9 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
 
 import com.sfa.persistence.connection.ConnectionProperties;
+import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.manager.SessionManager;
@@ -38,7 +38,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Inject
 	private Logger log;	
 	
-	private TemplatesEnum mainArea;
+	@Inject
+	private MainController mainController;
 	
 	private String frontDoorUrl;	
 	
@@ -110,7 +111,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 														
 			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
 			setLoggedIn(Boolean.TRUE);								
-			setMainArea(TemplatesEnum.HOME);
 			
 			session.removeAttribute("OAuth");			
 			session.removeAttribute("Identity");			
@@ -118,7 +118,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		} else {
 			
 			setLoggedIn(Boolean.FALSE);
-			setMainArea(TemplatesEnum.SIGN_IN);			
+			mainController.setMainArea(TemplatesEnum.SIGN_IN);			
 		}			
 	}
 	
@@ -170,16 +170,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		    log.error("IOException", e);
 		    throw new FacesException(e);
 	    } 
-	}
-	
-	@Override
-	public void setMainArea(TemplatesEnum mainArea) {
-		this.mainArea = mainArea;
-	}
-
-	@Override
-	public TemplatesEnum getMainArea() {
-		return mainArea;
 	}
 	
 	@Override
