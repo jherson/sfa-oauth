@@ -18,6 +18,7 @@ import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.dao.OpportunityDAO;
 import com.sfa.qb.dao.QuoteDAO;
 import com.sfa.qb.exception.QueryException;
+import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.model.sobject.Opportunity;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;
@@ -68,6 +69,12 @@ public class QuoteProducer implements Serializable {
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
 		selectedQuote = queryQuoteById(quote.getId()); 	
 		selectedQuote.setFollowers(chatterDAO.getQuoteFollowers(quote.getId()));
+		try {
+			chatterDAO.getFeedForQuote(quote.getId());
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 	
 	public void onCreateQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @CreateQuote final Quote quote) {

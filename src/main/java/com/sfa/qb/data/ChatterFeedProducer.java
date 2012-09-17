@@ -21,6 +21,7 @@ import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.qualifiers.DeleteItem;
 import com.sfa.qb.qualifiers.PostItem;
+import com.sfa.qb.qualifiers.QueryFeed;
 import com.sfa.qb.qualifiers.SelectedQuote;
 
 @SessionScoped
@@ -53,7 +54,7 @@ public class ChatterFeedProducer implements Serializable {
 	}
 	
 	
-	public void queryFeed() {
+	public void queryQuoteFeed() {
 
 		try {
 			//feed = chatterDAO.getFeed();
@@ -65,10 +66,10 @@ public class ChatterFeedProducer implements Serializable {
 		}
 	}
 	
-	public void queryFeedForQuote() {
+	public void queryFeedForQuote(Quote quote) {
 		log.info("queryFeedForQuote");
-		try {
-			feed = chatterDAO.getFeedForQuote("iiii");
+		try {			
+			feed = chatterDAO.getFeedForQuote(quote.getId());
 		} catch (SalesforceServiceException e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
@@ -81,8 +82,13 @@ public class ChatterFeedProducer implements Serializable {
 //		queryFeed();
 //	}
 	
-	public void refreshFeed(@Observes(during=TransactionPhase.AFTER_SUCCESS) final Feed feed) {
-		queryFeed();
+	public void queryFeed(@Observes(during=TransactionPhase.AFTER_SUCCESS) @QueryFeed final Quote quote) {
+		log.info("observing query feed for quote");
+		queryFeedForQuote(quote);
+	}
+	
+	public void queryFeed(@Observes(during=TransactionPhase.AFTER_SUCCESS) @QueryFeed final Feed feed) {
+		queryQuoteFeed();
 	}
 	
 	public void onPostItem(@Observes(during=TransactionPhase.AFTER_SUCCESS) @PostItem final Item item) {

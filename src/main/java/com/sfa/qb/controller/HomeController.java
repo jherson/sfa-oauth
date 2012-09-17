@@ -21,7 +21,6 @@ import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.chatter.MyLike;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.qualifiers.DeleteItem;
-import com.sfa.qb.qualifiers.PostItem;
 import com.sfa.qb.qualifiers.ViewQuote;
 
 @Model
@@ -48,10 +47,7 @@ public class HomeController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<ViewQuote> VIEW_QUOTE = new AnnotationLiteral<ViewQuote>() {};
-		
-	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<PostItem> POST_ITEM = new AnnotationLiteral<PostItem>() {};
-	
+			
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<DeleteItem> DELETE_ITEM = new AnnotationLiteral<DeleteItem>() {};
 		

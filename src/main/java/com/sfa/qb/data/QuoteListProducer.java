@@ -32,10 +32,7 @@ public class QuoteListProducer implements Serializable {
 
 	@Produces
 	@Named
-	public List<Quote> getQuoteList() {		
-		if (quoteList == null)
-			queryQuotes();
-		
+	public List<Quote> getQuoteList() {				
 		return quoteList;
 	}
 

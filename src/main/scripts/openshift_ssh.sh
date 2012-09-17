@@ -1,1 +1,1 @@
-ssh 4cb21b56186048d493a62901f91919fa@quotebuilder-sfa.rhcloud.com
+20913375ace145188de70761d6ad2290@quotebuilder-sfa.openshift.devlab.phx1.redhat.com

@@ -121,7 +121,7 @@
 					<h:panelGroup layout="block">
 
 						<a4j:commandButton id="edit" value="#{msgs.edit}"
-							action="#{quoteController.editQuote()}"
+							action="#{quoteController.editQuote}"
 							styleClass="commandButton"
 							rendered="#{not quoteController.editMode}" ajaxSingle="true"
 							disabled="#{empty selectedQuote}" render="quoteDetails"

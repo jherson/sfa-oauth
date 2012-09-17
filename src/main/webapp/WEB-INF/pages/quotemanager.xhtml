@@ -28,6 +28,7 @@
 
 				<h:outputText value="#{msgs.quoteListHeader}"
 					style="font-weight: bold" />
+						
 
 				<h:outputText value=" [#{quoteList.size}]"
 					style="font-weight: bold" />
@@ -45,7 +46,7 @@
 					</h:selectOneMenu>
 
 					<a4j:commandButton value="#{msgs.go}" styleClass="commandButton"
-						action="#{quoteReports.runReport()}" render="quoteList"
+						action="#{quoteReports.runReport}" render="quoteList"
 						ajaxSingle="true">
 					</a4j:commandButton>
 

@@ -2,16 +2,21 @@ package com.sfa.qb.controller;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.logging.Logger;
 
-import com.sfa.qb.data.ChatterFeedProducer;
+import com.sfa.qb.model.chatter.Feed;
+import com.sfa.qb.model.sobject.Quote;
+import com.sfa.qb.qualifiers.ListQuotes;
+import com.sfa.qb.qualifiers.QueryFeed;
 
 import java.io.Serializable;
 
-@Named(value="mainController")
+@Named
 @SessionScoped
 
 public class MainController implements Serializable {
@@ -20,9 +25,18 @@ public class MainController implements Serializable {
 	
 	@Inject
 	private Logger log;
-	
+		
 	@Inject
-	private ChatterFeedProducer chatterFeedProducer;
+	private Event<Quote> quoteEvent;
+		
+	@Inject
+	private Event<Feed> feedEvent;
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<ListQuotes> LIST_QUOTES = new AnnotationLiteral<ListQuotes>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<QueryFeed> QUERY_FEED = new AnnotationLiteral<QueryFeed>() {};
 	
 	private TemplatesEnum mainArea;
 	
@@ -35,16 +49,15 @@ public class MainController implements Serializable {
 		log.info("set page: " + mainArea.getTemplate());
 		
 		if (mainArea.equals(TemplatesEnum.HOME)) {
-			chatterFeedProducer.queryFeed();
-		} else if (mainArea.equals(TemplatesEnum.QUOTE)) {
-			chatterFeedProducer.queryFeedForQuote();
+			feedEvent.select(QUERY_FEED).fire(new Feed());	
+		} else if (mainArea.equals(TemplatesEnum.QUOTE_MANAGER)) {
+			quoteEvent.select(LIST_QUOTES).fire(new Quote());
 		}
 		
 		this.mainArea = mainArea;
 	}
 
 	public TemplatesEnum getMainArea() {
-		log.info("get page: " + mainArea.getTemplate());
 		return mainArea;
 	}
 }
