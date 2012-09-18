@@ -2,6 +2,8 @@ package com.sfa.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -13,6 +15,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
@@ -89,37 +92,36 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void init() {
 		log.info("init");
 
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);		
-				
-		if (session.getAttribute("OAuth") != null && session.getAttribute("Identity") != null) {
+//		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);		
+//				
+//		if (session.getAttribute("OAuth") != null && session.getAttribute("Identity") != null) {
+//			
+//			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 
+//			Identity identity = (Identity) session.getAttribute("Identity");
+//						
+//			try {
+//				sessionUser = new SessionUser(oauth, identity);
+//			} catch (QueryException e) {
+//				log.error("QueryException", e);
+//				throw new FacesException(e);
+//			}
+//			
+//			if (sessionUser.getLocale() != null) {
+//				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
+//			} else {
+//				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
+//			}			
+//														
+//			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
+//			setLoggedIn(Boolean.TRUE);								
+//			
+//			session.removeAttribute("OAuth");			
+//			session.removeAttribute("Identity");			
+//
+//		} else {
 			
-			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 
-			Identity identity = (Identity) session.getAttribute("Identity");
-						
-			try {
-				sessionUser = new SessionUser(oauth, identity);
-			} catch (QueryException e) {
-				log.error("QueryException", e);
-				throw new FacesException(e);
-			}
-			
-			if (sessionUser.getLocale() != null) {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
-			} else {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
-			}			
-														
-			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
-			setLoggedIn(Boolean.TRUE);								
-			
-			session.removeAttribute("OAuth");			
-			session.removeAttribute("Identity");			
-
-		} else {
-			
-			setLoggedIn(Boolean.FALSE);
-			mainController.setMainArea(TemplatesEnum.SIGN_IN);			
-		}			
+			setLoggedIn(Boolean.FALSE);		
+//		}			
 	}
 	
 	@PreDestroy
@@ -160,16 +162,41 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public void login() {
 		
-		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-       	session.invalidate();
+		String authUrl = null;
+		try {
+			authUrl = System.getProperty("salesforce.environment")
+					+ "/services/oauth2/authorize?response_type=code"
+					+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
+					+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
+					+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
+					+ "&prompt=login"
+					+ "&display=popup";
+							
+			try {
+			    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			    externalContext.redirect(authUrl);
+		    } catch (IOException e) {
+			    log.error("IOException", e);
+			    throw new FacesException(e);
+		    } 
+			
+			return;
+
+		} catch (UnsupportedEncodingException e) {
+			log.error("UnsupportedEncodingException", e);
+			throw new FacesException(e);
+		}
 		
-	    try {
-		    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
-	    } catch (IOException e) {
-		    log.error("IOException", e);
-		    throw new FacesException(e);
-	    } 
+	//	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+    //   	session.invalidate();
+		
+	//    try {
+	//	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+	//	    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
+	//    } catch (IOException e) {
+	//	    log.error("IOException", e);
+	//	    throw new FacesException(e);
+	//    } 
 	}
 	
 	@Override

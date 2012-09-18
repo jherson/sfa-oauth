@@ -18,6 +18,7 @@ public interface ServicesManager {
 	// chatter services
 	public String getFeed(String sessionId) throws SalesforceServiceException;
 	public String postItem(String sessionId, String text) throws SalesforceServiceException;
+	public String postItem(String sessionId, String recordId, String text) throws SalesforceServiceException;
 	
 	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException;
 	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException;

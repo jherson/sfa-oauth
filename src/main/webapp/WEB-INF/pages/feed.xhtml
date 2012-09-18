@@ -14,7 +14,7 @@
 			<h:panelGroup layout="block">
 				<a4j:commandButton id="refreshFeed" styleClass="commandButton"
 					value="#{msgs.refresh}" ajaxSingle="true"
-					action="#{homeController.refreshFeed}" render="chatterFeed" />
+					action="#{chatterController.refreshFeed}" render="chatterFeed" />
 			</h:panelGroup>
 
 			<h:panelGroup layout="block">
@@ -72,10 +72,9 @@
 
 								<a4j:commandLink value="#{msgs.comment}"
 									style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-									status="waitstatus" ajaxSingle="true"
-									focus="#{rich:element('mainForm:postText')}" execute="@this"
-									render="chatterFeed"
-									action="#{homeController.comment(feedItem)}">
+									status="waitstatus" ajaxSingle="true" execute="@this"
+									render="chatterFeed" actionListener="#{chatterController.comment}">
+									<f:attribute name="feedItem" value="#{feedItem}" />
 								</a4j:commandLink>
 
 								<f:verbatim escape="#{true}">&#8226;</f:verbatim>
@@ -83,19 +82,21 @@
 								<a4j:commandLink value="#{msgs.like}"
 									rendered="#{empty feedItem.myLike}"
 									style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-									status="waitstatus" ajaxSingle="true">
-									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
-									<a4j:actionListener
-										listener="#{homeController.likeItem(feedItem)}" />
+									status="waitstatus" ajaxSingle="true"
+									render="chatterFeed" execute="@this"
+									actionListener="#{chatterController.likeItem}">
+									<f:attribute name="feedItem" value="#{feedItem}" />
 								</a4j:commandLink>
+								
 								<a4j:commandLink value="#{msgs.unlike}"
 									rendered="#{not empty feedItem.myLike}"
 									style="padding-left: 5px; padding-right: 5px; text-decoration: none; color: #336699;"
-									status="waitstatus" ajaxSingle="true">
-									<a4j:ajax execute="@this" event="click" render="chatterFeed" />
-									<a4j:actionListener
-										listener="#{homeController.unlikeItem(feedItem)}" />
+									status="waitstatus" ajaxSingle="true"
+									execute="@this" render="chatterFeed"
+									listener="#{chatterController.unlikeItem}">
+									<f:attribute name="feedItem" value="#{feedItem}" />						
 								</a4j:commandLink>
+								
 							</h:panelGroup>
 
 							<br />
@@ -150,7 +151,7 @@
 													<a4j:ajax execute="@this" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
-														listener="#{homeController.likeComment(comment)}" />
+														listener="#{chatterController.likeComment(comment)}" />
 												</a4j:commandLink>
 												<a4j:commandLink value="#{msgs.unlike}"
 													rendered="#{not empty comment.myLike}"
@@ -159,7 +160,7 @@
 													<a4j:ajax execute="@this" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
-														listener="#{homeController.unlikeComment(comment)}" />
+														listener="#{chatterController.unlikeComment(comment)}" />
 												</a4j:commandLink>
 												<f:verbatim escape="#{true}">&#8226;</f:verbatim>
 												<a4j:commandLink value="#{msgs.delete}"
@@ -169,7 +170,7 @@
 													<a4j:ajax execute="@this" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
-														listener="#{homeController.deleteComment(feedItem, comment)}" />
+														listener="#{chatterController.deleteComment(feedItem, comment)}" />
 												</a4j:commandLink>
 											</h:panelGroup>
 
@@ -197,7 +198,7 @@
 													<a4j:ajax execute="@this commentText" event="click"
 														render="chatterFeed" />
 													<a4j:actionListener
-														listener="#{homeController.postComment(feedItem)}" />
+														listener="#{chatterController.postComment(feedItem)}" />
 												</a4j:commandButton>
 											</h:panelGroup>
 										</h:panelGroup>
@@ -212,11 +213,10 @@
 						<h:panelGroup layout="block" class="feed-item-tools">
 
 							<a4j:commandLink status="waitstatus"
-								render="#{not feedItem.isDeleteRestricted}"
-								actionListener="#{homeController.showPageView}">
+								render="#{not feedItem.isDeleteRestricted}">
 								<a4j:ajax execute="@this" event="click" render="chatterFeed" />
 								<a4j:actionListener
-									listener="#{homeController.deleteItem(feedItem)}" />
+									listener="#{chatterController.deleteItem(feedItem)}" />
 
 								<h:graphicImage id="quotemanager" alt="quotemanager"
 									url="/resources/images/delete.png" height="20" width="20" />

@@ -4,42 +4,15 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j">
+	xmlns:a4j="http://richfaces.org/a4j">	
 
-	<br />
-
-	<rich:tabPanel switchType="client">
+	<rich:tabPanel switchType="client" style="padding: 5px">
+	
 		<rich:tab header="Quote">
+		
+		    <h:panelGrid layout="inline-block" columns="2" >		    
 
-			<a4j:outputPanel>
-
-				<ui:include src="feed.xhtml" />
-
-			</a4j:outputPanel>
-
-
-			<rich:panel id="quoteDetails" layout="block" style="border: 0px;">
-
-				<h:panelGroup layout="block">
-					<h:panelGroup layout="block" style="padding-bottom: 3px;">
-						<h:inputTextarea id="postText" value="" style="width: 420px;"
-							maxlength="1000" cols="200" rows="3" />
-
-					</h:panelGroup>
-					<h:panelGroup layout="block"
-						style="text-align: right; width: 430px; padding-bottom: 5px;">
-
-						<a4j:commandButton value="#{msgs.share}" status="waitstatus"
-							styleClass="commandButton" execute="@this postText"
-							render="chatterFeed" actionListener="#{quoteController.postItem}">
-						</a4j:commandButton>
-
-					</h:panelGroup>
-				</h:panelGroup>
-
-				<br />
-				<hr />
-				<br />
+			<rich:panel id="quoteDetails" layout="block" style="border: 0px;">				
 
 				<table style="width: 100%">
 					<tr>
@@ -413,13 +386,20 @@
 				<ui:include src="contacts.xhtml" />
 
 			</rich:panel>
+			
+			
+			
+			</h:panelGrid>
 
 		</rich:tab>
 		<rich:tab header="Quote Products">
 			<ui:include src="quotelineitems.xhtml" />
 		</rich:tab>
 		<rich:tab header="Discounts">
-            Here is tab #3
+            Here is tab 3
+        </rich:tab>
+        <rich:tab header="Chatter">
+            <ui:include src="quotefeed.xhtml" />
         </rich:tab>
 	</rich:tabPanel>
 </ui:composition>

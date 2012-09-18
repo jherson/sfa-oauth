@@ -45,28 +45,28 @@ public class AuthorizeServlet extends HttpServlet {
 		response.setContentType("text/html");
 		
 		String code = request.getParameter("code");		
-
-		if (code == null) {
-			
-			String authUrl = null;
-			try {
-				authUrl = System.getProperty("salesforce.environment")
-						+ "/services/oauth2/authorize?response_type=code"
-						+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
-						+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
-						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
-						//+ "&prompt=login"
-						+ "&display=popup";
-								
-				response.sendRedirect(authUrl);
-				return;
-
-			} catch (UnsupportedEncodingException e) {
-				log.error("UnsupportedEncodingException", e);
-				throw new ServletException(e);
-			}
-
-		} else {
+//
+//		if (code == null) {
+//			
+//			String authUrl = null;
+//			try {
+//				authUrl = System.getProperty("salesforce.environment")
+//						+ "/services/oauth2/authorize?response_type=code"
+//						+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
+//						+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
+//						+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
+//						//+ "&prompt=login"
+//						+ "&display=popup";
+//								
+//				response.sendRedirect(authUrl);
+//				return;
+//
+//			} catch (UnsupportedEncodingException e) {
+//				log.error("UnsupportedEncodingException", e);
+//				throw new ServletException(e);
+//			}
+//
+//		} else {
 			
 			HttpSession session = request.getSession(true);	
 			PrintWriter out = response.getWriter();
@@ -109,7 +109,7 @@ public class AuthorizeServlet extends HttpServlet {
 					throw new ServletException(e);
 				}					
 		    }
-		}																	
+		//}																	
 	}
 		
 	private String getAuthResponse(String code) throws Exception {

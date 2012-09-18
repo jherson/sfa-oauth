@@ -303,6 +303,33 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
+	public String postItem(String sessionId, String recordId, String text) throws SalesforceServiceException {
+		String url = ConnectionProperties.getApiEndpoint()
+				+ "/data/"
+				+ ConnectionProperties.getApiVersion() 
+				+ "/chatter/feeds/record/" + recordId + "/feed-items";
+
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Content-type", "application/x-www-form-urlencoded");
+		request.queryParameter("text", text);
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.CREATED) {
+			logResponse(response);
+			return response.getEntity();
+		} else {
+			throw new SalesforceServiceException(response.getEntity());
+		}
+	}
+	
+	@Override
 	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"

@@ -82,8 +82,6 @@
 
 		<h:panelGroup layout="block">
 
-			<h:outputText value="#{msgs.quoteFeed}"
-				style="font-weight: bold; font-size: 18; text-decoration: none; color: black" />
 
 		</h:panelGroup>
 
@@ -122,16 +120,11 @@
 
 	<ui:define name="content">
 
-		<ui:include src="/WEB-INF/pages/messages.xhtml" />
-		<ui:include src="/WEB-INF/pages/profile.xhtml" />
-
 		<h:panelGroup id="mainArea">
 
 			<ui:include src="/WEB-INF/pages/#{mainController.mainArea.template}" />
 
 		</h:panelGroup>
-
-
 
 	</ui:define>
 

@@ -6,7 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:panel>
+	<div>
 
 		<img src="images/256x256/quote.png" alt="some_text" />
 
@@ -14,6 +14,7 @@
 			<h:outputText>Quote Builder is an open source quoting application for Salesforce.com. Built on the following technologies:
             </h:outputText>
 			<ul>
+				<li>Salesforce</li>
 				<li>JBoss</li>
 				<li>Richfaces</li>
 				<li>JSF</li>
@@ -21,8 +22,21 @@
 				<li>Openshift</li>
 			</ul>
 
+			<div>
+				<div>
+					<a4j:commandLink action="#{sessionManager.login}"
+						value="#{msgs.salesforceLogin}"
+						style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;">
+
+						<h:graphicImage value="/resources/images/salesforce.jpg"
+							alt="some_text" height="40" width="40">
+						</h:graphicImage>
+					</a4j:commandLink>
+				</div>
+			</div>
+
 		</rich:panel>
 
-	</rich:panel>
+	</div>
 
 </ui:composition>

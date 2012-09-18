@@ -8,8 +8,6 @@ import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.FacesException;
-import javax.faces.component.html.HtmlInputTextarea;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -17,7 +15,6 @@ import org.jboss.logging.Logger;
 import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.manager.QuoteManager;
 import com.sfa.qb.manager.SessionManager;
-import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.sobject.Contact;
 import com.sfa.qb.model.sobject.Opportunity;
 import com.sfa.qb.model.sobject.Quote;
@@ -313,26 +310,5 @@ public class QuoteController {
 	public void setQuoteOwner(User user) {
 		selectedQuote.setOwnerId(user.getId());
 		selectedQuote.setOwnerName(user.getName());
-	}
-	
-	public void postItem() {
-		HtmlInputTextarea inputText = (HtmlInputTextarea) FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:postText");
-		
-		String text = inputText.getValue().toString();
-		
-		if (text == null || text.trim().length() == 0)
-			return;
-		
-		log.info("post: " + text);
-		
-		inputText.setValue("");
-					
-		//try {
-		//	Item item = chatterDAO.postItem(text);
-		//	itemEvent.select(POST_ITEM).fire(item);
-		//} catch (SalesforceServiceException e) {
-		//	log.info("SalesforceServiceException: " + e.getMessage());
-//			throw new FacesException(e);
-	//	}
 	}
 }

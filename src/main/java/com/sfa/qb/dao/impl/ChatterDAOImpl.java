@@ -31,6 +31,11 @@ public class ChatterDAOImpl extends DAO implements ChatterDAO {
 	}
 	
 	@Override
+	public Item postItem(String recordId, String text) throws SalesforceServiceException {
+		return getGson().fromJson(servicesManager.postItem(getSessionId(), recordId, text), Item.class);
+	}
+	
+	@Override
 	public void deleteItem(String itemId) throws SalesforceServiceException {
         servicesManager.deleteItem(sessionUser.getOAuth().getAccessToken(), itemId);
 	}

@@ -15,6 +15,7 @@ public interface ChatterDAO {
 	public MyLike likeItem(String itemId) throws SalesforceServiceException;
 	public void unlikeItem(String likeId) throws SalesforceServiceException;
 	public Comment postComment(String itemId, String text) throws SalesforceServiceException;	
+	public Item postItem(String recordId, String text) throws SalesforceServiceException;
 	public MyLike likeComment(String commentId) throws SalesforceServiceException;	
 	public void unlikeComment(String commentId) throws SalesforceServiceException;	
 	public void deleteComment(String commentId) throws SalesforceServiceException;
