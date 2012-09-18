@@ -5,8 +5,6 @@ import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.FacesException;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
@@ -21,6 +19,8 @@ import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.chatter.MyLike;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.qualifiers.DeleteItem;
+import com.sfa.qb.qualifiers.ListQuotes;
+import com.sfa.qb.qualifiers.QueryFeed;
 import com.sfa.qb.qualifiers.ViewQuote;
 
 @Model
@@ -50,6 +50,12 @@ public class HomeController {
 			
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<DeleteItem> DELETE_ITEM = new AnnotationLiteral<DeleteItem>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<ListQuotes> LIST_QUOTES = new AnnotationLiteral<ListQuotes>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<QueryFeed> QUERY_FEED = new AnnotationLiteral<QueryFeed>() {};
 		
 	@PostConstruct
 	public void init() {
@@ -60,16 +66,9 @@ public class HomeController {
 		mainController.setMainArea(mainArea);
 	}
 	
-	public void showPageView(ActionEvent event) throws AbortProcessingException {
-		
-        FacesContext context = FacesContext.getCurrentInstance();
-        String pageView = context.getExternalContext().getRequestParameterMap().get("pageView"); 
-
-		if ("home".equals(pageView)) {
-			setMainArea(TemplatesEnum.HOME);	
-		} else if ("quotemanager".equals(pageView)) {
-			setMainArea(TemplatesEnum.QUOTE_MANAGER);
-		}
+	public void showHome(ActionEvent event) {
+		feedEvent.select(QUERY_FEED).fire(new Feed());
+		setMainArea(TemplatesEnum.HOME);	
     }
 	
 	public void comment(Item item) {
@@ -101,8 +100,14 @@ public class HomeController {
 		Quote quote = new Quote();
 		quote.setId(quoteId);
 		
-		quoteEvent.select(VIEW_QUOTE).fire(quote);		
+		quoteEvent.select(VIEW_QUOTE).fire(quote);	
+		quoteEvent.select(QUERY_FEED).fire(quote);
 		mainController.setMainArea(TemplatesEnum.QUOTE);
+	}
+	
+	public void viewQuoteManager(ActionEvent event) {
+		quoteEvent.select(LIST_QUOTES).fire(new Quote());
+		mainController.setMainArea(TemplatesEnum.QUOTE_MANAGER);
 	}
 	
 	public void refreshFeed() {

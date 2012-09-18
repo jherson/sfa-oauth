@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
@@ -14,6 +15,7 @@ import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.qualifiers.DeleteQuote;
 import com.sfa.qb.qualifiers.ListQuotes;
+import com.sfa.qb.qualifiers.QueryFeed;
 import com.sfa.qb.qualifiers.ViewQuote;
 
 @Model
@@ -31,6 +33,9 @@ public class QuoteManagerController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<DeleteQuote> DELETE_QUOTE = new AnnotationLiteral<DeleteQuote>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<QueryFeed> QUERY_FEED = new AnnotationLiteral<QueryFeed>() {};
 		
 	@Inject
 	private SessionManager sessionManager;
@@ -60,10 +65,15 @@ public class QuoteManagerController {
 		mainController.setMainArea(TemplatesEnum.QUOTE);
 	}
 
-    public void viewQuote(AjaxBehaviorEvent event) {
-    	Quote quote = (Quote) event.getComponent().getAttributes().get("quote");    	
-    	quoteEvent.select(VIEW_QUOTE).fire(quote);		
-    	mainController.setMainArea(TemplatesEnum.QUOTE);
+    public void viewQuote(ActionEvent event) {   
+    	String quoteId = (String) event.getComponent().getAttributes().get("quoteId");
+
+		Quote quote = new Quote();
+		quote.setId(quoteId);
+		
+		quoteEvent.select(VIEW_QUOTE).fire(quote);	
+		quoteEvent.select(QUERY_FEED).fire(quote);
+		mainController.setMainArea(TemplatesEnum.QUOTE);
     }
     
     public void viewOpportunity(AjaxBehaviorEvent event) {

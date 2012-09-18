@@ -6,7 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:extendedDataTable id="quoteList" var="quote"
+	<rich:extendedDataTable id="quoteListDataTable" var="quote"
 		style="height:600px;" value="#{quoteList}"
 		noDataLabel="#{msgs.noRecords}" iterationStatusVar="it"
 		selectionMode="single">
@@ -35,7 +35,7 @@
 					<f:attribute name="quote" value="#{quote}" />
 				    <a4j:ajax execute="@this" event="click"
 					    listener="#{quoteManagerController.deleteQuote}"
-					    render="quoteList">
+					    render="quoteListDataTable">
 				    </a4j:ajax>
 				</a4j:commandLink>
 
@@ -47,12 +47,10 @@
 
 		<rich:column width="80px" style="text-align: center;">
 			<f:facet name="header">#{msgs.number}</f:facet>
-			<a4j:commandLink value="#{quote.number}">
-				<f:attribute name="quote" value="#{quote}" />
-				<a4j:ajax execute="@this" event="click"
-					listener="#{quoteManagerController.viewQuote}"
-					render="mainArea">
-				</a4j:ajax>
+			<a4j:commandLink value="#{quote.number}"
+				actionListener="#{homeController.viewQuote}"
+				ajaxSingle="true" execute="@this" render="mainArea">
+				<f:attribute name="quoteId" value="#{quote.id}" />
 			</a4j:commandLink>
 		</rich:column>
 

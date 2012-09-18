@@ -97,8 +97,7 @@
 
 				<a4j:commandLink id="homeLink" rendered="#{sessionManager.loggedIn}"
 					status="waitstatus" render="mainArea" execute="@this"
-					actionListener="#{homeController.showPageView}">
-					<f:param name="pageView" value="home" />
+					actionListener="#{homeController.showHome}">
 					<h:graphicImage id="home" alt="home"
 						url="/images/menubar/home48x48.png" />
 				</a4j:commandLink>
@@ -110,8 +109,7 @@
 				<a4j:commandLink id="quotemanagerLink"
 					rendered="#{sessionManager.loggedIn}" status="waitstatus"
 					render="mainArea" execute="@this"
-					actionListener="#{homeController.showPageView}">
-					<f:param name="pageView" value="quotemanager" />
+					actionListener="#{homeController.viewQuoteManager}">
 					<h:graphicImage id="quotemanager" alt="quotemanager"
 						url="/images/menubar/quote48x48.png" />
 				</a4j:commandLink>
@@ -123,14 +121,17 @@
 	</ui:define>
 
 	<ui:define name="content">
-	
+
+		<ui:include src="/WEB-INF/pages/messages.xhtml" />
+		<ui:include src="/WEB-INF/pages/profile.xhtml" />
+
 		<h:panelGroup id="mainArea">
 
-		<ui:include src="/WEB-INF/pages/#{mainController.mainArea.template}" />
+			<ui:include src="/WEB-INF/pages/#{mainController.mainArea.template}" />
 
-	</h:panelGroup>
+		</h:panelGroup>
 
-	
+
 
 	</ui:define>
 

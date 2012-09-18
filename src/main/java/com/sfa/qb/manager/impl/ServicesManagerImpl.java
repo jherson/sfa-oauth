@@ -452,7 +452,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		String url = ConnectionProperties.getApiEndpoint()
 				+ "/data/"
 				+ ConnectionProperties.getApiVersion() 
-				+ "/chatter/feeds/" + recordId;
+				+ "/chatter/feeds/record/" + recordId + "/feed-items";
 
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);

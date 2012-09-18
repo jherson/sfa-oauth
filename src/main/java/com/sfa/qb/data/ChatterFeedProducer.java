@@ -48,12 +48,12 @@ public class ChatterFeedProducer implements Serializable {
 		return feed;
 	}
 
-	@PostConstruct
+	
 	public void init() {
         log.info("init");
 	}
 	
-	
+	@PostConstruct
 	public void queryQuoteFeed() {
 
 		try {

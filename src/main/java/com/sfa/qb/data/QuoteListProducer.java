@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.event.TransactionPhase;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,7 +37,7 @@ public class QuoteListProducer implements Serializable {
 		return quoteList;
 	}
 
-	public void onQuoteListChanged(@Observes final @ListQuotes Quote quote) {
+	public void onQuoteListChanged(@Observes(during=TransactionPhase.AFTER_SUCCESS) final @ListQuotes Quote quote) {
 		queryQuotes();
 	}
 
