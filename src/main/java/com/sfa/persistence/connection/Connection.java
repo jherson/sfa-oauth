@@ -82,9 +82,16 @@ public class Connection implements SessionRenewer {
     }
     
     public void openConnection(SessionUser sessionUser) throws ConnectionException {    	
+    	Properties properties = getProperties();
+    	log.info(properties.getProperty("salesforce.api.version"));
+    	
+    	String serviceEndpoint = sessionUser.getIdentity().getUrls().getPartner().replace("{version}", ConnectionProperties.getApiVersion());
+    	
+    	log.info(serviceEndpoint);
     	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setServiceEndpoint(ConnectionProperties.getServiceEndpoint());
+    	//config.setServiceEndpoint(ConnectionProperties.getServiceEndpoint());
+    	config.setServiceEndpoint(serviceEndpoint);
     	config.setManualLogin(Boolean.TRUE);
     	config.setSessionId(sessionUser.getOAuth().getAccessToken());
     	config.setSessionRenewer(this);

@@ -25,11 +25,51 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 	@Inject
 	private Logger log;
+	
+	@Override
+	public String getAuthResponse(String code) throws SalesforceServiceException {
+        String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
+        
+		ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/json");		
+		request.queryParameter("grant_type", "authorization_code");		
+		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
+		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
+		request.queryParameter("redirect_uri", System.getProperty("salesforce.oauth.redirectUri"));
+		request.queryParameter("code", code);
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+		
+		return response.getEntity();		
+	}
+	
+	@Override
+	public String getIdentity(String instanceUrl, String id, String accessToken) throws SalesforceServiceException {
+		String url = instanceUrl + "/" + id.substring(id.indexOf("id"));
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + accessToken);
+		request.header("Content-type", "application/json");
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.get(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+		
+		return response.getEntity();		
+	}
 
 	@Override
 	public JSONObject getCurrentUserInfo(String sessionId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/apexrest/"
+				+ "/apexrest/v"
 				+ ConnectionProperties.getApiVersion()
 				+ "/QuoteRestService/currentUserInfo";
 		
@@ -55,7 +95,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void follow(String sessionId, String subjectId) {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/users/me/following";
 		
@@ -79,7 +119,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void unfollow(String sessionId, String subscriptionId) {		
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/subscriptions/" + subscriptionId;
 		
@@ -102,7 +142,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public JSONObject getFollowers(String sessionId, String recordId) {
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/records/" + recordId + "/followers";
 		
@@ -128,7 +168,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public JSONObject getFeed(String sessionId, String recordId) {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/record/" + recordId + "/feed-items";	
 		
@@ -153,7 +193,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void activateQuote(String sessionId, String quoteId) {
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/apexrest/"
+				+ "/apexrest/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/QuoteRestService/activate";
 		
@@ -178,7 +218,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void calculateQuote(String sessionId, String quoteId) {		
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/apexrest/"
+				+ "/apexrest/v"
 				+ ConnectionProperties.getApiVersion()
 				+ "/QuoteRestService/calculate";
 		
@@ -203,7 +243,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String copyQuote(String sessionId, String quoteId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/apexrest/"
+				+ "/apexrest/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/QuoteRestService/copy";
 		
@@ -229,7 +269,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String getQuoteFeed(String sessionId) throws SalesforceServiceException {		
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/filter/me/a0Q/feed-items";	
 		
@@ -254,7 +294,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String getFeed(String sessionId) throws SalesforceServiceException {		
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/news/me/feed-items";
 
@@ -279,7 +319,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String postItem(String sessionId, String text) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/news/me/feed-items";
 
@@ -305,7 +345,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String postItem(String sessionId, String recordId, String text) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/record/" + recordId + "/feed-items";
 
@@ -332,7 +372,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feed-items/" + itemId;
 
@@ -350,7 +390,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feed-items/" + itemId + "/likes";
 		
@@ -374,7 +414,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void unlikeItem(String sessionId, String likeId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/likes/" + likeId;
 		
@@ -391,7 +431,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String postComment(String sessionId, String itemId, String text) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feed-items/" + itemId + "/comments";
 		
@@ -418,7 +458,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String likeComment(String sessionId, String commentId) throws SalesforceServiceException { 
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/data/" 
+				+ "/data/v" 
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/comments/" + commentId + "/likes";
 
@@ -442,7 +482,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void unlikeComment(String sessionId, String commentId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/likes/" + commentId;
 		
@@ -459,7 +499,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void deleteComment(String sessionId, String commentId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/comments/" + commentId;
 
@@ -477,7 +517,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public String getRecordFeed(String sessionId, String recordId) throws SalesforceServiceException {
 		String url = ConnectionProperties.getApiEndpoint()
-				+ "/data/"
+				+ "/data/v"
 				+ ConnectionProperties.getApiVersion() 
 				+ "/chatter/feeds/record/" + recordId + "/feed-items";
 
@@ -502,7 +542,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	@Override
 	public void priceQuote(String sessionId, String xml) {
 		String url = ConnectionProperties.getApiEndpoint() 
-				+ "/apexrest/"
+				+ "/apexrest/v"
 				+ ConnectionProperties.getApiVersion()
 				+ "/QuoteRestService/price";
 		
@@ -524,7 +564,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			log.error(e);
 		}
 	}
-	
+		
 	private void logResponse(ClientResponse<String> response) {
 		JSONObject jsonObject = null;
 		try {

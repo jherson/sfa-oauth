@@ -7,6 +7,8 @@ import com.sfa.qb.exception.SalesforceServiceException;
 public interface ServicesManager {
 	
 	// user service
+	public String getAuthResponse(String code) throws SalesforceServiceException;
+	public String getIdentity(String instanceUrl, String id, String accessToken) throws SalesforceServiceException;
 	public JSONObject getCurrentUserInfo(String sessionId) throws SalesforceServiceException;
 	
 	// quote services

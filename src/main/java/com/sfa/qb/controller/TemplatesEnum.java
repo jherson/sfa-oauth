@@ -6,6 +6,7 @@ import javax.enterprise.inject.Model;
 
 public enum TemplatesEnum {
 
+	INITIALIZE("initialize.xhtml"),
 	HOME("home.xhtml"), 
 	QUOTE_MANAGER("quotemanager.xhtml"), 
 	QUOTE("quote.xhtml"), 

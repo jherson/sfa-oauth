@@ -40,17 +40,17 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 		log.info("init");
 
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
-		Properties propertiesFile = new Properties();
+		Properties properties = new Properties();
 		try {
-			propertiesFile.load(is);
+			properties.load(is);
 		} catch (IOException e) {
 			log.error(e);
 		}
 
 		ConnectorConfig config = new ConnectorConfig();
-		config.setAuthEndpoint(MessageFormat.format(propertiesFile.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
-		config.setUsername(propertiesFile.getProperty("salesforce.username"));
-		config.setPassword(propertiesFile.getProperty("salesforce.password"));
+		config.setAuthEndpoint(MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
+		config.setUsername(properties.getProperty("salesforce.username"));
+		config.setPassword(properties.getProperty("salesforce.password"));				
 
 		try{
 			partnerConnection = Connector.newConnection(config);
@@ -58,8 +58,7 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 			ConnectionProperties.setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
 			ConnectionProperties.setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
 			ConnectionProperties.setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-			ConnectionProperties.setApiVersion(propertiesFile.getProperty("salesforce.api.version"));
-			ConnectionProperties.setFrontDoorUrl(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/services")).replace("-api", "") + "/secur/frontdoor.jsp?sid=#sid#&retURL=/");
+			ConnectionProperties.setApiVersion(properties.getProperty("salesforce.api.version"));
 			
 		} catch (ConnectionException e) {
 			log.error(e);

@@ -10,21 +10,22 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 
-import com.sfa.persistence.connection.ConnectionProperties;
+import com.google.gson.Gson;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
-import com.sfa.qb.exception.QueryException;
+import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.auth.Identity;
 import com.sfa.qb.model.auth.OAuth;
@@ -42,6 +43,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private Logger log;	
 	
 	@Inject
+	private ServicesManager servicesManager;
+	
+	@Inject
 	private MainController mainController;
 	
 	private String frontDoorUrl;	
@@ -54,6 +58,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@LoggedIn
 	@Named
 	public SessionUser getSessionUser() {
+		if (sessionUser == null)
+			authenticate();
+		
 		return sessionUser;
 	}
 	
@@ -90,38 +97,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	@PostConstruct
 	public void init() {
-		log.info("init");
-
-//		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);		
-//				
-//		if (session.getAttribute("OAuth") != null && session.getAttribute("Identity") != null) {
-//			
-//			OAuth oauth = (OAuth) session.getAttribute("OAuth"); 
-//			Identity identity = (Identity) session.getAttribute("Identity");
-//						
-//			try {
-//				sessionUser = new SessionUser(oauth, identity);
-//			} catch (QueryException e) {
-//				log.error("QueryException", e);
-//				throw new FacesException(e);
-//			}
-//			
-//			if (sessionUser.getLocale() != null) {
-//				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
-//			} else {
-//				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
-//			}			
-//														
-//			setFrontDoorUrl(ConnectionProperties.getFrontDoorUrl().replace("#sid#", oauth.getAccessToken()));									
-//			setLoggedIn(Boolean.TRUE);								
-//			
-//			session.removeAttribute("OAuth");			
-//			session.removeAttribute("Identity");			
-//
-//		} else {
-			
-			setLoggedIn(Boolean.FALSE);		
-//		}			
+		log.info("init");			
+		setLoggedIn(Boolean.FALSE);					
 	}
 	
 	@PreDestroy
@@ -149,10 +126,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		}
 		
 		setLoggedIn(Boolean.FALSE);
-													
+		
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+	    session.invalidate();
+	    
 		try {
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		    externalContext.redirect(externalContext.getRequestContextPath() + "/logout");
+		    externalContext.redirect(externalContext.getRequestContextPath() + "/index.jsf");
 		} catch (IOException e) {
 			log.error("IOException", e);
 			throw new FacesException(e);
@@ -161,6 +141,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Override
 	public void login() {
+		
+	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+					    
+		mainController.setMainArea(TemplatesEnum.INITIALIZE);
 		
 		String authUrl = null;
 		try {
@@ -173,7 +157,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 					+ "&display=popup";
 							
 			try {
-			    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			    externalContext.redirect(authUrl);
 		    } catch (IOException e) {
 			    log.error("IOException", e);
@@ -185,18 +168,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		} catch (UnsupportedEncodingException e) {
 			log.error("UnsupportedEncodingException", e);
 			throw new FacesException(e);
-		}
-		
-	//	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-    //   	session.invalidate();
-		
-	//    try {
-	//	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-	//	    externalContext.redirect(externalContext.getRequestContextPath() + "/authorize");
-	//    } catch (IOException e) {
-	//	    log.error("IOException", e);
-	//	    throw new FacesException(e);
-	//    } 
+		}				
 	}
 	
 	@Override
@@ -206,5 +178,53 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private void setFrontDoorUrl(String frontDoorUrl) {
 		this.frontDoorUrl = frontDoorUrl;
+	}
+	
+	private void authenticate() {		
+		
+		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		HttpServletRequest request = (HttpServletRequest) context.getRequest();
+		
+		String code = request.getParameter("code");
+
+		try {
+		
+		    String authResponse = servicesManager.getAuthResponse(code);
+		    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
+		    
+		    if (oauth.getError() != null) {
+		    	throw new Exception(oauth.getErrorDescription());
+		    }
+		
+		    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
+		    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
+		    		
+		    sessionUser = new SessionUser(oauth, identity);
+		    
+		    log.info("SessionId: " + oauth.getAccessToken());							
+			
+			if (sessionUser.getLocale() != null) {
+				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
+			} else {
+				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
+			}			
+			
+			String frontDoorUrl = identity.getUrls().getPartner().substring(0,identity.getUrls().getPartner().indexOf("/services"))
+					+ "/secur/frontdoor.jsp?sid=" 
+					+ oauth.getAccessToken() 
+					+ "&retURL=/";			
+																	
+			setFrontDoorUrl(frontDoorUrl);									
+			setLoggedIn(Boolean.TRUE);
+			
+			mainController.setMainArea(TemplatesEnum.HOME);
+			
+			context.redirect(context.getRequestContextPath() + "/index.jsf");
+		
+		} catch (Exception e) {
+		   log.error("Exception", e);
+		   FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
+		   FacesContext.getCurrentInstance().addMessage(null, facesMessage);			
+		}				
 	}
 }

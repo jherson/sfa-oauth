@@ -26,6 +26,12 @@ public class OAuth implements Serializable {
 	@SerializedName("access_token")
 	private String accessToken;
 	
+	@SerializedName("error")
+	private String error;
+	
+	@SerializedName("error_description")
+	private String errorDescription;
+	
 
 	public String getId() {
 		return id;
@@ -73,5 +79,21 @@ public class OAuth implements Serializable {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+	
+	public String getError() {
+		return error;
+	}
+	
+	public void setError(String error) {
+		this.error = error;
+	}
+	
+	public String getErrorDescription() {
+		return errorDescription;
+	}
+	
+	public void setErrorDescription(String errorDescription) {
+		this.errorDescription = errorDescription;
 	}
 }

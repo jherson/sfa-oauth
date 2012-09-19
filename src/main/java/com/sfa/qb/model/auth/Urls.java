@@ -79,11 +79,11 @@ public class Urls implements Serializable  {
 		this.rest = rest;
 	}
 
-	public String getSobjects() {
+	public String getSObjects() {
 		return sobjects;
 	}
 
-	public void setSobjects(String sobjects) {
+	public void setSObjects(String sobjects) {
 		this.sobjects = sobjects;
 	}
 
