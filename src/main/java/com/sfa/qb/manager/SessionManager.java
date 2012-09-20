@@ -5,6 +5,8 @@ public interface SessionManager {
 	public void logout();
 	public void login();
 	
+	public void setTheme(String theme);
+	public String getTheme();	
 	public String getFrontDoorUrl();
 	public Boolean getLoggedIn();
 	

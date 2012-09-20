@@ -2,7 +2,7 @@ html, body {
 	margin: 0px;
     height: 100%;
     width: 100%;
-    padding: 0, 20px, 0, 20px;     
+    padding: 0;     
     overflow-y: hidden;    
 }
 
@@ -15,20 +15,19 @@ div#header {
 	position: absolute;
 	width: 100%;
 	margin: 0 auto;	
-	height: 70px;	
+	height: 60px;	
 	top: 0px;	
 	left: 0px;
 	display: block;
 	overflow: hidden;	
-	min-width: 1000px;  
-	border-bottom: 2px solid #EAECEE;        
+	min-width: 1000px;       
 }
 
 div#container {	
 	position: absolute;
 	width: 100%;
 	margin: 0 auto;		
-	top: 75px;
+	top: 65px;
 	left: 0px;
 	bottom: 0px;     
     min-width: 1000px;   
@@ -99,7 +98,7 @@ div#footer {
 #header-left {
 	float: left;
 	display: inline-block;
-    width: 560px;
+    width: 550px;
     height: 100%;
     white-space: nowrap;	
     vertical-align: middle;
@@ -110,11 +109,12 @@ div#footer {
 #header-right {
 	float: right;
 	display: inline-block;
-    width: 400px;
+    width: 550px;
     height: 100%;
     white-space: nowrap;	
     text-align: right;
     vertical-align: middle;
+    text-align: right;
 	padding: 5px;
 }
 
@@ -195,7 +195,6 @@ div#footer {
 	float: left;
 	width: 370px;
 	padding: 5px;
-	background-color: #EFF8FB;
 }
 
 .feed-item-comment-pic {

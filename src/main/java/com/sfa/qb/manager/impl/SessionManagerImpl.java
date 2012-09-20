@@ -54,6 +54,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private Boolean loggedIn;
 	
 	private SessionUser sessionUser;
+	
+	private String theme;
 
 	@Produces
 	@LoggedIn
@@ -99,7 +101,16 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@PostConstruct
 	public void init() {
 		log.info("init");			
-		setLoggedIn(Boolean.FALSE);					
+		
+		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		HttpServletRequest request = (HttpServletRequest) context.getRequest();
+		
+		log.info("accept language: " + request.getHeader("Accept-Language"));
+		
+		//en-US,en;q=0.8
+		
+		setLoggedIn(Boolean.FALSE);
+		setTheme("classic");		
 	}
 	
 	@PreDestroy
@@ -228,5 +239,15 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		   FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
 		   FacesContext.getCurrentInstance().addMessage(null, facesMessage);			
 		}				
+	}
+    
+    @Override
+    public void setTheme(String theme) {
+    	this.theme = theme;    	
+    }
+
+	@Override
+	public String getTheme() {		
+		return theme;
 	}
 }

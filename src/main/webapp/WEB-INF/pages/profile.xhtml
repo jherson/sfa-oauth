@@ -12,10 +12,11 @@
 			<h:outputText value="#{msgs.profile}" />
 		</f:facet>
 		<f:facet name="controls">
-			<h:outputLink value="#" status="waitStatus"
+			<a4j:commandLink status="waitStatus"
 				onclick="#{rich:component('profilePanel')}.hide(); return false;">
-                    X
-                </h:outputLink>
+                <h:graphicImage value="/resources/images/close-window.png"
+						alt="close-window" />
+                </a4j:commandLink>
 		</f:facet>
 
 		<a4j:outputPanel>
@@ -36,6 +37,9 @@
 							<td width="200">
 							    <a4j:commandLink value="#{sessionUser.name}" onclick="window.open('#{sessionManager.frontDoorUrl}#{sessionUser.id}');"/>
 							</td>							
+						</tr>
+						<tr>
+						    <td width="200">#{sessionUser.profileName}</td>
 						</tr>
 						<tr>
 							<td width="200">#{sessionUser.title}</td>

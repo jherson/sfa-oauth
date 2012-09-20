@@ -6,48 +6,51 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<div style="width: 100%">
+	<div style="width: 100%; display: table;">
 
 		<div
-			style="display: inline-block; width: 280px; float: left; vertical-align: middle;">
+			style="display: table-cell; width: 280px; float: left; vertical-align: top;">
 			<img src="images/256x256/quote.png" alt="some_text" />
 		</div>
 
 		<div
-			style="display: inline-block; width: 600px; float: left; padding: 10px; vertical-align: middle; white-space: nowrap;">
+			style="display: table-cell; width: 600px; float: left; vertical-align: top;">
 
-				<a4j:commandLink action="#{sessionManager.login}">
-					<h:graphicImage value="/resources/images/salesforce.jpg"
-						alt="Salesforce" height="40" width="40" />
-				</a4j:commandLink>
+			<div style="display: block; width: 500px; float: left;">
+
+				<h:outputText value="#{msgs.applicationTitle}"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-weight: bold; font-size: 22px;">
+				</h:outputText>
+			</div>
+			
+			<div style="display: block; float: left; padding-top: 2px">
+				<rich:panel style="width: 500px">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.applicationDescription}" />
+					</f:facet>
+					
+					<br />
+
+					<h:outputText value="#{msgs.technologyText}" />
+					<ul>
+						<li>Salesforce Platform</li>
+						<li>Red Hat Enterprise Linux</li>
+						<li>JBoss</li>
+						<li>Richfaces</li>
+						<li>JSF</li>
+						<li>Weld</li>
+						<li>Openshift</li>
+						<li><a href="https://github.com/jherson/quotebuilder.git">GitHub</a></li>
+					</ul>
+
+				</rich:panel>
+			</div>
 
 
-				<a4j:commandLink action="#{sessionManager.login}"
-					value="#{msgs.salesforceLogin}"
-					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;">
 
-				</a4j:commandLink>
 
 		</div>
 
-		<br /> <br /> <br />
-
-		<div style="display: inline-block; vertical-align: middle;">
-			<rich:panel style="width: 600px">
-				<f:facet name="header">Quote Builder is an open source quoting application for Salesforce.com. Built on the following technologies:
-            </f:facet>
-				<ul>
-					<li>Salesforce</li>
-					<li>Red Hat Enterprise Linux</li>
-					<li>JBoss</li>
-					<li>Richfaces</li>
-					<li>JSF</li>
-					<li>Weld</li>
-					<li>Openshift</li>
-				</ul>
-
-			</rich:panel>
-		</div>
 
 	</div>
 

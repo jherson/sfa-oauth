@@ -106,7 +106,7 @@
 								<a4j:repeat id="comments" var="comment"
 									value="#{feedItem.comments.comments}" rowKeyVar="commentsRow">
 
-									<h:panelGroup layout="block" class="feed-item-comment"
+									<h:panelGroup layout="block" class="feed-item-comment" style="background: #{a4jSkin.additionalBackgroundColor};"
 										rendered="#{not empty comment.body.text}">
 										<h:panelGroup layout="block" class="feed-item-comment-pic">
 											<h:graphicImage
