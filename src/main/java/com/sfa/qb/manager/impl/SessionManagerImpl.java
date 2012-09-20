@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.Asynchronous;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.FacesException;
@@ -59,7 +60,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Named
 	public SessionUser getSessionUser() {
 		if (sessionUser == null)
-			authenticate();
+		    this.authenticate();
 		
 		return sessionUser;
 	}
@@ -180,7 +181,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		this.frontDoorUrl = frontDoorUrl;
 	}
 	
-	private void authenticate() {		
+    @Asynchronous
+	public void authenticate() {		
 		
 		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 		HttpServletRequest request = (HttpServletRequest) context.getRequest();

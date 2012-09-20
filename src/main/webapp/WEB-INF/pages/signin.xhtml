@@ -6,36 +6,48 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<div>
+	<div style="width: 100%">
 
-		<img src="images/256x256/quote.png" alt="some_text" />
+		<div
+			style="display: inline-block; width: 280px; float: left; vertical-align: middle;">
+			<img src="images/256x256/quote.png" alt="some_text" />
+		</div>
 
-		<rich:panel>
-			<h:outputText>Quote Builder is an open source quoting application for Salesforce.com. Built on the following technologies:
-            </h:outputText>
-			<ul>
-				<li>Salesforce</li>
-				<li>JBoss</li>
-				<li>Richfaces</li>
-				<li>JSF</li>
-				<li>Weld</li>
-				<li>Openshift</li>
-			</ul>
+		<div
+			style="display: inline-block; width: 600px; float: left; padding: 10px; vertical-align: middle; white-space: nowrap;">
 
-			<div>
-				<div>
-					<a4j:commandLink action="#{sessionManager.login}"
-						value="#{msgs.salesforceLogin}"
-						style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;">
+				<a4j:commandLink action="#{sessionManager.login}">
+					<h:graphicImage value="/resources/images/salesforce.jpg"
+						alt="Salesforce" height="40" width="40" />
+				</a4j:commandLink>
 
-						<h:graphicImage value="/resources/images/salesforce.jpg"
-							alt="some_text" height="40" width="40">
-						</h:graphicImage>
-					</a4j:commandLink>
-				</div>
-			</div>
 
-		</rich:panel>
+				<a4j:commandLink action="#{sessionManager.login}"
+					value="#{msgs.salesforceLogin}"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;">
+
+				</a4j:commandLink>
+
+		</div>
+
+		<br /> <br /> <br />
+
+		<div style="display: inline-block; vertical-align: middle;">
+			<rich:panel style="width: 600px">
+				<f:facet name="header">Quote Builder is an open source quoting application for Salesforce.com. Built on the following technologies:
+            </f:facet>
+				<ul>
+					<li>Salesforce</li>
+					<li>Red Hat Enterprise Linux</li>
+					<li>JBoss</li>
+					<li>Richfaces</li>
+					<li>JSF</li>
+					<li>Weld</li>
+					<li>Openshift</li>
+				</ul>
+
+			</rich:panel>
+		</div>
 
 	</div>
 
