@@ -1,7 +1,6 @@
 package com.sfa.persistence.connection;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -24,32 +23,35 @@ public class Connection implements SessionRenewer {
     private static final ThreadLocal<PartnerConnection> PARTNER_CONNECTION;
     
     private static final ThreadLocal<SessionUser> SESSION_USER;
-    
-    private static final Properties PROPERTIES;
 
     static {
     	PARTNER_CONNECTION = new ThreadLocal<PartnerConnection>();
         SESSION_USER = new ThreadLocal<SessionUser>();
-        PROPERTIES = getProperties();
     }
     
     public void openConnection() throws ConnectionException {
     	
+    	loadConnectionProperties();    	
+    	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(MessageFormat.format(PROPERTIES.getProperty("salesforce.authEndpoint"), PROPERTIES.getProperty("salesforce.environment")));
-    	config.setUsername(PROPERTIES.getProperty("salesforce.username"));
-		config.setPassword(PROPERTIES.getProperty("salesforce.password"));
+    	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
+    	config.setUsername(System.getProperty("salesforce.username"));
+		config.setPassword(System.getProperty("salesforce.password"));
 		config.setSessionRenewer(this);
 						
 		PartnerConnection connection = Connector.newConnection(config);
 		
+		System.setProperty("salesforce.default.locale", connection.getUserInfo().getUserLocale());
+		System.setProperty("salesforce.service.endpoint", connection.getConfig().getServiceEndpoint());
+		System.setProperty("salesforce.api.endpoint", connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+				
 		setConnection(connection);
     }
     
     public void openConnection(String sessionId) throws ConnectionException {
     	    	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setServiceEndpoint("https://cs4-api.salesforce.com/services/Soap/u/25.0/00DP00000006lRQ");
+    	config.setServiceEndpoint(System.getProperty("salesforce.service.endpoint"));
     	config.setManualLogin(Boolean.TRUE);
     	config.setSessionId(sessionId);
     	
@@ -61,13 +63,11 @@ public class Connection implements SessionRenewer {
     public void openConnection(String username, String password) throws ConnectionException {
     	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(MessageFormat.format(PROPERTIES.getProperty("salesforce.authEndpoint"), PROPERTIES.getProperty("salesforce.environment")));
+    	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
     	config.setUsername(username);
 		config.setPassword(password);
 						
 		PartnerConnection connection = Connector.newConnection(config);
-		
-		ConnectionProperties.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
 		
 		setConnection(connection);
     }
@@ -75,7 +75,7 @@ public class Connection implements SessionRenewer {
     public void openConnection(SessionUser sessionUser) throws ConnectionException {
     	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setServiceEndpoint(sessionUser.getIdentity().getUrls().getPartner().replace("{version}", PROPERTIES.getProperty("salesforce.api.version")));
+    	config.setServiceEndpoint(sessionUser.getIdentity().getUrls().getPartner().replace("{version}", System.getProperty("salesforce.api.version")));
     	config.setManualLogin(Boolean.TRUE);
     	config.setSessionId(sessionUser.getOAuth().getAccessToken());
     	
@@ -110,17 +110,6 @@ public class Connection implements SessionRenewer {
     	if (getConnection() != null)
     		getConnection().logout();
     }
-    
-    private static Properties getProperties() {
-    	InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties");
-		Properties properties = new Properties();
-		try {
-			properties.load(is);
-		} catch (IOException e) {
-			log.severe("Unable to load quotebuilder.properties file");
-		}
-		return properties;
-    }
 
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
@@ -140,5 +129,30 @@ public class Connection implements SessionRenewer {
         renewalHeader.headerElement = element;
         
         return renewalHeader;
+    }
+    
+    private void loadConnectionProperties() {
+    	
+		Properties props = new Properties();
+		try {
+			props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
+		} catch (IOException e) {
+			log.severe("Unable to load quotebuilder.properties file: " + e.getMessage());
+		}	
+		
+		for (String key : props.stringPropertyNames()) {
+		    String value = props.getProperty(key);
+			System.out.println(key + " => " + value);
+			System.setProperty(key, value);
+		}
+
+		//System.setProperty("salesforce.environment", properties.getProperty("salesforce.environment"));
+		//System.setProperty("salesforce.authEndpoint", "{0}/services/Soap/u/25.0");
+		//System.setProperty("salesforce.username", "intadmin@redhat.com.vpm");
+		//System.setProperty("salesforce.password", "fedora10H8wBs6OlRuP4OWGu4nQNHZox");
+		//System.setProperty("salesforce.api.version", "25.0");
+		//System.setProperty("salesforce.oauth.clientId", "3MVG94DzwlYDSHS6zfNz9quij13YGleDlZ9u7Le_XIqGTcYWo6Sp7FJJDI4KrvSMjfwhjfpZm_hD_8Ou9fj4w");
+		//System.setProperty("salesforce.oauth.clientSecret", "5180567430750494425");
+		//System.setProperty("salesforce.oauth.redirectUri", "https://jherson-ws.devlab.phx1.redhat.com:8443/quotebuilder/index.jsf");
     }
 }

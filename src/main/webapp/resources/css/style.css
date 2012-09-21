@@ -92,6 +92,7 @@ div#footer {
 .header-cell {
 	display: inline-block; 
 	padding: 5px;
+	vertical-align: middle;	
 }
 
 #header-left {
