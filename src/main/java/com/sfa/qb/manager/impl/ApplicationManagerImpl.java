@@ -3,8 +3,6 @@ package com.sfa.qb.manager.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -17,10 +15,6 @@ import org.jboss.logging.Logger;
 
 import com.sfa.persistence.connection.ConnectionProperties;
 import com.sfa.qb.manager.ApplicationManager;
-import com.sforce.soap.partner.Connector;
-import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.ws.ConnectionException;
-import com.sforce.ws.ConnectorConfig;
 
 @ManagedBean(name = "applicationManager", eager = true)
 @ApplicationScoped
@@ -32,8 +26,6 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 
 	@Inject
 	private Logger log;
-	
-	private PartnerConnection partnerConnection;
 
 	@PostConstruct
 	public void init() {
@@ -45,23 +37,15 @@ public class ApplicationManagerImpl implements ApplicationManager, Serializable 
 			properties.load(is);
 		} catch (IOException e) {
 			log.error(e);
-		}
+		}			
 
-		ConnectorConfig config = new ConnectorConfig();
-		config.setAuthEndpoint(MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
-		config.setUsername(properties.getProperty("salesforce.username"));
-		config.setPassword(properties.getProperty("salesforce.password"));				
-
-		try{
-			partnerConnection = Connector.newConnection(config);
-
-			ConnectionProperties.setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
-			ConnectionProperties.setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
-			ConnectionProperties.setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-			ConnectionProperties.setApiVersion(properties.getProperty("salesforce.api.version"));
-			
-		} catch (ConnectionException e) {
-			log.error(e);
-		}
+		//ConnectionProperties.setLocale(new Locale(partnerConnection.getUserInfo().getUserLocale()));
+		//ConnectionProperties.setServiceEndpoint(partnerConnection.getConfig().getServiceEndpoint());
+		//ConnectionProperties.setApiEndpoint(partnerConnection.getConfig().getServiceEndpoint().substring(0,partnerConnection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+		ConnectionProperties.setEnvironment(properties.getProperty("salesforce.environment"));
+		ConnectionProperties.setApiVersion(properties.getProperty("salesforce.api.version"));
+		ConnectionProperties.setOAuthClientId(properties.getProperty("salesforce.oauth.clientId"));
+		ConnectionProperties.setOAuthClientSecret(properties.getProperty("salesforce.oauth.clientSecret"));
+		ConnectionProperties.setOAuthRedirectUri(properties.getProperty("salesforce.oauth.redirectUri"));			
 	}	
 }

@@ -28,14 +28,14 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	
 	@Override
 	public String getAuthResponse(String code) throws SalesforceServiceException {
-        String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
+        String url = ConnectionProperties.getEnvironment() + "/services/oauth2/token";
         
 		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/json");		
 		request.queryParameter("grant_type", "authorization_code");		
-		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
-		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
-		request.queryParameter("redirect_uri", System.getProperty("salesforce.oauth.redirectUri"));
+		request.queryParameter("client_id", ConnectionProperties.getOAuthClientId());
+		request.queryParameter("client_secret", ConnectionProperties.getOAuthClientSecret());
+		request.queryParameter("redirect_uri", ConnectionProperties.getOAuthRedirectUri());
 		request.queryParameter("code", code);
 		
 		ClientResponse<String> response = null;

@@ -24,6 +24,7 @@ import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 
 import com.google.gson.Gson;
+import com.sfa.persistence.connection.ConnectionProperties;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.manager.ServicesManager;
@@ -160,10 +161,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		String authUrl = null;
 		try {
-			authUrl = System.getProperty("salesforce.environment")
+			authUrl = ConnectionProperties.getEnvironment()
 					+ "/services/oauth2/authorize?response_type=code"
-					+ "&client_id=" + System.getProperty("salesforce.oauth.clientId") 
-					+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
+					+ "&client_id=" + ConnectionProperties.getOAuthClientId() 
+					+ "&redirect_uri=" + URLEncoder.encode(ConnectionProperties.getOAuthRedirectUri(), "UTF-8")
 					+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
 					+ "&prompt=login"
 					+ "&display=popup";
