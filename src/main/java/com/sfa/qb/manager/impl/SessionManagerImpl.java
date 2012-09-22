@@ -1,9 +1,14 @@
 package com.sfa.qb.manager.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -31,6 +36,7 @@ import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.auth.Identity;
 import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
+import com.sfa.qb.model.properties.ConnectionProperties;
 import com.sfa.qb.qualifiers.LoggedIn;
 
 @Named(value="sessionManager")
@@ -42,6 +48,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	@Inject
 	private Logger log;	
+	
+	@Inject
+	private ConnectionProperties connectionProperties;
 	
 	@Inject
 	private ServicesManager servicesManager;
@@ -106,6 +115,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		HttpServletRequest request = (HttpServletRequest) context.getRequest();
 		
 		log.info("accept language: " + request.getHeader("Accept-Language"));
+		
 		
 		//en-US,en;q=0.8
 		
@@ -249,5 +259,33 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public String getTheme() {		
 		return theme;
+	}
+	
+	@Override
+	public void saveProperties() {
+		try {
+			Properties properties = new Properties();
+			properties.setProperty("salesforce.environment", connectionProperties.getEnvironment());
+			properties.setProperty("salesforce.authEndpoint", connectionProperties.getAuthEndpoint());
+			properties.setProperty("salesforce.username", connectionProperties.getUsername());
+			properties.setProperty("salesforce.password", connectionProperties.getPassword());
+			properties.setProperty("salesforce.api.version", connectionProperties.getApiVersion());
+			properties.setProperty("salesforce.oauth.clientId", connectionProperties.getOauthClientId());
+			properties.setProperty("salesforce.oauth.clientSecret", connectionProperties.getOauthClientSecret());
+			properties.setProperty("salesforce.oauth.redirectUri", connectionProperties.getOauthRedirectUri());
+			properties.setProperty("salesforce.service.endpoint", connectionProperties.getServiceEndpoint());
+			properties.setProperty("salesforce.api.endpoint", connectionProperties.getApiEndpoint());
+			
+			File dir = new File(".env");
+			if (! dir.exists())
+				dir.mkdir();
+			
+		    properties.store(new FileOutputStream(dir + System.getProperty("file.separator") + "quotebuilder.properties"), null);
+		    
+		} catch (IOException e) {
+			log.error("Exception", e);
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
+		    FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+		}
 	}
 }

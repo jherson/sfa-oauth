@@ -46,7 +46,17 @@
 				</rich:panel>
 			</div>
 
-
+<div style="display: block; float: left; padding-top: 2px">
+<rich:panel id="connectionProperties" style="width: 500px">
+<f:facet name="header">
+						<h:outputText value="Connection Properties" />
+					</f:facet>
+    <h:inputText value="#{connectionProperties.environment}" />
+    <h:inputText value="#{connectionProperties.apiEndpoint}" />
+    <h:inputText value="#{connectionProperties.oauthClientId}" />
+    <a4j:commandButton value="Save" action="#{sessionManager.saveProperties}" render="connectionProperties" />
+    </rich:panel>
+</div>
 
 
 		</div>

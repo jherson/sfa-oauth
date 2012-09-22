@@ -142,17 +142,7 @@ public class Connection implements SessionRenewer {
 		
 		for (String key : props.stringPropertyNames()) {
 		    String value = props.getProperty(key);
-			System.out.println(key + " => " + value);
 			System.setProperty(key, value);
 		}
-
-		//System.setProperty("salesforce.environment", properties.getProperty("salesforce.environment"));
-		//System.setProperty("salesforce.authEndpoint", "{0}/services/Soap/u/25.0");
-		//System.setProperty("salesforce.username", "intadmin@redhat.com.vpm");
-		//System.setProperty("salesforce.password", "fedora10H8wBs6OlRuP4OWGu4nQNHZox");
-		//System.setProperty("salesforce.api.version", "25.0");
-		//System.setProperty("salesforce.oauth.clientId", "3MVG94DzwlYDSHS6zfNz9quij13YGleDlZ9u7Le_XIqGTcYWo6Sp7FJJDI4KrvSMjfwhjfpZm_hD_8Ou9fj4w");
-		//System.setProperty("salesforce.oauth.clientSecret", "5180567430750494425");
-		//System.setProperty("salesforce.oauth.redirectUri", "https://jherson-ws.devlab.phx1.redhat.com:8443/quotebuilder/index.jsf");
     }
 }

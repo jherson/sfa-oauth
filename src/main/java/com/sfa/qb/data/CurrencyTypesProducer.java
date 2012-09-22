@@ -1,7 +1,11 @@
 package com.sfa.qb.data;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
@@ -36,7 +40,30 @@ public class CurrencyTypesProducer implements Serializable {
 	
 	@PostConstruct
 	public void init() {
+		loadProperties();
 		queryCurrencyTypes();
+	}
+	
+	public void loadProperties() {
+		Properties props = new Properties();
+		try {
+			File file = new File(System.getenv("HOME") + System.getProperty("file.separator")  + ".env" + System.getProperty("file.separator") + "quotebuilder.properties");
+			log.info(file.getAbsolutePath());
+			if (file.exists()) {
+				props.load(new FileInputStream(file));
+				log.info("reding it in: " + props.getProperty("salesforce.environment"));
+			} else {
+			    props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
+			}
+		} catch (IOException e) {
+			log.error("Unable to load quotebuilder.properties file: " + e.getMessage());
+		}	
+		
+		for (String key : props.stringPropertyNames()) {
+		    String value = props.getProperty(key);
+		    log.info(key + " -> " + value);
+			System.setProperty(key, value);
+		}
 	}
 	
 	@Produces

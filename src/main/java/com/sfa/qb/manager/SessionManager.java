@@ -13,5 +13,6 @@ public interface SessionManager {
 	public void setEditMode(Boolean editMode);
 	public Boolean getEditMode();	
 	public void setGoalSeek(Boolean goalSeek);
-	public Boolean getGoalSeek();	
+	public Boolean getGoalSeek();
+	void saveProperties();	
 }
