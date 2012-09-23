@@ -1,13 +1,12 @@
 package com.sfa.qb.manager.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +37,10 @@ import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
 import com.sfa.qb.model.properties.ConnectionProperties;
 import com.sfa.qb.qualifiers.LoggedIn;
+import com.sforce.soap.partner.Connector;
+import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.ws.ConnectionException;
+import com.sforce.ws.ConnectorConfig;
 
 @Named(value="sessionManager")
 @SessionScoped
@@ -259,6 +262,38 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Override
 	public String getTheme() {		
 		return theme;
+	}
+	
+	@Override
+	public void testConnection() {
+		Object[] args = new Object[] {connectionProperties.getEnvironment(), connectionProperties.getApiVersion()};
+		
+		log.info(connectionProperties.getEnvironment());
+		log.info(connectionProperties.getApiVersion());
+		
+		//{0}/services/Soap/u/{1}
+		
+		connectionProperties.setAuthEndpoint(MessageFormat.format("{0}/services/Soap/u/{1}",args));
+		
+		log.info(connectionProperties.getAuthEndpoint());
+		
+		ConnectorConfig config = new ConnectorConfig();
+    	config.setAuthEndpoint(connectionProperties.getAuthEndpoint());
+    	config.setUsername(connectionProperties.getUsername());
+		config.setPassword(connectionProperties.getPassword());
+						
+		PartnerConnection connection = null;
+		try {
+			connection = Connector.newConnection(config);
+			connectionProperties.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
+			connectionProperties.setApiEndpoint(connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+			log.info(connection.getConfig().getSessionId());
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 	
 	@Override

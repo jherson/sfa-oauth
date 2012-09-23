@@ -22,13 +22,13 @@
 					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-weight: bold; font-size: 22px;">
 				</h:outputText>
 			</div>
-			
+
 			<div style="display: block; float: left; padding-top: 2px">
 				<rich:panel style="width: 500px">
 					<f:facet name="header">
 						<h:outputText value="#{msgs.applicationDescription}" />
 					</f:facet>
-					
+
 					<br />
 
 					<h:outputText value="#{msgs.technologyText}" />
@@ -40,23 +40,44 @@
 						<li>JSF</li>
 						<li>Weld</li>
 						<li>Openshift</li>
-						<li><a href="https://github.com/jherson/quotebuilder.git">GitHub</a></li>
+						<li><a href="https://github.com/jherson/quotebuilder.git"
+							target="_blank">GitHub</a></li>
 					</ul>
 
 				</rich:panel>
 			</div>
 
-<div style="display: block; float: left; padding-top: 2px">
-<rich:panel id="connectionProperties" style="width: 500px">
-<f:facet name="header">
-						<h:outputText value="Connection Properties" />
+		</div>
+		<div
+			style="display: table-cell; width: 400px; float: left; vertical-align: top;">
+
+			<div style="display: block; float: left; padding-top: 2px">
+				<rich:panel id="connectionProperties" style="width: 500px">
+					<f:facet name="header">
+						<h:outputText value="Salesforce Connection" />
 					</f:facet>
-    <h:inputText value="#{connectionProperties.environment}" />
-    <h:inputText value="#{connectionProperties.apiEndpoint}" />
-    <h:inputText value="#{connectionProperties.oauthClientId}" />
-    <a4j:commandButton value="Save" action="#{sessionManager.saveProperties}" render="connectionProperties" />
-    </rich:panel>
-</div>
+					<h:inputText width="100px" value="#{connectionProperties.environment}" />
+					<h:inputText width="100px" value="#{connectionProperties.username}" />
+					<h:inputSecret width="100px" value="#{connectionProperties.password}"/>
+					<br />
+					<a4j:commandButton value="Test" styleClass="commandButton"
+						action="#{sessionManager.testConnection}"
+						render="connectionProperties" />
+				</rich:panel>
+				<br />
+				<rich:panel id="oauthProperties" style="width: 500px">
+					<f:facet name="header">
+						<h:outputText value="Salesforce User Authentication" />
+					</f:facet>
+				
+					<h:inputText width="100px" value="#{connectionProperties.apiEndpoint}" />
+					<h:inputText width="100px" value="#{connectionProperties.oauthClientId}" />
+					
+					<a4j:commandButton value="Save" styleClass="commandButton"
+						action="#{sessionManager.saveProperties}"
+						render="connectionProperties" />
+				</rich:panel>
+			</div>
 
 
 		</div>

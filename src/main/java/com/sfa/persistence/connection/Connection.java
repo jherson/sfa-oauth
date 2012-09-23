@@ -1,8 +1,6 @@
 package com.sfa.persistence.connection;
 
-import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.sfa.qb.model.auth.SessionUser;
@@ -29,12 +27,10 @@ public class Connection implements SessionRenewer {
         SESSION_USER = new ThreadLocal<SessionUser>();
     }
     
-    public void openConnection() throws ConnectionException {
-    	
-    	loadConnectionProperties();    	
+    public void openConnection() throws ConnectionException {  	
     	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
+    	config.setAuthEndpoint(System.getProperty("salesforce.authEndpoint"));
     	config.setUsername(System.getProperty("salesforce.username"));
 		config.setPassword(System.getProperty("salesforce.password"));
 		config.setSessionRenewer(this);
@@ -129,20 +125,5 @@ public class Connection implements SessionRenewer {
         renewalHeader.headerElement = element;
         
         return renewalHeader;
-    }
-    
-    private void loadConnectionProperties() {
-    	
-		Properties props = new Properties();
-		try {
-			props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
-		} catch (IOException e) {
-			log.severe("Unable to load quotebuilder.properties file: " + e.getMessage());
-		}	
-		
-		for (String key : props.stringPropertyNames()) {
-		    String value = props.getProperty(key);
-			System.setProperty(key, value);
-		}
     }
 }

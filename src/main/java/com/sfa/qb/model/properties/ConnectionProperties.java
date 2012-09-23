@@ -16,7 +16,7 @@ public class ConnectionProperties implements Serializable {
 	private Properties properties = System.getProperties();
 	
 	//System.setProperty("salesforce.environment", properties.getProperty("salesforce.environment"));
-	//System.setProperty("salesforce.authEndpoint", "{0}/services/Soap/u/25.0");
+	//System.setProperty("salesforce.authEndpoint", "{0}/services/Soap/u/{1}");
 	//System.setProperty("salesforce.username", "intadmin@redhat.com.vpm");
 	//System.setProperty("salesforce.password", "fedora10H8wBs6OlRuP4OWGu4nQNHZox");
 	//System.setProperty("salesforce.api.version", "25.0");
