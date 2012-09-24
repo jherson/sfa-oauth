@@ -56,9 +56,12 @@
 					<f:facet name="header">
 						<h:outputText value="Salesforce Connection" />
 					</f:facet>
-					<h:inputText width="100px" value="#{connectionProperties.environment}" />
-					<h:inputText width="100px" value="#{connectionProperties.username}" />
-					<h:inputSecret width="100px" value="#{connectionProperties.password}"/>
+					<h:selectOneMenu value="#{connectionProperties.environment}" >
+					<f:selectItem itemValue="https://login.salesforce.com/" itemLabel="Production" />
+					<f:selectItem itemValue="https://test.salesforce.com/" itemLabel="Sandbox" />
+					</h:selectOneMenu>
+					<h:inputText  value="#{connectionProperties.username}" />
+					<h:inputSecret value="#{connectionProperties.password}" redisplay="true"/>
 					<br />
 					<a4j:commandButton value="Test" styleClass="commandButton"
 						action="#{sessionManager.testConnection}"

@@ -41,20 +41,18 @@ public class CurrencyTypesProducer implements Serializable {
 	@PostConstruct
 	public void init() {
 		loadProperties();
-		queryCurrencyTypes();
+		if (! "".equals(System.getProperty("salesforce.environment").trim()))
+		    queryCurrencyTypes();
 	}
 	
 	public void loadProperties() {
 		Properties properties = new Properties();
 		try {
+			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
 			File file = new File(System.getenv("HOME") + System.getProperty("file.separator")  + ".env" + System.getProperty("file.separator") + "quotebuilder.properties");
-			log.info(file.getAbsolutePath());
 			if (file.exists()) {
 				properties.load(new FileInputStream(file));
-				log.info("reding it in: " + properties.getProperty("salesforce.environment"));
-			} else {
-				properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
-			}
+			} 
 		} catch (IOException e) {
 			log.error("Unable to load quotebuilder.properties file: " + e.getMessage());
 		}	

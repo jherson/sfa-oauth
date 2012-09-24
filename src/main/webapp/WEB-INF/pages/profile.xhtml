@@ -35,7 +35,7 @@
 					<table style="width: 100%">
 						<tr>
 							<td width="200">
-							    <a4j:commandLink value="#{sessionUser.name}" onclick="window.open('#{sessionManager.frontDoorUrl}#{sessionUser.id}');"/>
+							    <a href="#{sessionManager.frontDoorUrl}#{sessionUser.id}" target="_blank">#{sessionUser.name}</a>
 							</td>							
 						</tr>
 						<tr>
