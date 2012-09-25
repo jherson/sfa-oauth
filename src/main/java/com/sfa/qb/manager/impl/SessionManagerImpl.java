@@ -317,10 +317,15 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			
 		    properties.store(new FileOutputStream(dir + System.getProperty("file.separator") + "quotebuilder.properties"), null);
 		    
+		    
 		} catch (IOException e) {
 			log.error("Exception", e);
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
 		    FacesContext.getCurrentInstance().addMessage(null, facesMessage);
 		}
+	}
+	
+	private void writeProperty(String file, String value) {
+		
 	}
 }

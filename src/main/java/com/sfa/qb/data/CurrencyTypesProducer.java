@@ -45,7 +45,9 @@ public class CurrencyTypesProducer implements Serializable {
 		    queryCurrencyTypes();
 	}
 	
-	public void loadProperties() {
+	public void loadProperties() {	
+		
+		log.info("env: " + System.getenv("SALESFORCE_ENVIRONMENT"));
 		Properties properties = new Properties();
 		try {
 			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
