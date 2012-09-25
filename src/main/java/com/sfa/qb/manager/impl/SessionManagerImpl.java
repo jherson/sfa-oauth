@@ -42,8 +42,8 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
-@Named(value="sessionManager")
 @SessionScoped
+@Named(value="sessionManager")
 
 public class SessionManagerImpl implements Serializable, SessionManager {
 
