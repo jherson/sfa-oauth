@@ -1,9 +1,8 @@
 package com.sfa.qb.data;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
 
@@ -11,6 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.inject.Produces;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -21,6 +22,7 @@ import com.sfa.persistence.Query;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.CurrencyType;
+import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 
 @Startup
@@ -41,28 +43,40 @@ public class CurrencyTypesProducer implements Serializable {
 	@PostConstruct
 	public void init() {
 		loadProperties();
-		if (! "".equals(System.getProperty("salesforce.environment").trim()))
-		    queryCurrencyTypes();
+		queryCurrencyTypes();
 	}
 	
 	public void loadProperties() {	
 		
-		log.info("env: " + System.getenv("SALESFORCE_ENVIRONMENT"));
 		Properties properties = new Properties();
 		try {
-			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));
-			File file = new File(System.getenv("HOME") + System.getProperty("file.separator")  + ".env" + System.getProperty("file.separator") + "quotebuilder.properties");
-			if (file.exists()) {
-				properties.load(new FileInputStream(file));
-			} 
+			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));						
 		} catch (IOException e) {
 			log.error("Unable to load quotebuilder.properties file: " + e.getMessage());
-		}	
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+			return;
+		}
+		
+		Object[] params = new Object[] {properties.getProperty("salesforce.environment"), properties.getProperty("salesforce.api.version")};
+		
+		properties.setProperty("salesforce.authEndpoint", MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), params));					
+		properties.setProperty("salesforce.rest.url", MessageFormat.format(properties.getProperty("salesforce.rest.url"), params));											
+		properties.setProperty("salesforce.apexrest.url", MessageFormat.format(properties.getProperty("salesforce.apexrest.url"), params));								
+		
+		try {
+		    ConnectionManager.openConnection();
+		} catch (ConnectionException e) {
+			log.error("Unable to to connect to Salesforce: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+			return;
+		}
+		
+	    PartnerConnection connection = ConnectionManager.getConnection();		    
+		properties.setProperty("salesforce.service.endpoint", connection.getConfig().getServiceEndpoint());
+		properties.setProperty("salesforce.api.endpoint", connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
 		
 		for (String key : properties.stringPropertyNames()) {
-		    String value = properties.getProperty(key);
-		    log.info(key + " -> " + value);
-			System.setProperty(key, value);
+			System.setProperty(key, properties.getProperty(key));
 		}
 	}
 	

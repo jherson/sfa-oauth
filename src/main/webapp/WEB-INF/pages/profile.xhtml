@@ -14,19 +14,21 @@
 		<f:facet name="controls">
 			<a4j:commandLink status="waitStatus"
 				onclick="#{rich:component('profilePanel')}.hide(); return false;">
-                <h:graphicImage value="/resources/images/close-window.png"
-						alt="close-window" />
-                </a4j:commandLink>
+				<h:graphicImage value="/resources/images/close-window.png"
+					alt="close-window" />
+			</a4j:commandLink>
 		</f:facet>
 
 		<a4j:outputPanel>
 
-			<h:panelGrid width="100%" columns="2" cellpadding="3" layout="inline-block">
+			<h:panelGrid width="100%" columns="2" cellpadding="3"
+				layout="inline-block">
 
 				<h:panelGroup>
 
-					<h:graphicImage value="#{sessionUser.fullPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}" height="160"
-						width="160" />
+					<h:graphicImage
+						value="#{sessionUser.fullPhotoUrl}?oauth_token=#{sessionUser.OAuth.accessToken}"
+						height="160" width="160" />
 
 				</h:panelGroup>
 
@@ -34,12 +36,13 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td width="200">
-							    <a href="#{sessionManager.frontDoorUrl}#{sessionUser.id}" target="_blank">#{sessionUser.name}</a>
-							</td>							
+							<td width="200"><a4j:commandLink value="#{sessionUser.name}"
+									onclick="window.open('#{sessionManager.frontDoorUrl}#{sessionUser.id}');"
+									oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
+							</td>
 						</tr>
 						<tr>
-						    <td width="200">#{sessionUser.profileName}</td>
+							<td width="200">#{sessionUser.profileName}</td>
 						</tr>
 						<tr>
 							<td width="200">#{sessionUser.title}</td>
@@ -48,7 +51,8 @@
 							<td width="200">#{sessionUser.email}</td>
 						</tr>
 						<tr>
-							<td width="200">#{sessionUser.phone} #{sessionUser.extension}</td>
+							<td width="200">#{sessionUser.phone}
+								#{sessionUser.extension}</td>
 						</tr>
 						<tr>
 							<td width="200">#{sessionUser.street}</td>
@@ -66,15 +70,16 @@
 			<br />
 
 			<h:panelGroup style="display: block; text-align: right">
-			
-			    <a4j:commandButton value="#{msgs.salesforceHome}" styleClass="commandButton"  
-			        onclick="window.open('#{sessionManager.frontDoorUrl}home/home.jsp');"
-			        oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
+
+				<a4j:commandButton value="#{msgs.salesforceHome}"
+					styleClass="commandButton"
+					onclick="window.open('#{sessionManager.frontDoorUrl}home/home.jsp');"
+					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
 
 				<h:outputText value="  " escape="false" />
 
-				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"					
-					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" 
+				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
+					oncomplete="#{rich:component('profilePanel')}.hide(); return false;"
 					status="waitStatus" />
 
 			</h:panelGroup>

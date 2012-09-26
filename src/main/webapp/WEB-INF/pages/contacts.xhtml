@@ -12,13 +12,12 @@
 			<h:outputText value="#{msgs.contacts}" />
 		</f:facet>
 		<f:facet name="controls">
-			<h:outputLink
+			<a4j:commandLink
 			    status="waitStatus"
 				onclick="#{rich:component('contactPanel')}.hide(); return false;">
                     <h:graphicImage value="/resources/images/close-window.png"
 						alt="close-window" />
                 </a4j:commandLink>
-                </h:outputLink>
 		</f:facet>
 
 		<a4j:region>

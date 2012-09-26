@@ -46,46 +46,6 @@
 
 				</rich:panel>
 			</div>
-
-		</div>
-		<div
-			style="display: table-cell; width: 400px; float: left; vertical-align: top;">
-
-			<div style="display: block; float: left; padding-top: 2px">
-				<rich:panel id="connectionProperties" style="width: 500px">
-					<f:facet name="header">
-						<h:outputText value="Salesforce Connection" />
-					</f:facet>
-					<h:selectOneMenu value="#{connectionProperties.environment}" >
-					<f:selectItem itemValue="https://login.salesforce.com/" itemLabel="Production" />
-					<f:selectItem itemValue="https://test.salesforce.com/" itemLabel="Sandbox" />
-					</h:selectOneMenu>
-					<h:inputText  value="#{connectionProperties.username}" />
-					<h:inputSecret value="#{connectionProperties.password}" redisplay="true"/>
-					<br />
-					<a4j:commandButton value="Test" styleClass="commandButton"
-						action="#{sessionManager.testConnection}"
-						render="connectionProperties" />
-				</rich:panel>
-				<br />
-				<rich:panel id="oauthProperties" style="width: 500px">
-					<f:facet name="header">
-						<h:outputText value="Salesforce User Authentication" />
-					</f:facet>
-				
-					<h:inputText width="100px" value="#{connectionProperties.apiEndpoint}" />
-					<h:inputText width="100px" value="#{connectionProperties.oauthClientId}" />
-					
-					<a4j:commandButton value="Save" styleClass="commandButton"
-						action="#{sessionManager.saveProperties}"
-						render="connectionProperties" />
-				</rich:panel>
-			</div>
-
-
-		</div>
-
-
+		</div>		
 	</div>
-
 </ui:composition>
