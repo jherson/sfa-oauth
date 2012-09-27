@@ -37,10 +37,6 @@ public class Connection implements SessionRenewer {
 						
 		PartnerConnection connection = Connector.newConnection(config);
 		
-		System.setProperty("salesforce.default.locale", connection.getUserInfo().getUserLocale());
-		System.setProperty("salesforce.service.endpoint", connection.getConfig().getServiceEndpoint());
-		System.setProperty("salesforce.api.endpoint", connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-				
 		setConnection(connection);
     }
     

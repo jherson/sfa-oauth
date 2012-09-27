@@ -22,8 +22,10 @@ import com.sfa.persistence.Query;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.CurrencyType;
+import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
+import com.sforce.ws.ConnectorConfig;
 
 @Startup
 @Singleton
@@ -63,15 +65,20 @@ public class CurrencyTypesProducer implements Serializable {
 		properties.setProperty("salesforce.rest.url", MessageFormat.format(properties.getProperty("salesforce.rest.url"), params));											
 		properties.setProperty("salesforce.apexrest.url", MessageFormat.format(properties.getProperty("salesforce.apexrest.url"), params));								
 		
-		try {
-		    ConnectionManager.openConnection();
+		PartnerConnection connection = null;
+		ConnectorConfig config = new ConnectorConfig();
+    	config.setAuthEndpoint(properties.getProperty("salesforce.authEndpoint"));
+    	config.setUsername(properties.getProperty("salesforce.username"));
+		config.setPassword(properties.getProperty("salesforce.password"));
+		
+		try {					
+			connection = Connector.newConnection(config);
 		} catch (ConnectionException e) {
 			log.error("Unable to to connect to Salesforce: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
 			return;
 		}
-		
-	    PartnerConnection connection = ConnectionManager.getConnection();		    
+		    
 		properties.setProperty("salesforce.service.endpoint", connection.getConfig().getServiceEndpoint());
 		properties.setProperty("salesforce.api.endpoint", connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
 		
