@@ -160,7 +160,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		String url = System.getProperty("salesforce.rest.url") + "/chatter/feeds/record/" + recordId + "/feed-items";	
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + sessionId);			
 		
 		JSONObject jsonObject = null;
 		try {
@@ -251,7 +251,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + sessionId);
 		
-		ClientResponse<String> response = null; 
+		ClientResponse<String> response = null; 		
 		try {
 			response = request.get(String.class);
 		} catch (Exception e) {

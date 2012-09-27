@@ -32,6 +32,7 @@ import com.sfa.qb.model.auth.Identity;
 import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
 import com.sfa.qb.qualifiers.LoggedIn;
+import com.sfa.qb.service.LoginHistoryWriter;
 
 @SessionScoped
 @Named(value="sessionManager")
@@ -41,14 +42,17 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private Logger log;	
+	private Logger log;
+	
+	@Inject
+	private LoginHistoryWriter loginHistoryWriter;
 		
 	@Inject
 	private ServicesManager servicesManager;
 	
 	@Inject
 	private MainController mainController;
-	
+		
 	private String frontDoorUrl;	
 	
 	private Boolean loggedIn;
@@ -206,7 +210,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		    		
 		    sessionUser = new SessionUser(oauth, identity);
 		    
-		    log.info("AccessToken: " + oauth.getAccessToken());							
+		    log.info("AccessToken: " + oauth.getAccessToken());
+		    loginHistoryWriter.write(sessionUser.getName(), request);
 			
 			if (sessionUser.getLocale() != null) {
 				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
@@ -220,8 +225,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 					+ "&retURL=/";			
 																										
 			loggedIn = Boolean.TRUE;			
-			mainController.setMainArea(TemplatesEnum.HOME);
-			
+			mainController.setMainArea(TemplatesEnum.HOME);									
+						
 			context.redirect(context.getRequestContextPath() + "/index.jsf");
 		
 		} catch (Exception e) {
@@ -229,7 +234,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));			
 		}				
 	}
-    
+	
     @Override
     public void setTheme(String theme) {
     	this.theme = theme;    	

@@ -62,8 +62,6 @@ public class CurrencyTypesProducer implements Serializable {
 		Object[] params = new Object[] {properties.getProperty("salesforce.environment"), properties.getProperty("salesforce.api.version")};
 		
 		properties.setProperty("salesforce.authEndpoint", MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), params));					
-		properties.setProperty("salesforce.rest.url", MessageFormat.format(properties.getProperty("salesforce.rest.url"), params));											
-		properties.setProperty("salesforce.apexrest.url", MessageFormat.format(properties.getProperty("salesforce.apexrest.url"), params));								
 		
 		PartnerConnection connection = null;
 		ConnectorConfig config = new ConnectorConfig();
@@ -78,9 +76,14 @@ public class CurrencyTypesProducer implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
 			return;
 		}
-		    
+						    
 		properties.setProperty("salesforce.service.endpoint", connection.getConfig().getServiceEndpoint());
 		properties.setProperty("salesforce.api.endpoint", connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+		
+		params = new Object[] {properties.getProperty("salesforce.api.endpoint"), properties.getProperty("salesforce.api.version")};
+		
+		properties.setProperty("salesforce.rest.url", MessageFormat.format(properties.getProperty("salesforce.rest.url"), params));											
+		properties.setProperty("salesforce.apexrest.url", MessageFormat.format(properties.getProperty("salesforce.apexrest.url"), params));								
 		
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
