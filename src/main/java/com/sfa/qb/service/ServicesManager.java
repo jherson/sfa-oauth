@@ -1,4 +1,4 @@
-package com.sfa.qb.manager;
+package com.sfa.qb.service;
 
 import org.json.JSONObject;
 

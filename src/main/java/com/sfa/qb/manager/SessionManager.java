@@ -7,7 +7,6 @@ public interface SessionManager {
 	
 	public void setTheme(String theme);
 	public String getTheme();	
-	public String getFrontDoorUrl();
 	public Boolean getLoggedIn();
 	
 	public void setEditMode(Boolean editMode);

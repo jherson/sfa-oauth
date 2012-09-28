@@ -49,7 +49,7 @@ public class QueryImpl<X> implements Query {
 	}
 	
 	@Override
-	public void addOrderBy(String columns) {
+	public void orderBy(String columns) {
 		query = query + " Order By " + columns;
 	}
 	

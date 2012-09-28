@@ -34,7 +34,6 @@ public class Resources {
 	@Produces
 	@MessageBundle
 	public ResourceBundle getBundle() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		return context.getApplication().getResourceBundle(context, "msgs");
+		return FacesContext.getCurrentInstance().getApplication().getResourceBundle(FacesContext.getCurrentInstance(), "msgs");
 	}
 }

@@ -7,9 +7,9 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.sfa.persistence.EntityManager;
-import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.model.auth.SessionUser;
 import com.sfa.qb.qualifiers.LoggedIn;
+import com.sfa.qb.service.ServicesManager;
 
 public class DAO implements Serializable {
 

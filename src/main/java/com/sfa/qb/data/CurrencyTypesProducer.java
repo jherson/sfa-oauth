@@ -82,8 +82,8 @@ public class CurrencyTypesProducer implements Serializable {
 		
 		params = new Object[] {properties.getProperty("salesforce.api.endpoint"), properties.getProperty("salesforce.api.version")};
 		
-		properties.setProperty("salesforce.rest.url", MessageFormat.format(properties.getProperty("salesforce.rest.url"), params));											
-		properties.setProperty("salesforce.apexrest.url", MessageFormat.format(properties.getProperty("salesforce.apexrest.url"), params));								
+		properties.setProperty("salesforce.rest.endpoint", MessageFormat.format(properties.getProperty("salesforce.rest.endpoint"), params));											
+		properties.setProperty("salesforce.apexrest.endpoint", MessageFormat.format(properties.getProperty("salesforce.apexrest.endpoint"), params));								
 		
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
@@ -103,7 +103,7 @@ public class CurrencyTypesProducer implements Serializable {
 		try {
 		    ConnectionManager.openConnection();		
 	        Query q = em.createQuery(queryString);	
-	        q.addOrderBy("IsoCode");    		    	        
+	        q.orderBy("IsoCode");    		    	        
 	        currencyTypes = q.getResultList();	
 	        
 		} catch (ConnectionException e) {

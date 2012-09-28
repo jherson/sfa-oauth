@@ -37,7 +37,7 @@
 					<table style="width: 100%">
 						<tr>
 							<td width="200"><a4j:commandLink value="#{sessionUser.name}"
-									onclick="window.open('#{sessionManager.frontDoorUrl}#{sessionUser.id}');"
+									onclick="window.open('#{urlBuilder.profile}');"
 									oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
 							</td>
 						</tr>
@@ -73,7 +73,7 @@
 
 				<a4j:commandButton value="#{msgs.salesforceHome}"
 					styleClass="commandButton"
-					onclick="window.open('#{sessionManager.frontDoorUrl}home/home.jsp');"
+					onclick="window.open('#{urlBuilder.home}');"
 					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
 
 				<h:outputText value="  " escape="false" />

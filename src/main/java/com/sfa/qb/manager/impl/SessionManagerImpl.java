@@ -10,29 +10,28 @@ import javax.annotation.PreDestroy;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.jboss.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 
 import com.google.gson.Gson;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
-import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.auth.Identity;
 import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
 import com.sfa.qb.qualifiers.LoggedIn;
 import com.sfa.qb.service.LoginHistoryWriter;
+import com.sfa.qb.service.ServicesManager;
 
 @SessionScoped
 @Named(value="sessionManager")
@@ -42,7 +41,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private Logger log;
+	private Logger logger;
+	
+	@Inject
+	private FacesContext context;
 	
 	@Inject
 	private LoginHistoryWriter loginHistoryWriter;
@@ -52,14 +54,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Inject
 	private MainController mainController;
-		
-	private String frontDoorUrl;	
-	
-	private Boolean loggedIn;
-	
-	private SessionUser sessionUser;
-	
-	private String theme;
+				
+			
+	private SessionUser sessionUser;		
 
 	@Produces
 	@LoggedIn
@@ -71,11 +68,37 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		return sessionUser;
 	}
 	
+	public void setSessionUser(SessionUser sessionUser) {
+		this.sessionUser = sessionUser;
+	}
+	
+	@ManagedProperty(value = "false")
+	private Boolean loggedIn;
+	
 	@Override	
 	public Boolean getLoggedIn() {
 		return loggedIn;
 	}
-				
+	
+	public void setLoggedIn(Boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+	
+	
+	@ManagedProperty(value = "classic")
+	private String theme;
+	
+    @Override
+    public void setTheme(String theme) {
+    	this.theme = theme;    	
+    }
+
+	@Override
+	public String getTheme() {		
+		return theme;
+	}
+	
+	
 	@ManagedProperty(value = "false")
 	private Boolean editMode;
 
@@ -100,30 +123,25 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 
 	@PostConstruct
 	public void init() {
-		log.info("init");			
+		logger.info("init");			
 		
-		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-		HttpServletRequest request = (HttpServletRequest) context.getRequest();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 		
-		log.info("accept language: " + request.getHeader("Accept-Language"));
-		
-		
-		//en-US,en;q=0.8
-		
-		loggedIn = Boolean.FALSE;
-		theme = "classic";		
+		logger.info("accept language: " + request.getHeader("Accept-Language"));
+				
+		//en-US,en;q=0.8		
 	}
 	
 	@PreDestroy
 	public void destroy() {
-		log.info("destroy");
+		logger.info("destroy");
 		if (getLoggedIn())
 		    logout();
 	}
 	
 	@Override
 	public void logout() {
-		log.info("logout");
+		logger.info("logout");
 		
 		String revokeUrl = System.getProperty("salesforce.environment") 
 					+ "/services/oauth2/revoke?" 
@@ -134,31 +152,26 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		try {			
 			request.post();
 		} catch (Exception e) {
-			log.error("Exception", e);
-			throw new FacesException(e);
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
 		}
 		
-		loggedIn = Boolean.FALSE;
+		setLoggedIn(Boolean.FALSE);
 		
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 	    session.invalidate();
 	    
 		try {
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		    externalContext.redirect(externalContext.getRequestContextPath() + "/index.jsf");
+			context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.jsf");
 		} catch (IOException e) {
-			log.error("IOException", e);
-			throw new FacesException(e);
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
 		}
 	}
 	
 	@Override
 	public void login() {
-		
-	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-					    
-		mainController.setMainArea(TemplatesEnum.INITIALIZE);
-		
+							   				
 		String authUrl = null;
 		try {
 			authUrl = System.getProperty("salesforce.environment")
@@ -170,78 +183,57 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 					+ "&display=popup";
 							
 			try {
-			    externalContext.redirect(authUrl);
+			    context.getExternalContext().redirect(authUrl);
 		    } catch (IOException e) {
-			    log.error("IOException", e);
-			    throw new FacesException(e);
+		    	logger.log(Level.SEVERE, e.getMessage(), e);
+		    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
 		    } 
 			
 			return;
 
 		} catch (UnsupportedEncodingException e) {
-			log.error("UnsupportedEncodingException", e);
-			throw new FacesException(e);
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
 		}				
 	}
 	
-	@Override
-	public String getFrontDoorUrl() {
-		return frontDoorUrl;
-	}
-	
-	public void authenticate() {		
+	public void authenticate() {					
 		
-		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-		HttpServletRequest request = (HttpServletRequest) context.getRequest();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();		
 		
 		String code = request.getParameter("code");
 
-		try {
+		try {		
 		
 		    String authResponse = servicesManager.getAuthResponse(code);
 		    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
 		    
-		    if (oauth.getError() != null) {
-		    	throw new Exception(oauth.getErrorDescription());
-		    }
+		    if (oauth.getError() == null) {
+		    	throw new Exception(oauth.getErrorDescription());		    	
+		    }		    		   
 		
 		    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
 		    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
 		    		
 		    sessionUser = new SessionUser(oauth, identity);
 		    
-		    log.info("AccessToken: " + oauth.getAccessToken());
+		    logger.info("AccessToken: " + oauth.getAccessToken());
 		    loginHistoryWriter.write(sessionUser.getName(), request);
 			
 			if (sessionUser.getLocale() != null) {
 				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
 			} else {
 				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
-			}			
-			
-			frontDoorUrl = identity.getUrls().getPartner().substring(0,identity.getUrls().getPartner().indexOf("/services"))
-					+ "/secur/frontdoor.jsp?sid=" 
-					+ oauth.getAccessToken() 
-					+ "&retURL=/";			
+			}								
 																										
-			loggedIn = Boolean.TRUE;			
+			setLoggedIn(Boolean.TRUE);			
 			mainController.setMainArea(TemplatesEnum.HOME);									
 						
-			context.redirect(context.getRequestContextPath() + "/index.jsf");
+			context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.jsf");			
 		
 		} catch (Exception e) {
-		   log.error("Exception", e);
-		   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));			
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));	
 		}				
-	}
-	
-    @Override
-    public void setTheme(String theme) {
-    	this.theme = theme;    	
-    }
-
-	@Override
-	public String getTheme() {		
-		return theme;
 	}
 }

@@ -110,7 +110,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			ConnectionManager.openConnection(sessionUser);			
 			Query q = em.createQuery(queryString);
 			q.addParameter("quoteId", quoteId);		
-			q.addOrderBy("LineNumber__c, CreatedDate");
+			q.orderBy("LineNumber__c, CreatedDate");
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
@@ -293,16 +293,11 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {		
-		List<String> ids = new ArrayList<String>();
-		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
-			ids.add(quoteLineItem.getId());
-		}
-		
+	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {				
 		DeleteResult[] deleteResult = null;
 		try {
 			ConnectionManager.openConnection(sessionUser);
-		    deleteResult = em.delete(ids);
+		    deleteResult = em.remove(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -357,7 +352,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		DeleteResult deleteResult = null;
 		try {
 			ConnectionManager.openConnection(sessionUser);
-            deleteResult = em.delete(quoteLineItem.getId());
+            deleteResult = em.remove(convertQuoteLineItemToSObject(quoteLineItem));
         
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -399,7 +394,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		DeleteResult deleteResult = null;
 		try {
 			ConnectionManager.openConnection(sessionUser);
-		    deleteResult = em.delete(quote.getId());	
+		    deleteResult = em.remove(convertQuoteToSObject(quote));	
 		
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -473,39 +468,43 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	
 	private List<SObject> convertQuoteLineItemsToSObjects(List<QuoteLineItem> quoteLineItemList) {
 		List<SObject> sobjectList = new ArrayList<SObject>();
-		for (QuoteLineItem quoteLineItem : quoteLineItemList) {
-		    SObject sobject = new SObject();
-		    sobject.setType("QuoteLineItem__c");
-		    if (quoteLineItem.getId() != null) {
-			    sobject.setId(quoteLineItem.getId());
-		    } else {
-		    	sobject.setField("QuoteId__c", quoteLineItem.getQuoteId());
-		    }
-		    sobject.setField("ProductDescription__c", quoteLineItem.getDescription());
-		    sobject.setField("Configured_SKU__c", quoteLineItem.getConfiguredSku());
-		    sobject.setField("ContractNumbers__c", quoteLineItem.getContractNumbers());
-		    sobject.setField("CurrencyIsoCode", quoteLineItem.getCurrencyIsoCode());
-		    sobject.setField("EndDate__c", quoteLineItem.getEndDate());
-		    sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
-		    sobject.setField("Name", quoteLineItem.getName());
-		    sobject.setField("NewOrRenewal__c", quoteLineItem.getNewOrRenewal());
-		    sobject.setField("OpportunityId__c", quoteLineItem.getOpportunityId());
-		    sobject.setField("OpportunityLineItemId__c", quoteLineItem.getOpportunityLineItemId());
-			sobject.setField("PricebookEntryId__c", quoteLineItem.getPricebookEntryId());
-			sobject.setField("Product__c", quoteLineItem.getProduct().getId());
-			sobject.setField("Pricing_Attributes__c", quoteLineItem.getPricingAttributes());
-			sobject.setField("Quantity__c", quoteLineItem.getQuantity());			
-			sobject.setField("LineNumber__c", quoteLineItem.getLineNumber());
-			sobject.setField("StartDate__c", quoteLineItem.getStartDate());
-			sobject.setField("Term__c", quoteLineItem.getTerm());
-			sobject.setField("UnitPrice__c", quoteLineItem.getUnitPrice());
-			sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
-			sobject.setField("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());			
-			
-			sobjectList.add(sobject);		    
+		for (QuoteLineItem quoteLineItem : quoteLineItemList) {		    					
+			sobjectList.add(convertQuoteLineItemToSObject(quoteLineItem));		    
 		}
 		
 		return sobjectList;
+	}
+	
+	private SObject convertQuoteLineItemToSObject(QuoteLineItem quoteLineItem) {
+		SObject sobject = new SObject();
+	    sobject.setType("QuoteLineItem__c");
+	    if (quoteLineItem.getId() != null) {
+		    sobject.setId(quoteLineItem.getId());
+	    } else {
+	    	sobject.setField("QuoteId__c", quoteLineItem.getQuoteId());
+	    }
+	    sobject.setField("ProductDescription__c", quoteLineItem.getDescription());
+	    sobject.setField("Configured_SKU__c", quoteLineItem.getConfiguredSku());
+	    sobject.setField("ContractNumbers__c", quoteLineItem.getContractNumbers());
+	    sobject.setField("CurrencyIsoCode", quoteLineItem.getCurrencyIsoCode());
+	    sobject.setField("EndDate__c", quoteLineItem.getEndDate());
+	    sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
+	    sobject.setField("Name", quoteLineItem.getName());
+	    sobject.setField("NewOrRenewal__c", quoteLineItem.getNewOrRenewal());
+	    sobject.setField("OpportunityId__c", quoteLineItem.getOpportunityId());
+	    sobject.setField("OpportunityLineItemId__c", quoteLineItem.getOpportunityLineItemId());
+		sobject.setField("PricebookEntryId__c", quoteLineItem.getPricebookEntryId());
+		sobject.setField("Product__c", quoteLineItem.getProduct().getId());
+		sobject.setField("Pricing_Attributes__c", quoteLineItem.getPricingAttributes());
+		sobject.setField("Quantity__c", quoteLineItem.getQuantity());			
+		sobject.setField("LineNumber__c", quoteLineItem.getLineNumber());
+		sobject.setField("StartDate__c", quoteLineItem.getStartDate());
+		sobject.setField("Term__c", quoteLineItem.getTerm());
+		sobject.setField("UnitPrice__c", quoteLineItem.getUnitPrice());
+		sobject.setField("ListPrice__c", quoteLineItem.getListPrice());
+		sobject.setField("YearlySalesPrice__c", quoteLineItem.getYearlySalesPrice());	
+		
+		return sobject;
 	}
 	
 	private List<SObject> convertQuotePriceAdjustmentsToSObjects(List<QuotePriceAdjustment> quotePriceAdjustmentList) {

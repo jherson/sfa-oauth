@@ -64,14 +64,36 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
 	
-	@Override
-	public DeleteResult[] delete(List<String> idList) throws ConnectionException {
-		return delete(idList.toArray(new String[idList.size()]));
-	}	
+//	@Override
+//	public DeleteResult[] delete(List<String> idList) throws ConnectionException {
+//		return delete(idList.toArray(new String[idList.size()]));
+//	}	
+//	
+//	@Override
+//	public DeleteResult delete(String id) throws ConnectionException {
+//		return delete(new String[] {id})[0];
+//	}
 	
 	@Override
-	public DeleteResult delete(String id) throws ConnectionException {
-		return delete(new String[] {id})[0];
+	public DeleteResult remove(SObject sobject) throws ConnectionException {
+		return delete(new String[] {sobject.getId()})[0];
+	}
+	
+	@Override
+	public DeleteResult[] remove(List<SObject> sobjectList) throws ConnectionException {
+		return delete(toIdArray(sobjectList));
+	}
+	
+	@Override
+	public SObject refresh(SObject sobject) throws ConnectionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	private DeleteResult[] delete(String[] ids) throws ConnectionException {
@@ -96,5 +118,13 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	
 	private PartnerConnection getPartnerConnection() {
 		return ConnectionManager.getConnection();
+	}
+	
+	private String[] toIdArray(List<SObject> sobjectList) {
+		List<String> idList = new ArrayList<String>();
+		for (SObject sobject : sobjectList) {
+			idList.add(sobject.getId());
+		}
+		return idList.toArray(new String[idList.size()]);
 	}
 }
