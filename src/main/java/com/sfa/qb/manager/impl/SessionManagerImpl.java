@@ -1,4 +1,4 @@
-package com.sfa.qb.manager.impl;
+                   package com.sfa.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -181,6 +181,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 					+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
 					+ "&prompt=login"
 					+ "&display=popup";
+			
+			mainController.setMainArea(TemplatesEnum.INITIALIZE);
 							
 			try {
 			    context.getExternalContext().redirect(authUrl);
@@ -207,17 +209,18 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		    String authResponse = servicesManager.getAuthResponse(code);
 		    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
+
+		    if (oauth.getError() != null) {
+		    	throw new Exception(oauth.getErrorDescription());		 
+		    }	
 		    
-		    if (oauth.getError() == null) {
-		    	throw new Exception(oauth.getErrorDescription());		    	
-		    }		    		   
+		    logger.info("AccessToken: " + oauth.getAccessToken());
 		
 		    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
 		    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
 		    		
 		    sessionUser = new SessionUser(oauth, identity);
 		    
-		    logger.info("AccessToken: " + oauth.getAccessToken());
 		    loginHistoryWriter.write(sessionUser.getName(), request);
 			
 			if (sessionUser.getLocale() != null) {

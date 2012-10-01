@@ -2,9 +2,16 @@ package com.sfa.qb.model.sobject;
 
 import java.util.Locale;
 
+import com.sfa.persistence.Column;
+import com.sfa.persistence.Id;
+import com.sfa.persistence.OneToOne;
+
 public class User extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = -5495949651775917498L;
+	
+	@Id
+	private String id;
 
 	private String userName;
 	private String firstName;
@@ -29,6 +36,15 @@ public class User extends QuoteBuilderObject {
 	private String contactId;
 	private String roleName;
 	private String profileName;
+	
+	@OneToOne
+	@Column(name="Role")
+	private Role role;
+	
+	@OneToOne
+	@Column(name="Profile")
+	private Profile profile;
+	
 	private String defaultCurrencyIsoCode;
 	private String fullPhotoUrl;
 	private String smallPhotoUrl;
@@ -40,6 +56,14 @@ public class User extends QuoteBuilderObject {
 
 	public User() {
 		super();
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUserName() {
@@ -288,5 +312,21 @@ public class User extends QuoteBuilderObject {
 
 	public void setDateTimeFormatPattern(String dateTimeFormatPattern) {
 		this.dateTimeFormatPattern = dateTimeFormatPattern;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 }

@@ -8,8 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 
-public @interface Column {
-	String name();
-	boolean createable() default true;
-	boolean updateable() default true;
+public @interface OneToOne {
+
 }

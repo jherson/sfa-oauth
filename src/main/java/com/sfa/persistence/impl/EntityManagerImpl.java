@@ -1,12 +1,23 @@
 package com.sfa.persistence.impl;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.sfa.persistence.Column;
 import com.sfa.persistence.EntityManager;
+import com.sfa.persistence.Id;
+import com.sfa.persistence.OneToMany;
+import com.sfa.persistence.OneToOne;
 import com.sfa.persistence.Query;
+import com.sfa.persistence.Table;
 import com.sfa.persistence.connection.ConnectionManager;
+import com.sfa.qb.exception.QueryException;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;
@@ -16,6 +27,7 @@ import com.sforce.ws.ConnectionException;
 public class EntityManagerImpl implements EntityManager, Serializable {
 
 	private static final long serialVersionUID = 8472659225063158884L;
+	private Map<String, String> objectMapping;
 				
 	public EntityManagerImpl() {
 		
@@ -64,6 +76,10 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
 	
+	private Query createQuery(String query, Map<String, String> objectMapping) {
+		return new QueryImpl<SObject>(getPartnerConnection(), query, objectMapping);
+	}
+	
 //	@Override
 //	public DeleteResult[] delete(List<String> idList) throws ConnectionException {
 //		return delete(idList.toArray(new String[idList.size()]));
@@ -91,8 +107,29 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 
 	@Override
-	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {
-		// TODO Auto-generated method stub
+	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {	
+		Annotation annotation = clazz.getAnnotation(Table.class);
+
+		Table table = null;
+		if (annotation instanceof Table){
+			table = (Table) annotation;
+		}
+		
+		String queryString = "Select Id," + System.getProperty("line.separator");
+		
+		queryString += scanProperties(clazz);
+		queryString += System.getProperty("line.separator") + "From " + table.name();
+		queryString += System.getProperty("line.separator") + "Where Id = '" + id + "'";
+		
+		Query q = createQuery(queryString, objectMapping);	
+		q.showQuery();
+		try {
+			q.execute();
+		} catch (QueryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 	
@@ -126,5 +163,100 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 			idList.add(sobject.getId());
 		}
 		return idList.toArray(new String[idList.size()]);
+	}
+	
+	private <T> String scanProperties(Class<T> clazz) {
+		System.out.println("scanning properties for: " + clazz.getName());
+		String fieldString = "";
+		
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			Annotation[] annotations = field.getAnnotations();
+			
+			for (Annotation annotation : annotations) {
+				if (annotation instanceof Id) {
+					
+				} else if (annotation instanceof Column) {
+				    Column column = (Column) annotation;
+				    
+		            if (! "".equals(fieldString)) {
+		        	    fieldString += "," + System.getProperty("line.separator");
+		            }
+		            
+		            if (field.getAnnotation(OneToOne.class) != null) {
+		            	fieldString += scanOneToOneProperties(column.name(), field.getType());
+		            } else if (field.getAnnotation(OneToMany.class) != null) { 
+		            	fieldString += "(Select Id," + System.getProperty("line.separator");
+		            	fieldString += scanOneToManyProperties(field);
+		            	fieldString += System.getProperty("line.separator") + "From " + column.name() + ")";
+		            } else {
+		            	fieldString += column.name();
+		            	objectMapping.put(column.name(), field.getName());
+		            }
+				} 
+			}
+		}
+		
+		return fieldString;
+	}
+	
+	private <T> String scanOneToOneProperties(String relationshipName, Class<T> clazz) {
+		String fieldString = "";
+		
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			Annotation[] annotations = field.getAnnotations();
+			
+			for (Annotation annotation : annotations) {
+				if (annotation instanceof Column) {
+				    Column column = (Column) annotation;
+		            if (! "".equals(fieldString)) {
+		            	 fieldString += "," + System.getProperty("line.separator");
+		            }
+		            
+		            if (field.getAnnotation(OneToOne.class) != null) {
+		            	fieldString += scanOneToOneProperties(relationshipName + "." + column.name(), field.getType());
+		            } else {
+		                fieldString += relationshipName + "." + column.name();
+		            }
+				} 
+			}
+		}
+		
+		return fieldString;
+	}
+	
+	private <T> String scanOneToManyProperties(Field relationshipField) {
+		ParameterizedType parameterizedType = (ParameterizedType) relationshipField.getGenericType();   
+		Type type = parameterizedType.getActualTypeArguments()[0];
+
+		String fieldString = "";
+		
+		@SuppressWarnings("unchecked")
+		Class<T> clazz = (Class<T>) type;
+		
+		System.out.println("scanning properties for: " + clazz.getName());
+		
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			Annotation[] annotations = field.getAnnotations();
+			
+			for (Annotation annotation : annotations) {
+				if (annotation instanceof Column) {
+				    Column column = (Column) annotation;
+		            if (! "".equals(fieldString)) {
+		            	 fieldString += ", " + System.getProperty("line.separator");
+		            }
+		            
+		            if (field.getAnnotation(OneToOne.class) != null) {
+		            	fieldString += scanOneToOneProperties(column.name(), field.getType());
+		            } else {
+		                fieldString += column.name();
+		            }
+				} 
+			}
+		}
+		
+		return fieldString;
 	}
 }

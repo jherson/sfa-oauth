@@ -3,6 +3,7 @@ package com.sfa.persistence.impl;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.sfa.persistence.Query;
@@ -21,11 +22,18 @@ public class QueryImpl<X> implements Query {
 	private String query;
 	private String type;
 	private Integer totalSize; 
+	private Map<String, String> objectMapping;
 	private Boolean showQuery = Boolean.FALSE;
 	
 	public QueryImpl(PartnerConnection connection, String query) {
 		this.connection = connection;        
 		this.query = query;
+	}
+	
+	public QueryImpl(PartnerConnection connection, String query, Map<String,String> objectMapping) {
+		this.connection = connection;
+		this.query = query;
+		this.objectMapping = objectMapping;
 	}
        
     @Override
@@ -49,13 +57,36 @@ public class QueryImpl<X> implements Query {
 	}
 	
 	@Override
-	public void orderBy(String columns) {
-		query = query + " Order By " + columns;
+	public void orderBy(String orderBy) {
+		query = query + " Order By " + orderBy;
 	}
 	
 	@Override
 	public void showQuery() {
 		showQuery = Boolean.TRUE;
+	}
+	
+	@Override
+	public void execute() throws QueryException {
+		if (showQuery) {
+			log.info(query);
+		}
+		
+		try {
+			QueryResult qr = connection.query(query);
+			log.info("QueryResult Size: " + qr.getSize());
+			
+			if (qr.getSize() == 0)
+				return;
+			
+			for (SObject sobject : qr.getRecords()) {
+				
+			}
+			
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 		
 	@Override

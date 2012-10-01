@@ -53,6 +53,7 @@ public class Account extends QuoteBuilderObject {
 	@Column(name="Account_Alias_Name__c")	
 	private String accountAliasName;
 	
+	
 	public String getBillingCity() {
 		return billingCity;
 	}

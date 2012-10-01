@@ -133,9 +133,10 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 				+ "Where Id = ':quoteId'";
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);		
+			ConnectionManager.openConnection(sessionUser);	
 		    Query q = em.createQuery(queryString);				
 		    q.addParameter("quoteId", quoteId);		    		    		
+		    em.find(Quote.class, quoteId);
 		    return q.getSingleResult();
 		   
 		} catch (ConnectionException e) {

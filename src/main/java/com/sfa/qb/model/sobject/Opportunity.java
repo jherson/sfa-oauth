@@ -3,43 +3,116 @@ package com.sfa.qb.model.sobject;
 import java.util.Date;
 import java.util.List;
 
+import com.sfa.persistence.Column;
+import com.sfa.persistence.OneToOne;
+
 public class Opportunity extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = -1577960793119757037L;
+/**
+	+ "OpportunityId__r.CreatedDate, "
+	+ "OpportunityId__r.LastModifiedDate, " 
+	+ "OpportunityId__r.FulfillmentChannel__c, "
+**/
+	
+	@Column(name="Name")
 	private String name;
+	
+	@Column(name="Description")
 	private String description;
+	
+	@Column(name="StageName")
 	private String stageName;
+	
+	@Column(name="Amount")
 	private Double amount;
+	
+	@Column(name="Probability")
 	private String probability;
+	
+	@Column(name="CloseDate")
 	private Date closeDate;
+	
+	@Column(name="OpportunityType__c")
 	private String opportunityType;
+	
+	@Column(name="IsClosed")
 	private Boolean isClosed;
+	
+	@Column(name="IsWon")
 	private Boolean isWon;
+	
+	@Column(name="ForecastCategory")
 	private String forecastCategory;
+	
+	@Column(name="CurrencyIsoCode")
 	private String currencyIsoCode;
+	
+	@Column(name="HasOpportunityLineItem")
 	private Boolean hasOpportunityLineItem;
-	private String pricebookId;
-	private String pricebookName;
+	
+	@OneToOne
+	@Column(name="Pricebook2")
+	private Pricebook pricebook;
+	
+	@Column(name="FulfillmentChannel__c")
 	private String fulfillmentChannel;
+	
+	@Column(name="BillingAddress__c")
 	private String billingAddress;
+	
+	@Column(name="BillingCity__c")
 	private String billingCity;
+	
+	@Column(name="BillingCountry__c")
 	private String billingCountry;
+	
+	@Column(name="BillingZipPostalCode__c")
 	private String billingZipPostalCode;
+	
+	@Column(name="BillingState__c")
 	private String billingState;
+	
+	@Column(name="ShippingAddress__c")
 	private String shippingAddress;
+	
+	@Column(name="ShippingCity__c")
 	private String shippingCity;
+	
+	@Column(name="ShippingCountry__c")
 	private String shippingCountry;
+	
+	@Column(name="ShippingZipPostalCode__c")
 	private String shippingZipPostalCode;
+	
+	@Column(name="ShippingState__c")
 	private String shippingState;
+	
+	@Column(name="OpportunityNumber__c")
 	private String opportunityNumber;
+	
+	@Column(name="Pay_Now__c")
 	private String payNow;
+	
+	@Column(name="Country_of_Order__c")
 	private String countryOfOrder;
+	
+	@Column(name="Super_Region__c")
 	private String superRegion;
+	
+	@Column(name="PaymentType__c")
 	private String paymentType;
+	
+	@OneToOne
+    @Column(name="Account")
 	private Account account;
+	
 	private User owner;
+	
 	private List<CreditCheck> creditChecks;
+	
 	private List<OpportunityLineItem> opportunityLineItems;
+	
 	private List<OpportunityPartner> opportunityPartners;
 	private List<Contact> contacts;
 	private List<User> salesTeam;
@@ -145,20 +218,12 @@ public class Opportunity extends QuoteBuilderObject {
 		this.hasOpportunityLineItem = hasOpportunityLineItem;
 	}
 
-	public String getPricebookId() {
-		return pricebookId;
+	public Pricebook getPricebook() {
+		return pricebook;
 	}
 
-	public void setPricebookId(String pricebookId) {
-		this.pricebookId = pricebookId;
-	}
-
-	public String getPricebookName() {
-		return pricebookName;
-	}
-
-	public void setPricebookName(String pricebookName) {
-		this.pricebookName = pricebookName;
+	public void setPricebook(Pricebook pricebook) {
+		this.pricebook = pricebook;
 	}
 
 	public User getOwner() {

@@ -57,8 +57,8 @@ public class OpportunityFactory {
 		opportunity.setIsClosed(wrapper.getBoolean("IsClosed"));
 		opportunity.setPayNow(wrapper.getString("Pay_Now__c"));
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
-		opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
-		opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
+		//opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
+		//opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		opportunity.setBillingAddress(wrapper.getString("BillingAddress__c"));
 		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));
@@ -132,8 +132,8 @@ public class OpportunityFactory {
 		opportunity.setIsClosed(wrapper.getBoolean("IsClosed"));
 		opportunity.setPayNow(wrapper.getString("Pay_Now__c"));
 		opportunity.setIsWon(wrapper.getBoolean("IsWon"));
-		opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
-		opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
+		//opportunity.setPricebookId(wrapper.getString("Pricebook2", "Id"));
+		//opportunity.setPricebookName(wrapper.getString("Pricebook2", "Name"));
 		opportunity.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		opportunity.setBillingAddress(wrapper.getString("BillingAddress__c"));
 		opportunity.setBillingCity(wrapper.getString("BillingCity__c"));

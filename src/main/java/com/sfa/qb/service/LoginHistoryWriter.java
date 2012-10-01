@@ -10,16 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import nl.bitwalker.useragentutils.UserAgent;
 
-import org.jboss.logging.Logger;
-
 import com.sfa.qb.model.entities.LoginHistory;
 
 @Stateless
 @Asynchronous
 public class LoginHistoryWriter {
-	
-	@Inject	
-	private Logger log;	 
 	
 	@Inject
 	private EntityManager entityManager;
@@ -27,8 +22,6 @@ public class LoginHistoryWriter {
 	public void write(String name, HttpServletRequest request) {
 		
 		String userAgentString = request.getHeader("user-agent");
-				
-		log.info("user-agent: " + userAgentString);
 				
 		LoginHistory loginHistory = new LoginHistory();
 		loginHistory.setRemoteAddress(request.getRemoteAddr());
@@ -44,6 +37,5 @@ public class LoginHistoryWriter {
 		}
 		
 		entityManager.persist(loginHistory);			
-
 	}
 }

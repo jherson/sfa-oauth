@@ -11,7 +11,8 @@ public interface Query {
 	public void showQuery();
 	public void addParameter(String param, String value);
 	public void setLimit(Integer limit);
-	public void orderBy(String columns);
+	public void orderBy(String orderBy);
     public <X> List<X> getResultList() throws QueryException;
     public <X> X getSingleResult() throws QueryException;
+    public void execute() throws QueryException;
 }

@@ -324,7 +324,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.CREATED) {
-			logResponse(response);
+			//logResponse(response);
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -470,7 +470,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.OK) {
-			logResponse(response);
+			//logResponse(response);
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());

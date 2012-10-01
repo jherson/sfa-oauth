@@ -5,38 +5,113 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.sfa.persistence.Column;
+
 public class QuoteLineItem extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	+ "        CurrencyIsoCode, "
+	+ "        CreatedDate, "
+	+ "        CreatedBy.Id, "
+	+ "        CreatedBy.Name, "
+	+ "        LastModifiedDate, "
+	+ "        LastModifiedBy.Id, "
+	+ "        LastModifiedBy.Name, "
+	+ "        Product__r.Id, "
+	+ "        Product__r.Description, "
+	+ "        Product__r.Name, "
+	+ "        Product__r.Family, "
+	+ "        Product__r.ProductCode, "
+	+ "        Product__r.Primary_Business_Unit__c, "
+	+ "        Product__r.Product_Line__c, "
+	+ "        Product__r.Unit_Of_Measure__c, "
+	+ "        Product__r.Term__c, "
+	+ "        PricebookEntryId__c, "
+	+ "        ProductDescription__c, "
+	+ " From   QuoteLineItem__r ";
+	**/
+	
+	@Column(name="QuoteId__c")
 	private String quoteId;
+	
+	@Column(name="OpportunityLineItemId__c")
 	private String opportunityLineItemId;
+	
+	
 	private String sku;
 	private String description;
+	
+	@Column(name="Name")
 	private String name;
+	
+	@Column(name="EndDate__c")
 	private Date endDate;
+	
+	@Column(name="StartDate__c")
 	private Date startDate;
+	
+	@Column(name="Term__c")
 	private Integer term;
+	
+	@Column(name="ContractNumbers__c")
 	private String contractNumbers;
+	
+	@Column(name="CurrencyIsoCode")
 	private String currencyIsoCode;
+	
+	@Column(name="ListPrice__c")
 	private Double listPrice;
+	
+	@Column(name="NewOrRenewal__c")
 	private String newOrRenewal;
+	
+	@Column(name="OpportunityId__c")
 	private String opportunityId;
+	
+	@Column(name="PricebookEntryId__c")
 	private String pricebookEntryId;
+	
+	@Column(name="Quantity__c")
 	private Integer quantity;
+	
+	@Column(name="UnitPrice__c")
 	private Double unitPrice;
+	
+	@Column(name="TotalPrice__c")
 	private Double totalPrice;
+	
+	@Column(name="YearlySalesPrice__c")
 	private Double yearlySalesPrice;
+	
+	@Column(name="Configured_SKU__c")
 	private String configuredSku;
+	
+	@Column(name="Pricing_Attributes__c")
 	private String pricingAttributes;
-	private Double basePrice;
+	
+	@Column(name="DiscountAmount__c")
 	private Double discountAmount;
+	
+	@Column(name="DiscountPercent__c")
 	private Double discountPercent;
+	
+	@Column(name="LineNumber__c")
 	private Integer lineNumber;
+	
 	@NotNull
 	private Product product;
 	private Boolean selected;
+	
+	private Double basePrice;
+	
+	@Column(name="Code__c")
 	private String code;
+	
+	@Column(name="Message__c")
 	private String message;
+	
 	private List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustments;
 
 	public QuoteLineItem() {
@@ -53,7 +128,6 @@ public class QuoteLineItem extends QuoteBuilderObject {
 		setUnitPrice(0.00);
 		setTotalPrice(0.00);
 		setYearlySalesPrice(0.00);
-		setBasePrice(0.00);
 		setDiscountAmount(0.00);
 		setDiscountPercent(0.00);
 		setListPrice(0.00);
@@ -221,14 +295,6 @@ public class QuoteLineItem extends QuoteBuilderObject {
 		this.pricingAttributes = pricingAttributes;
 	}
 
-	public Double getBasePrice() {
-		return basePrice;
-	}
-
-	public void setBasePrice(Double basePrice) {
-		this.basePrice = basePrice;
-	}
-
 	public Double getDiscountAmount() {
 		return discountAmount;
 	}
@@ -291,5 +357,13 @@ public class QuoteLineItem extends QuoteBuilderObject {
 
 	public void setQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustments) {
 		this.quoteLineItemPriceAdjustments = quoteLineItemPriceAdjustments;
+	}
+
+	public Double getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Double basePrice) {
+		this.basePrice = basePrice;
 	}
 }

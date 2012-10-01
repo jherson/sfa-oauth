@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 
 import com.sfa.persistence.Column;
 import com.sfa.persistence.Entity;
+import com.sfa.persistence.Id;
+import com.sfa.persistence.OneToMany;
+import com.sfa.persistence.OneToOne;
 import com.sfa.persistence.Table;
 import com.sfa.qb.model.chatter.Followers;
 
@@ -18,6 +21,9 @@ import com.sfa.qb.model.chatter.Followers;
 public class Quote extends QuoteBuilderObject {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+	private String id;
 	
 	@Column(name="Link__c")
 	private String link;
@@ -121,7 +127,8 @@ public class Quote extends QuoteBuilderObject {
 	@Column(name="LastPricedDate__c")
 	private Date lastPricedDate;
 	
-	
+	@OneToOne
+	@Column(name="OpportunityId__r")
 	private Opportunity opportunity;
 	
 	
@@ -129,7 +136,12 @@ public class Quote extends QuoteBuilderObject {
 	
 	
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
+	
+	@OneToMany
+	@Column(name="QuoteLineItem__r")
 	private List<QuoteLineItem> quoteLineItems;
+	
+	
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
 
 	public Quote() {
@@ -144,7 +156,7 @@ public class Quote extends QuoteBuilderObject {
 		setPayNow(opportunity.getPayNow());
 		setType("Standard");
 		setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
-		setPricebookId(opportunity.getPricebookId());
+		setPricebookId(opportunity.getPricebook().getId());
 		setVersion(new Double(0));
 		setAmount(new Double(0));
 		setTerm(365);
@@ -168,6 +180,14 @@ public class Quote extends QuoteBuilderObject {
 
 		//setQuoteLineItems(new ArrayList<QuoteLineItem>());
 		setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getLink() {

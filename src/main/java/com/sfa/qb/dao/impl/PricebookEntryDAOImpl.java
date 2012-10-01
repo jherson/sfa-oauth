@@ -40,7 +40,7 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 		        + "And Product2.Configurable__c = :configurable " 
 		        + "And CurrencyIsoCode = ':currencyIsoCode' "
 		        + "And IsActive = true "
-		        + "And Product2.IsActive = true limit 1";
+		        + "And Product2.IsActive = true";
 		
 		Query q = null;
 		PricebookEntry pricebookEntry = null;
@@ -53,6 +53,7 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 		    q.addParameter("productCode", productCode);
 		    q.addParameter("configurable", "false");
 		    q.addParameter("currencyIsoCode", currencyIsoCode);
+		    q.setLimit(1);
 		
 		    pricebookEntry = q.getSingleResult();				
 		
