@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ import com.sforce.ws.ConnectionException;
 public class EntityManagerImpl implements EntityManager, Serializable {
 
 	private static final long serialVersionUID = 8472659225063158884L;
-	private Map<String, String> objectMapping;
+	private Map<String, String> objectMapping = new HashMap<String, String>();
 				
 	public EntityManagerImpl() {
 		
@@ -76,8 +77,8 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
 	
-	private Query createQuery(String query, Map<String, String> objectMapping) {
-		return new QueryImpl<SObject>(getPartnerConnection(), query, objectMapping);
+	private <T> Query createQuery(String query, Class<T> clazz, Map<String, String> objectMapping) {
+		return new QueryImpl<SObject>(getPartnerConnection(), query, clazz, objectMapping);
 	}
 	
 //	@Override
@@ -89,24 +90,23 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 //	public DeleteResult delete(String id) throws ConnectionException {
 //		return delete(new String[] {id})[0];
 //	}
-	
+
 	@Override
 	public DeleteResult remove(SObject sobject) throws ConnectionException {
 		return delete(new String[] {sobject.getId()})[0];
 	}
-	
+
 	@Override
 	public DeleteResult[] remove(List<SObject> sobjectList) throws ConnectionException {
 		return delete(toIdArray(sobjectList));
 	}
-	
+
 	@Override
 	public SObject refresh(SObject sobject) throws ConnectionException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
+	
 	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {	
 		Annotation annotation = clazz.getAnnotation(Table.class);
 
@@ -121,7 +121,7 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		queryString += System.getProperty("line.separator") + "From " + table.name();
 		queryString += System.getProperty("line.separator") + "Where Id = '" + id + "'";
 		
-		Query q = createQuery(queryString, objectMapping);	
+		Query q = createQuery(queryString, clazz, objectMapping);	
 		q.showQuery();
 		try {
 			q.execute();

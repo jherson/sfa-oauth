@@ -2,6 +2,7 @@ package com.sfa.persistence.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ public class QueryImpl<X> implements Query {
 	private String query;
 	private String type;
 	private Integer totalSize; 
+	private Class<?> clazz;
 	private Map<String, String> objectMapping;
 	private Boolean showQuery = Boolean.FALSE;
 	
@@ -30,10 +32,11 @@ public class QueryImpl<X> implements Query {
 		this.query = query;
 	}
 	
-	public QueryImpl(PartnerConnection connection, String query, Map<String,String> objectMapping) {
+	public QueryImpl(PartnerConnection connection, String query, Class<?> clazz, Map<String,String> objectMapping) {
 		this.connection = connection;
 		this.query = query;
 		this.objectMapping = objectMapping;
+		this.clazz = clazz; 
 	}
        
     @Override
@@ -80,10 +83,20 @@ public class QueryImpl<X> implements Query {
 				return;
 			
 			for (SObject sobject : qr.getRecords()) {
+				Object o = clazz.newInstance();   
+				for (Map.Entry<String, String> entry : objectMapping.entrySet()) {
+				    log.info(sobject.getField(entry.getKey()).toString());
+				}
 				
 			}
 			
 		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
