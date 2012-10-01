@@ -2,9 +2,9 @@ package com.sfa.qb.model.sobject;
 
 import java.io.Serializable;
 
-import com.sfa.persistence.Column;
-import com.sfa.persistence.Id;
-import com.sfa.persistence.Table;
+import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Id;
+import com.sfa.persistence.annotation.Table;
 
 @Table(name="Pricebook2")
 public class Pricebook implements Serializable {

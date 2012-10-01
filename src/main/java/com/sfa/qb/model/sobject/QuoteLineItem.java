@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.sfa.persistence.Column;
+import com.sfa.persistence.annotation.Column;
 
 public class QuoteLineItem extends QuoteBuilderObject {
 

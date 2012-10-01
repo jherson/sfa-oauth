@@ -1,8 +1,8 @@
 package com.sfa.qb.model.sobject;
 
-import com.sfa.persistence.Column;
-import com.sfa.persistence.Entity;
-import com.sfa.persistence.Table;
+import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Entity;
+import com.sfa.persistence.annotation.Table;
 
 @Entity
 @Table(name="Account")

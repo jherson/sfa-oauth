@@ -1,4 +1,4 @@
-                   package com.sfa.qb.manager.impl;
+package com.sfa.qb.manager.impl;
 
 import java.io.IOException;
 import java.io.Serializable;

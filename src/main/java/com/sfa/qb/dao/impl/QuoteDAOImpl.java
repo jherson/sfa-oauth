@@ -84,7 +84,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		try {
 			ConnectionManager.openConnection(sessionUser);			
 			Query q = em.createQuery(queryString);
-			q.addParameter("opportunityId", opportunityId);			
+			q.setParameter("opportunityId", opportunityId);			
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
@@ -109,7 +109,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		try {
 			ConnectionManager.openConnection(sessionUser);			
 			Query q = em.createQuery(queryString);
-			q.addParameter("quoteId", quoteId);		
+			q.setParameter("quoteId", quoteId);		
 			q.orderBy("LineNumber__c, CreatedDate");
 			return q.getResultList();
 			
@@ -135,7 +135,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		try {
 			ConnectionManager.openConnection(sessionUser);	
 		    Query q = em.createQuery(queryString);				
-		    q.addParameter("quoteId", quoteId);		    		    		
+		    q.setParameter("quoteId", quoteId);		    		    		
 		    em.find(Quote.class, quoteId);
 		    return q.getSingleResult();
 		   
@@ -160,7 +160,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		try {
 			ConnectionManager.openConnection(sessionUser);			
 			Query q = em.createQuery(queryString);
-			q.addParameter("quoteLineItemId", quoteLineItemId);			
+			q.setParameter("quoteLineItemId", quoteLineItemId);			
 			return q.getSingleResult();	
 			
 		} catch (ConnectionException e) {

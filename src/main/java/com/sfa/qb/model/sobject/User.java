@@ -2,9 +2,9 @@ package com.sfa.qb.model.sobject;
 
 import java.util.Locale;
 
-import com.sfa.persistence.Column;
-import com.sfa.persistence.Id;
-import com.sfa.persistence.OneToOne;
+import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Id;
+import com.sfa.persistence.annotation.OneToOne;
 
 public class User extends QuoteBuilderObject {
 

@@ -2,8 +2,8 @@ package com.sfa.qb.model.sobject;
 
 import java.io.Serializable;
 
-import com.sfa.persistence.Column;
-import com.sfa.persistence.Id;
+import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Id;
 
 public class Role implements Serializable {
 

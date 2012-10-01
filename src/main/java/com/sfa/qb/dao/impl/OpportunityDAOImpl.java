@@ -27,7 +27,7 @@ public class OpportunityDAOImpl extends DAO implements OpportunityDAO, Serializa
 			ConnectionManager.openConnection(sessionUser);
 		
 		    Query q = em.createQuery(queryString);				
-		    q.addParameter("opportunityId", opportunityId);
+		    q.setParameter("opportunityId", opportunityId);
 		
 		    return (Opportunity) q.getSingleResult();
 		

@@ -1,4 +1,4 @@
-package com.sfa.persistence;
+package com.sfa.persistence.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

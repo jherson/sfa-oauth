@@ -7,12 +7,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
-import com.sfa.persistence.Column;
-import com.sfa.persistence.Entity;
-import com.sfa.persistence.Id;
-import com.sfa.persistence.OneToMany;
-import com.sfa.persistence.OneToOne;
-import com.sfa.persistence.Table;
+import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Entity;
+import com.sfa.persistence.annotation.Id;
+import com.sfa.persistence.annotation.OneToMany;
+import com.sfa.persistence.annotation.OneToOne;
+import com.sfa.persistence.annotation.Table;
 import com.sfa.qb.model.chatter.Followers;
 
 @Entity

@@ -109,7 +109,7 @@ public class SessionUser extends User {
 			
 			ConnectionManager.openConnection(accessToken);
 			Query q = em.createQuery(queryString);
-			q.addParameter("userId", userId);
+			q.setParameter("userId", userId);
 			User user = q.getSingleResult();
 			return user;
 			

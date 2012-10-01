@@ -2,12 +2,12 @@ package com.sfa.persistence.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.sfa.persistence.Query;
+import com.sfa.persistence.type.EntityType;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.factory.SObjectFactory;
 import com.sforce.soap.partner.PartnerConnection;
@@ -19,12 +19,12 @@ public class QueryImpl<X> implements Query {
 
 	private static final Logger log = Logger.getLogger(QueryImpl.class.getName());
 	
-	private PartnerConnection connection;	
+	private PartnerConnection connection;
+	private EntityType entityType;
 	private String query;
 	private String type;
 	private Integer totalSize; 
-	private Class<?> clazz;
-	private Map<String, String> objectMapping;
+	private Integer limit;	
 	private Boolean showQuery = Boolean.FALSE;
 	
 	public QueryImpl(PartnerConnection connection, String query) {
@@ -32,11 +32,9 @@ public class QueryImpl<X> implements Query {
 		this.query = query;
 	}
 	
-	public QueryImpl(PartnerConnection connection, String query, Class<?> clazz, Map<String,String> objectMapping) {
+	public QueryImpl(PartnerConnection connection, EntityType entityType) {
 		this.connection = connection;
-		this.query = query;
-		this.objectMapping = objectMapping;
-		this.clazz = clazz; 
+        this.entityType = entityType;
 	}
        
     @Override
@@ -50,23 +48,37 @@ public class QueryImpl<X> implements Query {
 	}	
 	
 	@Override
-	public void addParameter(String param, String value) {
+	public Query setParameter(String param, String value) {
 		query = query.replace(":" + param, value);
+		return this;
 	}
 	
 	@Override
-	public void setLimit(Integer limit) {
+	public Query setLimit(Integer limit) {
 		query = query + " Limit " + limit;
+		return this;
 	}
 	
 	@Override
-	public void orderBy(String orderBy) {
+	public Integer getLimit() {
+		return limit;
+	}
+	
+	@Override
+	public Query orderBy(String orderBy) {
 		query = query + " Order By " + orderBy;
+		return this;
 	}
 	
 	@Override
-	public void showQuery() {
+	public String getQueryString() {
+		return query;
+	}
+	
+	@Override
+	public Query showQuery() {
 		showQuery = Boolean.TRUE;
+		return this;
 	}
 	
 	@Override
@@ -83,23 +95,14 @@ public class QueryImpl<X> implements Query {
 				return;
 			
 			for (SObject sobject : qr.getRecords()) {
-				Object o = clazz.newInstance();   
-				for (Map.Entry<String, String> entry : objectMapping.entrySet()) {
-				    log.info(sobject.getField(entry.getKey()).toString());
-				}
+				
 				
 			}
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 		
 	@Override

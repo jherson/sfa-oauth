@@ -49,10 +49,10 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 			ConnectionManager.openConnection(sessionUser);
 		
 		    q = em.createQuery(queryString);
-		    q.addParameter("pricebookId", pricebookId);
-		    q.addParameter("productCode", productCode);
-		    q.addParameter("configurable", "false");
-		    q.addParameter("currencyIsoCode", currencyIsoCode);
+		    q.setParameter("pricebookId", pricebookId);
+		    q.setParameter("productCode", productCode);
+		    q.setParameter("configurable", "false");
+		    q.setParameter("currencyIsoCode", currencyIsoCode);
 		    q.setLimit(1);
 		
 		    pricebookEntry = q.getSingleResult();				
@@ -60,10 +60,10 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 		    if (pricebookEntry == null) {		    	
 		    	
 			    q = em.createQuery(queryString);
-			    q.addParameter("pricebookId", pricebookId);
-			    q.addParameter("productCode", productCode.substring(0,4));
-			    q.addParameter("configurable", "true");
-			    q.addParameter("currencyIsoCode", currencyIsoCode);
+			    q.setParameter("pricebookId", pricebookId);
+			    q.setParameter("productCode", productCode.substring(0,4));
+			    q.setParameter("configurable", "true");
+			    q.setParameter("currencyIsoCode", currencyIsoCode);
 			    
 			    pricebookEntry = q.getSingleResult();
 		    }

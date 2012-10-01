@@ -3,7 +3,7 @@ package com.sfa.qb.model.sobject;
 import java.util.Date;
 import java.io.Serializable;
 
-import com.sfa.persistence.Id;
+import com.sfa.persistence.annotation.Id;
 
 public class QuoteBuilderObject implements Serializable, Cloneable {
 
