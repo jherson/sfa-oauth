@@ -1,9 +1,15 @@
 package com.sfa.persistence.impl;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.sfa.persistence.AnnotationScanner;
 import com.sfa.persistence.annotation.Column;
@@ -14,40 +20,43 @@ import com.sfa.persistence.annotation.Table;
 import com.sfa.persistence.soql.Select;
 import com.sfa.persistence.type.EntityType;
 
-public class AnnotationScannerImpl implements AnnotationScanner {
+public class AnnotationScannerImpl implements AnnotationScanner, Serializable {
 	
-	private Select select;
-	private PropertyMapping propertyMapping;
+	private static final long serialVersionUID = 1L;
+	private String className;
+	private Table table;
+	private Column[] columns;
+	private Map<String,String> propertyMap = new HashMap<String,String>();
 	
-
-	@Override
-	public <T> EntityType scan(Class<T> clazz) {
-		
-		Annotation annotation = clazz.getAnnotation(Table.class);
-
-		Table table = null;
-		if (annotation instanceof Table){
-			table = (Table) annotation;
-		}
-		
-		select = new Select();
-		select.setFromClause(table.name());
-		select.setSelectClause(scanProperties(clazz));
-				
-		return null;
-
+	public AnnotationScannerImpl(String className) throws Exception {
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		Object object = loader.loadClass(className).newInstance();
+		scan(object);
+		this.className = className;
 	}
-		
-	@Override
-	public EntityType scan(String className) {
-		return null;
-	}	
 	
-	private <T> String scanProperties(Class<T> clazz) {
-		System.out.println("scanning properties for: " + clazz.getName());
-		String fieldString = "";
+	@Override
+	public Table getEntity() {
+		return table;
 		
-		Field[] fields = clazz.getDeclaredFields();
+	}
+	
+	
+	
+	private void scan(Object object) throws Exception {
+		Annotation annotation = object.getClass().getAnnotation(Table.class);
+		
+		if (annotation == null)
+			throw new Exception("Entity annotation not found on object: " + object.getClass().getName());
+
+		table = (Table) annotation;
+	}
+	
+	public void scanProperties(Object object) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		System.out.println("scanning properties for: " + object.getClass().getName());
+		List<Column> columnList = new ArrayList<Column>();
+		
+		Field[] fields = object.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			Annotation[] annotations = field.getAnnotations();
 			
@@ -56,63 +65,64 @@ public class AnnotationScannerImpl implements AnnotationScanner {
 					
 				} else if (annotation instanceof Column) {
 				    Column column = (Column) annotation;
-				    
-		            if (! "".equals(fieldString)) {
-		        	    fieldString += "," + System.getProperty("line.separator");
-		            }
 		            
 		            if (field.getAnnotation(OneToOne.class) != null) {
-		            	fieldString += scanOneToOneProperties(column.name(), field.getType());
+		            	columnList.addAll(scanOneToOneProperties(column.name(), field.getType().getName()));
 		            } else if (field.getAnnotation(OneToMany.class) != null) { 
-		            	fieldString += "(Select Id," + System.getProperty("line.separator");
-		            	fieldString += scanOneToManyProperties(field);
-		            	fieldString += System.getProperty("line.separator") + "From " + column.name() + ")";
+		            	
+		            	scanOneToManyProperties(field);
+		            	
 		            } else {
-		            	fieldString += column.name();
+		            	columnList.add(column);
 		            }
 				} 
 			}
 		}
 		
-		return fieldString;
+		columns = columnList.toArray(new Column[columnList.size()]);
 	}
 
-	private <T> String scanOneToOneProperties(String relationshipName, Class<T> clazz) {
-		String fieldString = "";
+	private List<Column> scanOneToOneProperties(String relationshipName, String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		Object object = loader.loadClass(className).newInstance();
 		
-		Field[] fields = clazz.getDeclaredFields();
+		System.out.println("scanning properties for: " + object.getClass().getName());
+		
+		List<Column> columnList = new ArrayList<Column>();
+		
+		Field[] fields = object.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			Annotation[] annotations = field.getAnnotations();
 			
 			for (Annotation annotation : annotations) {
 				if (annotation instanceof Column) {
 				    Column column = (Column) annotation;
-		            if (! "".equals(fieldString)) {
-		            	 fieldString += "," + System.getProperty("line.separator");
-		            }
 		            
 		            if (field.getAnnotation(OneToOne.class) != null) {
-		            	fieldString += scanOneToOneProperties(relationshipName + "." + column.name(), field.getType());
+		            	scanOneToOneProperties(relationshipName + "." + column.name(), field.getType().getName());
 		            } else {
-		                fieldString += relationshipName + "." + column.name();
+		            	columnList.add(column);
 		            }
 				} 
 			}
 		}
 		
-		return fieldString;
+		return columnList;
 	}
 	
-	private <T> String scanOneToManyProperties(Field relationshipField) {
+	private List<Column> scanOneToManyProperties(String relationshipField) {
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		Object object = loader.loadClass(relationshipField).newInstance();
+		
 		ParameterizedType parameterizedType = (ParameterizedType) relationshipField.getGenericType();   
 		Type type = parameterizedType.getActualTypeArguments()[0];
-	
-		String fieldString = "";
 		
 		@SuppressWarnings("unchecked")
 		Class<T> clazz = (Class<T>) type;
 		
 		System.out.println("scanning properties for: " + clazz.getName());
+		
+		List<Column> columnList = new ArrayList<Column>();
 		
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
@@ -126,7 +136,7 @@ public class AnnotationScannerImpl implements AnnotationScanner {
 		            }
 		            
 		            if (field.getAnnotation(OneToOne.class) != null) {
-		            	fieldString += scanOneToOneProperties(column.name(), field.getType());
+		            	fieldString += scanOneToOneProperties(column.name(), field.getType().getName());
 		            } else {
 		                fieldString += column.name();
 		            }

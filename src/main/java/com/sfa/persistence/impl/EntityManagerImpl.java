@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sfa.persistence.AnnotationScanner;
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
 import com.sfa.persistence.binder.EntityTypeBinder;
@@ -67,7 +68,7 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
 	
-	private <T> Query createQuery(EntityType entityType) {
+	private Query createQuery(EntityType entityType) {
 		return new QueryImpl<SObject>(getPartnerConnection(), entityType);
 	}
 	
@@ -98,7 +99,8 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {	
-		EntityType entityType = new EntityTypeBinder().bind(clazz, id);
+		AnnotationScanner scanner = createScanner(clazz.getName());
+		EntityType entityType = new EntityTypeBinder().bind(scanner, , id);
 		
 		
 //		Annotation annotation = clazz.getAnnotation(Table.class);
@@ -257,4 +259,26 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 //		
 //		return fieldString;
 //	}
+	
+    private static AnnotationScanner createScanner(final String className) {
+		
+		AnnotationScanner scanner = null;
+		try {
+			new AnnotationScannerImpl(className);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return scanner;
+	}
 }
