@@ -4,6 +4,6 @@ import com.sfa.persistence.annotation.Table;
 
 public interface AnnotationScanner {
 
-	public Table getEntity();
+	public Table getTable();
 
 }

@@ -10,8 +10,12 @@ public class Select {
     
     public String toStatementString() {
     	StringBuilder buffer = new StringBuilder();
-    	buffer.append("select Id, ");
-    	buffer.append(selectClause);
+    	buffer.append("select ");
+    	
+    	if (selectClause != null && selectClause.trim().length() > 0) {
+    		buffer.append(selectClause);	
+    	}
+    	
     	buffer.append(" from ");
     	buffer.append(fromClause);
     	
@@ -19,7 +23,7 @@ public class Select {
     		buffer.append(" where ");
     		buffer.append(whereClause);
     	}
-    	
+    	    	
     	if (orderByClause != null && orderByClause.trim().length() > 0) {
     		buffer.append(" order by ");
     		buffer.append(orderByClause);
@@ -61,5 +65,5 @@ public class Select {
 	public Select setLimitClause(String limitClause) {
 		this.limitClause = limitClause;
 		return this;
-	}        
+	}       
 }

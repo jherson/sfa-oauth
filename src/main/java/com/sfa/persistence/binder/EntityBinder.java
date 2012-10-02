@@ -5,7 +5,10 @@ import com.sfa.persistence.impl.AnnotationScannerImpl;
 import com.sfa.persistence.soql.Select;
 import com.sfa.persistence.type.EntityType;
 
-public class EntityTypeBinder {
+public class EntityBinder {
+	
+	private String name;
+	
 	
 	private AnnotationScanner scanner;
 
@@ -17,12 +20,11 @@ public class EntityTypeBinder {
 	private EntityType initialize(String id) {
 		
 		EntityType entityType = new EntityType();
-		entityType.setId(id);
-		entityType.setClassName(className);
+		entityType.setClassName(scanner.getTable().name());
 		
 
 		
-		buildSelect(id);
+		//buildSelect(id);
 		
 		return entityType;
 		
@@ -30,10 +32,10 @@ public class EntityTypeBinder {
 	
 	
 	
-	private Select buildSelect(String id) {
-		Select select = new Select();
-		select.setFromClause(scanner.getEntity().name());
-		select.setSelectClause(scanProperties(clazz));
-		select.setWhereClause("Where Id = '" + id + "'");
-	}
+//	private Select buildSelect(String id) {
+//		Select select = new Select();
+//		select.setFromClause(scanner.getEntity().name());
+//		select.setSelectClause(scanProperties(clazz));
+//		select.setWhereClause("Where Id = '" + id + "'");
+//	}
 }

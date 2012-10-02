@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 
 public @interface OneToOne {
 
+	String name();
+	String referenceColumnName();
 }

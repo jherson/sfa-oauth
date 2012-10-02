@@ -1,13 +1,19 @@
 package com.sfa.persistence.type;
 
+import java.util.List;
+
 import com.sfa.persistence.impl.PropertyMapping;
 
 public class EntityType {
 	
 	private String className;
 	private String entityName;
-	private String id;
 	private String queryString;
+	private IdType idType;
+	private List<ColumnType> columnTypes;
+	private List<OneToOneType> oneToOneTypes;
+	private List<OneToManyType> oneToManyTypes;
+	
 	private PropertyMapping propertyMapping;
 	
 	public String getClassName() {
@@ -26,12 +32,12 @@ public class EntityType {
 		this.entityName = entityName;
 	}
 	
-	public String getId() {
-		return id;
+	public IdType getIdType() {
+		return idType;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
+	public void setIdType(IdType idType) {
+		this.idType = idType;
 	}
 	
 	public String getQueryString() {
@@ -48,5 +54,29 @@ public class EntityType {
 
 	public void setPropertyMapping(PropertyMapping propertyMapping) {
 		this.propertyMapping = propertyMapping;
-	}	
+	}
+
+	public List<ColumnType> getColumnTypes() {
+		return columnTypes;
+	}
+
+	public void setColumnTypes(List<ColumnType> columnTypes) {
+		this.columnTypes = columnTypes;
+	}
+
+	public List<OneToOneType> getOneToOneTypes() {
+		return oneToOneTypes;
+	}
+
+	public void setOneToOneTypes(List<OneToOneType> oneToOneTypes) {
+		this.oneToOneTypes = oneToOneTypes;
+	}
+
+	public List<OneToManyType> getOneToManyTypes() {
+		return oneToManyTypes;
+	}
+
+	public void setOneToManyTypes(List<OneToManyType> oneToManyTypes) {
+		this.oneToManyTypes = oneToManyTypes;
+	}
 }

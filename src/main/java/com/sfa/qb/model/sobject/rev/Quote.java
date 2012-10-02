@@ -1,4 +1,4 @@
-package com.sfa.qb.model.sobject;
+package com.sfa.qb.model.sobject.rev;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,93 +8,156 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Entity;
+import com.sfa.persistence.annotation.Id;
+import com.sfa.persistence.annotation.OneToMany;
+import com.sfa.persistence.annotation.OneToOne;
+import com.sfa.persistence.annotation.Table;
 import com.sfa.qb.model.chatter.Followers;
+import com.sfa.qb.model.sobject.Contact;
+import com.sfa.qb.model.sobject.QuoteLineItem;
+import com.sfa.qb.model.sobject.QuoteLineItemSchedule;
+import com.sfa.qb.model.sobject.QuotePriceAdjustment;
+import com.sforce.soap.partner.sobject.SObject;
 
-public class Quote extends QuoteBuilderObject implements Serializable, Cloneable {
+@Entity
+@Table(name="Quote__c")
+
+public class Quote extends SObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
-			
+	
+	@Id
+	private String id;
+	
+	@Column(name="CreatedDate")
+	private Date createdDate;
+	
+	@Column(name="CreatedById")
+	private String createdById;
+		
+	@OneToOne(name="CreatedBy", referenceColumnName="CreatedById")
+	private User createdBy;
+	
+	@OneToOne(name="LastModifiedBy", referenceColumnName="LastModifiedById")
+	private User lastModifiedBy;
+	
+	@Column(name="LastModifiedDate")
+	private Date lastModifiedDate;
+	
+	@Column(name="LastModifiedById")
+	private String lastModifiedById;
+		
+	@Column(name="Link__c")
 	private String link;
 	
+	@Column(name="Version__c")
 	private Double version;
 	
 	@NotNull
+	@Column(name="Name")
 	private String quoteName;
 	
+	@Column(name="Number__c")
 	private String number;
 	
+	@Column(name="CurrencyIsoCode")
 	private String currencyIsoCode;
 	
+	@Column(name="PayNow__c")
 	private String payNow;
 	
+	@Column(name="PricebookId__c")
 	private String pricebookId;
 	
 	private String pricebookName;
 	
+	@Column(name="Type__c")
 	private String type;
 	
+	@Column(name="IsActive__c")
 	private Boolean isActive;
 	
+	@Column(name="Amount__c")
 	private Double amount;
 	
+	@Column(name="Year1PaymentAmount__c")
 	private Double year1PaymentAmount;
 	
+	@Column(name="Year2PaymentAmount__c")
 	private Double year2PaymentAmount;
 	
+	@Column(name="Year3PaymentAmount__c")
 	private Double year3PaymentAmount;
 	
+	@Column(name="Year4PaymentAmount__c")
 	private Double year4PaymentAmount;
 	
+	@Column(name="Year5PaymentAmount__c")
 	private Double year5PaymentAmount;
 	
+	@Column(name="Year6PaymentAmount__c")
 	private Double year6PaymentAmount;
 	
+	@Column(name="HasQuoteLineItems__c")
 	private Boolean hasQuoteLineItems;
 	
+	@Column(name="IsCalculated__c")
 	private Boolean isCalculated;
 	
-	private String ownerId;
+	@OneToOne(name="OwnerId__r", referenceColumnName="OwnerId__c")
+	private User owner;
 	
-	private String ownerName;
+	@OneToOne(name="ContactId__r", referenceColumnName="ContactId__c")
+	private Contact contact;
 	
-	private String ownerEmail;
-	
-	private String contactId;
-	
-	private String contactName;
-	
-	private String contactEmail;
-	
+	@Column(name="Comments__c")
 	private String comments;
 	
+	@Column(name="ExpirationDate__c")
 	private Date expirationDate;
-
+	
+	@Column(name="StartDate__c")
 	private Date startDate;
 	
+	@Column(name="EndDate__c")
 	private Date endDate;
 	
+	@Column(name="Term__c")
 	private Integer term;
 	
+	@Column(name="Status__c")
 	private String status;
 	
+	@Column(name="EffectiveDate__c")
 	private Date effectiveDate;
 	
+	@Column(name="ReferenceNumber__c")
 	private String referenceNumber;
 	
+	@Column(name="IsNonStandardPayment__c")
 	private Boolean isNonStandardPayment;
 	
+	@Column(name="LastCalculatedDate__c")
 	private Date lastCalculatedDate;
 	
+	@Column(name="LastPricedDate__c")
 	private Date lastPricedDate;
 	
+	@OneToOne(name="OpportunityId__r", referenceColumnName="OpportunityId__c")
 	private Opportunity opportunity;
-		
+	
+	
 	private Followers followers;
-		
+	
+	
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	
+	@OneToMany(name="QuoteLineItem__r")
 	private List<QuoteLineItem> quoteLineItems;
-		
+	
+	
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
 
 	public Quote() {
@@ -104,8 +167,8 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 	public Quote(Opportunity opportunity) {
 		super();
 		setOpportunity(opportunity);
-		setOwnerId(opportunity.getOwner().getId());
-		setOwnerName(opportunity.getOwner().getName());
+		//setOwnerId(opportunity.getOwner().getId());
+		//setOwnerName(opportunity.getOwner().getName());
 		setPayNow(opportunity.getPayNow());
 		setType("Standard");
 		setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
@@ -135,6 +198,62 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 		setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
 	}
 	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public User getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(User lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedById() {
+		return createdById;
+	}
+
+	public void setCreatedById(String createdById) {
+		this.createdById = createdById;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getLastModifiedById() {
+		return lastModifiedById;
+	}
+
+	public void setLastModifiedById(String lastModifiedById) {
+		this.lastModifiedById = lastModifiedById;
+	}
+
 	public String getLink() {
 		return link;
 	}
@@ -287,52 +406,20 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 		this.isCalculated = isCalculated;
 	}
 
-	public String getOwnerId() {
-		return ownerId;
+	public User getOwner() {
+		return owner;
 	}
 
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
-	public String getOwnerName() {
-		return ownerName;
+	public Contact getContact() {
+		return contact;
 	}
 
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-	
-	public String getOwnerEmail() {
-		return ownerEmail;
-	}
-	
-	public void setOwnerEmail(String ownerEmail) {
-		this.ownerEmail = ownerEmail;
-	}
-
-	public String getContactId() {
-		return contactId;
-	}
-
-	public void setContactId(String contactId) {
-		this.contactId = contactId;
-	}
-
-	public String getContactName() {
-		return contactName;
-	}
-
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
-	}
-	
-	public String getContactEmail() {
-		return contactEmail;
-	}
-	
-	public void setContactEmail(String contactEmail) {
-		this.contactEmail = contactEmail;
+	public void setContact(Contact contact) {
+		this.contact = contact;
 	}
 
 	public String getComments() {

@@ -16,7 +16,7 @@
 
 				<table style="width: 100%">
 					<tr>
-						<td><h:outputText value="#{selectedQuote.name}"
+						<td><h:outputText value="#{selectedQuote.quoteName}"
 								style="font-weight:bold; font-size: 18px;" /></td>
 					</tr>
 				</table>
@@ -144,7 +144,7 @@
 						<td class="column-l-align"><h:outputText
 								value="#{selectedQuote.name}"
 								rendered="#{not quoteController.editMode}" /> <h:inputText
-								id="quoteName" required="true" value="#{selectedQuote.name}"
+								id="quoteName" required="true" value="#{selectedQuote.quoteName}"
 								style="width:300px" rendered="#{quoteController.editMode}"
 								requiredMessage="#{msgs.quoteNameRequiredMessage}">
 								<rich:validator />

@@ -136,7 +136,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			ConnectionManager.openConnection(sessionUser);	
 		    Query q = em.createQuery(queryString);				
 		    q.setParameter("quoteId", quoteId);		    		    		
-		    em.find(Quote.class, quoteId);
+		    //em.find(com.sfa.qb.model.sobject.rev.Quote.class, quoteId);
 		    return q.getSingleResult();
 		   
 		} catch (ConnectionException e) {
@@ -298,7 +298,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		DeleteResult[] deleteResult = null;
 		try {
 			ConnectionManager.openConnection(sessionUser);
-		    deleteResult = em.remove(convertQuoteLineItemsToSObjects(quoteLineItemList));
+		    deleteResult = em.delete(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -353,7 +353,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		DeleteResult deleteResult = null;
 		try {
 			ConnectionManager.openConnection(sessionUser);
-            deleteResult = em.remove(convertQuoteLineItemToSObject(quoteLineItem));
+            deleteResult = em.delete(convertQuoteLineItemToSObject(quoteLineItem));
         
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -395,7 +395,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		DeleteResult deleteResult = null;
 		try {
 			ConnectionManager.openConnection(sessionUser);
-		    deleteResult = em.remove(convertQuoteToSObject(quote));	
+		    deleteResult = em.delete(convertQuoteToSObject(quote));	
 		
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -446,7 +446,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	    sobject.setField("EndDate__c", quote.getEndDate());
 	    sobject.setField("ExpirationDate__c", quote.getExpirationDate());	    
 	    sobject.setField("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
-	    sobject.setField("Name", quote.getName());	    
+	    sobject.setField("Name", quote.getQuoteName());	    
 	    sobject.setField("QuoteOwnerId__c", quote.getOwnerId());
 	    sobject.setField("PayNow__c", quote.getPayNow());
 	    sobject.setField("PricebookId__c", quote.getPricebookId());

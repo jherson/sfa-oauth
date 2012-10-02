@@ -6,10 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.sfa.persistence.AnnotationScanner;
 import com.sfa.persistence.annotation.Column;
@@ -18,133 +15,167 @@ import com.sfa.persistence.annotation.OneToMany;
 import com.sfa.persistence.annotation.OneToOne;
 import com.sfa.persistence.annotation.Table;
 import com.sfa.persistence.soql.Select;
-import com.sfa.persistence.type.EntityType;
+import com.sfa.persistence.type.ColumnType;
+import com.sfa.persistence.type.OneToManyType;
+import com.sfa.persistence.type.OneToOneType;
 
 public class AnnotationScannerImpl implements AnnotationScanner, Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private String className;
 	private Table table;
 	private Column[] columns;
-	private Map<String,String> propertyMap = new HashMap<String,String>();
 	
-	public AnnotationScannerImpl(String className) throws Exception {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		Object object = loader.loadClass(className).newInstance();
-		scan(object);
-		this.className = className;
-	}
-	
-	@Override
-	public Table getEntity() {
-		return table;
+	private List<ColumnType> columnTypes = new ArrayList<ColumnType>();
+	private List<OneToManyType> oneToManyTypes = new ArrayList<OneToManyType>();
+	private List<OneToOneType> oneToOneTypes = new ArrayList<OneToOneType>();
 		
+	public AnnotationScannerImpl(String className) throws Exception {		
+		scan(className);
+	}		
+	
+	public Table getTable() {
+		return table;
 	}
 	
-	
-	
-	private void scan(Object object) throws Exception {
-		Annotation annotation = object.getClass().getAnnotation(Table.class);
+	private void scan(String className) throws Exception {
+		Class<?> clazz = Class.forName(className);
+		
+		Annotation annotation = clazz.getAnnotation(Table.class);
 		
 		if (annotation == null)
-			throw new Exception("Entity annotation not found on object: " + object.getClass().getName());
+			throw new Exception("Table annotation not found on object: " + clazz.getName());
 
-		table = (Table) annotation;
-	}
-	
-	public void scanProperties(Object object) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		System.out.println("scanning properties for: " + object.getClass().getName());
-		List<Column> columnList = new ArrayList<Column>();
+		table = (Table) annotation;		
 		
-		Field[] fields = object.getClass().getDeclaredFields();
+        StringBuilder selectClause = new StringBuilder();
+		
+		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
-			Annotation[] annotations = field.getAnnotations();
-			
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Id) {
-					
-				} else if (annotation instanceof Column) {
-				    Column column = (Column) annotation;
-		            
-		            if (field.getAnnotation(OneToOne.class) != null) {
-		            	columnList.addAll(scanOneToOneProperties(column.name(), field.getType().getName()));
-		            } else if (field.getAnnotation(OneToMany.class) != null) { 
-		            	
-		            	scanOneToManyProperties(field);
-		            	
-		            } else {
-		            	columnList.add(column);
-		            }
-				} 
-			}
+			selectClause.append(scanField(field));						
 		}
 		
-		columns = columnList.toArray(new Column[columnList.size()]);
-	}
-
-	private List<Column> scanOneToOneProperties(String relationshipName, String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		Object object = loader.loadClass(className).newInstance();
+		Select select = new Select();
+		select.setFromClause(table.name());
+		select.setSelectClause(selectClause.toString());
 		
-		System.out.println("scanning properties for: " + object.getClass().getName());
-		
-		List<Column> columnList = new ArrayList<Column>();
-		
-		Field[] fields = object.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			Annotation[] annotations = field.getAnnotations();
-			
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Column) {
-				    Column column = (Column) annotation;
-		            
-		            if (field.getAnnotation(OneToOne.class) != null) {
-		            	scanOneToOneProperties(relationshipName + "." + column.name(), field.getType().getName());
-		            } else {
-		            	columnList.add(column);
-		            }
-				} 
-			}
-		}
-		
-		return columnList;
+		System.out.println(select.toStatementString());
 	}
 	
-	private List<Column> scanOneToManyProperties(String relationshipField) {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		Object object = loader.loadClass(relationshipField).newInstance();
+	private String scanField(Field field) throws ClassNotFoundException {
+				
+		StringBuilder queryFragment = new StringBuilder();
 		
-		ParameterizedType parameterizedType = (ParameterizedType) relationshipField.getGenericType();   
-		Type type = parameterizedType.getActualTypeArguments()[0];
+		Annotation[] annotations = field.getAnnotations();	
 		
-		@SuppressWarnings("unchecked")
-		Class<T> clazz = (Class<T>) type;
+		for (Annotation annotation : annotations) {
+			
+			if (annotation instanceof Id) {
+							
+				if (queryFragment.length() > 0) {
+	            	queryFragment.append("," + System.getProperty("line.separator"));
+	            }
+				
+				queryFragment.append("Id");
+				
+			} else if (annotation instanceof Column) {
+			    Column property = (Column) annotation;
+			    
+			    if (queryFragment.length() > 0) {
+	            	queryFragment.append("," + System.getProperty("line.separator"));
+	            }
+	            
+	            queryFragment.append(property.name());
+	            		            
+			} else if (annotation instanceof OneToOne) {
+				OneToOne property = (OneToOne) annotation;
+				queryFragment.append(scanOneToOneRelationship(property.name(), field.getType().getName()));
+            } else if (annotation instanceof OneToMany) { 
+            	OneToMany property = (OneToMany) annotation;   
+            	queryFragment.append("(Select ");
+            	queryFragment.append(scanOneToManyRelationship(property.name(), field));
+            	queryFragment.append(System.getProperty("line.separator") + "From " + property.name() + ")");
+            } 
+		}
 		
-		System.out.println("scanning properties for: " + clazz.getName());
+		return queryFragment.toString();
+	}
+	
+	private String scanOneToOneRelationship(String relationshipName, String className) throws ClassNotFoundException {
+		Class<?> clazz = Class.forName(className);
 		
-		List<Column> columnList = new ArrayList<Column>();
+		StringBuilder queryFragment = new StringBuilder();
 		
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
 			Annotation[] annotations = field.getAnnotations();
 			
 			for (Annotation annotation : annotations) {
-				if (annotation instanceof Column) {
-				    Column column = (Column) annotation;
-		            if (! "".equals(fieldString)) {
-		            	 fieldString += ", " + System.getProperty("line.separator");
+				if (annotation instanceof Id) {					
+					
+					if (queryFragment.length() > 0) {
+		            	queryFragment.append("," + System.getProperty("line.separator"));
+		            }
+					
+					queryFragment.append(relationshipName + "." + "Id");
+					
+				} else if (annotation instanceof Column) {
+				    Column property = (Column) annotation;
+				    
+				    if (queryFragment.length() > 0) {
+		            	queryFragment.append("," + System.getProperty("line.separator"));
 		            }
 		            
-		            if (field.getAnnotation(OneToOne.class) != null) {
-		            	fieldString += scanOneToOneProperties(column.name(), field.getType().getName());
-		            } else {
-		                fieldString += column.name();
-		            }
+		            queryFragment.append(relationshipName + "." + property.name());
+		            
+				} else if (annotation instanceof OneToOne) {
+					OneToOne property = (OneToOne) annotation;
+					queryFragment.append(scanOneToOneRelationship(relationshipName + "." + property.name(), field.getType().getName()));
 				} 
 			}
 		}
 		
-		return fieldString;
+		return queryFragment.toString();		
 	}
 	
+	private <T> String scanOneToManyRelationship(String relationshipName, Field relationshipField) throws ClassNotFoundException {
+		ParameterizedType parameterizedType = (ParameterizedType) relationshipField.getGenericType();   
+		Type type = parameterizedType.getActualTypeArguments()[0];
+	
+		StringBuilder queryFragment = new StringBuilder();
+		
+		@SuppressWarnings("unchecked")
+		Class<T> clazz = (Class<T>) type;
+						
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			Annotation[] annotations = field.getAnnotations();
+			
+			for (Annotation annotation : annotations) {
+				
+				if (annotation instanceof Id) {
+					
+					if (queryFragment.length() > 0) {
+		            	queryFragment.append("," + System.getProperty("line.separator"));
+		            } 
+					
+					queryFragment.append("Id");
+					
+				} else if (annotation instanceof Column) {
+				    Column column = (Column) annotation;
+				    
+				    if (queryFragment.length() > 0) {
+		            	queryFragment.append(", " + System.getProperty("line.separator"));
+		            } 
+		            
+				    queryFragment.append(column.name());
+		            
+				} else if (field.getAnnotation(OneToOne.class) != null) {
+					OneToOne property = (OneToOne) annotation;
+	            	queryFragment.append(scanOneToOneRelationship(property.name(), field.getType().getName()));
+	            } 
+			}						
+		}
+						
+		return queryFragment.toString();
+	}	
 }

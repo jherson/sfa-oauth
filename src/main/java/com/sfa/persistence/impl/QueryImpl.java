@@ -135,7 +135,9 @@ public class QueryImpl<X> implements Query {
 			
 			while (! done) {
 									
-				for (SObject sobject : qr.getRecords()) {																		
+				for (SObject sobject : qr.getRecords()) {
+					
+					log.info(sobject.toString());
 				    
 				    resultList.add((X) SObjectFactory.parse(sobject));
 				}	

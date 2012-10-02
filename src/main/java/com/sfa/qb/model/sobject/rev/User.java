@@ -1,12 +1,14 @@
-package com.sfa.qb.model.sobject;
+package com.sfa.qb.model.sobject.rev;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.Id;
 import com.sfa.persistence.annotation.OneToOne;
+import com.sforce.soap.partner.sobject.SObject;
 
-public class User extends QuoteBuilderObject {
+public class User extends SObject implements Serializable {
 
 	private static final long serialVersionUID = -5495949651775917498L;
 	
@@ -23,7 +25,7 @@ public class User extends QuoteBuilderObject {
 	private String lastName;
 	
 	@Column(name="Name")
-	private String name;
+	private String fullName;
 	
 	@Column(name="CompanyName")
 	private String companyName;
@@ -113,11 +115,11 @@ public class User extends QuoteBuilderObject {
 		this.id = id;
 	}
 
-	public String getUserName() {
+	public String getFullName() {
 		return userName;
 	}
 
-	public void setUserName(String userName) {
+	public void setFullName(String userName) {
 		this.userName = userName;
 	}
 
@@ -137,12 +139,12 @@ public class User extends QuoteBuilderObject {
 		this.lastName = lastName;
 	}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return fullName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public String getCompanyName() {

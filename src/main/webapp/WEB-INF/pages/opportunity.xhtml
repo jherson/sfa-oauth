@@ -24,7 +24,7 @@
 
 				<h:outputText value="#{msgs.name}" />
 				<a4j:commandLink value="#{selectedQuote.opportunity.name}"
-					onclick="window.open('#{sessionManager.frontDoorUrl}#{selectedQuote.opportunity.id}');" />
+					onclick="window.open('#{frontDoorUrl}#{selectedQuote.opportunity.id}');" />
 
 				<h:outputText value="#{msgs.number}" />
 				<h:outputText value="#{selectedQuote.opportunity.opportunityNumber}" />

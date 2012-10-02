@@ -7,7 +7,7 @@ import java.util.List;
 import com.sfa.persistence.AnnotationScanner;
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
-import com.sfa.persistence.binder.EntityTypeBinder;
+import com.sfa.persistence.binder.EntityBinder;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.persistence.type.EntityType;
 import com.sfa.qb.exception.QueryException;
@@ -98,9 +98,10 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return null;
 	}
 	
-	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {	
-		AnnotationScanner scanner = createScanner(clazz.getName());
-		EntityType entityType = new EntityTypeBinder().bind(scanner, , id);
+	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {
+		System.out.println("find: " + clazz.getName());
+		AnnotationScanner scanner = createScanner(clazz.getName());	
+		EntityType entityType = new EntityBinder().bind(scanner, id);
 		
 		
 //		Annotation annotation = clazz.getAnnotation(Table.class);

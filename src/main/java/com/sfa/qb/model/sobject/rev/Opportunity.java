@@ -1,12 +1,19 @@
-package com.sfa.qb.model.sobject;
+package com.sfa.qb.model.sobject.rev;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.OneToOne;
+import com.sfa.qb.model.sobject.Contact;
+import com.sfa.qb.model.sobject.CreditCheck;
+import com.sfa.qb.model.sobject.OpportunityLineItem;
+import com.sfa.qb.model.sobject.OpportunityPartner;
+import com.sfa.qb.model.sobject.Pricebook;
+import com.sforce.soap.partner.sobject.SObject;
 
-public class Opportunity extends QuoteBuilderObject {
+public class Opportunity extends SObject implements Serializable {
 
 	private static final long serialVersionUID = -1577960793119757037L;
 /**
@@ -120,7 +127,7 @@ public class Opportunity extends QuoteBuilderObject {
 		super();
 	}
 
-	public String getName() {
+	public String getOpportunityName() {
 		return name;
 	}
 

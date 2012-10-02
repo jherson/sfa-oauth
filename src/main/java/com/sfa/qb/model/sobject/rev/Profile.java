@@ -1,4 +1,4 @@
-package com.sfa.qb.model.sobject;
+package com.sfa.qb.model.sobject.rev;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.Id;
 import com.sforce.soap.partner.sobject.SObject;
 
-public class Role extends SObject implements Serializable {
+public class Profile extends SObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -14,7 +14,7 @@ public class Role extends SObject implements Serializable {
 	private String id;
 	
 	@Column(name="Name")
-	private String roleName;
+	private String profileName;
 	
 	public String getId() {
 		return id;
@@ -24,11 +24,11 @@ public class Role extends SObject implements Serializable {
 		this.id = id;
 	}
 	
-	public String getRoleName() {
-		return roleName;
+	public String getProfileName() {
+		return profileName;
 	}
 	
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
 	}
 }
