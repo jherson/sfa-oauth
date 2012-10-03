@@ -1,5 +1,7 @@
 package com.sfa.qb.controller;
 
+import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
@@ -7,8 +9,6 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.manager.QuoteManager;
 import com.sfa.qb.manager.SessionManager;

@@ -1,10 +1,9 @@
 package com.sfa.qb.dao.impl;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.persistence.EntityManager;
 import com.sfa.qb.model.auth.SessionUser;

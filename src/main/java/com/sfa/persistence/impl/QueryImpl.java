@@ -3,10 +3,13 @@ package com.sfa.persistence.impl;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
+import org.infinispan.Cache;
+import org.infinispan.manager.DefaultCacheManager;
+
 import com.sfa.persistence.Query;
+import com.sfa.persistence.type.ColumnType;
 import com.sfa.persistence.type.EntityType;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.factory.SObjectFactory;
@@ -20,7 +23,6 @@ public class QueryImpl<X> implements Query {
 	private static final Logger log = Logger.getLogger(QueryImpl.class.getName());
 	
 	private PartnerConnection connection;
-	private EntityType entityType;
 	private String query;
 	private String type;
 	private Integer totalSize; 
@@ -30,11 +32,6 @@ public class QueryImpl<X> implements Query {
 	public QueryImpl(PartnerConnection connection, String query) {
 		this.connection = connection;        
 		this.query = query;
-	}
-	
-	public QueryImpl(PartnerConnection connection, EntityType entityType) {
-		this.connection = connection;
-        this.entityType = entityType;
 	}
        
     @Override
@@ -92,12 +89,7 @@ public class QueryImpl<X> implements Query {
 			log.info("QueryResult Size: " + qr.getSize());
 			
 			if (qr.getSize() == 0)
-				return;
-			
-			for (SObject sobject : qr.getRecords()) {
-				
-				
-			}
+				return;												
 			
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
@@ -137,9 +129,21 @@ public class QueryImpl<X> implements Query {
 									
 				for (SObject sobject : qr.getRecords()) {
 					
-					log.info(sobject.toString());
-				    
 				    resultList.add((X) SObjectFactory.parse(sobject));
+				    
+						DefaultCacheManager m = new DefaultCacheManager();
+					    Cache<Object, Object> c = m.getCache();
+					    EntityType entityType = (EntityType) c.get(sobject.getType());
+					    if (entityType == null) {
+					    	log.info("entity is null");
+					    } else {
+					    	log.info("entity is not null");
+					    	log.info(entityType.getTable().getTableName());
+							for (ColumnType column : entityType.getColumnTypes()) {
+								log.info(column.getColumnName() + " " + column.getFieldName());
+							}
+					    }
+						
 				}	
 							    			    
 			    done = qr.getDone();

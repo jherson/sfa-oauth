@@ -1,13 +1,13 @@
 package com.sfa.qb.controller;
 
+import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.model.sobject.OpportunityLineItem;
 import com.sfa.qb.model.sobject.Quote;

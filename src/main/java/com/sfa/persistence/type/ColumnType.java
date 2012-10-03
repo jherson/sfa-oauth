@@ -2,17 +2,32 @@ package com.sfa.persistence.type;
 
 public class ColumnType {
 	
-	private String propertyName;
+	private String fieldName;
+	private Object fieldType;
 	private String columnName;
 	
-	public String getPropertyName() {
-		return propertyName;
+	public ColumnType(String fieldName, Object fieldType, String columnName) {
+		this.fieldName = fieldName;
+		this.fieldType = fieldType;
+		this.columnName = columnName;
 	}
-	
-	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
+		
+	public String getFieldName() {
+		return fieldName;
 	}
-	
+
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+
+	public Object getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(Object fieldType) {
+		this.fieldType = fieldType;
+	}
+
 	public String getColumnName() {
 		return columnName;
 	}

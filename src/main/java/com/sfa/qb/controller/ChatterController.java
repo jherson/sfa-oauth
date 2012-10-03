@@ -1,5 +1,7 @@
 package com.sfa.qb.controller;
 
+import java.util.logging.Logger;
+
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
@@ -8,8 +10,6 @@ import javax.faces.component.html.HtmlInputTextarea;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.exception.SalesforceServiceException;

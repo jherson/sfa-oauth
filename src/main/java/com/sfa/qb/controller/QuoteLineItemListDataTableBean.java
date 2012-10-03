@@ -2,6 +2,7 @@ package com.sfa.qb.controller;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
@@ -12,8 +13,6 @@ import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.dao.PricebookEntryDAO;
 import com.sfa.qb.exception.QueryException;

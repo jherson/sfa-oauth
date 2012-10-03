@@ -2,14 +2,13 @@ package com.sfa.qb.controller;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuotePriceAdjustment;

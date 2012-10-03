@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.dao.QuoteDAO;
@@ -125,7 +125,7 @@ public class QuoteManagerImpl implements QuoteManager {
 				log.info("Quote save successful: " + saveResult.getId());			
 				
 			} else {
-				log.error("Quote save failed: " + saveResult.getErrors()[0].getMessage());
+				log.log(Level.SEVERE, "Quote save failed: " + saveResult.getErrors()[0].getMessage());
 			} 						
 			
 		} catch (ConnectionException e) {

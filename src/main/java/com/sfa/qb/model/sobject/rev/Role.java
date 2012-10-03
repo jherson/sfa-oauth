@@ -3,7 +3,12 @@ package com.sfa.qb.model.sobject.rev;
 import java.io.Serializable;
 
 import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Entity;
 import com.sfa.persistence.annotation.Id;
+import com.sfa.persistence.annotation.Table;
+
+@Entity
+@Table(name="Role")
 
 public class Role implements Serializable {
 
@@ -14,6 +19,8 @@ public class Role implements Serializable {
 	
 	@Column(name="Name")
 	private String name;
+	
+	public Role() {}
 	
 	public String getId() {
 		return id;

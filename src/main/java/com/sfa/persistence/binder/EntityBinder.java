@@ -1,41 +1,37 @@
 package com.sfa.persistence.binder;
 
-import com.sfa.persistence.AnnotationScanner;
-import com.sfa.persistence.impl.AnnotationScannerImpl;
 import com.sfa.persistence.soql.Select;
+import com.sfa.persistence.type.ColumnType;
 import com.sfa.persistence.type.EntityType;
+import com.sfa.persistence.type.OneToOneType;
 
-public class EntityBinder {
+public class EntityBinder {	
 	
-	private String name;
-	
-	
-	private AnnotationScanner scanner;
-
-	public EntityType bind(AnnotationScanner scanner, String id) {
-		this.scanner = scanner;
-		return initialize(id);
-	}
-	
-	private EntityType initialize(String id) {
-		
-		EntityType entityType = new EntityType();
-		entityType.setClassName(scanner.getTable().name());
-		
-
-		
-		//buildSelect(id);
+	public EntityType bind(String className) throws Exception {		
+			
+		EntityType entityType = AnnotationBinder.bindClass(className);	
+		entityType.setQueryString(queryBuilder(entityType));
 		
 		return entityType;
 		
 	}
 	
-	
-	
-//	private Select buildSelect(String id) {
-//		Select select = new Select();
-//		select.setFromClause(scanner.getEntity().name());
-//		select.setSelectClause(scanProperties(clazz));
-//		select.setWhereClause("Where Id = '" + id + "'");
-//	}
+	private String queryBuilder(EntityType entityType) {
+		Select select = new Select();
+		select.setFromClause(entityType.getTable().getTableName());
+		
+		String queryString = "Id";
+		for (ColumnType column : entityType.getColumnTypes()) {
+			queryString += ", " + column.getColumnName();
+		}
+		
+		for (OneToOneType oneToOne : entityType.getOneToOneTypes()) {
+			queryString += ", " + oneToOne.getRelationshipName() + ".";
+		}
+			
+		
+		select.setSelectClause(queryString);
+		
+		return select.toStatementString();
+	}
 }

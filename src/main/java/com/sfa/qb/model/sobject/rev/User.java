@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Entity;
 import com.sfa.persistence.annotation.Id;
+import com.sfa.persistence.annotation.Table;
 import com.sfa.persistence.annotation.OneToOne;
-import com.sforce.soap.partner.sobject.SObject;
 
-public class User extends SObject implements Serializable {
+@Entity
+@Table(name="User")
+
+public class User implements Serializable {
 
 	private static final long serialVersionUID = -5495949651775917498L;
 	
@@ -25,7 +29,7 @@ public class User extends SObject implements Serializable {
 	private String lastName;
 	
 	@Column(name="Name")
-	private String fullName;
+	private String name;
 	
 	@Column(name="CompanyName")
 	private String companyName;
@@ -115,12 +119,12 @@ public class User extends SObject implements Serializable {
 		this.id = id;
 	}
 
-	public String getFullName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFullName(String userName) {
-		this.userName = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getFirstName() {
@@ -140,11 +144,11 @@ public class User extends SObject implements Serializable {
 	}
 
 	public String getUserName() {
-		return fullName;
+		return userName;
 	}
 
-	public void setUserName(String fullName) {
-		this.fullName = fullName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getCompanyName() {

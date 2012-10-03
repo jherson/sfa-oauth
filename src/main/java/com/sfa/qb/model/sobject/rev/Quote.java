@@ -8,6 +8,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+import com.sfa.persistence.annotation.Access;
+import com.sfa.persistence.annotation.AccessType;
 import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.Entity;
 import com.sfa.persistence.annotation.Id;
@@ -19,12 +21,12 @@ import com.sfa.qb.model.sobject.Contact;
 import com.sfa.qb.model.sobject.QuoteLineItem;
 import com.sfa.qb.model.sobject.QuoteLineItemSchedule;
 import com.sfa.qb.model.sobject.QuotePriceAdjustment;
-import com.sforce.soap.partner.sobject.SObject;
 
 @Entity
 @Table(name="Quote__c")
+@Access(AccessType.FIELD)
 
-public class Quote extends SObject implements Serializable, Cloneable {
+public class Quote implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -57,7 +59,7 @@ public class Quote extends SObject implements Serializable, Cloneable {
 	
 	@NotNull
 	@Column(name="Name")
-	private String quoteName;
+	private String name;
 	
 	@Column(name="Number__c")
 	private String number;
@@ -154,15 +156,13 @@ public class Quote extends SObject implements Serializable, Cloneable {
 	
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	
-	@OneToMany(name="QuoteLineItem__r")
+	//@OneToMany(name="QuoteLineItem__r")
 	private List<QuoteLineItem> quoteLineItems;
 	
 	
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
 
-	public Quote() {
-		super();
-	}
+	public Quote() {}
 
 	public Quote(Opportunity opportunity) {
 		super();
@@ -270,12 +270,12 @@ public class Quote extends SObject implements Serializable, Cloneable {
 		this.version = version;
 	}
 
-	public String getQuoteName() {
-		return quoteName;
+	public String getName() {
+		return name;
 	}
 
-	public void setQuoteName(String quoteName) {
-		this.quoteName = quoteName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getNumber() {

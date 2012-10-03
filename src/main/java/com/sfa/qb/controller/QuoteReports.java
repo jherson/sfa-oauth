@@ -2,14 +2,13 @@ package com.sfa.qb.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.jboss.logging.Logger;
 
 @Named("quoteReports")
 @RequestScoped

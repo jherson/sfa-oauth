@@ -1,6 +1,7 @@
 package com.sfa.qb.data;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -12,8 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.logging.Logger;
-
 import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.model.chatter.Feed;
@@ -22,7 +21,6 @@ import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.qualifiers.DeleteItem;
 import com.sfa.qb.qualifiers.PostItem;
 import com.sfa.qb.qualifiers.QueryFeed;
-import com.sfa.qb.qualifiers.SelectedQuote;
 
 @SessionScoped
 

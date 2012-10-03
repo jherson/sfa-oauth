@@ -6,6 +6,12 @@ public class OneToOneType {
 	private EntityType entityType;
 	private String referenceColumnName;
 	
+	public OneToOneType(String relationshipName, String referenceColumnName, EntityType entityType) {
+		this.relationshipName = relationshipName;
+		this.entityType = entityType;
+		this.referenceColumnName = referenceColumnName;
+	}
+	
 	public String getRelationshipName() {
 		return relationshipName;
 	}

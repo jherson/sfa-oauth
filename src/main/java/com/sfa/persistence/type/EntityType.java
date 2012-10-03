@@ -10,11 +10,28 @@ public class EntityType {
 	private String entityName;
 	private String queryString;
 	private IdType idType;
+	private TableType tableType;
 	private List<ColumnType> columnTypes;
 	private List<OneToOneType> oneToOneTypes;
 	private List<OneToManyType> oneToManyTypes;
 	
 	private PropertyMapping propertyMapping;
+	
+	public EntityType(
+			String className, 
+			TableType tableType, 
+			IdType idType, 
+			List<ColumnType> columnTypes, 
+			List<OneToOneType> oneToOneTypes, 
+			List<OneToManyType> oneToManyTypes) {
+		
+		this.className = className;
+		this.tableType = tableType;
+		this.idType = idType;
+		this.columnTypes = columnTypes;
+		this.oneToOneTypes = oneToOneTypes;
+		this.oneToManyTypes = oneToManyTypes;
+	}
 	
 	public String getClassName() {
 		return className;
@@ -30,6 +47,14 @@ public class EntityType {
 	
 	public void setEntityName(String entityName) {
 		this.entityName = entityName;
+	}
+	
+	public TableType getTable() {
+		return tableType;
+	}
+	
+	public void setTable(TableType tableType) {
+		this.tableType = tableType;
 	}
 	
 	public IdType getIdType() {

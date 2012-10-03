@@ -4,13 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sfa.persistence.AnnotationScanner;
+import org.infinispan.Cache;
+import org.infinispan.manager.DefaultCacheManager;
+
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
 import com.sfa.persistence.binder.EntityBinder;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.persistence.type.EntityType;
-import com.sfa.qb.exception.QueryException;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;
@@ -67,11 +68,7 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	public Query createQuery(String query) {			
 		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
-	
-	private Query createQuery(EntityType entityType) {
-		return new QueryImpl<SObject>(getPartnerConnection(), entityType);
-	}
-	
+		
 //	@Override
 //	public DeleteResult[] delete(List<String> idList) throws ConnectionException {
 //		return delete(idList.toArray(new String[idList.size()]));
@@ -99,37 +96,19 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {
-		System.out.println("find: " + clazz.getName());
-		AnnotationScanner scanner = createScanner(clazz.getName());	
-		EntityType entityType = new EntityBinder().bind(scanner, id);
 		
+
+
+			
 		
-//		Annotation annotation = clazz.getAnnotation(Table.class);
-//
-//		Table table = null;
-//		if (annotation instanceof Table){
-//			table = (Table) annotation;
+//		Query q = createQuery(entityType);	
+//		q.showQuery();
+//		try {
+//			q.execute();
+//		} catch (QueryException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
 //		}
-//		
-//		Select select = new Select();
-//		select.setFromClause(table.name());
-//		select.setSelectClause(scanProperties(clazz));
-//		select.setWhereClause("Id = '" + id + "'");
-		
-		//String queryString = "Select Id," + System.getProperty("line.separator");
-		
-		//queryString += scanProperties(clazz);
-		//queryString += System.getProperty("line.separator") + "From " + table.name();
-		//queryString += System.getProperty("line.separator") + "Where Id = '" + id + "'";		
-		
-		Query q = createQuery(entityType);	
-		q.showQuery();
-		try {
-			q.execute();
-		} catch (QueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		return null;
 	}
@@ -260,26 +239,4 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 //		
 //		return fieldString;
 //	}
-	
-    private static AnnotationScanner createScanner(final String className) {
-		
-		AnnotationScanner scanner = null;
-		try {
-			new AnnotationScannerImpl(className);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return scanner;
-	}
 }

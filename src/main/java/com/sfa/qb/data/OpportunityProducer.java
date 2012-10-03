@@ -2,6 +2,7 @@ package com.sfa.qb.data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -11,8 +12,6 @@ import javax.enterprise.inject.Produces;
 import javax.faces.FacesException;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.dao.OpportunityDAO;
 import com.sfa.qb.exception.QueryException;

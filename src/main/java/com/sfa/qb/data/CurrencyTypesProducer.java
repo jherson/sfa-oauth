@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
@@ -15,11 +16,16 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.logging.Logger;
+import org.infinispan.Cache;
+import org.infinispan.manager.DefaultCacheManager;
 
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
+import com.sfa.persistence.binder.EntityBinder;
 import com.sfa.persistence.connection.ConnectionManager;
+import com.sfa.persistence.type.ColumnType;
+import com.sfa.persistence.type.EntityType;
+import com.sfa.persistence.type.OneToOneType;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.CurrencyType;
 import com.sforce.soap.partner.Connector;
@@ -41,7 +47,7 @@ public class CurrencyTypesProducer implements Serializable {
 	private EntityManager em;
 
 	private List<CurrencyType> currencyTypes;
-	
+		
 	@PostConstruct
 	public void init() {
 		loadProperties();
@@ -54,7 +60,7 @@ public class CurrencyTypesProducer implements Serializable {
 		try {
 			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));						
 		} catch (IOException e) {
-			log.error("Unable to load quotebuilder.properties file: " + e.getMessage());
+			//log.error("Unable to load quotebuilder.properties file: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
 			return;
 		}
@@ -72,7 +78,7 @@ public class CurrencyTypesProducer implements Serializable {
 		try {					
 			connection = Connector.newConnection(config);
 		} catch (ConnectionException e) {
-			log.error("Unable to to connect to Salesforce: " + e.getMessage());
+			//log.error("Unable to to connect to Salesforce: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
 			return;
 		}
@@ -87,7 +93,42 @@ public class CurrencyTypesProducer implements Serializable {
 		
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
+		}		
+		
+		String[] classes = new String[] {
+				"com.sfa.qb.model.sobject.rev.Account",
+				"com.sfa.qb.model.sobject.rev.Contact",
+				"com.sfa.qb.model.sobject.rev.Opportunity",
+				"com.sfa.qb.model.sobject.rev.Profile",
+				"com.sfa.qb.model.sobject.rev.Quote",
+				"com.sfa.qb.model.sobject.rev.Role",
+				"com.sfa.qb.model.sobject.rev.User"
+		};
+		
+		for (String className : classes) {
+            
+			try {
+				EntityType type = new EntityBinder().bind(className);
+				
+				DefaultCacheManager m = new DefaultCacheManager();
+			    Cache<Object, Object> c = m.getCache();
+			    c.put(type.getTable(), type);
+			    
+			    log.info(type.getTable().getTableName());
+			    
+				for (ColumnType column : type.getColumnTypes()) {
+					log.info(column.getColumnName() + " " + column.getFieldName() + " " + column.getFieldType());
+				}															
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}						
 		}
+		
+		DefaultCacheManager m = new DefaultCacheManager();
+	    Cache<Object, Object> c = m.getCache();
+		
 	}
 	
 	@Produces
@@ -107,15 +148,15 @@ public class CurrencyTypesProducer implements Serializable {
 	        currencyTypes = q.getResultList();	
 	        
 		} catch (ConnectionException e) {
-			log.error(e);
+			//log.error(e);
 		} catch (QueryException e) {
-			log.error(e);
+			//log.error(e);
 		} finally {
 			
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				//log.error("Unable to close connection", e);
 			}
 		}
 	}

@@ -1,12 +1,12 @@
 package com.sfa.qb.service;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response.Status;
 
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.json.JSONException;
@@ -81,7 +81,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
+			
 		}
 		
 		return jsonObject;
@@ -104,7 +105,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}	
 	}
 	
@@ -124,7 +125,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}	
 	}
 	
@@ -144,7 +145,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}
 		
 		return jsonObject;
@@ -167,7 +168,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}
 		
 		return jsonObject;
@@ -191,7 +192,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}		
 	}
 	
@@ -213,7 +214,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}
 	}
 
@@ -496,7 +497,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 				throw new SalesforceServiceException(response.getEntity());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			//log.error(e);
 		}
 	}
 		
@@ -506,7 +507,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			jsonObject = new JSONObject(new JSONTokener(response.getEntity()));
 			log.info(jsonObject.toString(2));
 		} catch (JSONException e) {
-			log.error(e);
+			//log.error(e);
 		}	   
 	}
 	

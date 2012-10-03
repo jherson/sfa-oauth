@@ -8,7 +8,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sfa.persistence.AnnotationScanner;
 import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.Id;
 import com.sfa.persistence.annotation.OneToMany;
@@ -19,7 +18,7 @@ import com.sfa.persistence.type.ColumnType;
 import com.sfa.persistence.type.OneToManyType;
 import com.sfa.persistence.type.OneToOneType;
 
-public class AnnotationScannerImpl implements AnnotationScanner, Serializable {
+public class AnnotationScanner implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Table table;
@@ -28,10 +27,12 @@ public class AnnotationScannerImpl implements AnnotationScanner, Serializable {
 	private List<ColumnType> columnTypes = new ArrayList<ColumnType>();
 	private List<OneToManyType> oneToManyTypes = new ArrayList<OneToManyType>();
 	private List<OneToOneType> oneToOneTypes = new ArrayList<OneToOneType>();
+	
+	public AnnotationScanner() {}
 		
-	public AnnotationScannerImpl(String className) throws Exception {		
+	public AnnotationScanner(String className) throws Exception {		
 		scan(className);
-	}		
+	}				
 	
 	public Table getTable() {
 		return table;

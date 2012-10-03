@@ -4,15 +4,18 @@ import java.io.Serializable;
 
 import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.Entity;
+import com.sfa.persistence.annotation.Id;
 import com.sfa.persistence.annotation.Table;
-import com.sforce.soap.partner.sobject.SObject;
 
 @Entity
 @Table(name="Account")
 
-public class Account extends SObject implements Serializable {
+public class Account implements Serializable {
 
 	private static final long serialVersionUID = 4563614967304678524L;
+	
+	@Id
+	private String id;
 		
 	@Column(name="BillingCity")	
 	private String billingCity;
@@ -48,7 +51,7 @@ public class Account extends SObject implements Serializable {
 	private String vatNumber;
 	
 	@Column(name="Name")	
-	private String accountName;
+	private String name;
 	
 	@Column(name="OracleAccountNumber__c")	
 	private String oracleAccountNumber;
@@ -56,6 +59,15 @@ public class Account extends SObject implements Serializable {
 	@Column(name="Account_Alias_Name__c")	
 	private String accountAliasName;
 	
+	public Account() {}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}	
 	
 	public String getBillingCity() {
 		return billingCity;
@@ -145,12 +157,12 @@ public class Account extends SObject implements Serializable {
 		this.vatNumber = vatNumber;
 	}
 	
-	public String getAccountName() {
-		return accountName;
+	public String getName() {
+		return name;
 	}
 	
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getOracleAccountNumber() {

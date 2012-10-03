@@ -1,13 +1,13 @@
 package com.sfa.qb.controller;
 
+import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.model.chatter.Feed;
 import com.sfa.qb.model.sobject.Quote;

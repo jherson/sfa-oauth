@@ -5,6 +5,11 @@ public class OneToManyType {
 	private String relationshipName;
 	private EntityType entityType;
 	
+	public OneToManyType(String relationshipName, EntityType entityType) {
+		this.relationshipName = relationshipName;
+		this.entityType = entityType;
+	}
+	
 	public String getRelationshipName() {
 		return relationshipName;
 	}

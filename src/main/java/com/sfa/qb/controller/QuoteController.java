@@ -2,6 +2,7 @@ package com.sfa.qb.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
@@ -9,8 +10,6 @@ import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.FacesException;
 import javax.inject.Inject;
-
-import org.jboss.logging.Logger;
 
 import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.manager.QuoteManager;

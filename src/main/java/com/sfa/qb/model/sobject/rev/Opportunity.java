@@ -5,15 +5,20 @@ import java.util.Date;
 import java.util.List;
 
 import com.sfa.persistence.annotation.Column;
+import com.sfa.persistence.annotation.Entity;
+import com.sfa.persistence.annotation.Id;
 import com.sfa.persistence.annotation.OneToOne;
+import com.sfa.persistence.annotation.Table;
 import com.sfa.qb.model.sobject.Contact;
 import com.sfa.qb.model.sobject.CreditCheck;
 import com.sfa.qb.model.sobject.OpportunityLineItem;
 import com.sfa.qb.model.sobject.OpportunityPartner;
 import com.sfa.qb.model.sobject.Pricebook;
-import com.sforce.soap.partner.sobject.SObject;
 
-public class Opportunity extends SObject implements Serializable {
+@Entity
+@Table(name="Opportunity")
+
+public class Opportunity implements Serializable {
 
 	private static final long serialVersionUID = -1577960793119757037L;
 /**
@@ -21,6 +26,9 @@ public class Opportunity extends SObject implements Serializable {
 	+ "OpportunityId__r.LastModifiedDate, " 
 	+ "OpportunityId__r.FulfillmentChannel__c, "
 **/
+	
+	@Id
+	private String id;
 	
 	@Column(name="Name")
 	private String name;
@@ -123,8 +131,14 @@ public class Opportunity extends SObject implements Serializable {
 	private List<User> salesTeam;
 	private List<User> owners;
 
-	public Opportunity() {
-		super();
+	public Opportunity() {}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getOpportunityName() {

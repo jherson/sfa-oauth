@@ -5,9 +5,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.logging.Logger;
-
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 @Named
 @SessionScoped

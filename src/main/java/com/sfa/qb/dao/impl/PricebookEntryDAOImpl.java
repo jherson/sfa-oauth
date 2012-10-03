@@ -2,6 +2,7 @@ package com.sfa.qb.dao.impl;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.enterprise.context.SessionScoped;
 
@@ -71,7 +72,7 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 		    return pricebookEntry;
 		    
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 		} finally {
 			

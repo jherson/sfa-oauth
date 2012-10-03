@@ -1,6 +1,7 @@
 package com.sfa.qb.rest;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -12,8 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-
-import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

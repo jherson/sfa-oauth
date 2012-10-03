@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.enterprise.context.SessionScoped;
 
@@ -40,7 +41,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
-            log.error("ConnectionException", e);
+            log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -48,7 +49,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}		
 	}
@@ -63,7 +64,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -71,7 +72,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 	}
@@ -88,7 +89,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -96,7 +97,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 	}
@@ -114,7 +115,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -122,7 +123,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 	}
@@ -140,7 +141,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		    return q.getSingleResult();
 		   
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -148,7 +149,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 	}
@@ -164,7 +165,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			return q.getSingleResult();	
 			
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -172,7 +173,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 	}
@@ -193,7 +194,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		    return quoteLineItemMap;
 		    
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -201,7 +202,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}   		    		
 	}
@@ -217,7 +218,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		    return Double.valueOf(quote.getAmount());
 		    
 		} catch (ConnectionException e) {
-			log.error("ConnectionException", e);
+			log.log(Level.SEVERE, "ConnectionException", e);
 			throw new QueryException("ConnectionException", e);
 			
 		} finally {
@@ -225,7 +226,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		} 
 	}
@@ -244,7 +245,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}    
 		
@@ -265,7 +266,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 		
@@ -286,7 +287,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 		
@@ -307,7 +308,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}    
 		    
@@ -341,7 +342,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 		
@@ -362,7 +363,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 		
@@ -383,7 +384,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 		
@@ -404,7 +405,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 			try {
 				ConnectionManager.closeConnection();
 			} catch (ConnectionException e) {
-				log.error("Unable to close connection", e);
+				log.log(Level.SEVERE, "ConnectionException", e);
 			}
 		}
 		

@@ -2,22 +2,13 @@ package com.sfa.persistence.type;
 
 public class IdType {
 	
-	private String propertyName;
-	private String columnName;
+	private String fieldName;
 	
-	public String getPropertyName() {
-		return propertyName;
+	public IdType(String fieldName) {
+		this.fieldName = fieldName;
 	}
 	
-	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
-	}
-	
-	public String getColumnName() {
-		return columnName;
-	}
-	
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
+	public String getFieldName() {
+		return fieldName;
 	}
 }
