@@ -227,6 +227,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-metadata-api</artifactId>
+			<version>${force.api.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.ocpsoft</groupId>
 			<artifactId>prettyfaces-jsf2</artifactId>
 			<version>3.3.3</version>

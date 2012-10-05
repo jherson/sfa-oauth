@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +30,8 @@ import com.sfa.persistence.type.OneToOneType;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.CurrencyType;
 import com.sforce.soap.partner.Connector;
+import com.sforce.soap.partner.DescribeSObjectResult;
+import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
@@ -77,8 +80,15 @@ public class CurrencyTypesProducer implements Serializable {
 		
 		try {					
 			connection = Connector.newConnection(config);
+			DescribeSObjectResult result = connection.describeSObject("Quote__c");
+			Field[] fields = result.getFields();
+			
+			for (Field field : fields) {
+				log.info(field.getName() + " " + field.getRelationshipName() != null ? field.getRelationshipName() : "");				
+			}
+			connection.describeSObject("Account");
 		} catch (ConnectionException e) {
-			//log.error("Unable to to connect to Salesforce: " + e.getMessage());
+			log.severe("Unable to to connect to Salesforce: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
 			return;
 		}
@@ -114,12 +124,7 @@ public class CurrencyTypesProducer implements Serializable {
 			    Cache<Object, Object> c = m.getCache();
 			    c.put(type.getTable(), type);
 			    
-			    log.info(type.getTable().getTableName());
-			    
-				for (ColumnType column : type.getColumnTypes()) {
-					log.info(column.getColumnName() + " " + column.getFieldName() + " " + column.getFieldType());
-				}															
-				
+			    				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -128,6 +133,8 @@ public class CurrencyTypesProducer implements Serializable {
 		
 		DefaultCacheManager m = new DefaultCacheManager();
 	    Cache<Object, Object> c = m.getCache();
+	    if (c.get("Quote__c") != null) 
+	    	log.info("cache found");
 		
 	}
 	

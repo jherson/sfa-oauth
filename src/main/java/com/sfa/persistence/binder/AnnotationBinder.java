@@ -93,11 +93,11 @@ public final class AnnotationBinder {
 			    	            		            
 			} else if (annotation instanceof OneToOne) {
 				OneToOne property = (OneToOne) annotation;				
-				return new OneToOneType(property.name(), property.referenceColumnName(), null);
+				return new OneToOneType(property.name(), property.referenceColumnName(), bindClass(field.getType().getName()));
 				
             } else if (annotation instanceof OneToMany) { 
             	OneToMany property = (OneToMany) annotation;   
-            	return new OneToManyType(property.name(), null);
+            	return new OneToManyType(property.name(), bindClass(field.getType().getName()));
             } 
 		}
 		
