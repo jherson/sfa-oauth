@@ -79,6 +79,12 @@
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+	<groupId>org.jboss.msc</groupId>
+	<artifactId>jboss-msc</artifactId>
+	<version>1.0.2.GA</version>
+</dependency>
 
 		<dependency>
 			<groupId>org.jboss.spec.javax.annotation</groupId>
