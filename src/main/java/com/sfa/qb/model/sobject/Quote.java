@@ -8,8 +8,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+import com.sfa.persistence.annotation.Table;
 import com.sfa.qb.model.chatter.Followers;
 
+@Table(name="Quote__c")
 public class Quote extends QuoteBuilderObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
@@ -19,7 +21,7 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 	private Double version;
 	
 	@NotNull
-	private String quoteName;
+	private String name;
 	
 	private String number;
 	
@@ -151,12 +153,12 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 		this.version = version;
 	}
 
-	public String getQuoteName() {
-		return quoteName;
+	public String getName() {
+		return name;
 	}
 
-	public void setQuoteName(String quoteName) {
-		this.quoteName = quoteName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getNumber() {

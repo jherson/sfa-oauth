@@ -5,12 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.infinispan.Cache;
-import org.infinispan.manager.DefaultCacheManager;
-
 import com.sfa.persistence.Query;
-import com.sfa.persistence.type.ColumnType;
-import com.sfa.persistence.type.EntityType;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.factory.SObjectFactory;
 import com.sforce.soap.partner.PartnerConnection;
@@ -77,25 +72,6 @@ public class QueryImpl<X> implements Query {
 		showQuery = Boolean.TRUE;
 		return this;
 	}
-	
-	@Override
-	public void execute() throws QueryException {
-		if (showQuery) {
-			log.info(query);
-		}
-		
-		try {
-			QueryResult qr = connection.query(query);
-			log.info("QueryResult Size: " + qr.getSize());
-			
-			if (qr.getSize() == 0)
-				return;												
-			
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-	}
 		
 	@Override
 	@SuppressWarnings("unchecked")
@@ -130,19 +106,6 @@ public class QueryImpl<X> implements Query {
 				for (SObject sobject : qr.getRecords()) {
 					
 				    resultList.add((X) SObjectFactory.parse(sobject));
-				    
-						DefaultCacheManager m = new DefaultCacheManager();
-					    Cache<Object, Object> c = m.getCache();
-					    EntityType entityType = (EntityType) c.get(sobject.getType());
-					    if (entityType == null) {
-					    	log.info("entity is null");
-					    } else {
-					    	log.info("entity is not null");
-					    	log.info(entityType.getTable().getTableName());
-							for (ColumnType column : entityType.getColumnTypes()) {
-								log.info(column.getColumnName() + " " + column.getFieldName());
-							}
-					    }
 						
 				}	
 							    			    

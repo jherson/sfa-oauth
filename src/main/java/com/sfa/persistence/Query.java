@@ -16,5 +16,4 @@ public interface Query {
 	public String getQueryString();
     public <X> List<X> getResultList() throws QueryException;
     public <X> X getSingleResult() throws QueryException;
-    public void execute() throws QueryException;
 }

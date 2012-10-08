@@ -75,7 +75,7 @@ public class QuoteFactory {
 		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
 		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));				
 		quote.setLink(wrapper.getString("Link__c"));
-		quote.setQuoteName(wrapper.getString("Name"));
+		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
 		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));
 		quote.setOwnerName(wrapper.getString("QuoteOwnerId__r", "Name"));
@@ -194,7 +194,7 @@ public class QuoteFactory {
 		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
 		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
 		quote.setLink(wrapper.getString("Link__c"));
-		quote.setQuoteName(wrapper.getString("Name"));
+		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
 		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));
 		quote.setOwnerName(wrapper.getString("QuoteOwnerId__r", "Name"));
@@ -302,7 +302,7 @@ public class QuoteFactory {
 			jsonObject.put("IsActive__c", quote.getIsActive());
 			jsonObject.put("IsCalculated__c", quote.getIsCalculated());
 			jsonObject.put("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
-			jsonObject.put("Name", quote.getQuoteName());
+			jsonObject.put("Name", quote.getName());
 			jsonObject.put("OpportunityId__c", quote.getOpportunity().getId());
 			jsonObject.put("QuoteOwnerId__c", quote.getOwnerId());
 			jsonObject.put("PayNow__c", quote.getPayNow());

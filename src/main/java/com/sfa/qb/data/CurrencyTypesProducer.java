@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -17,16 +16,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.infinispan.Cache;
-import org.infinispan.manager.DefaultCacheManager;
-
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
-import com.sfa.persistence.binder.EntityBinder;
 import com.sfa.persistence.connection.ConnectionManager;
-import com.sfa.persistence.type.ColumnType;
-import com.sfa.persistence.type.EntityType;
-import com.sfa.persistence.type.OneToOneType;
 import com.sfa.qb.exception.QueryException;
 import com.sfa.qb.model.sobject.CurrencyType;
 import com.sforce.soap.partner.Connector;
@@ -104,38 +96,6 @@ public class CurrencyTypesProducer implements Serializable {
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
 		}		
-		
-		String[] classes = new String[] {
-				"com.sfa.qb.model.sobject.rev.Account",
-				"com.sfa.qb.model.sobject.rev.Contact",
-				"com.sfa.qb.model.sobject.rev.Opportunity",
-				"com.sfa.qb.model.sobject.rev.Profile",
-				"com.sfa.qb.model.sobject.rev.Quote",
-				"com.sfa.qb.model.sobject.rev.Role",
-				"com.sfa.qb.model.sobject.rev.User"
-		};
-		
-		for (String className : classes) {
-            
-			try {
-				EntityType type = new EntityBinder().bind(className);
-				
-				DefaultCacheManager m = new DefaultCacheManager();
-			    Cache<Object, Object> c = m.getCache();
-			    c.put(type.getTable(), type);
-			    
-			    				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}						
-		}
-		
-		DefaultCacheManager m = new DefaultCacheManager();
-	    Cache<Object, Object> c = m.getCache();
-	    if (c.get("Quote__c") != null) 
-	    	log.info("cache found");
-		
 	}
 	
 	@Produces

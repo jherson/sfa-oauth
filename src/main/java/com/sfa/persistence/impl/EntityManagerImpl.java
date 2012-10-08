@@ -4,14 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.infinispan.Cache;
-import org.infinispan.manager.DefaultCacheManager;
-
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
-import com.sfa.persistence.binder.EntityBinder;
 import com.sfa.persistence.connection.ConnectionManager;
-import com.sfa.persistence.type.EntityType;
+import com.sfa.persistence.sql.QueryResolver;
+import com.sfa.qb.exception.QueryException;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;
@@ -65,19 +62,19 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	@Override
+	public SaveResult[] persist(Object object) throws ConnectionException {
+		return null;
+	}
+	
+	@Override
 	public Query createQuery(String query) {			
 		return new QueryImpl<Object>(getPartnerConnection(), query);				
 	}
-		
-//	@Override
-//	public DeleteResult[] delete(List<String> idList) throws ConnectionException {
-//		return delete(idList.toArray(new String[idList.size()]));
-//	}	
-//	
-//	@Override
-//	public DeleteResult delete(String id) throws ConnectionException {
-//		return delete(new String[] {id})[0];
-//	}
+	
+	@Override
+	public Query createNamedQuery(String queryName) {
+		return new QueryImpl<SObject>(getPartnerConnection(), "");
+	}
 
 	@Override
 	public DeleteResult delete(SObject sobject) throws ConnectionException {
@@ -91,26 +88,24 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 
 	@Override
 	public SObject refresh(SObject sobject) throws ConnectionException {
-		// TODO Auto-generated method stub
+		//String queryString = QueryResolver.getBoundQuery(clazz);
+		//queryString += "Where Id = ':id'";
+		
+		//Query q = createQuery(queryString);	
+		//q.setParameter("id", id);	
+		//q.showQuery();
+		//return q.getSingleResult();
 		return null;
 	}
 	
-	public <T> SObject find(Class<T> clazz, String id) throws ConnectionException {
+	@Override
+	public <T> T find(Class<T> clazz, String id) throws QueryException {
+		String queryString = QueryResolver.getBoundQuery(clazz);
+		queryString += "Where Id = ':id'";
 		
-
-
-			
-		
-//		Query q = createQuery(entityType);	
-//		q.showQuery();
-//		try {
-//			q.execute();
-//		} catch (QueryException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		return null;
+		Query q = createQuery(queryString);	
+		q.setParameter("id", id);	
+		return q.getSingleResult();
 	}
 	
 	private DeleteResult[] delete(String[] ids) throws ConnectionException {
@@ -144,99 +139,4 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		}
 		return idList.toArray(new String[idList.size()]);
 	}
-	
-//	private <T> String scanProperties(Class<T> clazz) {
-//		System.out.println("scanning properties for: " + clazz.getName());
-//		String fieldString = "";
-//		
-//		Field[] fields = clazz.getDeclaredFields();
-//		for (Field field : fields) {
-//			Annotation[] annotations = field.getAnnotations();
-//			
-//			for (Annotation annotation : annotations) {
-//				if (annotation instanceof Id) {
-//					
-//				} else if (annotation instanceof Column) {
-//				    Column column = (Column) annotation;
-//				    
-//		            if (! "".equals(fieldString)) {
-//		        	    fieldString += "," + System.getProperty("line.separator");
-//		            }
-//		            
-//		            if (field.getAnnotation(OneToOne.class) != null) {
-//		            	fieldString += scanOneToOneProperties(column.name(), field.getType());
-//		            } else if (field.getAnnotation(OneToMany.class) != null) { 
-//		            	fieldString += "(Select Id," + System.getProperty("line.separator");
-//		            	fieldString += scanOneToManyProperties(field);
-//		            	fieldString += System.getProperty("line.separator") + "From " + column.name() + ")";
-//		            } else {
-//		            	fieldString += column.name();
-//		            	objectMapping.put(column.name(), field.getName());
-//		            }
-//				} 
-//			}
-//		}
-//		
-//		return fieldString;
-//	}
-//	
-//	private <T> String scanOneToOneProperties(String relationshipName, Class<T> clazz) {
-//		String fieldString = "";
-//		
-//		Field[] fields = clazz.getDeclaredFields();
-//		for (Field field : fields) {
-//			Annotation[] annotations = field.getAnnotations();
-//			
-//			for (Annotation annotation : annotations) {
-//				if (annotation instanceof Column) {
-//				    Column column = (Column) annotation;
-//		            if (! "".equals(fieldString)) {
-//		            	 fieldString += "," + System.getProperty("line.separator");
-//		            }
-//		            
-//		            if (field.getAnnotation(OneToOne.class) != null) {
-//		            	fieldString += scanOneToOneProperties(relationshipName + "." + column.name(), field.getType());
-//		            } else {
-//		                fieldString += relationshipName + "." + column.name();
-//		            }
-//				} 
-//			}
-//		}
-//		
-//		return fieldString;
-//	}
-//	
-//	private <T> String scanOneToManyProperties(Field relationshipField) {
-//		ParameterizedType parameterizedType = (ParameterizedType) relationshipField.getGenericType();   
-//		Type type = parameterizedType.getActualTypeArguments()[0];
-//
-//		String fieldString = "";
-//		
-//		@SuppressWarnings("unchecked")
-//		Class<T> clazz = (Class<T>) type;
-//		
-//		System.out.println("scanning properties for: " + clazz.getName());
-//		
-//		Field[] fields = clazz.getDeclaredFields();
-//		for (Field field : fields) {
-//			Annotation[] annotations = field.getAnnotations();
-//			
-//			for (Annotation annotation : annotations) {
-//				if (annotation instanceof Column) {
-//				    Column column = (Column) annotation;
-//		            if (! "".equals(fieldString)) {
-//		            	 fieldString += ", " + System.getProperty("line.separator");
-//		            }
-//		            
-//		            if (field.getAnnotation(OneToOne.class) != null) {
-//		            	fieldString += scanOneToOneProperties(column.name(), field.getType());
-//		            } else {
-//		                fieldString += column.name();
-//		            }
-//				} 
-//			}
-//		}
-//		
-//		return fieldString;
-//	}
 }

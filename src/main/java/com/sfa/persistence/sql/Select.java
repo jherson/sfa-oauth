@@ -1,4 +1,4 @@
-package com.sfa.persistence.soql;
+package com.sfa.persistence.sql;
 
 public class Select {
 	

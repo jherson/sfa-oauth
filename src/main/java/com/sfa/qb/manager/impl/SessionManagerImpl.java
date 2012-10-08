@@ -90,7 +90,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
     @Override
     public void setTheme(String theme) {
-    	this.theme = theme;    	
+    	if ("none".equals(theme)) {
+    		this.theme = null;
+    	} else {
+    	    this.theme = theme;
+    	}
     }
 
 	@Override
