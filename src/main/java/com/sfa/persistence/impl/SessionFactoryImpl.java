@@ -6,18 +6,13 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.msc.service.Service;
-import org.jboss.msc.service.StartContext;
-import org.jboss.msc.service.StartException;
-import org.jboss.msc.service.StopContext;
-
 import com.sfa.persistence.SessionFactory;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
-public class SessionFactoryImpl implements SessionFactory, Service<Object> {
+public class SessionFactoryImpl implements SessionFactory {
 	
 	private static final Logger log = Logger.getLogger(SessionFactoryImpl.class.getName());
 
@@ -60,24 +55,5 @@ public class SessionFactoryImpl implements SessionFactory, Service<Object> {
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
 		}	
-	}
-
-	@Override
-	public Object getValue() throws IllegalStateException,
-			IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void start(StartContext arg0) throws StartException {
-		log.info("starting service");
-		
-	}
-
-	@Override
-	public void stop(StopContext arg0) {
-		log.info("stoping service");
-		
 	}
 }
