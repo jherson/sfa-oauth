@@ -18,8 +18,12 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import nl.bitwalker.useragentutils.UserAgent;
+
 import org.jboss.resteasy.client.ClientRequest;
 
 import com.google.gson.Gson;
@@ -29,6 +33,8 @@ import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.auth.Identity;
 import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
+import com.sfa.qb.model.entities.LoginHistory;
+import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.qualifiers.LoggedIn;
 import com.sfa.qb.service.LoginHistoryWriter;
 import com.sfa.qb.service.ServicesManager;
@@ -83,8 +89,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void setLoggedIn(Boolean loggedIn) {
 		this.loggedIn = loggedIn;
 	}
-	
-	
+		
 	@ManagedProperty(value = "classic")
 	private String theme;
 	
@@ -95,10 +100,16 @@ public class SessionManagerImpl implements Serializable, SessionManager {
     	} else {
     	    this.theme = theme;
     	}
+    	
+    	UserPreferences preferences = new UserPreferences();
+    	preferences.setUserId(sessionUser.getId());
+    	preferences.setTheme(this.theme);
+    	
+    	loginHistoryWriter.saveUserPreferences(preferences);
     }
 
 	@Override
-	public String getTheme() {		
+	public String getTheme() {				
 		return theme;
 	}
 	
@@ -208,39 +219,77 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();		
 		
 		String code = request.getParameter("code");
-
-		try {		
 		
-		    String authResponse = servicesManager.getAuthResponse(code);
-		    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
-
-		    if (oauth.getError() != null) {
-		    	throw new Exception(oauth.getErrorDescription());		 
-		    }	
-		    
-		    logger.info("AccessToken: " + oauth.getAccessToken());
-		
-		    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
-		    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
-		    		
-		    sessionUser = new SessionUser(oauth, identity);
-		    
-		    loginHistoryWriter.write(sessionUser.getName(), request);
+		if (code != null) {
 			
-			if (sessionUser.getLocale() != null) {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
-			} else {
-				FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
-			}								
-																										
-			setLoggedIn(Boolean.TRUE);			
-			mainController.setMainArea(TemplatesEnum.HOME);									
-						
-			context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.jsf");			
+			try {					
+			    String authResponse = servicesManager.getAuthResponse(code);
+			    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
+	
+			    if (oauth.getError() != null) {
+			    	throw new Exception(oauth.getErrorDescription());		 
+			    }	
+			    
+			    logger.info("AccessToken: " + oauth.getAccessToken());
+			
+			    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
+			    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
+			    		
+			    sessionUser = new SessionUser(oauth, identity);
+			    			    				
+				LoginHistory history = new LoginHistory();
+				history.setRemoteAddress(request.getRemoteAddr());
+				history.setName(sessionUser.getName());
+				history.setLoginTime(new Timestamp(System.currentTimeMillis()));
+				
+				String userAgentString = request.getHeader("user-agent");				
+				
+				if (userAgentString != null) {
+					
+				    UserAgent userAgent = UserAgent.parseUserAgentString(userAgentString);				    
+				    history.setUserAgent(userAgentString);
+				    history.setBrowser(userAgent.getBrowser().getName());
+				    history.setBrowserVersion(userAgent.getBrowserVersion().getVersion());
+				    history.setOperatingSystem(userAgent.getOperatingSystem().getName());
+				}
+			    
+			    loginHistoryWriter.write(history);
+				
+				if (sessionUser.getLocale() != null) {
+					FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
+				} else {
+					FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
+				}			
+				
+//				public UserPreferences getUserPreferences(String userId) {
+//					return entityManager.find(UserPreferences.class, userId);
+//				}
+//				
+//				UserPreferences preferences = loginHistoryWriter.getUserPreferences(sessionUser.getId());
+//				if (preferences != null) 
+//				    this.theme = preferences.getTheme();
+																											
+				setLoggedIn(Boolean.TRUE);			
+				mainController.setMainArea(TemplatesEnum.HOME);																							
+			
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));	
+			}	
+			
+		} else {
+			mainController.setMainArea(TemplatesEnum.SIGN_IN);
+		}
 		
-		} catch (Exception e) {
+	    /**
+		 * redirect back to index.jsf to render the proper template
+		 */
+		
+		try {
+			context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.jsf");
+		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));	
-		}				
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
+		}
 	}
 }

@@ -17,7 +17,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	private static final Logger log = Logger.getLogger(SessionFactoryImpl.class.getName());
 
 	@Override
-	public void getSession() {
+	public void openSession() {
 		Properties properties = new Properties();
 		try {
 			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));						
@@ -38,7 +38,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		PartnerConnection connection = null;
 		try {					
 			connection = Connector.newConnection(config);
-			log.log(Level.INFO, "Initialize - Connection to Salesforce established: " + connection.getConfig().getSessionId());
+			log.log(Level.INFO, "Connection to Salesforce successful");
 		} catch (ConnectionException e) {			
 			log.log(Level.SEVERE, "Unable to to connect to Salesforce: " + e.getMessage());
 			return;

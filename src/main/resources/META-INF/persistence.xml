@@ -5,6 +5,7 @@
 	<persistence-unit name="sfa-qb">
 		<jta-data-source>java:jboss/datasources/QuoteBuilderDS</jta-data-source>
 		<class>com.sfa.qb.model.entities.LoginHistory</class>
+		<class>com.sfa.qb.model.entities.UserPreferences</class>
 		<properties>
 			<property name="hibernate.cache.use_second_level_cache"
 				value="true" />

@@ -25,26 +25,24 @@ public class SessionFactoryService implements Service<SessionFactory> {
 	}
 
 	@Override
-	public void start(final StartContext context) throws StartException {
-		log.log(Level.INFO, "start context");
+	public void start(final StartContext context) throws StartException {		
+		log.log(Level.INFO, "Starting service...");
 		
         context.asynchronous();        
         context.execute(new Runnable() {
             public void run() {
                 try {
-                	SessionFactoryService.this.getValue().getSession();
+                	SessionFactoryService.this.getValue().openSession();
                     context.complete();
                 } catch (Exception e) {
-                    context.failed( new StartException( e ) );
+                    context.failed(new StartException(e));
                 }
             }
-        });
-		
+        });		
 	}
 
 	@Override
-	public void stop(StopContext context) {
-		log.log(Level.INFO, "stop context");
-		
+	public void stop(StopContext context) {		
+		log.log(Level.INFO, "Stopping service...");
 	}
 }
