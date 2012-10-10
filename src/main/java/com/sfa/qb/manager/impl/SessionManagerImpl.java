@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -53,6 +54,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private FacesContext context;
 	
 	@Inject
+	private EntityManager entityManager;
+	
+	@Inject
 	private LoginHistoryWriter loginHistoryWriter;
 		
 	@Inject
@@ -70,13 +74,25 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public SessionUser getSessionUser() {
 		if (sessionUser == null)
 		    this.authenticate();
-		
+				
 		return sessionUser;
 	}
 	
 	public void setSessionUser(SessionUser sessionUser) {
 		this.sessionUser = sessionUser;
 	}
+	
+	
+	private UserPreferences userPreferences;
+	
+	public UserPreferences getUserPreferences() {								
+		return userPreferences;
+	}
+	
+	public void setUserPreferences(UserPreferences userPreferences) {
+		this.userPreferences = userPreferences;
+	}
+	
 	
 	@ManagedProperty(value = "false")
 	private Boolean loggedIn;
@@ -261,13 +277,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 					FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
 				}			
 				
-//				public UserPreferences getUserPreferences(String userId) {
-//					return entityManager.find(UserPreferences.class, userId);
-//				}
-//				
-//				UserPreferences preferences = loginHistoryWriter.getUserPreferences(sessionUser.getId());
-//				if (preferences != null) 
-//				    this.theme = preferences.getTheme();
+				if (userPreferences == null) {
+				    userPreferences = entityManager.find(UserPreferences.class, sessionUser.getId());
+				    theme = userPreferences.getTheme();
+				}
 																											
 				setLoggedIn(Boolean.TRUE);			
 				mainController.setMainArea(TemplatesEnum.HOME);																							

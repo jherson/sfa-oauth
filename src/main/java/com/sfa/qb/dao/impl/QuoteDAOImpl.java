@@ -29,15 +29,14 @@ import com.sforce.ws.ConnectionException;
 public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 
 	private static final long serialVersionUID = 761677199610058917L;
-			
+				
 	@Override
 	public List<Quote> queryQuotes() throws QueryException {
-		String queryString = quoteQuery + "Order By Number__c";
 		
 		try {
 			
 			ConnectionManager.openConnection(sessionUser);			
-			Query q = em.createQuery(queryString);				
+			Query q = em.createQuery(quoteQuery).orderBy("Number__c");
 			return q.getResultList();
 			
 		} catch (ConnectionException e) {

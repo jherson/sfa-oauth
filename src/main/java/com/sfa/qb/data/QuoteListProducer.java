@@ -46,32 +46,6 @@ public class QuoteListProducer implements Serializable {
 		try {
 			quoteList = quoteDAO.queryQuotes();			
 			
-//			try {
-				
-//				String host = System.getenv("OPENSHIFT_NOSQL_DB_HOST");
-//		        String port = System.getenv("OPENSHIFT_NOSQL_DB_PORT");
-//		        String db = System.getenv("OPENSHIFT_GEAR_NAME");
-//		        String user = System.getenv("OPENSHIFT_NOSQL_DB_USERNAME");
-//		        String password = System.getenv("OPENSHIFT_NOSQL_DB_PASSWORD");
-//		        
-//		        Mongo mongo = new Mongo(host, Integer.parseInt(port));
-//		        DB mongoDB = mongo.getDB(db);
-//		        mongoDB.authenticate(user, password.toCharArray());
-//		        mongoDB.requestStart();
-//		        DBCollection dbCollection = mongoDB.getCollection("quoteFeed");
-//		        BasicDBObject doc = new BasicDBObject();
-//		        doc.put("1", chatterDAO.getQuoteFeed());
-//		        dbCollection.insert(doc);
-		        
-				
-//			} catch (UnknownHostException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (MongoException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			
 		} catch (QueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

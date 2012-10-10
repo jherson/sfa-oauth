@@ -97,12 +97,12 @@
 			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
-	<groupId>org.jboss.jbossas</groupId>
-	<artifactId>jboss-as-jmx</artifactId>
-	<version>5.1.0.GA</version>
-</dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-jmx</artifactId>
+			<version>5.1.0.GA</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
