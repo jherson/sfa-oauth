@@ -6,6 +6,7 @@ import java.sql.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
@@ -13,7 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@Table(name="Payment_Schedule")
+@Table(name="PaymentSchedule")
 
 public class PaymentSchedule implements Serializable {
 	
@@ -32,16 +33,20 @@ public class PaymentSchedule implements Serializable {
 		this.id = id;
 	}
 	
-	@Column(name="Payment_Date")
+	@Column(name="SalesforceId")
+	private String salesforceId;
+	
+	@Column(name="PaymentDate")
 	private Date paymentDate;
 	
-	@Column(name="Payment_Amount")
+	@Column(name="PaymentAmount")
 	private Double paymentAmount;
 	
 	@Column(name="Comments")
 	private String comments;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="QuoteId")
 	private Quote quote;
 	
 	public PaymentSchedule() {
@@ -78,6 +83,14 @@ public class PaymentSchedule implements Serializable {
 	
 	public void setQuote(Quote quote) {
 		this.quote = quote;
+	}
+
+	public String getSalesforceId() {
+		return salesforceId;
+	}
+
+	public void setSalesforceId(String salesforceId) {
+		this.salesforceId = salesforceId;
 	}
 	
 }

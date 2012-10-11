@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Entity
-@Table(name="Login_History")
+@Table(name="LoginHistory")
 
 public class LoginHistory implements Serializable {
 
@@ -38,7 +38,7 @@ public class LoginHistory implements Serializable {
 	}
 
 	
-	@Column(name="Remote_Address")
+	@Column(name="RemoteAddress")
 	public String getRemoteAddress() {
 		return this.remoteAddress;
 	}
@@ -58,7 +58,7 @@ public class LoginHistory implements Serializable {
 	}
 
 	
-	@Column(name="Login_Time")
+	@Column(name="LoginTime")
 	public Timestamp getLoginTime() {
 		return loginTime;
 	}
@@ -68,7 +68,7 @@ public class LoginHistory implements Serializable {
 	}
 	
 	
-	@Column(name="User_Agent")
+	@Column(name="UserAgent")
 	public String getUserAgent() {
 		return userAgent;
 	}
@@ -88,7 +88,7 @@ public class LoginHistory implements Serializable {
 	}
 
 	
-	@Column(name="Browser_Version")
+	@Column(name="BrowserVersion")
 	public String getBrowserVersion() {
 		return browserVersion;
 	}
@@ -99,7 +99,7 @@ public class LoginHistory implements Serializable {
 	}
 
 
-	@Column(name="Operating_System")
+	@Column(name="OperatingSystem")
 	public String getOperatingSystem() {
 		return operatingSystem;
 	}

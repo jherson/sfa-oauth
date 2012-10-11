@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="User_Preferences")
+@Table(name="UserPreferences")
 
 public class UserPreferences implements Serializable {
 
@@ -22,7 +22,7 @@ public class UserPreferences implements Serializable {
 	}
 	
 	@Id	
-	@Column(name="User_Id")
+	@Column(name="UserId")
 	public String getUserId() {
 		return this.userId;
 	}

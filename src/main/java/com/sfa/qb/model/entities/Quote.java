@@ -346,7 +346,7 @@ public class Quote implements Serializable, Cloneable {
 		this.lastPricedDate = lastPricedDate;
 	}
 	
-	@OneToMany
+	@OneToMany(mappedBy="quote")
 	private List<PaymentSchedule> paymentSchedules;
 	
 	public List<PaymentSchedule> getPaymentSchedules() {
@@ -355,6 +355,18 @@ public class Quote implements Serializable, Cloneable {
 	
 	public void setPaymentSchedules(List<PaymentSchedule> paymentSchedules) {
 		this.paymentSchedules = paymentSchedules;
+	}
+	
+	
+	@OneToMany(mappedBy="quote")
+    private List<QuoteLineItem> quoteLineItems;
+	
+	public List<QuoteLineItem> getQuoteLineItems() {
+		return quoteLineItems;
+	}
+	
+	public void setQuoteLineItems(List<QuoteLineItem> quoteLineItems) {
+		this.quoteLineItems = quoteLineItems;
 	}
 	
 	
