@@ -34,7 +34,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public List<Quote> queryQuotes() throws QueryException {
 		
 		try {
-			
+						
 			ConnectionManager.openConnection(sessionUser);			
 			Query q = em.createQuery(quoteQuery).orderBy("Number__c");
 			return q.getResultList();
@@ -131,7 +131,10 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public Quote queryQuoteById(String quoteId) throws QueryException {
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);			    		    		
+									
+			//servicesManager.createQuote(sessionUser.getOAuth().getAccessToken(),);
+			
+			ConnectionManager.openConnection(sessionUser);			
 			return em.find(Quote.class, quoteId);
 		   
 		} catch (ConnectionException e) {

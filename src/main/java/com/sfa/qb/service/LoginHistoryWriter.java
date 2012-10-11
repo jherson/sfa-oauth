@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import com.sfa.qb.model.entities.LoginHistory;
+import com.sfa.qb.model.entities.Pricebook;
 import com.sfa.qb.model.entities.UserPreferences;
 
 @Stateless
@@ -22,5 +23,9 @@ public class LoginHistoryWriter {
 	
 	public void saveUserPreferences(UserPreferences userPreferences) {
 		entityManager.merge(userPreferences);
+	}
+	
+	public void savePricebook(Pricebook pricebook) {
+		entityManager.persist(pricebook);
 	}
 }

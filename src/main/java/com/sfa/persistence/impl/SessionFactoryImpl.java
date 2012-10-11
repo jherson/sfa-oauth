@@ -38,7 +38,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		PartnerConnection connection = null;
 		try {					
 			connection = Connector.newConnection(config);
-			log.log(Level.INFO, "Connection to Salesforce successful");
+			log.log(Level.INFO, "Connection to Salesforce successful");			
 		} catch (ConnectionException e) {			
 			log.log(Level.SEVERE, "Unable to to connect to Salesforce: " + e.getMessage());
 			return;
@@ -54,6 +54,6 @@ public class SessionFactoryImpl implements SessionFactory {
 		
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
-		}	
+		}
 	}
 }

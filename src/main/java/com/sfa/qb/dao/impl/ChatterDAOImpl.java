@@ -91,12 +91,12 @@ public class ChatterDAOImpl extends DAO implements ChatterDAO {
 	}
 	
 	@Override
-	public void followQuote(String quoteId) {
+	public void followQuote(String quoteId) throws SalesforceServiceException {
 		servicesManager.follow(getSessionId(), quoteId);
 	}
 
 	@Override
-	public void unfollowQuote(String quoteId) {
+	public void unfollowQuote(String quoteId) throws SalesforceServiceException {
 		servicesManager.unfollow(getSessionId(), quoteId);
 	}
 	

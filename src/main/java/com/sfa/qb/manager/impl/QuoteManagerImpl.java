@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
-import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.dao.QuoteDAO;
 import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.manager.QuoteManager;
@@ -29,9 +28,6 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	@Inject
 	private QuoteDAO quoteDAO;
-	
-	@Inject
-	private ChatterDAO chatterDAO;
 		
 	@Override
 	public DeleteResult delete(Quote quote) {
@@ -76,16 +72,6 @@ public class QuoteManagerImpl implements QuoteManager {
 	@Override
 	public void activate(Quote quote) {
 		doActivate(quote);
-	}
-	
-	@Override
-	public void follow(Quote quote) {
-		doFollow(quote);
-	}
-	
-	@Override
-	public void unfollow(Quote quote) {
-		doUnfollow(quote);
 	}
 	
 	@Override
@@ -296,14 +282,6 @@ public class QuoteManagerImpl implements QuoteManager {
 	
 	private void doActivate(Quote quote) {
 		quoteDAO.activateQuote(quote.getId());
-	}
-	
-	private void doFollow(Quote quote) {
-		chatterDAO.followQuote(quote.getId());				
-	}
-	
-	private void doUnfollow(Quote quote) {
-		chatterDAO.unfollowQuote(quote.getFollowers().getFollowers().get(0).getSubject().getMySubscription().getId());
 	}
 	
 	private DeleteResult[] doDelete(List<QuoteLineItem> quoteLineItems) {

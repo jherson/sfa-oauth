@@ -54,6 +54,11 @@
 					<a4j:ajax execute="@this" event="valueChange"  
 						status="waitstatus" oncomplete="javascript: window.location.reload(false);"/>
 				</h:selectOneMenu>
+				
+				<a4j:commandButton
+				value="Sync Pricebooks"
+				action="#{dataSyncController.syncPricebooks()}">
+				</a4j:commandButton>
 			</div>
 
 			<div class="header-cell">

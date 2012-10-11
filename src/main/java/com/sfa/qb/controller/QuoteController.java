@@ -11,6 +11,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.FacesException;
 import javax.inject.Inject;
 
+import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.manager.QuoteManager;
 import com.sfa.qb.manager.SessionManager;
@@ -87,6 +88,9 @@ public class QuoteController {
 	private QuoteManager quoteManager;
 	
 	@Inject
+	private ChatterDAO chatterDAO;
+	
+	@Inject
 	@SelectedQuote
 	private Quote selectedQuote;
 
@@ -144,14 +148,24 @@ public class QuoteController {
 		setEditMode(Boolean.TRUE);
 	}
 	
-	public void followQuote() {
-		quoteManager.follow(selectedQuote);
-		quoteEvent.select(FOLLOW_QUOTE).fire(selectedQuote);	
+	public void followQuote() {		
+		try {
+			chatterDAO.followQuote(selectedQuote.getId());
+			quoteEvent.select(FOLLOW_QUOTE).fire(selectedQuote);	
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}						
 	}
 	
-	public void unfollowQuote() {
-		quoteManager.unfollow(selectedQuote);
-		quoteEvent.select(UNFOLLOW_QUOTE).fire(selectedQuote);	
+	public void unfollowQuote() {		
+		try {
+			chatterDAO.unfollowQuote(selectedQuote.getId());
+			quoteEvent.select(UNFOLLOW_QUOTE).fire(selectedQuote);	
+		} catch (SalesforceServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			
 	}
 	
 	public void goalSeek() {

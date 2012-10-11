@@ -21,7 +21,5 @@ public interface QuoteManager {
 	public void price(Quote quote);
 	public String copy(Quote quote) throws SalesforceServiceException;
 	public void activate(Quote quote);
-	public void follow(Quote quote);
-	public void unfollow(Quote quote);
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems);
 }

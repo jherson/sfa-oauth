@@ -23,6 +23,6 @@ public interface ChatterDAO {
 	public Feed getFeedForQuote(String quoteId) throws SalesforceServiceException;
 
 	public Followers getQuoteFollowers(String quoteId);		
-	public void followQuote(String quoteId);
-	public void unfollowQuote(String quoteId);	
+	public void followQuote(String quoteId) throws SalesforceServiceException;
+	public void unfollowQuote(String quoteId) throws SalesforceServiceException; 	
 }

@@ -9,13 +9,15 @@ public interface ServicesManager {
 	// user service
 	public String getAuthResponse(String code) throws SalesforceServiceException;
 	public String getIdentity(String instanceUrl, String id, String accessToken) throws SalesforceServiceException;
-	public JSONObject getCurrentUserInfo(String sessionId) throws SalesforceServiceException;
+	public String getCurrentUserInfo(String sessionId) throws SalesforceServiceException;
 	
 	// quote services
 	public void calculateQuote(String sessionId, String quoteId);			
 	public void activateQuote(String sessionId, String quoteId);	
 	public String copyQuote(String sessionId, String quoteId) throws SalesforceServiceException;
 	public void priceQuote(String sessionId, String xml);
+	public void createQuote(String sessionId, String jsonString) throws SalesforceServiceException;
+	public void queryQuote(String sessionId, String query);
 	
 	// chatter services
 	public String getFeed(String sessionId) throws SalesforceServiceException;
@@ -32,8 +34,8 @@ public interface ServicesManager {
 	public String getQuoteFeed(String sessionId) throws SalesforceServiceException;
 	public String getRecordFeed(String sessionId, String recordId) throws SalesforceServiceException;
 	
-	public void follow(String sessionId, String subjectId);
-	public void unfollow(String sessionId, String subscriptionId);
+	public String follow(String sessionId, String subjectId) throws SalesforceServiceException;
+	public void unfollow(String sessionId, String subscriptionId) throws SalesforceServiceException;
 	public JSONObject getFollowers(String sessionId, String recordId);
 	public JSONObject getFeed(String sessionId, String recordId);	
 }
