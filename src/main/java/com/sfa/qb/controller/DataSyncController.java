@@ -2,7 +2,6 @@ package com.sfa.qb.controller;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.model.entities.Pricebook;
@@ -25,7 +24,7 @@ public class DataSyncController {
 			ConnectionManager.openConnection();
 			PartnerConnection connection = ConnectionManager.getConnection();
 			
-			QueryResult queryResult = connection.query("Select Id, Name From Pricebook2");
+			QueryResult queryResult = connection.query("Select Id, Name From Pricebook2 Where IsActive = true");
 			for (SObject sobject : queryResult.getRecords()) {
 				Pricebook pricebook = new Pricebook();
 				pricebook.setSalesforceId(sobject.getId());

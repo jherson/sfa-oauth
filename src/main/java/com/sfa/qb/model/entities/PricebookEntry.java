@@ -23,7 +23,7 @@ public class PricebookEntry implements Serializable {
 	@Column(name="Id")
 	private int id;
 	
-	@Column(name="SalesforceId", length=20)
+	@Column(name="SalesforceId", length=20, unique=true)
 	private String salesforceId;
 	
 	@Column(name="CurrencyIsoCode", length=3)

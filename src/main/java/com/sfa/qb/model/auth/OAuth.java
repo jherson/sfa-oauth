@@ -31,7 +31,8 @@ public class OAuth implements Serializable {
 	
 	@SerializedName("error_description")
 	private String errorDescription;
-	
+			
+	private Identity identity;
 
 	public String getId() {
 		return id;
@@ -95,5 +96,13 @@ public class OAuth implements Serializable {
 	
 	public void setErrorDescription(String errorDescription) {
 		this.errorDescription = errorDescription;
+	}
+
+	public Identity getIdentity() {
+		return identity;
+	}
+
+	public void setIdentity(Identity identity) {
+		this.identity = identity;
 	}
 }

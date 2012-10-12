@@ -35,7 +35,7 @@ public class QuoteLineItem implements Serializable {
 		this.id = id;
 	}
 	
-	@Column(name="SalesforceId", length=20)
+	@Column(name="SalesforceId", length=20, unique=true)
 	private String salesforceId;
 	
 	@ManyToOne(cascade = CascadeType.ALL)

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name="Pricebook")
 
 public class Pricebook implements Serializable {
 
@@ -19,23 +19,23 @@ public class Pricebook implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="Id")
-	private String id;
+	private int id;
 
 	@Column(name = "Name", length=60)
 	private String name;
 	
-	@Column
+	@Column(name = "SalesforceId", length=20, unique=true)	
 	private String salesforceId;
 	
 	public Pricebook() {
 		
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

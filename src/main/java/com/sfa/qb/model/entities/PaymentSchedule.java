@@ -33,7 +33,7 @@ public class PaymentSchedule implements Serializable {
 		this.id = id;
 	}
 	
-	@Column(name="SalesforceId")
+	@Column(name="SalesforceId", length=20, unique=true)
 	private String salesforceId;
 	
 	@Column(name="PaymentDate")

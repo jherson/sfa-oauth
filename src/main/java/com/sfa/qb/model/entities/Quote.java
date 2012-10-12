@@ -34,7 +34,7 @@ public class Quote implements Serializable, Cloneable {
 	}
 	
 	
-	@Column(name="SalesforceId")
+	@Column(name="SalesforceId", length=20, unique=true)
 	private String salesforceId;
 	
 	public String getSalesforceId() {

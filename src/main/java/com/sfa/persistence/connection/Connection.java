@@ -1,9 +1,20 @@
 package com.sfa.persistence.connection;
 
+import java.security.AccessController;
+import java.security.Principal;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
+import javax.security.auth.Subject;
+
+import org.jboss.as.controller.security.SecurityContext;
+
+
+
+import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
+import com.sfa.qb.service.OAuthPrincipal;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SessionHeader_element;
@@ -28,6 +39,34 @@ public class Connection implements SessionRenewer {
     }
     
     public void openConnection() throws ConnectionException {  	
+    	log.info("openConnection");
+    	
+    	if (AccessController.getContext() != null) {
+    	
+    		log.info("inside accesscontroller");
+    	//Subject subject = Subject.getSubject(AccessController.getContext());
+
+    	Subject subject = SecurityContext.getSubject();
+    	if (subject == null) {
+    		log.info("subject is null...boo!");
+    	}
+
+    	Iterator<Principal> iterator = subject.getPrincipals().iterator();
+    	log.info("inside accesscontroller iterator: " + iterator.hasNext());
+    	while (iterator.hasNext()) {
+    		Principal principal = iterator.next();
+    		if (principal instanceof OAuthPrincipal) {
+    			log.info("finally found in security context party on");
+    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
+    			OAuth oauth = oauthPrincipal.getOAuth();
+    			log.info(oauth.getAccessToken());
+    			openConnection(oauth.getAccessToken());
+    		}
+    		    		
+    		 
+    	}
+    	} else {
+    	
     	
     	ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(System.getProperty("salesforce.authEndpoint"));
@@ -38,8 +77,9 @@ public class Connection implements SessionRenewer {
 		PartnerConnection connection = Connector.newConnection(config);
 		
 		setConnection(connection);
+    	}
     }
-    
+        
     public void openConnection(String sessionId) throws ConnectionException {
     	    	
     	ConnectorConfig config = new ConnectorConfig();

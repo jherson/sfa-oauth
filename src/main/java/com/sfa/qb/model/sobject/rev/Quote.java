@@ -13,7 +13,6 @@ import com.sfa.persistence.annotation.AccessType;
 import com.sfa.persistence.annotation.Column;
 import com.sfa.persistence.annotation.Entity;
 import com.sfa.persistence.annotation.Id;
-import com.sfa.persistence.annotation.OneToMany;
 import com.sfa.persistence.annotation.OneToOne;
 import com.sfa.persistence.annotation.Table;
 import com.sfa.qb.model.chatter.Followers;

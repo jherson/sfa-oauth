@@ -50,10 +50,16 @@ public class SessionFactoryImpl implements SessionFactory {
 		params = new Object[] {properties.getProperty("salesforce.api.endpoint"), properties.getProperty("salesforce.api.version")};
 		
 		properties.setProperty("salesforce.rest.endpoint", MessageFormat.format(properties.getProperty("salesforce.rest.endpoint"), params));											
-		properties.setProperty("salesforce.apexrest.endpoint", MessageFormat.format(properties.getProperty("salesforce.apexrest.endpoint"), params));								
+		properties.setProperty("salesforce.apexrest.endpoint", MessageFormat.format(properties.getProperty("salesforce.apexrest.endpoint"), params));		
 		
 		for (String key : properties.stringPropertyNames()) {
 			System.setProperty(key, properties.getProperty(key));
+		}
+				
+		if (System.getSecurityManager() != null) {
+			log.info("enabled");
+		} else {
+			log.info("not enabled");
 		}
 	}
 }

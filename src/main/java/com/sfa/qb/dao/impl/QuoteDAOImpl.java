@@ -35,7 +35,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		
 		try {
 						
-			ConnectionManager.openConnection(sessionUser);			
+			ConnectionManager.openConnection();			
 			Query q = em.createQuery(quoteQuery).orderBy("Number__c");
 			return q.getResultList();
 			

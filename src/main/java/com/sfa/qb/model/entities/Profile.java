@@ -21,7 +21,7 @@ public class Profile implements Serializable {
 	@Column(name="Id")
 	private int id;
 	
-	@Column(name="SalesforceId")
+	@Column(name="SalesforceId", length=20, unique=true)
 	private String salesforceId;
 	
 	@Column(name="Name")

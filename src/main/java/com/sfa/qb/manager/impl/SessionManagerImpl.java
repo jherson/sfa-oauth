@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
@@ -16,12 +18,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.bitwalker.useragentutils.UserAgent;
 
@@ -38,6 +38,7 @@ import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.qualifiers.LoggedIn;
 import com.sfa.qb.service.LoginHistoryWriter;
+import com.sfa.qb.service.OAuthCallbackHandler;
 import com.sfa.qb.service.ServicesManager;
 
 @SessionScoped
@@ -97,7 +98,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@ManagedProperty(value = "false")
 	private Boolean loggedIn;
 	
-	@Override	
+
 	public Boolean getLoggedIn() {
 		return loggedIn;
 	}
@@ -109,7 +110,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@ManagedProperty(value = "classic")
 	private String theme;
 	
-    @Override
     public void setTheme(String theme) {
     	if ("none".equals(theme)) {
     		this.theme = null;
@@ -124,7 +124,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
     	loginHistoryWriter.saveUserPreferences(preferences);
     }
 
-	@Override
 	public String getTheme() {				
 		return theme;
 	}
@@ -151,16 +150,21 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public Boolean getGoalSeek() {
 		return goalSeek;
 	}
+	
+	private String INDEX_PAGE;
 
 	@PostConstruct
 	public void init() {
 		logger.info("init");			
 		
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-		
+						
 		logger.info("accept language: " + request.getHeader("Accept-Language"));
 				
-		//en-US,en;q=0.8		
+		//en-US,en;q=0.8
+		
+		
+		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
 	}
 	
 	@PreDestroy
@@ -192,17 +196,12 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 	    session.invalidate();
 	    
-		try {
-			context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.jsf");
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		}
+	    redirect(INDEX_PAGE);	    
 	}
 	
 	@Override
 	public void login() {
-							   				
+											   				
 		String authUrl = null;
 		try {
 			authUrl = System.getProperty("salesforce.environment")
@@ -212,32 +211,25 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 					+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
 					+ "&prompt=login"
 					+ "&display=popup";
-			
-			mainController.setMainArea(TemplatesEnum.INITIALIZE);
-							
-			try {
-			    context.getExternalContext().redirect(authUrl);
-		    } catch (IOException e) {
-		    	logger.log(Level.SEVERE, e.getMessage(), e);
-		    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		    } 
-			
-			return;
-
+												
 		} catch (UnsupportedEncodingException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		}				
+		}					
+				
+		mainController.setMainArea(TemplatesEnum.INITIALIZE);
+		
+		redirect(authUrl);
 	}
 	
 	public void authenticate() {					
 		
-		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();		
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
 		
 		String code = request.getParameter("code");
 		
 		if (code != null) {
-			
+												
 			try {					
 			    String authResponse = servicesManager.getAuthResponse(code);
 			    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
@@ -247,11 +239,16 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			    }	
 			    
 			    logger.info("AccessToken: " + oauth.getAccessToken());
-			
+			    			    			
 			    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
 			    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
-			    		
-			    sessionUser = new SessionUser(oauth, identity);
+			    
+			    oauth.setIdentity(identity);
+			    					    			    				
+				LoginContext loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(oauth));				
+				loginContext.login();
+
+                sessionUser = new SessionUser(oauth, identity);
 			    			    				
 				LoginHistory history = new LoginHistory();
 				history.setRemoteAddress(request.getRemoteAddr());
@@ -283,8 +280,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				}
 																											
 				setLoggedIn(Boolean.TRUE);			
-				mainController.setMainArea(TemplatesEnum.HOME);																							
-			
+				mainController.setMainArea(TemplatesEnum.HOME);
+				
+			} catch (LoginException e) {
+				logger.log(Level.SEVERE, "Unable to authenticate", e);
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to authenticate", e.getStackTrace()[0].toString()));				
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));	
@@ -298,8 +298,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		 * redirect back to index.jsf to render the proper template
 		 */
 		
+		redirect(INDEX_PAGE);
+		
+	}
+	
+	private void redirect(String url) {
 		try {
-			context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.jsf");
+			context.getExternalContext().redirect(url);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
