@@ -12,7 +12,6 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
 import com.sfa.qb.dao.ChatterDAO;
-import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.model.chatter.Body;
 import com.sfa.qb.model.chatter.Comment;
 import com.sfa.qb.model.chatter.Feed;
@@ -68,7 +67,7 @@ public class ChatterController {
 		try {
 			Item item = chatterDAO.postItem(quoteId, text);
 			itemEvent.select(POST_ITEM).fire(item);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
@@ -106,7 +105,7 @@ public class ChatterController {
 		try {						
 			Comment comment = chatterDAO.postComment(item.getId(), text);
 			item.getComments().getComments().set(index, comment);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
@@ -116,7 +115,7 @@ public class ChatterController {
 		try {
 			chatterDAO.deleteItem(item.getId());
 			itemEvent.select(DELETE_ITEM).fire(item);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
@@ -129,7 +128,7 @@ public class ChatterController {
 			MyLike myLike = chatterDAO.likeItem(item.getId());
 			item.setMyLike(myLike);
 			item.setIsLikedByCurrentUser(Boolean.TRUE);			
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}		
@@ -140,7 +139,7 @@ public class ChatterController {
 			chatterDAO.unlikeItem(item.getMyLike().getId());
 			item.setIsLikedByCurrentUser(Boolean.FALSE);
 			item.setMyLike(null);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
@@ -150,7 +149,7 @@ public class ChatterController {
 		try {
 			MyLike myLike = chatterDAO.likeComment(comment.getId());
 			comment.setMyLike(myLike);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}		
@@ -160,7 +159,7 @@ public class ChatterController {
 		try {
 			chatterDAO.unlikeComment(comment.getId());
 			comment.setMyLike(null);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}
@@ -170,7 +169,7 @@ public class ChatterController {
 		try {
 			chatterDAO.deleteComment(comment.getId());
 			item.getComments().getComments().remove(comment);
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			throw new FacesException(e);
 		}

@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.sfa.qb.dao.ChatterDAO;
-import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.model.chatter.Feed;
 import com.sfa.qb.model.chatter.Item;
 import com.sfa.qb.model.sobject.Quote;
@@ -57,18 +56,18 @@ public class ChatterFeedProducer implements Serializable {
 		try {
 			//feed = chatterDAO.getFeed();
 			feed = chatterDAO.getQuoteFeed();
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
 		    FacesContext.getCurrentInstance().addMessage(null, facesMessage);			
-		}
+		} 
 	}
 	
 	public void queryFeedForQuote(Quote quote) {
 		log.info("queryFeedForQuote");
 		try {			
 			feed = chatterDAO.getFeedForQuote(quote.getId());
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			log.info("SalesforceServiceException: " + e.getMessage());
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString());
 		    FacesContext.getCurrentInstance().addMessage(null, facesMessage);			

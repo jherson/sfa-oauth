@@ -8,6 +8,7 @@ import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.SaveResult;
+import com.sforce.ws.ConnectionException;
 
 public interface QuoteManager {
 
@@ -17,9 +18,9 @@ public interface QuoteManager {
 	public DeleteResult delete(Quote quote);
 	public DeleteResult delete(QuoteLineItem quoteLineItem);
 	public DeleteResult[] delete(List<QuoteLineItem> quoteLineItems);
-	public void calculate(Quote quote);
-	public void price(Quote quote);
-	public String copy(Quote quote) throws SalesforceServiceException;
-	public void activate(Quote quote);
+	public void calculate(Quote quote) throws ConnectionException;
+	public void price(Quote quote) throws ConnectionException;
+	public String copy(Quote quote) throws SalesforceServiceException, ConnectionException;
+	public void activate(Quote quote) throws ConnectionException;
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems);
 }

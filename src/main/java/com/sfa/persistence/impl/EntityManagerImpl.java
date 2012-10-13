@@ -129,7 +129,11 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 	}
 	
 	private PartnerConnection getPartnerConnection() {
-		return ConnectionManager.getConnection();
+		try {
+			return ConnectionManager.openConnection();
+		} catch (ConnectionException e) {
+			return null;
+		}
 	}
 	
 	private String[] toIdArray(List<SObject> sobjectList) {

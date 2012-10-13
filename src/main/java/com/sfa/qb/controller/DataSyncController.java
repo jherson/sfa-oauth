@@ -21,8 +21,7 @@ public class DataSyncController {
 	public void syncPricebooks() {
 		
 		try {
-			ConnectionManager.openConnection();
-			PartnerConnection connection = ConnectionManager.getConnection();
+			PartnerConnection connection = ConnectionManager.openConnection();
 			
 			QueryResult queryResult = connection.query("Select Id, Name From Pricebook2 Where IsActive = true");
 			for (SObject sobject : queryResult.getRecords()) {

@@ -24,7 +24,7 @@ public class OpportunityDAOImpl extends DAO implements OpportunityDAO, Serializa
 				+ "Where Id = ':opportunityId'";
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		
 		    Query q = em.createQuery(queryString);				
 		    q.setParameter("opportunityId", opportunityId);
@@ -52,7 +52,7 @@ public class OpportunityDAOImpl extends DAO implements OpportunityDAO, Serializa
 				+ "Where IsClosed = false";
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 			
 		    Query q = em.createQuery(queryString);
 

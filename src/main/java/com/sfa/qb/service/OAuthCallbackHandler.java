@@ -15,6 +15,10 @@ public class OAuthCallbackHandler implements CallbackHandler {
 	private static Logger log = Logger.getLogger(OAuthCallbackHandler.class.getName()); 
 	private OAuth oauth;
 	
+	public OAuthCallbackHandler() {
+		
+	}
+	
 	public OAuthCallbackHandler(OAuth oauth) {
 		this.oauth = oauth;
 	}

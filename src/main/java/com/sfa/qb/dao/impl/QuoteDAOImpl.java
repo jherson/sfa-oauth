@@ -58,7 +58,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		String queryString = quoteQuery + "Where " + whereClause;
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);			
+			ConnectionManager.openConnection();			
 			Query q = em.createQuery(queryString);				
 			return q.getResultList();
 			
@@ -82,7 +82,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 				+ "Where OpportunityId__c = ':opportunityId'";
 						
 		try {
-			ConnectionManager.openConnection(sessionUser);			
+			ConnectionManager.openConnection();			
 			Query q = em.createQuery(queryString);
 			q.setParameter("opportunityId", opportunityId);			
 			return q.getResultList();
@@ -107,7 +107,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 				+ "Where QuoteId__c = ':quoteId'";
 									
 		try {
-			ConnectionManager.openConnection(sessionUser);			
+			ConnectionManager.openConnection();			
 			Query q = em.createQuery(queryString);
 			q.setParameter("quoteId", quoteId);		
 			q.orderBy("LineNumber__c, CreatedDate");
@@ -134,7 +134,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 									
 			//servicesManager.createQuote(sessionUser.getOAuth().getAccessToken(),);
 			
-			ConnectionManager.openConnection(sessionUser);			
+			ConnectionManager.openConnection();			
 			return em.find(Quote.class, quoteId);
 		   
 		} catch (ConnectionException e) {
@@ -156,7 +156,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		String queryString = quoteLineItemQuery + "Where Id = ':quoteLineItemId'";
 										
 		try {
-			ConnectionManager.openConnection(sessionUser);			
+			ConnectionManager.openConnection();			
 			Query q = em.createQuery(queryString);
 			q.setParameter("quoteLineItemId", quoteLineItemId);			
 			return q.getSingleResult();	
@@ -180,7 +180,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		String queryString = "Select Id, ListPrice__c, ProductDescription__c, Code__c, Message__c From QuoteLineItem__c Where QuoteId__c = '" + quoteId + "' Order By CreatedDate";
 						
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    Query q = em.createQuery(queryString);		
 		    List<QuoteLineItem> quoteLineItems = q.getResultList();
 		    
@@ -209,7 +209,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		String queryString = "Select Amount__c From Quote__c Where Id = '" + quoteId + "'";
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    Query q = em.createQuery(queryString);		
             Quote quote = q.getSingleResult();
 		    return Double.valueOf(quote.getAmount());
@@ -232,7 +232,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public SaveResult[] saveQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {
 		SaveResult[] saveResult = null;	
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
@@ -253,7 +253,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException {
 		SaveResult[] saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    saveResult = em.persist(convertQuotePriceAdjustmentsToSObjects(quotePriceAdjustmentList));
 		
 		} catch (ConnectionException e) {
@@ -274,7 +274,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustmentList) throws ConnectionException {
 		SaveResult[] saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    saveResult = em.persist(convertQuoteLineItemPriceAdjustmentsToSObjects(quoteLineItemPriceAdjustmentList));
 		    
 		} catch (ConnectionException e) {
@@ -295,7 +295,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public DeleteResult[] deleteQuoteLineItems(List<QuoteLineItem> quoteLineItemList) throws ConnectionException {				
 		DeleteResult[] deleteResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    deleteResult = em.delete(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
@@ -329,7 +329,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 		
 		SaveResult[] saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    saveResult = em.persist(convertQuoteLineItemsToSObjects(quoteLineItemList));
 		
 		} catch (ConnectionException e) {
@@ -350,7 +350,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public DeleteResult deleteQuoteLineItem(QuoteLineItem quoteLineItem) throws ConnectionException {
 		DeleteResult deleteResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
             deleteResult = em.delete(convertQuoteLineItemToSObject(quoteLineItem));
         
 		} catch (ConnectionException e) {
@@ -371,7 +371,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public SaveResult saveQuote(Quote quote) throws ConnectionException {	
 		SaveResult saveResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    saveResult = em.persist(convertQuoteToSObject(quote));
 		
 		} catch (ConnectionException e) {
@@ -392,7 +392,7 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	public DeleteResult deleteQuote(Quote quote) throws ConnectionException {
 		DeleteResult deleteResult = null;
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		    deleteResult = em.delete(convertQuoteToSObject(quote));	
 		
 		} catch (ConnectionException e) {
@@ -410,23 +410,23 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	}		
 	
 	@Override
-	public String copyQuote(String quoteId) throws SalesforceServiceException {
-		return servicesManager.copyQuote(sessionUser.getOAuth().getAccessToken(), quoteId);		
+	public String copyQuote(String quoteId) throws SalesforceServiceException, ConnectionException {
+		return servicesManager.copyQuote(quoteId);		
 	}
 
 	@Override
-	public void activateQuote(String quoteId) {
-		servicesManager.activateQuote(sessionUser.getOAuth().getAccessToken(), quoteId);		
+	public void activateQuote(String quoteId) throws ConnectionException {
+		servicesManager.activateQuote(quoteId);		
 	}
 
 	@Override
-	public void calculateQuote(String quoteId) {
-		servicesManager.calculateQuote(sessionUser.getOAuth().getAccessToken(), quoteId);		
+	public void calculateQuote(String quoteId) throws ConnectionException {
+		servicesManager.calculateQuote(quoteId);		
 	}
 
 	@Override
-	public void priceQuote(Quote quote) {
-		servicesManager.priceQuote(sessionUser.getOAuth().getAccessToken(), MessageFactory.createPricingMessage(quote));		
+	public void priceQuote(Quote quote) throws ConnectionException {
+		servicesManager.priceQuote(MessageFactory.createPricingMessage(quote));		
 	}
 
 	private SObject convertQuoteToSObject(Quote quote) {

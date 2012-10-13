@@ -3,39 +3,40 @@ package com.sfa.qb.service;
 import org.json.JSONObject;
 
 import com.sfa.qb.exception.SalesforceServiceException;
+import com.sforce.ws.ConnectionException;
 
 public interface ServicesManager {
 	
 	// user service
 	public String getAuthResponse(String code) throws SalesforceServiceException;
 	public String getIdentity(String instanceUrl, String id, String accessToken) throws SalesforceServiceException;
-	public String getCurrentUserInfo(String sessionId) throws SalesforceServiceException;
+	public String getCurrentUserInfo() throws ConnectionException, SalesforceServiceException;
 	
 	// quote services
-	public void calculateQuote(String sessionId, String quoteId);			
-	public void activateQuote(String sessionId, String quoteId);	
-	public String copyQuote(String sessionId, String quoteId) throws SalesforceServiceException;
-	public void priceQuote(String sessionId, String xml);
-	public void createQuote(String sessionId, String jsonString) throws SalesforceServiceException;
-	public void queryQuote(String sessionId, String query);
+	public void calculateQuote(String quoteId) throws ConnectionException;			
+	public void activateQuote(String quoteId) throws ConnectionException;	
+	public String copyQuote(String quoteId) throws ConnectionException, SalesforceServiceException;
+	public void priceQuote(String xml) throws ConnectionException;
+	public void createQuote(String jsonString) throws ConnectionException, SalesforceServiceException;
+	public void queryQuote(String query) throws ConnectionException;
 	
 	// chatter services
-	public String getFeed(String sessionId) throws SalesforceServiceException;
-	public String postItem(String sessionId, String text) throws SalesforceServiceException;
-	public String postItem(String sessionId, String recordId, String text) throws SalesforceServiceException;
+	public String getFeed() throws ConnectionException, SalesforceServiceException;
+	public String postItem(String text) throws ConnectionException, SalesforceServiceException;
+	public String postItem(String recordId, String text) throws ConnectionException, SalesforceServiceException;
 	
-	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException;
-	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException;
-	public void unlikeItem(String sessionId, String likeId) throws SalesforceServiceException;
-	public String postComment(String sessionId, String itemId, String text) throws SalesforceServiceException;
-    public String likeComment(String sessionId, String commentId) throws SalesforceServiceException;		
-	public void unlikeComment(String sessionId, String commentId) throws SalesforceServiceException;
-	public void deleteComment(String sessionId, String commentId) throws SalesforceServiceException;
-	public String getQuoteFeed(String sessionId) throws SalesforceServiceException;
-	public String getRecordFeed(String sessionId, String recordId) throws SalesforceServiceException;
+	public void deleteItem(String itemId) throws ConnectionException, SalesforceServiceException;
+	public String likeItem(String itemId) throws ConnectionException, SalesforceServiceException;
+	public void unlikeItem(String likeId) throws ConnectionException, SalesforceServiceException;
+	public String postComment(String itemId, String text) throws ConnectionException, SalesforceServiceException;
+    public String likeComment(String commentId) throws ConnectionException, SalesforceServiceException;		
+	public void unlikeComment(String commentId) throws ConnectionException, SalesforceServiceException;
+	public void deleteComment(String commentId) throws ConnectionException, SalesforceServiceException;
+	public String getQuoteFeed() throws ConnectionException, SalesforceServiceException;
+	public String getRecordFeed(String recordId) throws ConnectionException, SalesforceServiceException;
 	
-	public String follow(String sessionId, String subjectId) throws SalesforceServiceException;
-	public void unfollow(String sessionId, String subscriptionId) throws SalesforceServiceException;
-	public JSONObject getFollowers(String sessionId, String recordId);
-	public JSONObject getFeed(String sessionId, String recordId);	
+	public String follow(String subjectId) throws ConnectionException, SalesforceServiceException;
+	public void unfollow(String subscriptionId) throws ConnectionException, SalesforceServiceException;
+	public JSONObject getFollowers(String recordId) throws ConnectionException;
+	public JSONObject getFeed(String recordId) throws ConnectionException;	
 }

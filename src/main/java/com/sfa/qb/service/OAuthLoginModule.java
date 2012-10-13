@@ -13,6 +13,8 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.jboss.as.controller.security.SecurityContext;
+
 import com.sfa.qb.model.auth.OAuth;
 
 @SuppressWarnings("unused")
@@ -38,6 +40,7 @@ public class OAuthLoginModule implements LoginModule {
 			return false;
 		
 	    subject.getPrincipals().add(new OAuthPrincipal(oauth));
+	    SecurityContext.setSubject(subject);
 	    return true;
 	}
 
@@ -72,7 +75,7 @@ public class OAuthLoginModule implements LoginModule {
 
 	@Override
 	public boolean logout() throws LoginException {
-		return false;
+		subject.getPrincipals().clear();
+		return true;
 	}
-
 }

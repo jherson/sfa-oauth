@@ -12,7 +12,9 @@ import org.jboss.resteasy.client.ClientResponse;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.SalesforceServiceException;
+import com.sforce.ws.ConnectionException;
 
 @Named(value="servicesManager")
 
@@ -64,11 +66,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
-	public String getCurrentUserInfo(String sessionId) throws SalesforceServiceException {
+	public String getCurrentUserInfo() throws ConnectionException, SalesforceServiceException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/currentUserInfo";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/json");
 		request.header("X-PrettyPrint", "1");
 		
@@ -87,11 +89,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String follow(String sessionId, String subjectId) throws SalesforceServiceException {
+	public String follow(String subjectId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/users/me/following";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.queryParameter("subjectId", subjectId);
 		
 		ClientResponse<String> response = null; 		
@@ -109,11 +111,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void unfollow(String sessionId, String subscriptionId) throws SalesforceServiceException {		
+	public void unfollow(String subscriptionId) throws ConnectionException, SalesforceServiceException {		
 		String url = getRestEndpoint() + "/chatter/subscriptions/" + subscriptionId;
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 					
 		try {
 			request.delete(String.class);
@@ -123,11 +125,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONObject getFollowers(String sessionId, String recordId) {
+	public JSONObject getFollowers(String recordId) throws ConnectionException {
 		String url = getRestEndpoint() + "/chatter/records/" + recordId + "/followers";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		
 		JSONObject jsonObject = null;
 		try {
@@ -146,11 +148,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONObject getFeed(String sessionId, String recordId) {
+	public JSONObject getFeed(String recordId) throws ConnectionException {
 		String url = getRestEndpoint() + "/chatter/feeds/record/" + recordId + "/feed-items";	
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);			
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());			
 		
 		JSONObject jsonObject = null;
 		try {
@@ -168,11 +170,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void activateQuote(String sessionId, String quoteId) {
+	public void activateQuote(String quoteId) throws ConnectionException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/activate";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/json");
 		request.queryParameter("quoteId", quoteId);
 		
@@ -190,11 +192,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void calculateQuote(String sessionId, String quoteId) {		
+	public void calculateQuote(String quoteId) throws ConnectionException {		
 		String url = getApexRestEndpoint() + "/QuoteRestService/calculate";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/json");
 		request.queryParameter("quoteId", quoteId);
 		
@@ -212,11 +214,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 
 	@Override
-	public String copyQuote(String sessionId, String quoteId) throws SalesforceServiceException {
+	public String copyQuote(String quoteId) throws ConnectionException, SalesforceServiceException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/copy";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/json");
 		request.queryParameter("quoteId", quoteId);
 		
@@ -235,11 +237,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String getQuoteFeed(String sessionId) throws SalesforceServiceException {		
+	public String getQuoteFeed() throws ConnectionException, SalesforceServiceException {		
 		String url = getRestEndpoint() + "/chatter/feeds/filter/me/a0Q/feed-items";	
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		
 		ClientResponse<String> response = null; 		
 		try {
@@ -256,11 +258,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String getFeed(String sessionId) throws SalesforceServiceException {		
+	public String getFeed() throws ConnectionException, SalesforceServiceException {		
 		String url = getRestEndpoint() + "/chatter/feeds/news/me/feed-items";
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		
 		ClientResponse<String> response = null;
 		try {
@@ -270,7 +272,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.OK) {
-			//logResponse(response);
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -278,11 +279,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String postItem(String sessionId, String text) throws SalesforceServiceException {
+	public String postItem(String text) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/feeds/news/me/feed-items";
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.queryParameter("text", text);
 		
@@ -301,11 +302,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String postItem(String sessionId, String recordId, String text) throws SalesforceServiceException {
+	public String postItem(String recordId, String text) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/feeds/record/" + recordId + "/feed-items";
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.queryParameter("text", text);
 		
@@ -317,7 +318,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 
 		if (response.getResponseStatus() == Status.CREATED) {
-			//logResponse(response);
 			return response.getEntity();
 		} else {
 			throw new SalesforceServiceException(response.getEntity());
@@ -325,11 +325,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void deleteItem(String sessionId, String itemId) throws SalesforceServiceException {
+	public void deleteItem(String itemId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/feed-items/" + itemId;
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 				
 		try {
 			request.delete(String.class);
@@ -339,11 +339,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String likeItem(String sessionId, String itemId) throws SalesforceServiceException {
+	public String likeItem(String itemId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/feed-items/" + itemId + "/likes";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("X-PrettyPrint", "1");
 		
 		ClientResponse<String> response = null;
@@ -361,11 +361,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void unlikeItem(String sessionId, String likeId) throws SalesforceServiceException {
+	public void unlikeItem(String likeId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/likes/" + likeId;
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		
 		try {
 			request.delete(String.class);
@@ -375,11 +375,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String postComment(String sessionId, String itemId, String text) throws SalesforceServiceException {
+	public String postComment(String itemId, String text) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/feed-items/" + itemId + "/comments";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);		
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());		
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("X-PrettyPrint", "1");
 		request.queryParameter("text", text);
@@ -400,11 +400,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String likeComment(String sessionId, String commentId) throws SalesforceServiceException { 
+	public String likeComment(String commentId) throws ConnectionException, SalesforceServiceException { 
 		String url = getRestEndpoint() + "/chatter/comments/" + commentId + "/likes";
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("X-PrettyPrint", "1");
 
 		ClientResponse<String> response = null;
@@ -422,11 +422,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void unlikeComment(String sessionId, String commentId) throws SalesforceServiceException {
+	public void unlikeComment(String commentId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/likes/" + commentId;
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		
 		try {
 			request.delete(String.class);
@@ -436,11 +436,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void deleteComment(String sessionId, String commentId) throws SalesforceServiceException {
+	public void deleteComment(String commentId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/comments/" + commentId;
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 				
 		try {
 			request.delete(String.class);
@@ -451,11 +451,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public String getRecordFeed(String sessionId, String recordId) throws SalesforceServiceException {
+	public String getRecordFeed(String recordId) throws ConnectionException, SalesforceServiceException {
 		String url = getRestEndpoint() + "/chatter/feeds/record/" + recordId + "/feed-items";
 
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("X-PrettyPrint", "1");
 		
 		ClientResponse<String> response = null;
@@ -473,13 +473,13 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void priceQuote(String sessionId, String xml) {
+	public void priceQuote(String xml) throws ConnectionException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/price";
 		
 		log.info(xml);
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.body("application/xml", xml);
 		
 		try {
@@ -496,13 +496,13 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void createQuote(String sessionId, String jsonString) {
+	public void createQuote(String jsonString) throws ConnectionException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/create";
 		
 		log.info(jsonString);
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.body("application/json", jsonString);
 		
 		try {
@@ -519,11 +519,11 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void queryQuote(String sessionId, String query) {
+	public void queryQuote(String query) throws ConnectionException {
         String url = getRestEndpoint() + "/query";
 		
 		ClientRequest request = new ClientRequest(url);
-		request.header("Authorization", "OAuth " + sessionId);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("X-PrettyPrint", "1");
 		request.queryParameter("q", query);

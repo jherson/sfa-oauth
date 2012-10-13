@@ -12,7 +12,6 @@ import javax.faces.FacesException;
 import javax.inject.Inject;
 
 import com.sfa.qb.dao.ChatterDAO;
-import com.sfa.qb.exception.SalesforceServiceException;
 import com.sfa.qb.manager.QuoteManager;
 import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.sobject.Contact;
@@ -34,6 +33,7 @@ import com.sfa.qb.qualifiers.UpdateQuote;
 import com.sfa.qb.qualifiers.UpdateQuoteAmount;
 import com.sfa.qb.qualifiers.ViewQuote;
 import com.sforce.soap.partner.SaveResult;
+import com.sforce.ws.ConnectionException;
 
 @Model
 
@@ -152,7 +152,7 @@ public class QuoteController {
 		try {
 			chatterDAO.followQuote(selectedQuote.getId());
 			quoteEvent.select(FOLLOW_QUOTE).fire(selectedQuote);	
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}						
@@ -162,7 +162,7 @@ public class QuoteController {
 		try {
 			chatterDAO.unfollowQuote(selectedQuote.getId());
 			quoteEvent.select(UNFOLLOW_QUOTE).fire(selectedQuote);	
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}			
@@ -177,7 +177,12 @@ public class QuoteController {
 	}
 	
 	public void priceQuote(Quote quote) {
-		quoteManager.price(quote);
+		try {
+			quoteManager.price(quote);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		quoteEvent.select(PRICE_QUOTE).fire(quote);
 	}
 
@@ -186,7 +191,12 @@ public class QuoteController {
 	}
 
 	public void activateQuote(Quote quote) {
-		quoteManager.activate(quote);
+		try {
+			quoteManager.activate(quote);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		quoteEvent.select(LIST_QUOTES).fire(quote);
 	}
 
@@ -199,10 +209,10 @@ public class QuoteController {
 		    String quoteId = quoteManager.copy(quote);		
 		    quote.setId(quoteId);
 		    quoteEvent.select(COPY_QUOTE).fire(quote);
-		} catch (SalesforceServiceException e) {
-			log.info("SalesforceServiceException: " + e.getMessage());
+		} catch (Exception e) {
+			log.info("Exception: " + e.getMessage());
 			throw new FacesException(e);
-		}
+		} 
 	}
 
 	public void deleteQuote() {
@@ -216,7 +226,12 @@ public class QuoteController {
 	}
 
 	public void calculateQuote(Quote quote) {
-		quoteManager.calculate(quote);
+		try {
+			quoteManager.calculate(quote);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		quoteEvent.select(UPDATE_QUOTE).fire(quote);
 		setMainArea(TemplatesEnum.QUOTE);
 	}

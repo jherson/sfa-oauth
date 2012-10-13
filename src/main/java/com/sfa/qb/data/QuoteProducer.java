@@ -67,10 +67,10 @@ public class QuoteProducer implements Serializable {
 
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
 		selectedQuote = queryQuoteById(quote.getId()); 	
-		selectedQuote.setFollowers(chatterDAO.getQuoteFollowers(quote.getId()));
 		try {
+			selectedQuote.setFollowers(chatterDAO.getQuoteFollowers(quote.getId()));
 			chatterDAO.getFeedForQuote(quote.getId());
-		} catch (SalesforceServiceException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		

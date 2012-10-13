@@ -1,6 +1,5 @@
 package com.sfa.persistence.connection;
 
-import com.sfa.qb.model.auth.SessionUser;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 
@@ -12,28 +11,20 @@ public class ConnectionManager {
 		connection = new Connection();
 	}
     
-	public static void openConnection() throws ConnectionException {
-		connection.openConnection();
+	public static PartnerConnection openConnection() throws ConnectionException {
+		return connection.openConnection();
 	}
 	
-	public static void openConnection(String sessionId) throws ConnectionException {
-		connection.openConnection(sessionId);
+	public static PartnerConnection openConnection(String sessionId) throws ConnectionException {
+		return connection.openConnection(sessionId);
 	}
 	
-	public static void openConnection(String username, String password) throws ConnectionException {
-		connection.openConnection(username, password);
+	public static PartnerConnection openConnection(String username, String password) throws ConnectionException {
+		return connection.openConnection(username, password);
 	}
-	
-    public static void openConnection(SessionUser sessionUser) throws ConnectionException {
-    	connection.openConnection(sessionUser);
-    }
 	
     public static void setConnection(PartnerConnection partnerConnection) {
     	connection.setConnection(partnerConnection);
-    }
-
-    public static PartnerConnection getConnection() {
-    	return connection.getConnection();
     }
     
     public static void closeConnection() throws ConnectionException {

@@ -1,6 +1,5 @@
 package com.sfa.persistence.connection;
 
-import java.security.AccessController;
 import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -9,8 +8,6 @@ import java.util.logging.Logger;
 import javax.security.auth.Subject;
 
 import org.jboss.as.controller.security.SecurityContext;
-
-
 
 import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.auth.SessionUser;
@@ -38,49 +35,37 @@ public class Connection implements SessionRenewer {
         SESSION_USER = new ThreadLocal<SessionUser>();
     }
     
-    public void openConnection() throws ConnectionException {  	
-    	log.info("openConnection");
+    public PartnerConnection openConnection() throws ConnectionException {  
     	
-    	if (AccessController.getContext() != null) {
-    	
-    		log.info("inside accesscontroller");
-    	//Subject subject = Subject.getSubject(AccessController.getContext());
+    	if (getConnection() != null)
+    		return getConnection();
 
-    	Subject subject = SecurityContext.getSubject();
-    	if (subject == null) {
-    		log.info("subject is null...boo!");
-    	}
-
-    	Iterator<Principal> iterator = subject.getPrincipals().iterator();
-    	log.info("inside accesscontroller iterator: " + iterator.hasNext());
-    	while (iterator.hasNext()) {
-    		Principal principal = iterator.next();
-    		if (principal instanceof OAuthPrincipal) {
-    			log.info("finally found in security context party on");
-    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
-    			OAuth oauth = oauthPrincipal.getOAuth();
-    			log.info(oauth.getAccessToken());
-    			openConnection(oauth.getAccessToken());
-    		}
-    		    		
-    		 
-    	}
-    	} else {
-    	
-    	
-    	ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(System.getProperty("salesforce.authEndpoint"));
-    	config.setUsername(System.getProperty("salesforce.username"));
-		config.setPassword(System.getProperty("salesforce.password"));
-		config.setSessionRenewer(this);
-						
-		PartnerConnection connection = Connector.newConnection(config);
-		
-		setConnection(connection);
-    	}
+		Subject subject = SecurityContext.getSubject();
+		if (subject != null) {
+			
+			Iterator<Principal> iterator = subject.getPrincipals().iterator();
+	    	while (iterator.hasNext()) {
+	    		Principal principal = iterator.next();
+	    		if (principal instanceof OAuthPrincipal) {
+	    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
+	    			OAuth oauth = oauthPrincipal.getOAuth();
+	    			log.info(oauth.getAccessToken());
+	    			return openConnection(oauth.getAccessToken());
+	    		}
+	    	}
+	    	
+	    	return null;
+	    	
+		} else {
+			
+			return openDefaultConnection();
+		}
     }
         
-    public void openConnection(String sessionId) throws ConnectionException {
+    public PartnerConnection openConnection(String sessionId) throws ConnectionException {
+    	
+    	if (getConnection() != null)
+    		return getConnection();
     	    	
     	ConnectorConfig config = new ConnectorConfig();
     	config.setServiceEndpoint(System.getProperty("salesforce.service.endpoint"));
@@ -90,9 +75,14 @@ public class Connection implements SessionRenewer {
     	PartnerConnection connection = Connector.newConnection(config);
     	    	
     	setConnection(connection);
+    	
+    	return getConnection();
     }
     
-    public void openConnection(String username, String password) throws ConnectionException {
+    public PartnerConnection openConnection(String username, String password) throws ConnectionException {
+    	
+    	if (getConnection() != null)
+    		return getConnection();
     	
     	ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
@@ -102,20 +92,8 @@ public class Connection implements SessionRenewer {
 		PartnerConnection connection = Connector.newConnection(config);
 		
 		setConnection(connection);
-    }
-    
-    public void openConnection(SessionUser sessionUser) throws ConnectionException {
-    	
-    	ConnectorConfig config = new ConnectorConfig();
-    	config.setServiceEndpoint(sessionUser.getIdentity().getUrls().getPartner().replace("{version}", System.getProperty("salesforce.api.version")));
-    	config.setManualLogin(Boolean.TRUE);
-    	config.setSessionId(sessionUser.getOAuth().getAccessToken());
-    	
-    	PartnerConnection connection = Connector.newConnection(config);
-    	    	
-    	setConnection(connection);
-    	
-    	setSessionUser(sessionUser);
+		
+		return getConnection();
     }
     
     public void setSessionUser(SessionUser sessionUser) {
@@ -130,7 +108,7 @@ public class Connection implements SessionRenewer {
     	PARTNER_CONNECTION.set(connection);
     }
 
-    public PartnerConnection getConnection() {
+    private PartnerConnection getConnection() {
     	return PARTNER_CONNECTION.get();
     }
     
@@ -161,5 +139,20 @@ public class Connection implements SessionRenewer {
         renewalHeader.headerElement = element;
         
         return renewalHeader;
+    }
+    
+    private PartnerConnection openDefaultConnection() throws ConnectionException {  	
+  
+	   	ConnectorConfig config = new ConnectorConfig();
+	   	config.setAuthEndpoint(System.getProperty("salesforce.authEndpoint"));
+	   	config.setUsername(System.getProperty("salesforce.username"));
+		config.setPassword(System.getProperty("salesforce.password"));
+		config.setSessionRenewer(this);
+							
+		PartnerConnection connection = Connector.newConnection(config);
+			
+		setConnection(connection);
+			
+		return getConnection();
     }
 }

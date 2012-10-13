@@ -66,7 +66,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Inject
 	private MainController mainController;
 				
-			
+	private LoginContext loginContext;		
+	
 	private SessionUser sessionUser;		
 
 	@Produces
@@ -178,6 +179,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void logout() {
 		logger.info("logout");
 		
+		/**
+		 * revoke the Salesforce OAuth token
+		 */
+		
 		String revokeUrl = System.getProperty("salesforce.environment") 
 					+ "/services/oauth2/revoke?" 
 					+ "token=" + sessionUser.getOAuth().getAccessToken();
@@ -191,7 +196,22 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
 		}
 		
+		/**
+		 * remove the Subject from SecurityContext
+		 */
+		
+		try {
+			loginContext.logout();
+		} catch (LoginException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
+		}				
+		
 		setLoggedIn(Boolean.FALSE);
+		
+		/**
+		 * invalidate the session
+		 */
 		
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 	    session.invalidate();
@@ -245,7 +265,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			    
 			    oauth.setIdentity(identity);
 			    					    			    				
-				LoginContext loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(oauth));				
+				loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(oauth));				
 				loginContext.login();
 
                 sessionUser = new SessionUser(oauth, identity);

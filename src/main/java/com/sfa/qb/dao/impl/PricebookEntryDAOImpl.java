@@ -47,7 +47,7 @@ public class PricebookEntryDAOImpl extends DAO implements PricebookEntryDAO, Ser
 		PricebookEntry pricebookEntry = null;
 		
 		try {
-			ConnectionManager.openConnection(sessionUser);
+			ConnectionManager.openConnection();
 		
 		    q = em.createQuery(queryString);
 		    q.setParameter("pricebookId", pricebookId);
