@@ -29,10 +29,10 @@ import javax.servlet.http.HttpSession;
 import nl.bitwalker.useragentutils.UserAgent;
 
 import com.google.gson.Gson;
-import com.sfa.qb.auth.OAuthCallbackHandler;
-import com.sfa.qb.auth.OAuthPrincipal;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
+import com.sfa.qb.login.OAuthCallbackHandler;
+import com.sfa.qb.login.OAuthPrincipal;
 import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.entities.LoginHistory;
@@ -153,18 +153,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		logger.info("logout");
 		
 		/**
-		 * revoke the Salesforce OAuth token
-		 */
-		
-		try {			
-			servicesManager.revokeToken();
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		}
-		
-		/**
-		 * remove the Subject from SecurityContext
+		 * revoke the Salesforce OAuth token and remove the Subject from SecurityContext
 		 */
 		
 		try {

@@ -1,4 +1,4 @@
-package com.sfa.qb.auth;
+package com.sfa.qb.login;
 
 import javax.security.auth.callback.Callback;
 

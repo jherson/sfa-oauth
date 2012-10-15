@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sfa.qb.exception.QueryException;
-import com.sfa.qb.exception.SalesforceServiceException;
+import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;
 import com.sfa.qb.model.sobject.QuoteLineItemPriceAdjustment;
@@ -32,7 +32,7 @@ public interface QuoteDAO {
 	public SaveResult[] saveQuotePriceAdjustments(List<QuotePriceAdjustment> quotePriceAdjustmentList) throws ConnectionException;
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
 	
-	public String copyQuote(String quoteId) throws SalesforceServiceException, ConnectionException;
+	public String copyQuote(String quoteId) throws ServiceException, ConnectionException;
 	public void activateQuote(String quoteId) throws ConnectionException;
 	public void calculateQuote(String quoteId) throws ConnectionException;
 	public void priceQuote(Quote quote) throws ConnectionException;	

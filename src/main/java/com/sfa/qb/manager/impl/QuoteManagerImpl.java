@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import com.sfa.qb.dao.QuoteDAO;
-import com.sfa.qb.exception.SalesforceServiceException;
+import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.manager.QuoteManager;
 import com.sfa.qb.model.sobject.OpportunityLineItem;
 import com.sfa.qb.model.sobject.Quote;
@@ -65,7 +65,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public String copy(Quote quote) throws SalesforceServiceException, ConnectionException {
+	public String copy(Quote quote) throws ServiceException, ConnectionException {
 		return doCopy(quote);
 	}
 	
@@ -225,7 +225,7 @@ public class QuoteManagerImpl implements QuoteManager {
 		quoteDAO.priceQuote(quote);
 	}
 	
-	private String doCopy(Quote quote) throws SalesforceServiceException, ConnectionException {		
+	private String doCopy(Quote quote) throws ServiceException, ConnectionException {		
 		return quoteDAO.copyQuote(quote.getId());
 	}
 	

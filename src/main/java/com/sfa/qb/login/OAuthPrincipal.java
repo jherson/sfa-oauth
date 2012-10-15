@@ -1,4 +1,4 @@
-package com.sfa.qb.auth;
+package com.sfa.qb.login;
 
 import java.io.Serializable;
 import java.security.Principal;

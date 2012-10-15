@@ -17,7 +17,7 @@ import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.dao.OpportunityDAO;
 import com.sfa.qb.dao.QuoteDAO;
 import com.sfa.qb.exception.QueryException;
-import com.sfa.qb.exception.SalesforceServiceException;
+import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.model.sobject.Opportunity;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;

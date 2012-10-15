@@ -2,7 +2,7 @@ package com.sfa.qb.manager;
 
 import java.util.List;
 
-import com.sfa.qb.exception.SalesforceServiceException;
+import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.model.sobject.OpportunityLineItem;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;
@@ -20,7 +20,7 @@ public interface QuoteManager {
 	public DeleteResult[] delete(List<QuoteLineItem> quoteLineItems);
 	public void calculate(Quote quote) throws ConnectionException;
 	public void price(Quote quote) throws ConnectionException;
-	public String copy(Quote quote) throws SalesforceServiceException, ConnectionException;
+	public String copy(Quote quote) throws ServiceException, ConnectionException;
 	public void activate(Quote quote) throws ConnectionException;
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems);
 }
