@@ -8,10 +8,4 @@ public interface SessionManager {
 	public void setTheme(String theme);
 	public String getTheme();	
 	public Boolean getLoggedIn();
-	
-	public void setEditMode(Boolean editMode);
-	public Boolean getEditMode();	
-	public void setGoalSeek(Boolean goalSeek);
-	public Boolean getGoalSeek();
-	
 }

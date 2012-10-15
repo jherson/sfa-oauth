@@ -8,23 +8,27 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
-import com.sfa.persistence.annotation.Table;
+import com.google.gson.annotations.SerializedName;
 import com.sfa.qb.model.chatter.Followers;
 
-@Table(name="Quote__c")
-public class Quote extends QuoteBuilderObject implements Serializable, Cloneable {
+public class Quote implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
-			
-	private String link;
 	
+	@SerializedName("Id")
+	private String id;
+	
+	@SerializedName("Version__c")
 	private Double version;
 	
 	@NotNull
+	@SerializedName("Name")
 	private String name;
 	
+	@SerializedName("Number__c")
 	private String number;
 	
+	@SerializedName("CurrencyIsoCode")
 	private String currencyIsoCode;
 	
 	private String payNow;
@@ -98,9 +102,11 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 	private List<QuoteLineItem> quoteLineItems;
 		
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
+	
+	private Boolean editMode;
 
 	public Quote() {
-		super();
+		
 	}
 
 	public Quote(Opportunity opportunity) {
@@ -137,12 +143,12 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 		setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
 	}
 	
-	public String getLink() {
-		return link;
+	public String getId() {
+		return id;
 	}
-
-	public void setLink(String link) {
-		this.link = link;
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Double getVersion() {
@@ -463,5 +469,13 @@ public class Quote extends QuoteBuilderObject implements Serializable, Cloneable
 
 	public void setQuoteLineItemSchedules(List<QuoteLineItemSchedule> quoteLineItemSchedules) {
 		this.quoteLineItemSchedules = quoteLineItemSchedules;
+	}
+
+	public Boolean getEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(Boolean editMode) {
+		this.editMode = editMode;
 	}
 }

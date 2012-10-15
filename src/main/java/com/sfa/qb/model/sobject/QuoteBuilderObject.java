@@ -3,13 +3,11 @@ package com.sfa.qb.model.sobject;
 import java.util.Date;
 import java.io.Serializable;
 
-import com.sfa.persistence.annotation.Id;
 
 public class QuoteBuilderObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
 	private String id;
 	private String url;
 	private String currencyIsoCode;
@@ -131,6 +129,7 @@ public class QuoteBuilderObject implements Serializable, Cloneable {
 	public void setLastModifiedByLastName(String lastModifiedByLastName) {
 		this.lastModifiedByLastName = lastModifiedByLastName;
 	}
+	
 	
     public Object clone() throws CloneNotSupportedException {
 	    return super.clone();

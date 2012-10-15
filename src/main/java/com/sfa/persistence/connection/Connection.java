@@ -9,9 +9,8 @@ import javax.security.auth.Subject;
 
 import org.jboss.as.controller.security.SecurityContext;
 
+import com.sfa.qb.auth.OAuthPrincipal;
 import com.sfa.qb.model.auth.OAuth;
-import com.sfa.qb.model.auth.SessionUser;
-import com.sfa.qb.service.OAuthPrincipal;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SessionHeader_element;
@@ -27,12 +26,9 @@ public class Connection implements SessionRenewer {
 	        new javax.xml.namespace.QName("urn:partner.soap.sforce.com", "SessionHeader");
 
     private static final ThreadLocal<PartnerConnection> PARTNER_CONNECTION;
-    
-    private static final ThreadLocal<SessionUser> SESSION_USER;
 
     static {
     	PARTNER_CONNECTION = new ThreadLocal<PartnerConnection>();
-        SESSION_USER = new ThreadLocal<SessionUser>();
     }
     
     public PartnerConnection openConnection() throws ConnectionException {  
@@ -94,14 +90,6 @@ public class Connection implements SessionRenewer {
 		setConnection(connection);
 		
 		return getConnection();
-    }
-    
-    public void setSessionUser(SessionUser sessionUser) {
-    	SESSION_USER.set(sessionUser);
-    }
-    
-    public SessionUser getSessionUser() {
-    	return SESSION_USER.get();
     }
     
     public void setConnection(PartnerConnection connection) {

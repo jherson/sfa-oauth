@@ -58,9 +58,6 @@ public class QuoteFactory {
 		quote.setContactId(wrapper.getString("ContactId__r", "Id"));
 		quote.setContactName(wrapper.getString("ContactId__r", "Name"));
 		quote.setContactEmail(wrapper.getString("ContactId__r", "Email"));
-		quote.setCreatedById(wrapper.getString("CreatedBy", "Id"));
-		quote.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
-		quote.setCreatedDate(wrapper.getDateTime("CreatedDate"));
 		quote.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		quote.setEffectiveDate(wrapper.getDate("EffectiveDate__c"));
 		quote.setEndDate(wrapper.getDate("EndDate__c"));
@@ -70,11 +67,7 @@ public class QuoteFactory {
 		quote.setIsCalculated(wrapper.getBoolean("IsCalculated__c"));
 		quote.setIsNonStandardPayment(wrapper.getBoolean("IsNonStandardPayment__c"));
 		quote.setLastCalculatedDate(wrapper.getDateTime("LastCalculatedDate__c"));
-		quote.setLastPricedDate(wrapper.getDateTime("LastPricedDate__c"));
-		quote.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
-		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
-		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));				
-		quote.setLink(wrapper.getString("Link__c"));
+		quote.setLastPricedDate(wrapper.getDateTime("LastPricedDate__c"));			
 		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
 		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));
@@ -177,9 +170,6 @@ public class QuoteFactory {
 		quote.setContactId(wrapper.getString("ContactId__r", "Id"));
 		quote.setContactName(wrapper.getString("ContactId__r", "Name"));
 		quote.setContactEmail(wrapper.getString("ContactId__r", "Email"));
-		quote.setCreatedById(wrapper.getString("CreatedBy", "Id"));
-		quote.setCreatedByName(wrapper.getString("CreatedBy", "Name"));
-		quote.setCreatedDate(wrapper.getDateTime("CreatedDate"));
 		quote.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		quote.setEffectiveDate(wrapper.getDate("EffectiveDate__c"));
 		quote.setEndDate(wrapper.getDate("EndDate__c"));
@@ -190,10 +180,6 @@ public class QuoteFactory {
 		quote.setIsNonStandardPayment(wrapper.getBoolean("IsNonStandardPayment__c"));
 		quote.setLastCalculatedDate(wrapper.getDateTime("LastCalculatedDate__c"));
 		quote.setLastPricedDate(wrapper.getDateTime("LastPricedDate__c"));
-		quote.setLastModifiedById(wrapper.getString("LastModifiedBy", "Id"));
-		quote.setLastModifiedByName(wrapper.getString("LastModifiedBy", "Name"));
-		quote.setLastModifiedDate(wrapper.getDateTime("LastModifiedDate"));
-		quote.setLink(wrapper.getString("Link__c"));
 		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
 		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));

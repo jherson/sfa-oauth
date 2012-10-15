@@ -10,9 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@Table(name="Role")
+@Table(name="UserRole")
 
-public class Role implements Serializable {
+public class UserRole implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

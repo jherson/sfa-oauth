@@ -1,105 +1,107 @@
 package com.sfa.qb.model.sobject;
 
+import java.io.Serializable;
 import java.util.Locale;
 
-import com.sfa.persistence.annotation.Column;
-import com.sfa.persistence.annotation.Id;
-import com.sfa.persistence.annotation.OneToOne;
+import com.google.gson.annotations.SerializedName;
+import com.sfa.qb.model.auth.OAuth;
 
-public class User extends QuoteBuilderObject {
+public class User implements Serializable {
 
 	private static final long serialVersionUID = -5495949651775917498L;
 	
-	@Id
+	@SerializedName("Id")
 	private String id;
 
-	@Column(name="UserName")
+	@SerializedName("Username")
 	private String userName;
 	
-	@Column(name="FirstName")
+	@SerializedName("FirstName")
 	private String firstName;
 	
-	@Column(name="LastName")
+	@SerializedName("LastName")
 	private String lastName;
 	
-	@Column(name="Name")
+	@SerializedName("Name")
 	private String name;
 	
-	@Column(name="CompanyName")
+	@SerializedName("CompanyName")
 	private String companyName;
 	
-	@Column(name="Division")
+	@SerializedName("Division")
 	private String division;
 	
-	@Column(name="Department")
+	@SerializedName("Department")
 	private String department;
 	
-	@Column(name="Title")
+	@SerializedName("Title")
 	private String title;
 	
-	@Column(name="Street")
+	@SerializedName("Street")
 	private String street;
 	
-	@Column(name="City")
+	@SerializedName("City")
 	private String city;
 	
-	@Column(name="State")
+	@SerializedName("State")
 	private String state;
 	
-	@Column(name="PostalCode")
+	@SerializedName("PostalCode")
 	private String postalCode;
 	
-	@Column(name="Country")
+	@SerializedName("Country")
 	private String country;
 	
-	@Column(name="Email")
+	@SerializedName("Email")
 	private String email;
 	
-	@Column(name="Phone")
+	@SerializedName("Phone")
 	private String phone;
 	
-	@Column(name="Fax")
+	@SerializedName("Fax")
 	private String fax;
 	
-	@Column(name="MobilePhone")
+	@SerializedName("MobilePhone")
 	private String mobilePhone;
 	
-	@Column(name="Alias")
+	@SerializedName("Alias")
 	private String alias;
 	
-	@Column(name="Extension")
+	@SerializedName("Extension")
 	private String extension;
 	
-	@Column(name="Region__c")
+	@SerializedName("Region__c")
 	private String region;
 	
-	@Column(name="ContactId")
+	@SerializedName("ContactId")
 	private String contactId;
 	
-	@OneToOne(name="Role", referenceColumnName="RoleId")
-	private Role role;
+	@SerializedName("UserRole")
+	private UserRole userRole;
 	
-	@OneToOne(name="Profile", referenceColumnName="ProfileId")
+	@SerializedName("Profile")
 	private Profile profile;
 	
-	@Column(name="DefaultCurrencyIsoCode")
+	@SerializedName("DefaultCurrencyIsoCode")
 	private String defaultCurrencyIsoCode;
 	
-	@Column(name="FullPhototUrl")
+	@SerializedName("FullPhototUrl")
 	private String fullPhotoUrl;
 	
-	@Column(name="SmallPhotoUrl")
+	@SerializedName("SmallPhotoUrl")
 	private String smallPhotoUrl;
 	
-	@Column(name="Locale")
+	@SerializedName("LocaleSidKey")
+	private String localeSidKey;
+
+	@SerializedName("TimeZoneSidKey")
+	private String timeZone;
+	
 	private Locale locale;
-		
-	private String roleName;
-	private String profileName;
-	private String timeZone;	
 	private String dateFormatPattern;
 	private String shortTimeFormat;
 	private String dateTimeFormatPattern;
+	private OAuth oauth;
 
 	public User() {
 		super();
@@ -289,22 +291,6 @@ public class User extends QuoteBuilderObject {
 		this.contactId = contactId;
 	}
 
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public String getProfileName() {
-		return profileName;
-	}
-
-	public void setProfileName(String profileName) {
-		this.profileName = profileName;
-	}
-
 	public String getFullPhotoUrl() {
 		return fullPhotoUrl;
 	}
@@ -361,12 +347,12 @@ public class User extends QuoteBuilderObject {
 		this.dateTimeFormatPattern = dateTimeFormatPattern;
 	}
 
-	public Role getRole() {
-		return role;
+	public UserRole getUserRole() {
+		return userRole;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
 	}
 
 	public Profile getProfile() {
@@ -375,5 +361,21 @@ public class User extends QuoteBuilderObject {
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
+	}
+	
+	public OAuth getOAuth() {
+		return oauth;
+	}
+	
+	public void setOAuth(OAuth oauth) {
+		this.oauth = oauth;
+	}
+
+	public String getLocaleSidKey() {
+		return localeSidKey;
+	}
+
+	public void setLocaleSidKey(String localeSidKey) {
+		this.localeSidKey = localeSidKey;
 	}
 }

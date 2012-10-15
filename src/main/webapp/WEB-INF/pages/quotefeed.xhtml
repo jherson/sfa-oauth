@@ -71,7 +71,7 @@
 								<br />
 								<h:panelGroup layout="block" class="feed-item-info">
 									<h:outputText value="#{feedItem.createdDate}">
-										<f:convertDateTime locale="#{sessionUser.locale}"
+										<f:convertDateTime locale="#{sessionUser.OAuth.accessToken}"
 											timeZone="#{sessionUser.timeZone}"
 											pattern="#{sessionUser.dateFormatPattern}" type="date" />
 									</h:outputText>

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Pricebook implements Serializable {
+public class UserRole implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

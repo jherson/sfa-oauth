@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.manager.QuoteManager;
-import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.sobject.Contact;
 import com.sfa.qb.model.sobject.Opportunity;
 import com.sfa.qb.model.sobject.Quote;
@@ -79,9 +78,6 @@ public class QuoteController {
 	private Logger log;
 	
 	@Inject
-	private SessionManager sessionManager;
-	
-	@Inject
 	private MainController mainController;
 	
 	@Inject
@@ -106,19 +102,20 @@ public class QuoteController {
 	}
 	
 	public void setEditMode(Boolean editMode) {
-		sessionManager.setEditMode(editMode);
+		selectedQuote.setEditMode(editMode);
 	}
 	
 	public Boolean getEditMode() {
-		return sessionManager.getEditMode();
+		return selectedQuote.getEditMode();
 	}
 	
 	public void setGoalSeek(Boolean goalSeek) {
-		sessionManager.setGoalSeek(goalSeek);
+		//sessionManager.setGoalSeek(goalSeek);
 	}
 	
 	public Boolean getGoalSeek() {
-		return sessionManager.getGoalSeek();
+		//return sessionManager.getGoalSeek();
+		return null; 
 	}
 
 	public void setMainArea(TemplatesEnum mainArea) {

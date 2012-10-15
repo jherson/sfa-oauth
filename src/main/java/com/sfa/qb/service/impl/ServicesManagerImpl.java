@@ -1,4 +1,4 @@
-package com.sfa.qb.service;
+package com.sfa.qb.service.impl;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
@@ -9,11 +9,10 @@ import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.SalesforceServiceException;
+import com.sfa.qb.service.ServicesManager;
 import com.sforce.ws.ConnectionException;
 
 @Named(value="servicesManager")
@@ -30,7 +29,8 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
         String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
         
 		ClientRequest request = new ClientRequest(url);
-		request.header("Content-type", "application/json");		
+		request.header("Content-type", "application/json");	
+		request.header("X-PrettyPrint", "1");
 		request.queryParameter("grant_type", "authorization_code");		
 		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
 		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
@@ -45,6 +45,42 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		}
 		
 		return response.getEntity();		
+	}
+	
+	@Override
+	public String refreshAuthToken() throws ConnectionException, SalesforceServiceException {
+        String url = System.getProperty("salesforce.environment") + "/services/oauth2/token";
+        
+		ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/json");	
+		request.header("X-PrettyPrint", "1");
+		request.queryParameter("grant_type", "refresh_token");		
+		request.queryParameter("client_id", System.getProperty("salesforce.oauth.clientId"));
+		request.queryParameter("client_secret", System.getProperty("salesforce.oauth.clientSecret"));
+		request.queryParameter("refresh_token", ConnectionManager.openConnection().getConfig().getSessionId());
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
+		
+		return response.getEntity();		
+	}
+	
+	@Override
+	public void revokeToken() throws ConnectionException, SalesforceServiceException {
+		String revokeUrl = System.getProperty("salesforce.environment") + "/services/oauth2/revoke";
+
+		ClientRequest request = new ClientRequest(revokeUrl);
+		request.queryParameter("token", ConnectionManager.openConnection().getConfig().getSessionId());
+
+		try {
+			request.post();
+		} catch (Exception e) {
+			throw new SalesforceServiceException(e);
+		}
 	}
 	
 	@Override
@@ -67,12 +103,46 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 
 	@Override
 	public String getCurrentUserInfo() throws ConnectionException, SalesforceServiceException {
+		String queryString = "Select " +
+				"Id, " +
+				"Username, " +
+				"LastName, " +
+				"FirstName, " +
+				"Name, " +
+				"CompanyName, " +
+				"Division, " +
+				"Department, " +
+				"Title, " +
+				"Street, " +
+				"City, " +
+				"State, " +
+				"PostalCode, " +
+				"Country, " +
+				"TimeZoneSidKey, " +
+				"Email, " +
+				"Phone, " +
+				"Fax, " +
+				"MobilePhone, " +
+				"Alias, " +
+				"DefaultCurrencyIsoCode, " +
+				"Extension, " +
+				"LocaleSidKey, " +
+				"FullPhotoUrl, " +
+				"SmallPhotoUrl, " +
+				"Region__c, " +
+				"UserRole.Id, " +
+				"UserRole.Name, " +
+				"Profile.Id, " +
+				"Profile.Name " +
+				"From User";
+		
 		String url = getApexRestEndpoint() + "/QuoteRestService/currentUserInfo";
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/json");
 		request.header("X-PrettyPrint", "1");
+		request.queryParameter("q", queryString);
 		
 		ClientResponse<String> response = null; 		
 		try {
@@ -125,17 +195,16 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public JSONObject getFollowers(String recordId) throws ConnectionException {
+	public String getFollowers(String recordId) throws ConnectionException {
 		String url = getRestEndpoint() + "/chatter/records/" + recordId + "/followers";
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		
-		JSONObject jsonObject = null;
 		try {
 			ClientResponse<String> response = request.get(String.class);
 			if (response.getResponseStatus() == Status.OK) {
-			    jsonObject = new JSONObject(new JSONTokener(response.getEntity()));
+			    return response.getEntity();
 			} else {
 				throw new SalesforceServiceException(response.getEntity());
 			}
@@ -143,22 +212,21 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			//log.error(e);
 		}
 		
-		return jsonObject;
+		return null;
 		
 	}
 	
 	@Override
-	public JSONObject getFeed(String recordId) throws ConnectionException {
+	public String getFeed(String recordId) throws ConnectionException {
 		String url = getRestEndpoint() + "/chatter/feeds/record/" + recordId + "/feed-items";	
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());			
 		
-		JSONObject jsonObject = null;
 		try {
 			ClientResponse<String> response = request.get(String.class);
 			if (response.getResponseStatus() == Status.OK) {
-			    jsonObject = new JSONObject(new JSONTokener(response.getEntity()));
+			    return response.getEntity();
 			} else {
 				throw new SalesforceServiceException(response.getEntity());
 			}
@@ -166,7 +234,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 			//log.error(e);
 		}
 		
-		return jsonObject;
+		return null;
 	}
 	
 	@Override

@@ -81,8 +81,8 @@ public class OpportunityFactory {
 
 		List<User> ownerList = new ArrayList<User>();
 		if (wrapper.getXmlObject("Owner") != null) {
-			opportunity.setOwner(UserFactory.parse(wrapper.getXmlObject("Owner")));
-			ownerList.add(opportunity.getOwner());
+			//opportunity.setOwner(UserFactory.parse(wrapper.getXmlObject("Owner")));
+			//ownerList.add(opportunity.getOwner());
 		}
 
 		Iterator<XmlObject> records = null;
@@ -99,8 +99,8 @@ public class OpportunityFactory {
 
 		records = wrapper.getRecords("OpportunityTeamMembers");
 		if (records != null) {
-			opportunity.setSalesTeam(UserFactory.parse(records));
-			ownerList.addAll(opportunity.getSalesTeam());
+			//opportunity.setSalesTeam(UserFactory.parse(records));
+			//ownerList.addAll(opportunity.getSalesTeam());
 		}
 
 		opportunity.setOwners(ownerList);
@@ -156,8 +156,8 @@ public class OpportunityFactory {
 
 		List<User> ownerList = new ArrayList<User>();
 		if (wrapper.getJSONObject("Owner") != null) {
-			opportunity.setOwner(UserFactory.deserialize(wrapper.getJSONObject("Owner")));
-			ownerList.add(opportunity.getOwner());
+			//opportunity.setOwner(UserFactory.deserialize(wrapper.getJSONObject("Owner")));
+			//ownerList.add(opportunity.getOwner());
 		}
 
 		JSONArray records = null;
@@ -174,8 +174,8 @@ public class OpportunityFactory {
 
 		records = wrapper.getRecords("OpportunityTeamMembers");
 		if (records != null) {
-			opportunity.setSalesTeam(UserFactory.deserialize(records));
-			ownerList.addAll(opportunity.getSalesTeam());
+			//opportunity.setSalesTeam(UserFactory.deserialize(records));
+			//ownerList.addAll(opportunity.getSalesTeam());
 		}
 
 		opportunity.setOwners(ownerList);

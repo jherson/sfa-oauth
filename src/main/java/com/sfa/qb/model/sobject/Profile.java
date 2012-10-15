@@ -2,17 +2,16 @@ package com.sfa.qb.model.sobject;
 
 import java.io.Serializable;
 
-import com.sfa.persistence.annotation.Column;
-import com.sfa.persistence.annotation.Id;
+import com.google.gson.annotations.SerializedName;
 
 public class Profile implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
+	@SerializedName("Id")
 	private String id;
 	
-	@Column(name="Name")
+	@SerializedName("Name")
 	private String name;
 	
 	public String getId() {

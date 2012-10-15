@@ -1,58 +1,66 @@
 package com.sfa.qb.model.sobject;
 
-import com.sfa.persistence.annotation.Column;
-import com.sfa.persistence.annotation.Entity;
-import com.sfa.persistence.annotation.Table;
+import java.io.Serializable;
 
-@Entity
-@Table(name="Account")
+import com.google.gson.annotations.SerializedName;
 
-public class Account extends QuoteBuilderObject {
+public class Account implements Serializable {
 
 	private static final long serialVersionUID = 4563614967304678524L;
+	
+	@SerializedName("Id")
+	private String id;
 		
-	@Column(name="BillingCity")	
+	@SerializedName("BillingCity")	
 	private String billingCity;
 	
-	@Column(name="BillingCountry")	
+	@SerializedName("BillingCountry")	
 	private String billingCountry;
 	
-	@Column(name="BillingPostalCode")	
+	@SerializedName("BillingPostalCode")	
 	private String billingPostalCode;
 	
-	@Column(name="BillingState")	
+	@SerializedName("BillingState")	
 	private String billingState;
 	
-	@Column(name="BillingStreet")	
+	@SerializedName("BillingStreet")	
 	private String billingStreet;
 	
-	@Column(name="ShippingCity")	
+	@SerializedName("ShippingCity")	
 	private String shippingCity;
 	
-	@Column(name="ShippingCountry")	
+	@SerializedName("ShippingCountry")	
 	private String shippingCountry;
 	
-	@Column(name="ShippingPostalCode")	
+	@SerializedName("ShippingPostalCode")	
 	private String shippingPostalCode;
 	
-	@Column(name="ShippingState")	
+	@SerializedName("ShippingState")	
 	private String shippingState;
 	
-	@Column(name="ShippingStreet")	
+	@SerializedName("ShippingStreet")	
 	private String shippingStreet;
 	
-	@Column(name="VATNumber__c")	
+	@SerializedName("VATNumber__c")	
 	private String vatNumber;
 	
-	@Column(name="Name")	
+	@SerializedName("Name")	
 	private String name;
 	
-	@Column(name="OracleAccountNumber__c")	
+	@SerializedName("OracleAccountNumber__c")	
 	private String oracleAccountNumber;
 	
-	@Column(name="Account_Alias_Name__c")	
+	@SerializedName("Account_Alias_Name__c")	
 	private String accountAliasName;
 	
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
 	
 	public String getBillingCity() {
 		return billingCity;

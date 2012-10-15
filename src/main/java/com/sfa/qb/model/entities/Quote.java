@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -369,6 +370,16 @@ public class Quote implements Serializable, Cloneable {
 		this.quoteLineItems = quoteLineItems;
 	}
 	
+	@Transient
+	private Boolean editMode;
+	
+	public Boolean getEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(Boolean editMode) {
+		this.editMode = editMode;
+	}
 	
 	public Quote() {
 		

@@ -1,13 +1,14 @@
 package com.sfa.qb.model.sobject;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.sfa.persistence.annotation.Column;
+import com.google.gson.annotations.SerializedName;
 
-public class QuoteLineItem extends QuoteBuilderObject {
+public class QuoteLineItem implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,71 +34,74 @@ public class QuoteLineItem extends QuoteBuilderObject {
 	+ " From   QuoteLineItem__r ";
 	**/
 	
-	@Column(name="QuoteId__c")
+	@SerializedName("Id")
+	private String id;
+	
+	@SerializedName("QuoteId__c")
 	private String quoteId;
 	
-	@Column(name="OpportunityLineItemId__c")
+	@SerializedName("OpportunityLineItemId__c")
 	private String opportunityLineItemId;
 	
 	
 	private String sku;
 	private String description;
 	
-	@Column(name="Name")
+	@SerializedName("Name")
 	private String name;
 	
-	@Column(name="EndDate__c")
+	@SerializedName("EndDate__c")
 	private Date endDate;
 	
-	@Column(name="StartDate__c")
+	@SerializedName("StartDate__c")
 	private Date startDate;
 	
-	@Column(name="Term__c")
+	@SerializedName("Term__c")
 	private Integer term;
 	
-	@Column(name="ContractNumbers__c")
+	@SerializedName("ContractNumbers__c")
 	private String contractNumbers;
 	
-	@Column(name="CurrencyIsoCode")
+	@SerializedName("CurrencyIsoCode")
 	private String currencyIsoCode;
 	
-	@Column(name="ListPrice__c")
+	@SerializedName("ListPrice__c")
 	private Double listPrice;
 	
-	@Column(name="NewOrRenewal__c")
+	@SerializedName("NewOrRenewal__c")
 	private String newOrRenewal;
 	
-	@Column(name="OpportunityId__c")
+	@SerializedName("OpportunityId__c")
 	private String opportunityId;
 	
-	@Column(name="PricebookEntryId__c")
+	@SerializedName("PricebookEntryId__c")
 	private String pricebookEntryId;
 	
-	@Column(name="Quantity__c")
+	@SerializedName("Quantity__c")
 	private Integer quantity;
 	
-	@Column(name="UnitPrice__c")
+	@SerializedName("UnitPrice__c")
 	private Double unitPrice;
 	
-	@Column(name="TotalPrice__c")
+	@SerializedName("TotalPrice__c")
 	private Double totalPrice;
 	
-	@Column(name="YearlySalesPrice__c")
+	@SerializedName("YearlySalesPrice__c")
 	private Double yearlySalesPrice;
 	
-	@Column(name="Configured_SKU__c")
+	@SerializedName("Configured_SKU__c")
 	private String configuredSku;
 	
-	@Column(name="Pricing_Attributes__c")
+	@SerializedName("Pricing_Attributes__c")
 	private String pricingAttributes;
 	
-	@Column(name="DiscountAmount__c")
+	@SerializedName("DiscountAmount__c")
 	private Double discountAmount;
 	
-	@Column(name="DiscountPercent__c")
+	@SerializedName("DiscountPercent__c")
 	private Double discountPercent;
 	
-	@Column(name="LineNumber__c")
+	@SerializedName("LineNumber__c")
 	private Integer lineNumber;
 	
 	@NotNull
@@ -106,16 +110,16 @@ public class QuoteLineItem extends QuoteBuilderObject {
 	
 	private Double basePrice;
 	
-	@Column(name="Code__c")
+	@SerializedName("Code__c")
 	private String code;
 	
-	@Column(name="Message__c")
+	@SerializedName("Message__c")
 	private String message;
 	
 	private List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjustments;
 
 	public QuoteLineItem() {
-		super();
+		
 	}
 
 	public QuoteLineItem(Quote quote) {
@@ -133,6 +137,14 @@ public class QuoteLineItem extends QuoteBuilderObject {
 		setListPrice(0.00);
 		setCurrencyIsoCode(quote.getCurrencyIsoCode());
 		setProduct(new Product());
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getQuoteId() {
@@ -365,5 +377,15 @@ public class QuoteLineItem extends QuoteBuilderObject {
 
 	public void setBasePrice(Double basePrice) {
 		this.basePrice = basePrice;
+	}
+	
+	@Override
+    public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
+	}
+	
+	@Override
+	public String toString() {
+		return this.id;
 	}
 }

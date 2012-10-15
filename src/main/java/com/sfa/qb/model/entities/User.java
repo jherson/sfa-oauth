@@ -93,7 +93,7 @@ public class User implements Serializable {
 	
 	@OneToOne
     @JoinColumn(name = "RoleId", referencedColumnName = "Id")
-	private Role role;
+	private UserRole role;
 	
 	@OneToOne
     @JoinColumn(name = "ProfileId", referencedColumnName = "Id")
@@ -375,11 +375,11 @@ public class User implements Serializable {
 		this.dateTimeFormatPattern = dateTimeFormatPattern;
 	}
 
-	public Role getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 

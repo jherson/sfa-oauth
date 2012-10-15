@@ -13,7 +13,7 @@
 		<class>com.sfa.qb.model.entities.LoginHistory</class>
 		<class>com.sfa.qb.model.entities.User</class>
 		<class>com.sfa.qb.model.entities.Profile</class>
-		<class>com.sfa.qb.model.entities.Role</class>
+		<class>com.sfa.qb.model.entities.UserRole</class>
 		<class>com.sfa.qb.model.entities.UserPreferences</class>
 		<properties>
 			<property name="hibernate.cache.use_second_level_cache" value="true" />

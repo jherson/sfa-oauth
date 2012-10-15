@@ -1,12 +1,12 @@
 package com.sfa.qb.model.sobject;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.sfa.persistence.annotation.Column;
-import com.sfa.persistence.annotation.OneToOne;
+import com.google.gson.annotations.SerializedName;
 
-public class Opportunity extends QuoteBuilderObject {
+public class Opportunity implements Serializable {
 
 	private static final long serialVersionUID = -1577960793119757037L;
 /**
@@ -15,96 +15,100 @@ public class Opportunity extends QuoteBuilderObject {
 	+ "OpportunityId__r.FulfillmentChannel__c, "
 **/
 	
-	@Column(name="Name")
+	@SerializedName("Id")
+	private String id;
+	
+	@SerializedName("Name")
 	private String name;
 	
-	@Column(name="Description")
+	@SerializedName("Description")
 	private String description;
 	
-	@Column(name="StageName")
+	@SerializedName("StageName")
 	private String stageName;
 	
-	@Column(name="Amount")
+	@SerializedName("Amount")
 	private Double amount;
 	
-	@Column(name="Probability")
+	@SerializedName("Probability")
 	private String probability;
 	
-	@Column(name="CloseDate")
+	@SerializedName("CloseDate")
 	private Date closeDate;
 	
-	@Column(name="OpportunityType__c")
+	@SerializedName("OpportunityType__c")
 	private String opportunityType;
 	
-	@Column(name="IsClosed")
+	@SerializedName("IsClosed")
 	private Boolean isClosed;
 	
-	@Column(name="IsWon")
+	@SerializedName("IsWon")
 	private Boolean isWon;
 	
-	@Column(name="ForecastCategory")
+	@SerializedName("ForecastCategory")
 	private String forecastCategory;
 	
-	@Column(name="CurrencyIsoCode")
+	@SerializedName("CurrencyIsoCode")
 	private String currencyIsoCode;
 	
-	@Column(name="HasOpportunityLineItem")
+	@SerializedName("HasOpportunityLineItem")
 	private Boolean hasOpportunityLineItem;
 	
-	@OneToOne(name="Pricebook2", referenceColumnName="Pricebook2Id")
+	@SerializedName("Pricebook2")
 	private Pricebook pricebook;
 	
-	@Column(name="FulfillmentChannel__c")
+	@SerializedName("FulfillmentChannel__c")
 	private String fulfillmentChannel;
 	
-	@Column(name="BillingAddress__c")
+	@SerializedName("BillingAddress__c")
 	private String billingAddress;
 	
-	@Column(name="BillingCity__c")
+	@SerializedName("BillingCity__c")
 	private String billingCity;
 	
-	@Column(name="BillingCountry__c")
+	@SerializedName("BillingCountry__c")
 	private String billingCountry;
 	
-	@Column(name="BillingZipPostalCode__c")
+	@SerializedName("BillingZipPostalCode__c")
 	private String billingZipPostalCode;
 	
-	@Column(name="BillingState__c")
+	@SerializedName("BillingState__c")
 	private String billingState;
 	
-	@Column(name="ShippingAddress__c")
+	@SerializedName("ShippingAddress__c")
 	private String shippingAddress;
 	
-	@Column(name="ShippingCity__c")
+	@SerializedName("ShippingCity__c")
 	private String shippingCity;
 	
-	@Column(name="ShippingCountry__c")
+	@SerializedName("ShippingCountry__c")
 	private String shippingCountry;
 	
-	@Column(name="ShippingZipPostalCode__c")
+	@SerializedName("ShippingZipPostalCode__c")
 	private String shippingZipPostalCode;
 	
-	@Column(name="ShippingState__c")
+	@SerializedName("ShippingState__c")
 	private String shippingState;
 	
-	@Column(name="OpportunityNumber__c")
+	@SerializedName("OpportunityNumber__c")
 	private String opportunityNumber;
 	
-	@Column(name="Pay_Now__c")
+	@SerializedName("Pay_Now__c")
 	private String payNow;
 	
-	@Column(name="Country_of_Order__c")
+	@SerializedName("Country_of_Order__c")
 	private String countryOfOrder;
 	
-	@Column(name="Super_Region__c")
+	@SerializedName("Super_Region__c")
 	private String superRegion;
 	
-	@Column(name="PaymentType__c")
+	@SerializedName("PaymentType__c")
 	private String paymentType;
 	
-	@OneToOne(name="Account", referenceColumnName="AccountId")
+	@SerializedName("Account")
 	private Account account;
 	
+	@SerializedName("Owner")
 	private User owner;
 	
 	private List<CreditCheck> creditChecks;
@@ -117,7 +121,15 @@ public class Opportunity extends QuoteBuilderObject {
 	private List<User> owners;
 
 	public Opportunity() {
-		super();
+
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {

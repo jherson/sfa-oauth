@@ -11,7 +11,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
 import com.sfa.qb.manager.QuoteManager;
-import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.qualifiers.DeleteQuote;
 import com.sfa.qb.qualifiers.ListQuotes;
@@ -36,9 +35,6 @@ public class QuoteManagerController {
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<QueryFeed> QUERY_FEED = new AnnotationLiteral<QueryFeed>() {};
-		
-	@Inject
-	private SessionManager sessionManager;
 	
 	@Inject
 	private MainController mainController;
@@ -61,7 +57,7 @@ public class QuoteManagerController {
 	public void editQuote(AjaxBehaviorEvent event) {	
 		Quote quote = (Quote) event.getComponent().getAttributes().get("quote");
 		quoteEvent.select(VIEW_QUOTE).fire(quote);	
-		sessionManager.setEditMode(Boolean.TRUE);
+		quote.setEditMode(Boolean.TRUE);
 		mainController.setMainArea(TemplatesEnum.QUOTE);
 	}
 

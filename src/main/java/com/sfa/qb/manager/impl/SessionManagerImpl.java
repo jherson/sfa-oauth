@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.Principal;
 import java.sql.Timestamp;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,21 +28,20 @@ import javax.servlet.http.HttpSession;
 
 import nl.bitwalker.useragentutils.UserAgent;
 
-import org.jboss.resteasy.client.ClientRequest;
-
 import com.google.gson.Gson;
+import com.sfa.qb.auth.OAuthCallbackHandler;
+import com.sfa.qb.auth.OAuthPrincipal;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.manager.SessionManager;
-import com.sfa.qb.model.auth.Identity;
 import com.sfa.qb.model.auth.OAuth;
-import com.sfa.qb.model.auth.SessionUser;
 import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.UserPreferences;
-import com.sfa.qb.qualifiers.LoggedIn;
-import com.sfa.qb.service.LoginHistoryWriter;
-import com.sfa.qb.service.OAuthCallbackHandler;
+import com.sfa.qb.model.sobject.User;
+import com.sfa.qb.qualifiers.SessionUser;
 import com.sfa.qb.service.ServicesManager;
+import com.sfa.qb.service.impl.PersistenceServiceImpl;
+import com.sfa.qb.util.DateUtil;
 
 @SessionScoped
 @Named(value="sessionManager")
@@ -58,32 +60,25 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private EntityManager entityManager;
 	
 	@Inject
-	private LoginHistoryWriter loginHistoryWriter;
+	private PersistenceServiceImpl loginHistoryWriter;
 		
 	@Inject
 	private ServicesManager servicesManager;
 	
 	@Inject
 	private MainController mainController;
-				
-	private LoginContext loginContext;		
 	
-	private SessionUser sessionUser;		
-
 	@Produces
-	@LoggedIn
 	@Named
-	public SessionUser getSessionUser() {
+	@SessionUser
+	private User sessionUser;
+	
+	public User getSessionUser() {
 		if (sessionUser == null)
-		    this.authenticate();
-				
+			this.authenticate();
+		
 		return sessionUser;
 	}
-	
-	public void setSessionUser(SessionUser sessionUser) {
-		this.sessionUser = sessionUser;
-	}
-	
 	
 	private UserPreferences userPreferences;
 	
@@ -99,7 +94,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@ManagedProperty(value = "false")
 	private Boolean loggedIn;
 	
-
 	public Boolean getLoggedIn() {
 		return loggedIn;
 	}
@@ -129,30 +123,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		return theme;
 	}
 	
-	
-	@ManagedProperty(value = "false")
-	private Boolean editMode;
-
-	public void setEditMode(Boolean editMode) {
-		this.editMode = editMode;
-	}
-
-	public Boolean getEditMode() {
-		return editMode;
-	}
-	
-	@ManagedProperty(value = "false")
-	private Boolean goalSeek;
-
-	public void setGoalSeek(Boolean goalSeek) {
-		this.goalSeek = goalSeek;
-	}
-
-	public Boolean getGoalSeek() {
-		return goalSeek;
-	}
-	
 	private String INDEX_PAGE;
+	
+	private LoginContext loginContext;		
 
 	@PostConstruct
 	public void init() {
@@ -183,14 +156,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		 * revoke the Salesforce OAuth token
 		 */
 		
-		String revokeUrl = System.getProperty("salesforce.environment") 
-					+ "/services/oauth2/revoke?" 
-					+ "token=" + sessionUser.getOAuth().getAccessToken();
-						
-		ClientRequest request = new ClientRequest(revokeUrl);
-		
 		try {			
-			request.post();
+			servicesManager.revokeToken();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
@@ -215,6 +182,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 	    session.invalidate();
+	    
+	    /**
+	     * redirect back to the index page
+	     */
 	    
 	    redirect(INDEX_PAGE);	    
 	}
@@ -250,29 +221,49 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		if (code != null) {
 												
-			try {					
-			    String authResponse = servicesManager.getAuthResponse(code);
-			    OAuth oauth = new Gson().fromJson(authResponse, OAuth.class);
-	
-			    if (oauth.getError() != null) {
-			    	throw new Exception(oauth.getErrorDescription());		 
-			    }	
-			    
-			    logger.info("AccessToken: " + oauth.getAccessToken());
-			    			    			
-			    String identityResponse = servicesManager.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
-			    Identity identity = new Gson().fromJson(identityResponse, Identity.class);
-			    
-			    oauth.setIdentity(identity);
-			    					    			    				
-				loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(oauth));				
+			try {			
+				/**
+				 * call the login context to validate user session
+				 */
+				
+				loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(code));				
 				loginContext.login();
-
-                sessionUser = new SessionUser(oauth, identity);
-			    			    				
+				
+				/**
+				 * get returned OAuth token
+				 */
+				
+				OAuth oauth = null;
+			    					    			    	
+                Subject subject = loginContext.getSubject();
+                Iterator<Principal> iterator = subject.getPrincipals().iterator();
+    	    	while (iterator.hasNext()) {
+    	    		Principal principal = iterator.next();
+    	    		if (principal instanceof OAuthPrincipal) {
+    	    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
+    	    			oauth = oauthPrincipal.getOAuth();
+    	    			logger.info("AccessToken: " + oauth.getAccessToken());
+    	    		}
+    	    	}
+    	    	
+    	    	/**
+    	    	 * get the session user details and add oauth token
+    	    	 * set date and datetime format patterns
+    	    	 */
+    	    	
+    	    	sessionUser = new Gson().fromJson(servicesManager.getCurrentUserInfo(), User.class);
+				sessionUser.setOAuth(oauth);
+				sessionUser.setLocale(DateUtil.stringToLocale(sessionUser.getLocaleSidKey()));
+				sessionUser.setDateFormatPattern(DateUtil.getDateFormat(sessionUser.getLocale()));
+				sessionUser.setDateTimeFormatPattern(DateUtil.getDateTimeFormat(sessionUser.getLocale()));
+			    
+				/**
+				 * write login history
+				 */
+				
 				LoginHistory history = new LoginHistory();
 				history.setRemoteAddress(request.getRemoteAddr());
-				history.setName(sessionUser.getName());
+				history.setName(sessionUser.getUserName());
 				history.setLoginTime(new Timestamp(System.currentTimeMillis()));
 				
 				String userAgentString = request.getHeader("user-agent");				
@@ -290,15 +281,21 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				
 				if (sessionUser.getLocale() != null) {
 					FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
-				} else {
-					FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getIdentity().getLocale());		
-				}			
+				} 		
+				
+				/**
+				 * get the users preferences
+				 */
 				
 				if (userPreferences == null) {
-				    userPreferences = entityManager.find(UserPreferences.class, sessionUser.getId());
+				    userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
 				    theme = userPreferences.getTheme();
 				}
-																											
+				
+				/**
+				 * set variables
+				 */
+				
 				setLoggedIn(Boolean.TRUE);			
 				mainController.setMainArea(TemplatesEnum.HOME);
 				

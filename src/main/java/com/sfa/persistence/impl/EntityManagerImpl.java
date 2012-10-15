@@ -7,7 +7,6 @@ import java.util.List;
 import com.sfa.persistence.EntityManager;
 import com.sfa.persistence.Query;
 import com.sfa.persistence.connection.ConnectionManager;
-import com.sfa.persistence.sql.QueryResolver;
 import com.sfa.qb.exception.QueryException;
 import com.sforce.soap.partner.DeleteResult;
 import com.sforce.soap.partner.PartnerConnection;
@@ -98,16 +97,6 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return null;
 	}
 	
-	@Override
-	public <T> T find(Class<T> clazz, String id) throws QueryException {
-		String queryString = QueryResolver.getBoundQuery(clazz);
-		queryString += "Where Id = ':id'";
-		
-		Query q = createQuery(queryString);	
-		q.setParameter("id", id);	
-		return q.getSingleResult();
-	}
-	
 	private DeleteResult[] delete(String[] ids) throws ConnectionException {
 		return getPartnerConnection().delete(ids);
 	}
@@ -142,5 +131,11 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 			idList.add(sobject.getId());
 		}
 		return idList.toArray(new String[idList.size()]);
+	}
+
+	@Override
+	public <T> T find(Class<T> clazz, String id) throws QueryException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

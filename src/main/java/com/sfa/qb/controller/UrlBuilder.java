@@ -4,29 +4,29 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
-import com.sfa.qb.model.auth.SessionUser;
-import com.sfa.qb.qualifiers.LoggedIn;
+import com.sfa.qb.model.sobject.User;
+import com.sfa.qb.qualifiers.SessionUser;
 
 @Model
 
 public class UrlBuilder {
 	
 	@Inject
-	@LoggedIn
-	private SessionUser sessionUser;
+	@SessionUser
+	private User sessionUser;
 	
 	private String home;	
 	private String profile;
 	
 	@PostConstruct
 	public void init() {
-        String frontDoor = sessionUser.getIdentity().getUrls().getPartner().substring(0,sessionUser.getIdentity().getUrls().getPartner().indexOf("/services")) 
+        String frontDoor = sessionUser.getOAuth().getIdentity().getUrls().getPartner().substring(0,sessionUser.getOAuth().getIdentity().getUrls().getPartner().indexOf("/services")) 
         		+ "/secur/frontdoor.jsp?sid=" 
         		+ sessionUser.getOAuth().getAccessToken() 
         		+ "&retURL=/";
         		
 		setHome(frontDoor + "home/home.jsp");
-		setProfile(frontDoor + sessionUser.getId());
+		setProfile(frontDoor + sessionUser.getOAuth().getIdentity().getUserId());
 	}
 	
 	public String getHome() {
