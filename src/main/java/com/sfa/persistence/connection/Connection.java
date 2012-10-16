@@ -9,8 +9,8 @@ import javax.security.auth.Subject;
 
 import org.jboss.as.controller.security.SecurityContext;
 
-import com.sfa.qb.login.OAuthPrincipal;
-import com.sfa.qb.model.auth.OAuth;
+import com.sfa.qb.login.oauth.OAuthPrincipal;
+import com.sfa.qb.login.oauth.model.OAuth;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SessionHeader_element;

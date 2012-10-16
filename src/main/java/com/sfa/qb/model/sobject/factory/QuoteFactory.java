@@ -47,9 +47,6 @@ public class QuoteFactory {
 		quote.setId(wrapper.getId());
 		quote.setAmount(wrapper.getDouble("Amount__c"));
 		quote.setComments(wrapper.getString("Comments__c"));
-		quote.setContactId(wrapper.getString("ContactId__r", "Id"));
-		quote.setContactName(wrapper.getString("ContactId__r", "Name"));
-		quote.setContactEmail(wrapper.getString("ContactId__r", "Email"));
 		quote.setCurrencyIsoCode(wrapper.getString("CurrencyIsoCode"));
 		quote.setEffectiveDate(wrapper.getDate("EffectiveDate__c"));
 		quote.setEndDate(wrapper.getDate("EndDate__c"));
@@ -62,9 +59,6 @@ public class QuoteFactory {
 		quote.setLastPricedDate(wrapper.getDateTime("LastPricedDate__c"));			
 		quote.setName(wrapper.getString("Name"));
 		quote.setNumber(wrapper.getString("Number__c"));
-		quote.setOwnerId(wrapper.getString("QuoteOwnerId__r", "Id"));
-		quote.setOwnerName(wrapper.getString("QuoteOwnerId__r", "Name"));
-		quote.setOwnerEmail(wrapper.getString("QuoteOwnerId__r", "Email"));
 		quote.setPayNow(wrapper.getString("PayNow__c"));
 		quote.setPricebookId(wrapper.getString("PricebookId__c"));
 		quote.setReferenceNumber(wrapper.getString("ReferenceNumber__c"));

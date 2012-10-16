@@ -1,4 +1,4 @@
-package com.sfa.qb.login;
+package com.sfa.qb.login.oauth;
 
 import java.io.IOException;
 

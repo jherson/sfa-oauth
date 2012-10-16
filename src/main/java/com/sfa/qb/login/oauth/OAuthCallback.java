@@ -1,8 +1,8 @@
-package com.sfa.qb.login;
+package com.sfa.qb.login.oauth;
 
 import javax.security.auth.callback.Callback;
 
-import com.sfa.qb.model.auth.OAuth;
+import com.sfa.qb.login.oauth.model.OAuth;
 
 public class OAuthCallback implements Callback {
 	

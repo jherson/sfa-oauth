@@ -33,7 +33,7 @@ public interface QuoteDAO {
 	public SaveResult[] saveQuoteLineItemPriceAdjustments(List<QuoteLineItemPriceAdjustment> quoteLineItemPriceAdjsutmentList) throws ConnectionException;
 	
 	public String copyQuote(String quoteId) throws ServiceException, ConnectionException;
-	public void activateQuote(String quoteId) throws ConnectionException;
-	public void calculateQuote(String quoteId) throws ConnectionException;
-	public void priceQuote(Quote quote) throws ConnectionException;	
+	public void activateQuote(String quoteId) throws ConnectionException, ServiceException;
+	public void calculateQuote(String quoteId) throws ConnectionException, ServiceException;
+	public void priceQuote(Quote quote) throws ConnectionException, ServiceException;	
 }

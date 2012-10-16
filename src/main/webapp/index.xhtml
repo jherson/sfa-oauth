@@ -36,27 +36,6 @@
 		<div id="header-right">
 
 			<div class="header-cell">
-				<h:outputText value="#{msgs.themes}" rendered="#{sessionManager.loggedIn}"
-					style="color:#{a4jSkin.generalTextColor}; font-size: 12px; font-weight: bold" />
-			</div>
-
-			<div class="header-cell">
-				<h:selectOneMenu id="theme" value="#{sessionManager.theme}" rendered="#{sessionManager.loggedIn}"
-					style="width: 150px;" >
-					<f:selectItem itemValue="none" itemLabel="None" />
-					<f:selectItem itemValue="blueSky" itemLabel="Blue Sky" />
-					<f:selectItem itemValue="classic" itemLabel="Classic" />
-					<f:selectItem itemValue="deepMarine" itemLabel="Deep Marine" />
-					<f:selectItem itemValue="emeraldTown" itemLabel="Emerald Town" />
-					<f:selectItem itemValue="japanCherry" itemLabel="Japan Cherry" />
-					<f:selectItem itemValue="ruby" itemLabel="Ruby" />
-					<f:selectItem itemValue="wine" itemLabel="Wine" />
-					<a4j:ajax execute="@this" event="valueChange"  
-						status="waitstatus" oncomplete="javascript: window.location.reload(false);"/>
-				</h:selectOneMenu>
-			</div>
-
-			<div class="header-cell">
 				<a4j:commandLink
 					value="#{sessionUser.name}"
 					rendered="#{sessionManager.loggedIn}"

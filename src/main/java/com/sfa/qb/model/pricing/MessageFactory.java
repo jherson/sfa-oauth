@@ -36,8 +36,8 @@ public class MessageFactory {
 		quoteHeader.setSuperRegion(quote.getOpportunity().getSuperRegion());	
 		
 		SalesrepEmail salesrepEmail = new SalesrepEmail();
-		salesrepEmail.setEmailAddress(quote.getOwnerEmail());
-		salesrepEmail.setName(quote.getOwnerName());
+		salesrepEmail.setEmailAddress(quote.getOwner().getEmail());
+		salesrepEmail.setName(quote.getOwner().getName());
 		salesrepEmail.setRecipientType("TO");
 		salesrepEmail.setType("WORK");
 		

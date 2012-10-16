@@ -19,7 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.dao.QuoteDAO;
 import com.sfa.qb.exception.QueryException;
-import com.sfa.qb.model.auth.OAuth;
+import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.User;
 import com.sforce.ws.ConnectionException;

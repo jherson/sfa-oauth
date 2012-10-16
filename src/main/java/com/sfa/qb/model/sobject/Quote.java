@@ -9,7 +9,6 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.sfa.qb.model.chatter.Followers;
 
 public class Quote implements Serializable, Cloneable {
 
@@ -31,74 +30,95 @@ public class Quote implements Serializable, Cloneable {
 	@SerializedName("CurrencyIsoCode")
 	private String currencyIsoCode;
 	
+	@SerializedName("PayNow__c")
 	private String payNow;
 	
+	@SerializedName("PricebookId__c")
 	private String pricebookId;
 	
 	private String pricebookName;
 	
+	@SerializedName("Type__c")
 	private String type;
 	
+	@SerializedName("IsActive__c")
 	private Boolean isActive;
 	
+	@SerializedName("Amount__c")
 	private Double amount;
 	
+	@SerializedName("Year1PaymentAmount__c")
 	private Double year1PaymentAmount;
 	
+	@SerializedName("Year2PaymentAmount__c")
 	private Double year2PaymentAmount;
 	
+	@SerializedName("Year3PaymentAmount__c")
 	private Double year3PaymentAmount;
 	
+	@SerializedName("Year4PaymentAmount__c")
 	private Double year4PaymentAmount;
 	
+	@SerializedName("Year5PaymentAmount__c")
 	private Double year5PaymentAmount;
 	
+	@SerializedName("Year6PaymentAmount__c")
 	private Double year6PaymentAmount;
 	
+	@SerializedName("HasQuoteLineItems__c")
 	private Boolean hasQuoteLineItems;
 	
+	@SerializedName("IsCalculated__c")
 	private Boolean isCalculated;
 	
-	private String ownerId;
+	@SerializedName("QuoteOwnerId__r")
+	private User owner;
 	
-	private String ownerName;
+	@SerializedName("ContactId__r")
+	private Contact contact;
 	
-	private String ownerEmail;
-	
-	private String contactId;
-	
-	private String contactName;
-	
-	private String contactEmail;
-	
+	@SerializedName("Comments__c")
 	private String comments;
 	
+	@SerializedName("ExpirationDate__c")
 	private Date expirationDate;
 
+	@SerializedName("StartDate__c")
 	private Date startDate;
 	
+	@SerializedName("EndDate__c")
 	private Date endDate;
 	
+	@SerializedName("Term__c")
 	private Integer term;
 	
+	@SerializedName("Status__c")
 	private String status;
 	
+	@SerializedName("EffectiveDate__c")
 	private Date effectiveDate;
 	
+	@SerializedName("ReferenceNumber__c")
 	private String referenceNumber;
 	
+	@SerializedName("IsNonStandardPayment__c")
 	private Boolean isNonStandardPayment;
 	
+	@SerializedName("LastCalculatedDAte__c")
 	private Date lastCalculatedDate;
 	
+	@SerializedName("LastPricedDate__c")
 	private Date lastPricedDate;
 	
+	@SerializedName("OpportunityId__r")
 	private Opportunity opportunity;
-		
-	private Followers followers;
+	
+	@SerializedName("FeedSubscriptionsForEntity")
+	private EntitySubscription entitySubscription;
 		
 	private List<QuotePriceAdjustment> quotePriceAdjustments;
 	
+	@SerializedName("QuoteLineItems__r")
 	private List<QuoteLineItem> quoteLineItems;
 		
 	private List<QuoteLineItemSchedule> quoteLineItemSchedules;
@@ -112,8 +132,6 @@ public class Quote implements Serializable, Cloneable {
 	public Quote(Opportunity opportunity) {
 		super();
 		setOpportunity(opportunity);
-		setOwnerId(opportunity.getOwner().getId());
-		setOwnerName(opportunity.getOwner().getName());
 		setPayNow(opportunity.getPayNow());
 		setType("Standard");
 		setCurrencyIsoCode(opportunity.getCurrencyIsoCode());
@@ -124,6 +142,11 @@ public class Quote implements Serializable, Cloneable {
 		setEffectiveDate(new Date());
 		setHasQuoteLineItems(Boolean.FALSE);
 		setStatus("New");
+		
+		User owner = new User();
+		owner.setId(opportunity.getOwner().getId());
+		owner.setName(opportunity.getOwner().getName());
+		setOwner(owner);
 
 		GregorianCalendar calendar = new GregorianCalendar();
 
@@ -139,7 +162,7 @@ public class Quote implements Serializable, Cloneable {
 		calendar.add(Calendar.DATE, -1);
 		setEndDate(calendar.getTime());
 
-		//setQuoteLineItems(new ArrayList<QuoteLineItem>());
+		setQuoteLineItems(new ArrayList<QuoteLineItem>());
 		setQuotePriceAdjustments(new ArrayList<QuotePriceAdjustment>());
 	}
 	
@@ -295,54 +318,6 @@ public class Quote implements Serializable, Cloneable {
 		this.isCalculated = isCalculated;
 	}
 
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-	
-	public String getOwnerEmail() {
-		return ownerEmail;
-	}
-	
-	public void setOwnerEmail(String ownerEmail) {
-		this.ownerEmail = ownerEmail;
-	}
-
-	public String getContactId() {
-		return contactId;
-	}
-
-	public void setContactId(String contactId) {
-		this.contactId = contactId;
-	}
-
-	public String getContactName() {
-		return contactName;
-	}
-
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
-	}
-	
-	public String getContactEmail() {
-		return contactEmail;
-	}
-	
-	public void setContactEmail(String contactEmail) {
-		this.contactEmail = contactEmail;
-	}
-
 	public String getComments() {
 		return comments;
 	}
@@ -439,14 +414,6 @@ public class Quote implements Serializable, Cloneable {
 		this.opportunity = opportunity;
 	}
 
-	public Followers getFollowers() {
-		return followers;
-	}
-
-	public void setFollowers(Followers followers) {
-		this.followers = followers;
-	}
-
 	public List<QuotePriceAdjustment> getQuotePriceAdjustments() {
 		return quotePriceAdjustments;
 	}
@@ -477,5 +444,29 @@ public class Quote implements Serializable, Cloneable {
 
 	public void setEditMode(Boolean editMode) {
 		this.editMode = editMode;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
+
+	public EntitySubscription getEntitySubscription() {
+		return entitySubscription;
+	}
+
+	public void setEntitySubscription(EntitySubscription entitySubscription) {
+		this.entitySubscription = entitySubscription;
 	}
 }

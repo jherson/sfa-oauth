@@ -8,13 +8,16 @@ public interface ServicesManager {
 	// user service
 	public String getCurrentUserInfo() throws ConnectionException, ServiceException;
 	
+	// sobject servies
+	public String query(String query) throws ConnectionException, ServiceException;
+	public void delete(String sobjectType, String id) throws ConnectionException, ServiceException;
+	
 	// quote services
-	public void calculateQuote(String quoteId) throws ConnectionException;			
-	public void activateQuote(String quoteId) throws ConnectionException;	
+	public String calculateQuote(String quoteId) throws ConnectionException, ServiceException;			
+	public String activateQuote(String quoteId) throws ConnectionException, ServiceException;	
 	public String copyQuote(String quoteId) throws ConnectionException, ServiceException;
-	public void priceQuote(String xml) throws ConnectionException;
-	public void createQuote(String jsonString) throws ConnectionException, ServiceException;
-	public void queryQuote(String query) throws ConnectionException;
+	public String priceQuote(String xml) throws ConnectionException, ServiceException;
+	public String createQuote(String jsonString) throws ConnectionException, ServiceException;
 	
 	// chatter services
 	public String getFeed() throws ConnectionException, ServiceException;

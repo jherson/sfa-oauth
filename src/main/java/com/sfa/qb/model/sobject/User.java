@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
-import com.sfa.qb.model.auth.OAuth;
+import com.sfa.qb.login.oauth.model.OAuth;
+import com.sfa.qb.model.entities.UserPreferences;
 
 public class User implements Serializable {
 
@@ -102,6 +103,7 @@ public class User implements Serializable {
 	private String shortTimeFormat;
 	private String dateTimeFormatPattern;
 	private OAuth oauth;
+	private UserPreferences userPreferences;
 
 	public User() {
 		super();
@@ -377,5 +379,13 @@ public class User implements Serializable {
 
 	public void setLocaleSidKey(String localeSidKey) {
 		this.localeSidKey = localeSidKey;
+	}
+
+	public UserPreferences getUserPreferences() {
+		return userPreferences;
+	}
+
+	public void setUserPreferences(UserPreferences userPreferences) {
+		this.userPreferences = userPreferences;
 	}
 }

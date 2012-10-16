@@ -32,7 +32,6 @@ import com.sfa.qb.qualifiers.UpdateQuote;
 import com.sfa.qb.qualifiers.UpdateQuoteAmount;
 import com.sfa.qb.qualifiers.ViewQuote;
 import com.sforce.soap.partner.SaveResult;
-import com.sforce.ws.ConnectionException;
 
 @Model
 
@@ -176,7 +175,7 @@ public class QuoteController {
 	public void priceQuote(Quote quote) {
 		try {
 			quoteManager.price(quote);
-		} catch (ConnectionException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -190,7 +189,7 @@ public class QuoteController {
 	public void activateQuote(Quote quote) {
 		try {
 			quoteManager.activate(quote);
-		} catch (ConnectionException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -225,7 +224,7 @@ public class QuoteController {
 	public void calculateQuote(Quote quote) {
 		try {
 			quoteManager.calculate(quote);
-		} catch (ConnectionException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -328,12 +327,10 @@ public class QuoteController {
 	}
 
 	public void setQuoteContact(Contact contact) {
-		selectedQuote.setContactId(contact.getId());
-		selectedQuote.setContactName(contact.getName());
+		selectedQuote.setContact(contact);
 	}
 
 	public void setQuoteOwner(User user) {
-		selectedQuote.setOwnerId(user.getId());
-		selectedQuote.setOwnerName(user.getName());
+		selectedQuote.setOwner(user);
 	}
 }

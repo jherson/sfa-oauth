@@ -70,6 +70,11 @@
 			<br />
 
 			<h:panelGroup style="display: block; text-align: right">
+			
+			    <a4j:commandButton value="#{msgs.preferences}" styleClass="commandButton" 
+			        action="#{homeController.showPreferences}" render="mainArea"
+			        oncomplete="#{rich:component('profilePanel')}.hide(); return false;"
+				    status="waitStatus" />
 
 				<a4j:commandButton value="#{msgs.salesforceHome}"
 					styleClass="commandButton"

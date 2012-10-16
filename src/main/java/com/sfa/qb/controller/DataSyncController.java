@@ -7,7 +7,7 @@ import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.model.entities.Pricebook;
 import com.sfa.qb.model.entities.Profile;
 import com.sfa.qb.model.entities.UserRole;
-import com.sfa.qb.service.impl.PersistenceServiceImpl;
+import com.sfa.qb.service.PersistenceService;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
@@ -18,7 +18,7 @@ import com.sforce.ws.ConnectionException;
 public class DataSyncController {
 
 	@Inject
-	private PersistenceServiceImpl writer;
+	private PersistenceService writer;
 	
 	public void syncPricebooks() {
 		

@@ -18,9 +18,9 @@ public interface QuoteManager {
 	public DeleteResult delete(Quote quote);
 	public DeleteResult delete(QuoteLineItem quoteLineItem);
 	public DeleteResult[] delete(List<QuoteLineItem> quoteLineItems);
-	public void calculate(Quote quote) throws ConnectionException;
-	public void price(Quote quote) throws ConnectionException;
+	public void calculate(Quote quote) throws ConnectionException, ServiceException;
+	public void price(Quote quote) throws ConnectionException, ServiceException;
 	public String copy(Quote quote) throws ServiceException, ConnectionException;
-	public void activate(Quote quote) throws ConnectionException;
+	public void activate(Quote quote) throws ConnectionException, ServiceException;
 	public SaveResult[] copy(List<QuoteLineItem> quoteLineItems);
 }

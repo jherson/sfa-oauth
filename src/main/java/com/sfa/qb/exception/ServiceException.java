@@ -9,6 +9,7 @@ public class ServiceException extends Exception {
 	private String message;
 		
 	public ServiceException(Exception exception) {
+		//if ({"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"})
 		super(exception);
 	}
 	

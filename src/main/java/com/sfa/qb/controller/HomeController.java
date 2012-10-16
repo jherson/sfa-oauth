@@ -10,10 +10,14 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
 import com.sfa.qb.model.chatter.Feed;
+import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.model.sobject.Quote;
+import com.sfa.qb.model.sobject.User;
 import com.sfa.qb.qualifiers.ListQuotes;
 import com.sfa.qb.qualifiers.QueryFeed;
+import com.sfa.qb.qualifiers.SessionUser;
 import com.sfa.qb.qualifiers.ViewQuote;
+import com.sfa.qb.service.PersistenceService;
 
 @Model
 
@@ -21,6 +25,13 @@ public class HomeController {
 
 	@Inject
 	private Logger log;
+	
+	@Inject
+	@SessionUser
+	private User sessionUser;
+	
+	@Inject
+	private PersistenceService persistenceService;
 	
 	@Inject
 	private MainController mainController;
@@ -43,6 +54,17 @@ public class HomeController {
 	@PostConstruct
 	public void init() {
 		log.info("init");		 
+	}
+	
+	public void showPreferences() {
+		setMainArea(TemplatesEnum.PREFERENCES);
+	}
+	
+	public void savePreferences() {
+		UserPreferences preferences = sessionUser.getUserPreferences();
+		preferences.setUserId(sessionUser.getId());
+    	persistenceService.saveUserPreferences(preferences);
+    	sessionUser.setUserPreferences(preferences);
 	}
 	
 	public void setMainArea(TemplatesEnum mainArea) {

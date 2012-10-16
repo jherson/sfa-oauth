@@ -17,7 +17,6 @@ import com.sfa.qb.dao.ChatterDAO;
 import com.sfa.qb.dao.OpportunityDAO;
 import com.sfa.qb.dao.QuoteDAO;
 import com.sfa.qb.exception.QueryException;
-import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.model.sobject.Opportunity;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.QuoteLineItem;
@@ -68,7 +67,7 @@ public class QuoteProducer implements Serializable {
 	public void onViewQuote(@Observes @ViewQuote final Quote quote) {
 		selectedQuote = queryQuoteById(quote.getId()); 	
 		try {
-			selectedQuote.setFollowers(chatterDAO.getQuoteFollowers(quote.getId()));
+
 			chatterDAO.getFeedForQuote(quote.getId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -131,11 +130,11 @@ public class QuoteProducer implements Serializable {
 	}
 	
 	public void onFollowQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @FollowQuote final Quote quote) {
-		selectedQuote.getFollowers().setIsCurrentUserFollowing(Boolean.TRUE);
+		//selectedQuote.getFollowers().setIsCurrentUserFollowing(Boolean.TRUE);
 	}
 	
 	public void onUnfollowQuote(@Observes(during=TransactionPhase.AFTER_SUCCESS) @UnfollowQuote final Quote quote) {
-		selectedQuote.getFollowers().setIsCurrentUserFollowing(Boolean.FALSE);
+		//selectedQuote.getFollowers().setIsCurrentUserFollowing(Boolean.FALSE);
 	}
 
 	private Opportunity queryOpportunity(String opportunityId) {

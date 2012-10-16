@@ -31,16 +31,16 @@ import nl.bitwalker.useragentutils.UserAgent;
 import com.google.gson.Gson;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
-import com.sfa.qb.login.OAuthCallbackHandler;
-import com.sfa.qb.login.OAuthPrincipal;
+import com.sfa.qb.login.oauth.OAuthCallbackHandler;
+import com.sfa.qb.login.oauth.OAuthPrincipal;
+import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.manager.SessionManager;
-import com.sfa.qb.model.auth.OAuth;
 import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.model.sobject.User;
 import com.sfa.qb.qualifiers.SessionUser;
 import com.sfa.qb.service.ServicesManager;
-import com.sfa.qb.service.impl.PersistenceServiceImpl;
+import com.sfa.qb.service.PersistenceService;
 import com.sfa.qb.util.DateUtil;
 
 @SessionScoped
@@ -60,7 +60,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private EntityManager entityManager;
 	
 	@Inject
-	private PersistenceServiceImpl loginHistoryWriter;
+	private PersistenceService loginHistoryWriter;
 		
 	@Inject
 	private ServicesManager servicesManager;
@@ -79,17 +79,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		return sessionUser;
 	}
-	
-	private UserPreferences userPreferences;
-	
-	public UserPreferences getUserPreferences() {								
-		return userPreferences;
-	}
-	
-	public void setUserPreferences(UserPreferences userPreferences) {
-		this.userPreferences = userPreferences;
-	}
-	
 	
 	@ManagedProperty(value = "false")
 	private Boolean loggedIn;
@@ -112,9 +101,17 @@ public class SessionManagerImpl implements Serializable, SessionManager {
     	    this.theme = theme;
     	}
     	
-    	UserPreferences preferences = new UserPreferences();
+    	UserPreferences preferences = null;
+    	if (sessionUser.getUserPreferences() != null) {
+    		preferences = sessionUser.getUserPreferences();
+    	} else {
+    		preferences = new UserPreferences();
+    	}
+    	
     	preferences.setUserId(sessionUser.getId());
     	preferences.setTheme(this.theme);
+    	
+    	sessionUser.setUserPreferences(preferences);
     	
     	loginHistoryWriter.saveUserPreferences(preferences);
     }
@@ -267,6 +264,10 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				}
 			    
 			    loginHistoryWriter.write(history);
+			    
+			    /**
+			     * set the session locale
+			     */
 				
 				if (sessionUser.getLocale() != null) {
 					FacesContext.getCurrentInstance().getViewRoot().setLocale(sessionUser.getLocale());			
@@ -276,16 +277,23 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				 * get the users preferences
 				 */
 				
-				if (userPreferences == null) {
-				    userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
-				    theme = userPreferences.getTheme();
-				}
-				
+			    UserPreferences userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
+			    if (userPreferences != null) {
+				    sessionUser.setUserPreferences(userPreferences);
+			    } else {
+			    	sessionUser.setUserPreferences(new UserPreferences());
+			    }
+			    
 				/**
-				 * set variables
+				 * set LoggedIn
 				 */
 				
-				setLoggedIn(Boolean.TRUE);			
+				setLoggedIn(Boolean.TRUE);
+				
+				/**
+				 * set the template to the home page 
+				 */
+				
 				mainController.setMainArea(TemplatesEnum.HOME);
 				
 			} catch (LoginException e) {

@@ -1,4 +1,4 @@
-package com.sfa.qb.model.auth;
+package com.sfa.qb.login.oauth.model;
 
 import java.io.Serializable;
 

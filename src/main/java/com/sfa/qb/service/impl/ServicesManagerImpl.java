@@ -161,7 +161,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void activateQuote(String quoteId) throws ConnectionException {
+	public String activateQuote(String quoteId) throws ConnectionException, ServiceException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/activate";
 		
 		ClientRequest request = new ClientRequest(url);
@@ -169,21 +169,22 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		request.header("Content-type", "application/json");
 		request.queryParameter("quoteId", quoteId);
 		
+		ClientResponse<String> response = null;
 		try {
-			ClientResponse<String> response = request.post(String.class);
-			if (response.getResponseStatus() == Status.OK) {
-				log.info("success: " + response.getEntity());
-			} else {
-				log.info("fail: " + response.getEntity());
-				throw new ServiceException(response);
-			}
+			response = request.post(String.class);
 		} catch (Exception e) {
-			//log.error(e);
+			throw new ServiceException(e);
+		}
+		
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new ServiceException(response);
 		}		
 	}
 	
 	@Override
-	public void calculateQuote(String quoteId) throws ConnectionException {		
+	public String calculateQuote(String quoteId) throws ConnectionException, ServiceException {		
 		String url = getApexRestEndpoint() + "/QuoteRestService/calculate";
 		
 		ClientRequest request = new ClientRequest(url);
@@ -191,16 +192,17 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		request.header("Content-type", "application/json");
 		request.queryParameter("quoteId", quoteId);
 		
+		ClientResponse<String> response = null;
 		try {
-			ClientResponse<String> response = request.post(String.class);
-			if (response.getResponseStatus() == Status.OK) {
-				log.info("success: " + response.getEntity());
-			} else {
-				log.info("fail: " + response.getEntity());
-				throw new ServiceException(response);
-			}
+			response = request.post(String.class);
 		} catch (Exception e) {
-			//log.error(e);
+			throw new ServiceException(e);
+		}
+		
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new ServiceException(response);
 		}
 	}
 
@@ -436,7 +438,6 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		try {
 			request.delete(String.class);
 		} catch (Exception e) {
-			//if ({"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"})
 			throw new ServiceException(e);
 		}
 	}
@@ -464,7 +465,7 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 	}
 	
 	@Override
-	public void priceQuote(String xml) throws ConnectionException {
+	public String priceQuote(String xml) throws ConnectionException, ServiceException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/price";
 		
 		log.info(xml);
@@ -473,21 +474,22 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.body("application/xml", xml);
 		
+		ClientResponse<String> response = null;
 		try {
-			ClientResponse<String> response = request.post(String.class);
-			if (response.getResponseStatus() == Status.OK) {
-				log.info("success: " + response.getEntity());
-			} else {
-				log.info("fail: " + response.getEntity());
-				throw new ServiceException(response);
-			}
+			response = request.get(String.class);
 		} catch (Exception e) {
-			//log.error(e);
+			throw new ServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new ServiceException(response);
 		}
 	}
 	
 	@Override
-	public void createQuote(String jsonString) throws ConnectionException {
+	public String createQuote(String jsonString) throws ConnectionException, ServiceException {
 		String url = getApexRestEndpoint() + "/QuoteRestService/create";
 		
 		log.info(jsonString);
@@ -496,41 +498,57 @@ public class ServicesManagerImpl implements Serializable, ServicesManager {
 		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.body("application/json", jsonString);
 		
+		ClientResponse<String> response = null;
 		try {
-			ClientResponse<String> response = request.post(String.class);
-			if (response.getResponseStatus() == Status.OK) {
-				log.info("success: " + response.getEntity());
-			} else {
-				log.info("fail: " + response.getEntity());
-				throw new ServiceException(response);
-			}
+			response = request.get(String.class);
 		} catch (Exception e) {
-			//log.error(e);
+			throw new ServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new ServiceException(response);
 		}
 	}
 	
 	@Override
-	public void queryQuote(String query) throws ConnectionException {
+	public String query(String query) throws ConnectionException, ServiceException {
         String url = getRestEndpoint() + "/query";
-		
+        
 		ClientRequest request = new ClientRequest(url);
 		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("X-PrettyPrint", "1");
 		request.queryParameter("q", query);
 		
+		ClientResponse<String> response = null;
 		try {
-			ClientResponse<String> response = request.get(String.class);
-			if (response.getResponseStatus() == Status.OK) {
-				log.info("success: " + response.getEntity());
-			} else {
-				log.info("fail: " + response.getEntity());
-				throw new ServiceException(response);
-			}
+			response = request.get(String.class);
 		} catch (Exception e) {
-			//log.error(e);
+			throw new ServiceException(e);
+		}
+
+		if (response.getResponseStatus() == Status.OK) {
+			return response.getEntity();
+		} else {
+			throw new ServiceException(response);
 		}	
 	}		
+	
+	@Override
+	public void delete(String sobjectType, String id) throws ConnectionException, ServiceException {
+		String url = getRestEndpoint() + "sobjects/" + sobjectType + "/" + id;
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Authorization", "OAuth " + ConnectionManager.openConnection().getConfig().getSessionId());
+				
+		try {
+			request.delete(String.class);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
 	
 	private String getRestEndpoint() {
 		return System.getProperty("salesforce.rest.endpoint");

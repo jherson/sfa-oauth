@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import com.sfa.qb.login.oauth.model.OAuth;
+
 @Entity
 @Table(name="User")
 
@@ -108,12 +110,18 @@ public class User implements Serializable {
 	@Column(name="SmallPhotoUrl")
 	private String smallPhotoUrl;
 	
-	@Column(name="Locale")
-	private Locale locale;
-		
-	@Transient
+	@Column(name="LocaleSidKey")
+	private String localeSidKey;
+	
+	@Column(name="TimeZone")
 	private String timeZone;
 	
+	@Transient
+	private UserPreferences userPreferences;
+	
+	@Transient
+	private Locale locale;
+
 	@Transient
 	private String dateFormatPattern;
 	
@@ -122,6 +130,10 @@ public class User implements Serializable {
 	
 	@Transient
 	private String dateTimeFormatPattern;
+
+	@Transient
+	private OAuth oauth;
+	
 
 	public User() {
 		
@@ -389,5 +401,29 @@ public class User implements Serializable {
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
+	}
+	
+	public String getLocaleSidKey() {
+		return localeSidKey;
+	}
+
+	public void setLocaleSidKey(String localeSidKey) {
+		this.localeSidKey = localeSidKey;
+	}
+
+	public OAuth getOauth() {
+		return oauth;
+	}
+
+	public void setOauth(OAuth oauth) {
+		this.oauth = oauth;
+	}
+
+	public UserPreferences getUserPreferences() {
+		return userPreferences;
+	}
+
+	public void setUserPreferences(UserPreferences userPreferences) {
+		this.userPreferences = userPreferences;
 	}
 }

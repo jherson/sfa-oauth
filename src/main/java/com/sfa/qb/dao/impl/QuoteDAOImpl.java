@@ -415,17 +415,17 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	}
 
 	@Override
-	public void activateQuote(String quoteId) throws ConnectionException {
+	public void activateQuote(String quoteId) throws ConnectionException, ServiceException {
 		servicesManager.activateQuote(quoteId);		
 	}
 
 	@Override
-	public void calculateQuote(String quoteId) throws ConnectionException {
+	public void calculateQuote(String quoteId) throws ConnectionException, ServiceException {
 		servicesManager.calculateQuote(quoteId);		
 	}
 
 	@Override
-	public void priceQuote(Quote quote) throws ConnectionException {
+	public void priceQuote(Quote quote) throws ConnectionException, ServiceException {
 		servicesManager.priceQuote(MessageFactory.createPricingMessage(quote));		
 	}
 
@@ -438,14 +438,14 @@ public class QuoteDAOImpl extends DAO implements QuoteDAO, Serializable {
 	    	sobject.setField("OpportunityId__c", quote.getOpportunity().getId());
 	    }	    	
 	    sobject.setField("Comments__c", quote.getComments());
-	    sobject.setField("ContactId__c", quote.getContactId());
+	    sobject.setField("ContactId__c", quote.getContact().getId());
 	    sobject.setField("CurrencyIsoCode", quote.getCurrencyIsoCode());
 	    sobject.setField("EffectiveDate__c", quote.getEffectiveDate());
 	    sobject.setField("EndDate__c", quote.getEndDate());
 	    sobject.setField("ExpirationDate__c", quote.getExpirationDate());	    
 	    sobject.setField("IsNonStandardPayment__c", quote.getIsNonStandardPayment());
 	    sobject.setField("Name", quote.getName());	    
-	    sobject.setField("QuoteOwnerId__c", quote.getOwnerId());
+	    sobject.setField("QuoteOwnerId__c", quote.getOwner().getId());
 	    sobject.setField("PayNow__c", quote.getPayNow());
 	    sobject.setField("PricebookId__c", quote.getPricebookId());
 	    sobject.setField("ReferenceNumber__c", quote.getReferenceNumber());

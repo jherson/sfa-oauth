@@ -45,7 +45,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void calculate(Quote quote) throws ConnectionException {
+	public void calculate(Quote quote) throws ConnectionException, ServiceException {
 		doCalcualate(quote);
 	}
 	
@@ -55,7 +55,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void price(Quote quote) throws ConnectionException {
+	public void price(Quote quote) throws ConnectionException, ServiceException {
 		doPrice(quote);
 	}
 	
@@ -70,7 +70,7 @@ public class QuoteManagerImpl implements QuoteManager {
 	}
 	
 	@Override
-	public void activate(Quote quote) throws ConnectionException {
+	public void activate(Quote quote) throws ConnectionException, ServiceException {
 		doActivate(quote);
 	}
 	
@@ -205,7 +205,7 @@ public class QuoteManagerImpl implements QuoteManager {
 		return deleteResult;
 	}
 	
-	private void doCalcualate(Quote quote) throws ConnectionException {
+	private void doCalcualate(Quote quote) throws ConnectionException, ServiceException {
 		quoteDAO.calculateQuote(quote.getId());			
 	}
 	
@@ -221,7 +221,7 @@ public class QuoteManagerImpl implements QuoteManager {
 		return deleteResult;
 	}
 
-	private void doPrice(Quote quote) throws ConnectionException {
+	private void doPrice(Quote quote) throws ConnectionException, ServiceException {
 		quoteDAO.priceQuote(quote);
 	}
 	
@@ -280,7 +280,7 @@ public class QuoteManagerImpl implements QuoteManager {
 		return saveResult;
 	}
 	
-	private void doActivate(Quote quote) throws ConnectionException {
+	private void doActivate(Quote quote) throws ConnectionException, ServiceException {
 		quoteDAO.activateQuote(quote.getId());
 	}
 	
