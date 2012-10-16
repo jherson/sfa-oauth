@@ -5,17 +5,17 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:popupPanel id="profilePanel" modal="false" autosized="true"
+	<rich:popupPanel id="profilePanel" modal="true" autosized="true"
 		resizeable="false" width="400" height="250">
 
 		<f:facet name="header">
 			<h:outputText value="#{msgs.profile}" />
 		</f:facet>
 		<f:facet name="controls">
-			<a4j:commandLink status="waitStatus"
-				onclick="#{rich:component('profilePanel')}.hide(); return false;">
+			<a4j:commandLink status="waitStatus">
 				<h:graphicImage value="/resources/images/close-window.png"
 					alt="close-window" />
+				<rich:componentControl target="profilePanel" operation="hide" />		
 			</a4j:commandLink>
 		</f:facet>
 
@@ -37,9 +37,9 @@
 					<table style="width: 100%">
 						<tr>
 							<td width="200"><a4j:commandLink value="#{sessionUser.name}"
-									onclick="window.open('#{urlBuilder.profile}');"
-									oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
-							</td>
+									onclick="window.open('#{urlBuilder.profile}');">
+									<rich:componentControl target="profilePanel" operation="hide" />
+								</a4j:commandLink></td>
 						</tr>
 						<tr>
 							<td width="200">#{sessionUser.profile.name}</td>
@@ -70,22 +70,27 @@
 			<br />
 
 			<h:panelGroup style="display: block; text-align: right">
-			
-			    <a4j:commandButton value="#{msgs.preferences}" styleClass="commandButton" 
-			        action="#{homeController.showPreferences}" render="mainArea"
-			        oncomplete="#{rich:component('profilePanel')}.hide(); return false;"
-				    status="waitStatus" />
+
+				<a4j:commandButton value="#{msgs.preferences}"
+					styleClass="commandButton"
+					action="#{homeController.showPreferences}" render="mainArea"
+					onclick="#{rich:component('profilePanel')}.hide(); return true;">					
+				</a4j:commandButton>
+
+				<h:outputText value="  " escape="false" />
 
 				<a4j:commandButton value="#{msgs.salesforceHome}"
 					styleClass="commandButton"
-					onclick="window.open('#{urlBuilder.home}');"
-					oncomplete="#{rich:component('profilePanel')}.hide(); return false;" />
+					onclick="window.open('#{urlBuilder.home}');">
+					<rich:componentControl target="profilePanel" operation="hide" />
+				</a4j:commandButton>
 
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
-					oncomplete="#{rich:component('profilePanel')}.hide(); return false;"
-					status="waitStatus" />
+					status="waitStatus">
+					<rich:componentControl target="profilePanel" operation="hide" />
+				</a4j:commandButton>
 
 			</h:panelGroup>
 

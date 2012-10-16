@@ -60,7 +60,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private EntityManager entityManager;
 	
 	@Inject
-	private PersistenceService loginHistoryWriter;
+	private PersistenceService persistenceService;
 		
 	@Inject
 	private ServicesManager servicesManager;
@@ -89,35 +89,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	public void setLoggedIn(Boolean loggedIn) {
 		this.loggedIn = loggedIn;
-	}
-		
-	@ManagedProperty(value = "classic")
-	private String theme;
-	
-    public void setTheme(String theme) {
-    	if ("none".equals(theme)) {
-    		this.theme = null;
-    	} else {
-    	    this.theme = theme;
-    	}
-    	
-    	UserPreferences preferences = null;
-    	if (sessionUser.getUserPreferences() != null) {
-    		preferences = sessionUser.getUserPreferences();
-    	} else {
-    		preferences = new UserPreferences();
-    	}
-    	
-    	preferences.setUserId(sessionUser.getId());
-    	preferences.setTheme(this.theme);
-    	
-    	sessionUser.setUserPreferences(preferences);
-    	
-    	loginHistoryWriter.saveUserPreferences(preferences);
-    }
-
-	public String getTheme() {				
-		return theme;
 	}
 	
 	private String INDEX_PAGE;
@@ -228,7 +199,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
     	    		if (principal instanceof OAuthPrincipal) {
     	    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
     	    			oauth = oauthPrincipal.getOAuth();
-    	    			logger.info("AccessToken: " + oauth.getAccessToken());
     	    		}
     	    	}
     	    	
@@ -263,7 +233,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				    history.setOperatingSystem(userAgent.getOperatingSystem().getName());
 				}
 			    
-			    loginHistoryWriter.write(history);
+			    persistenceService.write(history);
 			    
 			    /**
 			     * set the session locale
@@ -305,6 +275,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			}	
 			
 		} else {
+			
+			/**
+			 * if sign in was not successful then set the template back to the sign in page
+			 */
+			
 			mainController.setMainArea(TemplatesEnum.SIGN_IN);
 		}
 		

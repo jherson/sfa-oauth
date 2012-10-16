@@ -86,7 +86,7 @@ public class User implements Serializable {
 	@SerializedName("DefaultCurrencyIsoCode")
 	private String defaultCurrencyIsoCode;
 	
-	@SerializedName("FullPhototUrl")
+	@SerializedName("FullPhotoUrl")
 	private String fullPhotoUrl;
 	
 	@SerializedName("SmallPhotoUrl")

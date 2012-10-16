@@ -7,6 +7,9 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 	<a4j:outputPanel>
+	
+	<rich:panel id="perferences" layout="block"
+		style="width: 500px;">
 
 		<div class="header-cell">
 			<h:outputText value="#{msgs.themes}"
@@ -24,6 +27,8 @@
 				<f:selectItem itemValue="japanCherry" itemLabel="Japan Cherry" />
 				<f:selectItem itemValue="ruby" itemLabel="Ruby" />
 				<f:selectItem itemValue="wine" itemLabel="Wine" />
+				<a4j:ajax execute="@this" event="valueChange" status="waitstatus"
+					oncomplete="javascript: window.location.reload(false);" />
 			</h:selectOneMenu>
 		</div>
 
@@ -33,6 +38,8 @@
 				action="#{homeController.savePreferences}" status="waitStatus" />
 
 		</h:panelGroup>
+		
+	</rich:panel>
 
 	</a4j:outputPanel>
 

@@ -39,10 +39,10 @@
 				<a4j:commandLink
 					value="#{sessionUser.name}"
 					rendered="#{sessionManager.loggedIn}"
-					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 12px; font-weight: bold;"
-					oncomplete="#{rich:component('profilePanel')}.show()"
-					status="waitstatus" rerender="#{rich:clientId('profilePanel')}"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 12px; font-weight: bold;"					
+					status="waitstatus" 
 					ajaxSingle="true">
+					<rich:componentControl target="profilePanel" operation="show" />
 				</a4j:commandLink>
 			</div>
 
