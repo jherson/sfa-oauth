@@ -271,3 +271,13 @@ div#footer {
 	cursor: pointer;
 	height: 22px;	
 }
+
+div#init-panel
+{
+  width: 120px;
+  height: 90px;
+  margin: 0 auto;       
+  margin-top: 75px;
+  border-width: 3px;
+  border-color: gray;    
+}

@@ -68,12 +68,26 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	@Inject
 	private MainController mainController;
 	
+	//private Boolean initialized = Boolean.FALSE;
+	
+	private String code;
+		
 	@Produces
 	@Named
 	@SessionUser
 	private User sessionUser;
 	
 	public User getSessionUser() {
+		
+		if (code == null) {
+			
+			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
+			
+			code = request.getParameter("code");
+				  
+			return null;
+		}
+		
 		if (sessionUser == null)
 			this.authenticate();
 		
@@ -170,11 +184,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		redirect(authUrl);
 	}
 	
-	public void authenticate() {					
+	public void authenticate() {				
 		
-		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
-		
-		String code = request.getParameter("code");
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();			
 		
 		if (code != null) {
 												
@@ -211,7 +223,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				sessionUser.setOAuth(oauth);
 				sessionUser.setLocale(DateUtil.stringToLocale(sessionUser.getLocaleSidKey()));
 				sessionUser.setDateFormatPattern(DateUtil.getDateFormat(sessionUser.getLocale()));
-				sessionUser.setDateTimeFormatPattern(DateUtil.getDateTimeFormat(sessionUser.getLocale()));
+				sessionUser.setDateTimeFormatPattern(DateUtil.getDateTimeFormat(sessionUser.getLocale()));				
 			    
 				/**
 				 * write login history

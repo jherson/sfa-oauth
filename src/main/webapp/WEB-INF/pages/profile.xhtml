@@ -12,10 +12,11 @@
 			<h:outputText value="#{msgs.profile}" />
 		</f:facet>
 		<f:facet name="controls">
-			<a4j:commandLink status="waitStatus">
+			<a4j:commandLink status="waitStatus"
+			    onclick="#{rich:component('profilePanel')}.hide(); return true;">
+			    	
 				<h:graphicImage value="/resources/images/close-window.png"
-					alt="close-window" />
-				<rich:componentControl target="profilePanel" operation="hide" />		
+					alt="close-window" />					
 			</a4j:commandLink>
 		</f:facet>
 
@@ -74,22 +75,22 @@
 				<a4j:commandButton value="#{msgs.preferences}"
 					styleClass="commandButton"
 					action="#{homeController.showPreferences}" render="mainArea"
-					onclick="#{rich:component('profilePanel')}.hide(); return true;">					
+					onclick="#{rich:component('profilePanel')}.hide(); return true;">				
 				</a4j:commandButton>
 
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandButton value="#{msgs.salesforceHome}"
 					styleClass="commandButton"
-					onclick="window.open('#{urlBuilder.home}');">
-					<rich:componentControl target="profilePanel" operation="hide" />
+					onclick="window.open('#{urlBuilder.home}');"
+					oncomplete="#{rich:component('profilePanel')}.hide(); return true;">			
 				</a4j:commandButton>
 
 				<h:outputText value="  " escape="false" />
 
 				<a4j:commandButton value="#{msgs.close}" styleClass="commandButton"
-					status="waitStatus">
-					<rich:componentControl target="profilePanel" operation="hide" />
+					status="waitStatus"
+					onclick="#{rich:component('profilePanel')}.hide(); return true;">	
 				</a4j:commandButton>
 
 			</h:panelGroup>

@@ -5,10 +5,20 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	
-	<meta http-equiv="refresh" content="2;url=newpage.jsf" />
-	
-	
-	<h:inputHidden value="#{sessionManager.sessionUser}" />
-	
+
+
+	<head>
+<meta http-equiv="Refresh" content="0; URL=index.jsf" />
+
+	</head>
+
+	<a4j:outputPanel>
+		<div id="init-panel">
+			<h:graphicImage value="./resources/images/ajax-loader.gif"
+				alt="ajax-loader" />
+		</div>
+
+		<h:inputHidden value="#{sessionManager.sessionUser}" />
+
+	</a4j:outputPanel>
 </ui:composition>
