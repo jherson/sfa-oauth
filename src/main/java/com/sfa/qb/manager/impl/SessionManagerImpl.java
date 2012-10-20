@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.login.oauth.OAuthCallbackHandler;
+import com.sfa.qb.login.oauth.OAuthConfig;
 import com.sfa.qb.login.oauth.OAuthPrincipal;
 import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.manager.SessionManager;
@@ -67,8 +68,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Inject
 	private MainController mainController;
-	
-	//private Boolean initialized = Boolean.FALSE;
 	
 	private String code;
 		
@@ -191,11 +190,22 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		if (code != null) {
 												
 			try {			
+				
+				/**
+				 * setup the oauth config object 
+				 */
+				
+				OAuthConfig oauthConfig = new OAuthConfig();
+				oauthConfig.setInstance(System.getProperty("salesforce.environment"));
+				oauthConfig.setClientId(System.getProperty("salesforce.oauth.clientId"));
+				oauthConfig.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
+				oauthConfig.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));				
+				
 				/**
 				 * call the login context to validate user session
 				 */
 				
-				loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(code));				
+				loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(oauthConfig, code));				
 				loginContext.login();
 				
 				/**

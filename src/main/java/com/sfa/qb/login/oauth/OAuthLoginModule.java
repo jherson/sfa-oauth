@@ -21,9 +21,9 @@ import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.login.oauth.model.Identity;
 import com.sfa.qb.login.oauth.model.OAuth;
-import com.sfa.qb.login.oauth.service.OAuthService;
-import com.sfa.qb.login.oauth.service.impl.OAuthServiceImpl;
+import com.sfa.qb.service.OAuthService;
 import com.sfa.qb.service.ServicesManager;
+import com.sfa.qb.service.impl.OAuthServiceImpl;
 import com.sfa.qb.service.impl.ServicesManagerImpl;
 import com.sforce.ws.ConnectionException;
 
@@ -38,6 +38,10 @@ public class OAuthLoginModule implements LoginModule {
 	private Map<String, ?> options;
 	
 	private OAuthService oauthService;
+	private String instance;
+	private String clientId;
+	private String clientSecret;
+	private String redirectUri;
 	private OAuth oauth;
 
 	@Override
@@ -69,8 +73,9 @@ public class OAuthLoginModule implements LoginModule {
 	@Override
 	public boolean login() throws LoginException {
 		
-		Callback[] callbacks = new Callback[1];
-		callbacks[0] = new OAuthCodeCallback();
+		Callback[] callbacks = new Callback[2];
+		callbacks[0] = new OAuthConfigCallback();
+		callbacks[1] = new OAuthCodeCallback();
 
 		try {
 			callbackHandler.handle(callbacks);
@@ -80,9 +85,15 @@ public class OAuthLoginModule implements LoginModule {
 			throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
 		}
 		
-		OAuthCodeCallback oauthCodeCallback = (OAuthCodeCallback) callbacks[0];		
+		OAuthConfigCallback oauthConfigCallback = (OAuthConfigCallback) callbacks[0];
+		OAuthCodeCallback oauthCodeCallback = (OAuthCodeCallback) callbacks[1];		
+		
+		instance = oauthConfigCallback.getOAuthConfig().getInstance();
+		clientId = oauthConfigCallback.getOAuthConfig().getClientId();
+		clientSecret = oauthConfigCallback.getOAuthConfig().getClientSecret();
+		redirectUri = oauthConfigCallback.getOAuthConfig().getRedirectUri();
 			
-		String authResponse = oauthService.getAuthResponse(oauthCodeCallback.getCode());
+		String authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, oauthCodeCallback.getCode());
 			
 		oauth = new Gson().fromJson(authResponse, OAuth.class);
 			
@@ -102,7 +113,7 @@ public class OAuthLoginModule implements LoginModule {
 
 	@Override
 	public boolean logout() throws LoginException {		
-		oauthService.revokeToken(oauth.getAccessToken());		
+		oauthService.revokeToken(instance, oauth.getAccessToken());		
 		SecurityContext.clearSubject();
 		return true;
 	}
