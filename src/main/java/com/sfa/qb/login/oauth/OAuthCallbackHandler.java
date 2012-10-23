@@ -8,11 +8,9 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 public class OAuthCallbackHandler implements CallbackHandler {
 	 
-	private OAuthConfig oauthConfig;
 	private String code;
 	
-	public OAuthCallbackHandler(OAuthConfig oauthConfig, String code) {
-		this.oauthConfig = oauthConfig;
+	public OAuthCallbackHandler(String code) {
 		this.code = code;
 	}
 
@@ -21,10 +19,7 @@ public class OAuthCallbackHandler implements CallbackHandler {
 		
 		for (int i = 0; i < callbacks.length; i++) {
 			Callback callback = callbacks[i];
-			if (callback instanceof OAuthConfigCallback) {
-				OAuthConfigCallback oauthConfigCallback = (OAuthConfigCallback) callback;
-				oauthConfigCallback.setOAuthConfig(oauthConfig);
-			}else if (callback instanceof OAuthCodeCallback) {
+			if (callback instanceof OAuthCodeCallback) {
 				OAuthCodeCallback oauthCodeCallback = (OAuthCodeCallback) callback;
 				oauthCodeCallback.setCode(code);
 			} else {

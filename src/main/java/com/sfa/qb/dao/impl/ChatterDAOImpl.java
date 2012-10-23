@@ -83,7 +83,7 @@ public class ChatterDAOImpl extends DAO implements ChatterDAO {
 	}
 
 	@Override
-	public Followers getQuoteFollowers(String quoteId) throws JsonSyntaxException, ConnectionException {
+	public Followers getQuoteFollowers(String quoteId) throws JsonSyntaxException, ServiceException {
 		Followers followers = new Gson().fromJson(servicesManager.getFollowers(quoteId).toString(), Followers.class);
 		followers.setIsCurrentUserFollowing(Boolean.FALSE);
 		if (followers.getTotal() > 0 && followers.getFollowers().get(0).getSubject().getMySubscription() != null) {

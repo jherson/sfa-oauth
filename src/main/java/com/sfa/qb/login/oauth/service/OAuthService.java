@@ -1,4 +1,4 @@
-package com.sfa.qb.service;
+package com.sfa.qb.login.oauth.service;
 
 import javax.security.auth.login.LoginException;
 

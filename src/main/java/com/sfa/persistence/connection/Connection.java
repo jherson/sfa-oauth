@@ -1,16 +1,10 @@
 package com.sfa.persistence.connection;
 
-import java.security.Principal;
 import java.text.MessageFormat;
-import java.util.Iterator;
 import java.util.logging.Logger;
 
-import javax.security.auth.Subject;
-
-import org.jboss.as.controller.security.SecurityContext;
-
-import com.sfa.qb.login.oauth.OAuthPrincipal;
 import com.sfa.qb.login.oauth.model.OAuth;
+import com.sfa.qb.util.Util;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SessionHeader_element;
@@ -36,24 +30,11 @@ public class Connection implements SessionRenewer {
     	if (getConnection() != null)
     		return getConnection();
 
-		Subject subject = SecurityContext.getSubject();
-		if (subject != null) {
-			
-			Iterator<Principal> iterator = subject.getPrincipals().iterator();
-	    	while (iterator.hasNext()) {
-	    		Principal principal = iterator.next();
-	    		if (principal instanceof OAuthPrincipal) {
-	    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
-	    			OAuth oauth = oauthPrincipal.getOAuth();
-	    			log.info(oauth.getAccessToken());
-	    			return openConnection(oauth.getAccessToken());
-	    		}
-	    	}
-	    	
-	    	return null;
-	    	
-		} else {
-			
+    	OAuth oauth = Util.getOAuthPrincipal().getOAuth();
+		if (oauth != null) {						
+			log.info(oauth.getAccessToken());
+			return openConnection(oauth.getAccessToken());	    	
+		} else {			
 			return openDefaultConnection();
 		}
     }
@@ -81,7 +62,7 @@ public class Connection implements SessionRenewer {
     		return getConnection();
     	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.environment")));
+    	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.instance")));
     	config.setUsername(username);
 		config.setPassword(password);
 						

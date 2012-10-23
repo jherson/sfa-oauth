@@ -7,14 +7,32 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+
+import javax.security.auth.Subject;
+
+import org.jboss.as.controller.security.SecurityContext;
+
+import com.sfa.qb.login.oauth.OAuthPrincipal;
 
 public class Util {
 		
 	private static DateFormat dateTimeFormat;
 	private static DateFormat dateFormat;
+	
+	public static OAuthPrincipal getOAuthPrincipal() {
+		Subject subject = SecurityContext.getSubject();
+		if (subject != null) {
+			Iterator<OAuthPrincipal> iterator = subject.getPrincipals(OAuthPrincipal.class).iterator();
+			if (iterator.hasNext()) {
+		        return iterator.next();
+			}
+		}
+    	return null;
+	}
 	
 	public static String getShortTimeFormat(Locale locale) {
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale);

@@ -24,7 +24,7 @@ public interface ChatterDAO {
 	public Feed getQuoteFeed() throws ServiceException, ConnectionException;
 	public Feed getFeedForQuote(String quoteId) throws ServiceException, JsonSyntaxException, ConnectionException;
 
-	public Followers getQuoteFollowers(String quoteId) throws JsonSyntaxException, ConnectionException;		
+	public Followers getQuoteFollowers(String quoteId) throws JsonSyntaxException, ServiceException;		
 	public void followQuote(String quoteId) throws ServiceException, ConnectionException;
 	public void unfollowQuote(String quoteId) throws ServiceException, ConnectionException; 	
 }

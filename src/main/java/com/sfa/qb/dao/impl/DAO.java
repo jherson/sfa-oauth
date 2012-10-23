@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import com.sfa.persistence.EntityManager;
-import com.sfa.qb.service.ServicesManager;
+import com.sfa.qb.manager.ServicesManager;
 
 public class DAO implements Serializable {
 

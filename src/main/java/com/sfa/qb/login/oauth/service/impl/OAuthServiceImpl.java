@@ -1,4 +1,4 @@
-package com.sfa.qb.service.impl;
+package com.sfa.qb.login.oauth.service.impl;
 
 import java.io.Serializable;
 
@@ -8,14 +8,14 @@ import javax.security.auth.login.LoginException;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
-import com.sfa.qb.service.OAuthService;
+import com.sfa.qb.login.oauth.service.OAuthService;
 
 @Stateless
 
 public class OAuthServiceImpl implements OAuthService, Serializable {
 
 	private static final long serialVersionUID = 1819521597953621629L;
-
+	
 	@Override
 	public String getAuthResponse(String instance, String clientId, String clientSecret, String redirectUri, String code) throws LoginException {
         String url = instance + "/services/oauth2/token";

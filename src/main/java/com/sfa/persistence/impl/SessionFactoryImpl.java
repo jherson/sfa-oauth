@@ -26,7 +26,7 @@ public class SessionFactoryImpl implements SessionFactory {
 			return;
 		}
 		
-		Object[] params = new Object[] {properties.getProperty("salesforce.environment"), properties.getProperty("salesforce.api.version")};
+		Object[] params = new Object[] {properties.getProperty("salesforce.instance"), properties.getProperty("salesforce.api.version")};
 		
 		properties.setProperty("salesforce.authEndpoint", MessageFormat.format(properties.getProperty("salesforce.authEndpoint"), params));					
 				

@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.security.Principal;
 import java.sql.Timestamp;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.security.auth.Subject;
+import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,21 +27,23 @@ import javax.servlet.http.HttpSession;
 
 import nl.bitwalker.useragentutils.UserAgent;
 
+import org.jboss.as.controller.security.SecurityContext;
+
 import com.google.gson.Gson;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.login.oauth.OAuthCallbackHandler;
 import com.sfa.qb.login.oauth.OAuthConfig;
-import com.sfa.qb.login.oauth.OAuthPrincipal;
 import com.sfa.qb.login.oauth.model.OAuth;
+import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.manager.SessionManager;
 import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.model.sobject.User;
 import com.sfa.qb.qualifiers.SessionUser;
-import com.sfa.qb.service.ServicesManager;
 import com.sfa.qb.service.PersistenceService;
 import com.sfa.qb.util.DateUtil;
+import com.sfa.qb.util.Util;
 
 @SessionScoped
 @Named(value="sessionManager")
@@ -138,11 +139,21 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		 */
 		
 		try {
-			loginContext.logout();
+			loginContext.logout();			
 		} catch (LoginException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		}				
+		}		
+		
+		/**
+		 * clear the secruity context
+		 */
+		
+		SecurityContext.clearSubject();
+		
+		/**
+		 * set the logged out variable
+		 */
 		
 		setLoggedIn(Boolean.FALSE);
 		
@@ -195,34 +206,43 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				 * setup the oauth config object 
 				 */
 				
-				OAuthConfig oauthConfig = new OAuthConfig();
-				oauthConfig.setInstance(System.getProperty("salesforce.environment"));
+				OAuthConfig oauthConfig = new OAuthConfig();				
+				oauthConfig.setInstance(System.getProperty("salesforce.instance"));
 				oauthConfig.setClientId(System.getProperty("salesforce.oauth.clientId"));
 				oauthConfig.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
-				oauthConfig.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));				
+				oauthConfig.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
+				oauthConfig.setDisplay("popup");
+				oauthConfig.setPrompt("login");
+				oauthConfig.setScope("full refresh_token");
+								
+				Configuration.setConfiguration(oauthConfig);
 				
 				/**
-				 * call the login context to validate user session
+				 * call the login context for the OAuthRealm
 				 */
 				
-				loginContext = new LoginContext("OAuthRealm", new OAuthCallbackHandler(oauthConfig, code));				
+				loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(code));	
 				loginContext.login();
 				
 				/**
-				 * get returned OAuth token
+				 * get the subject from the loginContext
 				 */
-				
-				OAuth oauth = null;
-			    					    			    	
+											    					    			    
                 Subject subject = loginContext.getSubject();
-                Iterator<Principal> iterator = subject.getPrincipals().iterator();
-    	    	while (iterator.hasNext()) {
-    	    		Principal principal = iterator.next();
-    	    		if (principal instanceof OAuthPrincipal) {
-    	    			OAuthPrincipal oauthPrincipal = (OAuthPrincipal) principal;
-    	    			oauth = oauthPrincipal.getOAuth();
-    	    		}
-    	    	}
+                
+                /**
+    	    	 * add the subject to the security context
+    	    	 */
+    	    	
+    	    	SecurityContext.setSubject(subject);    	    	
+				
+				/**
+				 * get OAuth token from the Subject
+				 */
+    	    	    	    	
+    	    	OAuth oauth = Util.getOAuthPrincipal().getOAuth(); 	   
+    	    	
+    	    	logger.info("Rest:" + oauth.getIdentity().getUrls().getRest());
     	    	
     	    	/**
     	    	 * get the session user details and add oauth token
