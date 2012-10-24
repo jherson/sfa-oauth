@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.security.auth.Subject;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
@@ -69,30 +70,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Inject
 	private MainController mainController;
-	
-	private String code;
 		
 	@Produces
 	@Named
 	@SessionUser
 	private User sessionUser;
-	
-	public User getSessionUser() {
-		
-		if (code == null) {
-			
-			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
-			
-			code = request.getParameter("code");
-				  
-			return null;
-		}
-		
-		if (sessionUser == null)
-			this.authenticate();
-		
-		return sessionUser;
-	}
 	
 	@ManagedProperty(value = "false")
 	private Boolean loggedIn;
@@ -107,7 +89,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	private String INDEX_PAGE;
 	
-	private LoginContext loginContext;		
+	private LoginContext loginContext;	
+	
+	private String code;
 
 	@PostConstruct
 	public void init() {
@@ -176,7 +160,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 											   				
 		String authUrl = null;
 		try {
-			authUrl = System.getProperty("salesforce.environment")
+			authUrl = System.getProperty("salesforce.instance")
 					+ "/services/oauth2/authorize?response_type=code"
 					+ "&client_id=" + System.getProperty("salesforce.oauth.clientId")
 					+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
@@ -289,7 +273,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				 * get the users preferences
 				 */
 				
-			    UserPreferences userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
+				Query query = entityManager.createQuery("Select up From UserPreferences up Where up.UserId = :userId", UserPreferences.class);
+				query.setParameter("userId", oauth.getIdentity().getUserId());
+				
+				UserPreferences userPreferences = (UserPreferences) query.getSingleResult();
+			    //UserPreferences userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
 			    if (userPreferences != null) {
 				    sessionUser.setUserPreferences(userPreferences);
 			    } else {
@@ -331,6 +319,23 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		redirect(INDEX_PAGE);
 		
+	}
+	
+	public User getSessionUser() {
+		
+		if (code == null) {
+			
+			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
+			
+			code = request.getParameter("code");
+				  
+			return null;
+		}
+		
+		if (sessionUser == null)
+			this.authenticate();
+		
+		return sessionUser;
 	}
 	
 	private void redirect(String url) {

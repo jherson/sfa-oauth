@@ -27,8 +27,8 @@ public class User implements Serializable {
 	@Column(name="Id")
 	private int id;
 	
-	@Column(name="SalesforceId", length=20, unique=true)
-	private String salesforceId;
+	@Column(name="UserId", length=20, unique=true)
+	private String userId;
 
 	@Column(name="UserName")
 	private String userName;
@@ -147,12 +147,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 	
-	public String getSalesforceId() {
-		return salesforceId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setSalesforceId(String salesforceId) {
-		this.salesforceId = salesforceId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getUserName() {
