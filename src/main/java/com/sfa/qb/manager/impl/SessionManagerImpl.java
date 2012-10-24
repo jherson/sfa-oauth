@@ -3,7 +3,6 @@ package com.sfa.qb.manager.impl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +19,6 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.security.auth.Subject;
-import javax.security.auth.login.Configuration;
-import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,8 +30,8 @@ import org.jboss.as.controller.security.SecurityContext;
 import com.google.gson.Gson;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
-import com.sfa.qb.login.oauth.OAuthCallbackHandler;
-import com.sfa.qb.login.oauth.OAuthConfig;
+import com.sfa.qb.login.oauth.OAuthConsumer;
+import com.sfa.qb.login.oauth.OAuthServiceProvider;
 import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.manager.SessionManager;
@@ -87,9 +84,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		this.loggedIn = loggedIn;
 	}
 	
-	private String INDEX_PAGE;
+	private String INDEX_PAGE;	
 	
-	private LoginContext loginContext;	
+	private OAuthConsumer oauthConsumer;
 	
 	private String code;
 
@@ -103,6 +100,24 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				
 		//en-US,en;q=0.8
 		
+		/**
+		 * setup the oauth service provider 
+		 */
+		
+		OAuthServiceProvider serviceProvider = new OAuthServiceProvider();				
+		serviceProvider.setInstance(System.getProperty("salesforce.instance"));
+		serviceProvider.setClientId(System.getProperty("salesforce.oauth.clientId"));
+		serviceProvider.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
+		serviceProvider.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
+		serviceProvider.setDisplay("popup");
+		serviceProvider.setPrompt("login");
+		serviceProvider.setScope("full refresh_token");
+		
+		/**
+		 * initialize the OAuthConsumer
+		 */
+		
+		this.oauthConsumer = new OAuthConsumer(serviceProvider, request);
 		
 		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
 	}
@@ -119,11 +134,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		logger.info("logout");
 		
 		/**
-		 * revoke the Salesforce OAuth token and remove the Subject from SecurityContext
+		 * call the ouathConsumer logout to revoke tokens and clear principals
 		 */
 		
 		try {
-			loginContext.logout();			
+			oauthConsumer.logout();			
 		} catch (LoginException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
@@ -152,7 +167,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	     * redirect back to the index page
 	     */
 	    
-	    redirect(INDEX_PAGE);	    
+	    redirect(INDEX_PAGE);	       
 	}
 	
 	@Override
@@ -160,13 +175,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 											   				
 		String authUrl = null;
 		try {
-			authUrl = System.getProperty("salesforce.instance")
-					+ "/services/oauth2/authorize?response_type=code"
-					+ "&client_id=" + System.getProperty("salesforce.oauth.clientId")
-					+ "&redirect_uri=" + URLEncoder.encode(System.getProperty("salesforce.oauth.redirectUri"), "UTF-8")
-					+ "&scope=" + URLEncoder.encode("full refresh_token", "UTF-8")
-					+ "&prompt=login"
-					+ "&display=popup";
+			authUrl = oauthConsumer.getOAuthTokenUrl();
 												
 		} catch (UnsupportedEncodingException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
@@ -184,35 +193,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		if (code != null) {
 												
-			try {			
-				
-				/**
-				 * setup the oauth config object 
-				 */
-				
-				OAuthConfig oauthConfig = new OAuthConfig();				
-				oauthConfig.setInstance(System.getProperty("salesforce.instance"));
-				oauthConfig.setClientId(System.getProperty("salesforce.oauth.clientId"));
-				oauthConfig.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
-				oauthConfig.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
-				oauthConfig.setDisplay("popup");
-				oauthConfig.setPrompt("login");
-				oauthConfig.setScope("full refresh_token");
-								
-				Configuration.setConfiguration(oauthConfig);
-				
-				/**
-				 * call the login context for the OAuthRealm
-				 */
-				
-				loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(code));	
-				loginContext.login();
+			try {											
 				
 				/**
 				 * get the subject from the loginContext
 				 */
 											    					    			    
-                Subject subject = loginContext.getSubject();
+                Subject subject = oauthConsumer.authenticate(code);
                 
                 /**
     	    	 * add the subject to the security context
@@ -318,6 +305,8 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		 */
 		
 		redirect(INDEX_PAGE);
+		
+		request.getContextPath();
 		
 	}
 	
