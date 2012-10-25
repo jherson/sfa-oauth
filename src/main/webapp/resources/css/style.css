@@ -11,6 +11,12 @@ h2,h3 {
     padding-top: 0px;
 }
 
+div#init {
+	top: 120px;
+    text-align: center;
+    margin: 0 auto;  
+}
+
 div#header {
 	position: absolute;
 	width: 100%;
@@ -270,14 +276,4 @@ div#footer {
 .commandButton {
 	cursor: pointer;
 	height: 22px;	
-}
-
-div#init-panel
-{
-  width: 120px;
-  height: 90px;
-  margin: 0 auto;       
-  margin-top: 75px;
-  border-width: 3px;
-  border-color: gray;    
 }

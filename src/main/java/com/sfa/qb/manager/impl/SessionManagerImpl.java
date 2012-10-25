@@ -17,10 +17,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import nl.bitwalker.useragentutils.UserAgent;
@@ -94,7 +94,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	public void init() {
 		logger.info("init");			
 		
-		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();		
 						
 		logger.info("accept language: " + request.getHeader("Accept-Language"));
 				
@@ -112,12 +112,13 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		serviceProvider.setDisplay("popup");
 		serviceProvider.setPrompt("login");
 		serviceProvider.setScope("full refresh_token");
+		serviceProvider.setStartUrl("/initialize.jsf");
 		
 		/**
 		 * initialize the OAuthConsumer
 		 */
 		
-		this.oauthConsumer = new OAuthConsumer(serviceProvider, request);
+		this.oauthConsumer = new OAuthConsumer(serviceProvider);
 		
 		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
 	}
@@ -172,25 +173,23 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Override
 	public void login() {
-											   				
-		String authUrl = null;
+					
 		try {
-			authUrl = oauthConsumer.getOAuthTokenUrl();
-												
+			oauthConsumer.login(context);
+			//redirect(oauthConsumer.getOAuthTokenUrl());												
 		} catch (UnsupportedEncodingException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		}					
-				
-		mainController.setMainArea(TemplatesEnum.INITIALIZE);
-		
-		redirect(authUrl);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 														
 	}
 	
 	public void authenticate() {				
 		
-		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();			
-		
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();		
+				
 		if (code != null) {
 												
 			try {											
@@ -260,11 +259,11 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				 * get the users preferences
 				 */
 				
-				Query query = entityManager.createQuery("Select up From UserPreferences up Where up.UserId = :userId", UserPreferences.class);
-				query.setParameter("userId", oauth.getIdentity().getUserId());
+				//Query query = entityManager.createQuery("Select up From UserPreferences up Where up.UserId = :userId", UserPreferences.class);
+				//query.setParameter("UserId", oauth.getIdentity().getUserId());
 				
-				UserPreferences userPreferences = (UserPreferences) query.getSingleResult();
-			    //UserPreferences userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
+				//UserPreferences userPreferences = (UserPreferences) query.getSingleResult();
+			    UserPreferences userPreferences = entityManager.find(UserPreferences.class, oauth.getIdentity().getUserId());
 			    if (userPreferences != null) {
 				    sessionUser.setUserPreferences(userPreferences);
 			    } else {
@@ -299,24 +298,26 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			
 			mainController.setMainArea(TemplatesEnum.SIGN_IN);
 		}
-		
+								
 	    /**
-		 * redirect back to index.jsf to render the proper template
+		 * refresh the view to render the proper template
 		 */
 		
 		redirect(INDEX_PAGE);
-		
-		request.getContextPath();
-		
+						
 	}
 	
 	public User getSessionUser() {
-		
+					
 		if (code == null) {
-			
+									
 			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
 			
 			code = request.getParameter("code");
+									
+			if (code == null) {
+				login();
+			} 
 				  
 			return null;
 		}

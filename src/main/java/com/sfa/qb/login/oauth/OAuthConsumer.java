@@ -1,25 +1,25 @@
 package com.sfa.qb.login.oauth;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import javax.faces.context.FacesContext;
 import javax.security.auth.Subject;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class OAuthConsumer implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
-	private HttpServletRequest request;
 	private OAuthServiceProvider serviceProvider;
 	private LoginContext loginContext;
 	
-    public OAuthConsumer(OAuthServiceProvider serviceProvider, HttpServletRequest request) { 
+    public OAuthConsumer(OAuthServiceProvider serviceProvider) {
     	this.serviceProvider = serviceProvider;
-    	this.request = request;
     }
 
     public String getOAuthTokenUrl() throws UnsupportedEncodingException {
@@ -29,7 +29,16 @@ public class OAuthConsumer implements Serializable {
 				+ "&redirect_uri=" + URLEncoder.encode(serviceProvider.getRedirectUri(), "UTF-8")
 				+ "&scope=" + URLEncoder.encode(serviceProvider.getScope(), "UTF-8")
 				+ "&prompt=" + serviceProvider.getPrompt()
-				+ "&display=" + serviceProvider.getDisplay();        					
+				+ "&display=" + serviceProvider.getDisplay()
+				+ "&startURL=" + serviceProvider.getStartUrl();        					
+    }
+    
+    public void login(FacesContext context) throws UnsupportedEncodingException, IOException {
+    	context.getExternalContext().redirect(getOAuthTokenUrl());
+    }
+    
+    public void login(HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+    	response.sendRedirect(getOAuthTokenUrl());
     }
     
     public Subject authenticate(String code) throws LoginException {
@@ -42,8 +51,9 @@ public class OAuthConsumer implements Serializable {
 		return loginContext.getSubject();
     }
     
-    public void refreshToken() {
-    	
+    public Subject refreshToken() throws LoginException {
+    	loginContext.login();
+    	return loginContext.getSubject();
     }
     
     public void logout() throws LoginException {

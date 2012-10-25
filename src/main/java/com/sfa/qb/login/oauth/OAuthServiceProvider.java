@@ -13,16 +13,10 @@ public class OAuthServiceProvider implements Serializable {
 	private String scope;
 	private String prompt;
 	private String display;	
+	private String startUrl;
 	
 	public OAuthServiceProvider() {
 		
-	}
-
-	public OAuthServiceProvider(String instance, String clientId, String clientSecret, String redirectUri) {
-		this.instance = instance;
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.redirectUri = redirectUri;
 	}
 	
 	public String getInstance() {
@@ -79,5 +73,13 @@ public class OAuthServiceProvider implements Serializable {
 
 	public void setDisplay(String display) {
 		this.display = display;
+	}
+	
+	public String getStartUrl() {
+		return startUrl;
+	}
+	
+	public void setStartUrl(String startUrl) {
+		this.startUrl = startUrl;
 	}
 }
