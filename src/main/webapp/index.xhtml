@@ -13,7 +13,7 @@
 
 			<div class="header-cell">
 				<h:graphicImage id="logo" alt="logo"
-					url="/resources/images/logo.png" height="40" width="130"/>
+					url="/resources/images/logo.png" height="40" width="130" />
 			</div>
 
 			<div class="header-cell">
@@ -36,12 +36,10 @@
 		<div id="header-right">
 
 			<div class="header-cell">
-				<a4j:commandLink
-					value="#{sessionUser.name}"
+				<a4j:commandLink value="#{sessionUser.name}"
 					rendered="#{sessionManager.loggedIn}"
-					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 12px; font-weight: bold;"					
-					status="waitstatus" 
-					ajaxSingle="true">
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 12px; font-weight: bold;"
+					status="waitstatus" ajaxSingle="true">
 					<rich:componentControl target="profilePanel" operation="show" />
 				</a4j:commandLink>
 			</div>
@@ -59,18 +57,19 @@
 			</div>
 
 			<div class="header-cell">
-				<a4j:commandLink title="#{msgs.logout}"					
-					render="quoteForm" rendered="#{sessionManager.loggedIn}"
+				<a4j:commandLink title="#{msgs.logout}" render="quoteForm"
+					rendered="#{sessionManager.loggedIn}"
 					action="#{sessionManager.logout}">
-					<h:graphicImage value="/resources/images/logout.png"
-						alt="logout" height="40" width="40" />
+					<h:graphicImage value="/resources/images/logout.png" alt="logout"
+						height="40" width="40" />
 				</a4j:commandLink>
 			</div>
-						
+
 			<div class="header-cell">
-				<a4j:commandLink action="#{sessionManager.login}" rendered="#{not sessionManager.loggedIn}">
+				<a4j:commandLink action="#{sessionManager.login}"
+					rendered="#{not sessionManager.loggedIn}">
 					<h:graphicImage value="/resources/images/salesforce.png"
-						alt="Salesforce" height="30" width="30"/>
+						alt="Salesforce" height="30" width="30" />
 				</a4j:commandLink>
 			</div>
 
@@ -92,6 +91,9 @@
 
 		<h:panelGroup layout="block">
 
+			<a4j:commandLink id="setup">
+				<h:graphicImage url="/images/settings.png" />
+			</a4j:commandLink>
 
 		</h:panelGroup>
 

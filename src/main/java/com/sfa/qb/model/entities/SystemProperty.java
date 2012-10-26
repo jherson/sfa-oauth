@@ -10,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Parameters")
+@Table(name="SystemProperty")
 
-public class Parameters implements Serializable {
+public class SystemProperty implements Serializable {
 
 	private static final long serialVersionUID = -6670811930921142440L;
 	
@@ -24,14 +24,14 @@ public class Parameters implements Serializable {
 	@Column(name="Module", length=30)
 	private String module;
 	
-	@Column(name="Parameter", length=30)
-	private String parameter;
+	@Column(name="Name", length=30)
+	private String name;
 		
 	@Column(name="Value", length=60)
 	private String value;
 	
 
-	public Parameters() {
+	public SystemProperty() {
 		
 	}
 	
@@ -51,12 +51,12 @@ public class Parameters implements Serializable {
 		this.module = module;
 	}
 
-	public String getParameter() {
-		return parameter;
+	public String getName() {
+		return name;
 	}
 
-	public void setParameter(String parameter) {
-		this.parameter = parameter;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getValue() {

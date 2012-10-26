@@ -15,10 +15,14 @@
 		<class>com.sfa.qb.model.entities.Profile</class>
 		<class>com.sfa.qb.model.entities.UserRole</class>
 		<class>com.sfa.qb.model.entities.UserPreferences</class>
+		<class>com.sfa.qb.model.entities.SystemProperty</class>
+		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.cache.use_second_level_cache" value="true" />
 			<property name="hibernate.cache.use_query_cache" value="true" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />			
-		</properties>		
+			<property name="hibernate.cache.region.factory_class" value="org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory" />
+			<property name="hibernate.cache.infinispan.cachemanager" value="java:jboss/infinispan/hibernate" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
 	</persistence-unit>
 </persistence>
