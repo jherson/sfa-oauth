@@ -33,7 +33,7 @@
 
 		</div>
 
-		<div id="header-right">
+		<div id="header-right">			
 
 			<div class="header-cell">
 				<a4j:commandLink value="#{sessionUser.name}"
@@ -64,6 +64,24 @@
 						height="40" width="40" />
 				</a4j:commandLink>
 			</div>
+			
+			<div class="header-cell">
+				<a4j:commandLink status="waitstatus"
+					render="mainArea" execute="@this"
+					rendered="#{not sessionManager.loggedIn}"
+					actionListener="#{homeController.goToSetup}">
+					<h:graphicImage url="/resources/images/settings.png" />
+				</a4j:commandLink>
+			</div>
+			
+			<div class="header-cell">
+				<a4j:commandLink actionListener="#{homeController.goToSetup}"
+					value="#{msgs.setup}"
+					status="waitstatus" render="mainArea"
+					rendered="#{not sessionManager.loggedIn}"
+					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;">
+				</a4j:commandLink>
+			</div>
 
 			<div class="header-cell">
 				<a4j:commandLink action="#{sessionManager.login}"
@@ -91,10 +109,7 @@
 
 		<h:panelGroup layout="block">
 
-			<a4j:commandLink id="setupLink" status="waitstatus" render="mainArea"
-				execute="@this" actionListener="#{homeController.goToSetup}">
-				<h:graphicImage url="/resources/images/settings.png" />
-			</a4j:commandLink>
+
 
 		</h:panelGroup>
 
