@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<rich:panel id="setupPanel" layout="block" style="width: 1000px;">
+
+		<h:panelGroup layout="block">
+
+			<a4j:commandButton id="create" value="#{msgs.create}"
+				action="#{homeController.createConfiguration()}" execute="@this"
+				styleClass="commandButton" status="waitstatus">
+			</a4j:commandButton>
+
+		</h:panelGroup>
+
+		<br />
+
+		<rich:dataTable id="configurationDataTable" var="config"
+			value="#{configurationList}" iterator="it"
+			noDataLabel="#{msgs.noRecords}">
+
+			<rich:column width="60px" style="text-align: center;">
+				<f:facet name="header">#{msgs.action}</f:facet>
+				<a4j:commandLink>
+					<h:graphicImage id="edit" alt="edit"
+						url="/resources/images/edit.png" />
+				</a4j:commandLink>
+			</rich:column>
+
+			<rich:column width="100px" style="text-align: center;">
+				<f:facet name="header">#{msgs.name}</f:facet>
+				<a4j:commandLink value="#{config.name}" />
+			</rich:column>
+
+			<rich:column width="120px" style="text-align: center;">
+				<f:facet name="header">#{msgs.instance}</f:facet>
+				<h:outputText value="#{config.instance}" />
+			</rich:column>
+
+			<rich:column width="80px">
+				<f:facet name="header">#{msgs.username}</f:facet>
+				<h:outputText value="#{config.username}" />
+			</rich:column>
+
+			<rich:column width="80px">
+				<f:facet name="header">#{msgs.apiVersion}</f:facet>
+				<h:outputText value="#{config.apiVersion}" />
+			</rich:column>
+
+			<rich:column width="80px">
+				<f:facet name="header">#{msgs.clientId}</f:facet>
+				<h:outputText value="#{config.clientId}" />
+			</rich:column>
+
+			<rich:column width="80px">
+				<f:facet name="header">#{msgs.clientSecret}</f:facet>
+				<h:outputText value="#{config.clientSecret}" />
+			</rich:column>
+
+			<rich:column width="150px">
+				<f:facet name="header">#{msgs.redirectUri}</f:facet>
+				<h:outputText value="#{config.redirectUri}" />
+			</rich:column>
+
+			<rich:column width="60px">
+				<f:facet name="header">#{msgs.isActive}</f:facet>
+				<h:outputText value="#{config.isActive}" />
+			</rich:column>
+
+		</rich:dataTable>
+		
+		<br />
+
+		<rich:panel id="setupPopupPanel" >
+
+			<f:facet name="header">
+				<h:outputText value="#{msgs.configuration}" />
+			</f:facet>
+
+			<a4j:outputPanel>
+				<a4j:region>
+					<h:panelGrid width="100%" columns="1" cellpadding="3"
+						layout="inline-block">
+
+						<h:panelGroup>
+
+							<table style="width: 100%">
+
+								<tr>
+									<td width="100">#{msgs.name}</td>
+									<td width="300"><h:inputText size="50"
+											value="#{configurationBean.configuration.name}" /></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.instance}</td>
+									<td width="300"><h:selectOneMenu style="width: 150px;"
+											value="#{configurationBean.configuration.instance}">
+											<f:selectItem itemLabel="Production"
+												itemValue="https://login.salesforce.com" />
+											<f:selectItem itemLabel="Sandbox"
+												itemValue="https://test.salesforce.com" />
+										</h:selectOneMenu></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.username}</td>
+									<td width="300"><h:inputText size="60"
+											value="#{configurationBean.configuration.username}" /></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.password}</td>
+									<td width="300"><h:inputSecret redisplay="true" size="60"
+											value="#{configurationBean.configuration.password}" /></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.securityToken}</td>
+									<td width="300"><h:inputText size="25"
+											value="#{configurationBean.configuration.securityToken}" /></td>
+								</tr>
+								<tr height="22">
+									<td width="100">#{msgs.apiVersion}</td>
+									<td width="300"><h:inputText size="10"
+											value="#{configurationBean.configuration.apiVersion}" /></td>
+								</tr>
+								<tr height="22">
+									<td width="100">#{msgs.authEndpoint}</td>
+									<td width="300"><h:outputText 
+											value="#{configurationBean.configuration.authEndpoint}" /></td>
+								</tr>
+								<tr height="22">
+									<td width="100">#{msgs.serviceEndpoint}</td>
+									<td width="300"><h:outputText
+											value="#{configurationBean.configuration.serviceEndpoint}" /></td>
+								</tr>
+								<tr height="25">
+									<td width="100">#{msgs.apiEndpoint}</td>
+									<td width="300"><h:outputText
+											value="#{configurationBean.configuration.apiEndpoint}" /></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.clientId}</td>
+									<td width="300"><h:inputText size="100"
+											value="#{configurationBean.configuration.clientId}" /></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.clientSecret}</td>
+									<td width="300"><h:inputSecret redisplay="true" size="30"
+											value="#{configurationBean.configuration.clientSecret}" /></td>
+								</tr>
+								<tr>
+									<td width="100">#{msgs.redirectUri}</td>
+									<td width="300"><h:inputText size="120"
+											value="#{configurationBean.configuration.redirectUri}" /></td>
+								</tr>
+							</table>
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<br />
+
+					<h:panelGroup style="display: block; text-align: right">
+
+						<a4j:commandButton value="#{msgs.test}" styleClass="commandButton"
+							action="#{homeController.testConfiguration(configurationBean.configuration)}"
+							render="setupPanel">
+						</a4j:commandButton>
+
+						<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
+							action="#{homeController.saveConfiguration(configurationBean.configuration)}"
+							render="setupPanel">
+						</a4j:commandButton>
+
+						<h:outputText value="  " escape="false" />
+
+						<a4j:commandButton value="#{msgs.cancel}"
+							styleClass="commandButton" status="waitStatus" ajaxSingle="true"
+							bypassUpdates="true" immediate="true">
+						</a4j:commandButton>
+
+					</h:panelGroup>
+				</a4j:region>
+			</a4j:outputPanel>
+
+		</rich:panel>
+
+	</rich:panel>
+
+</ui:composition>

@@ -5,6 +5,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import com.sfa.qb.model.entities.Configuration;
 import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.Pricebook;
 import com.sfa.qb.model.entities.Profile;
@@ -49,5 +50,11 @@ public class PersistenceServiceImpl implements PersistenceService {
 	@Override
 	public void saveRole(UserRole role) {
 		entityManager.persist(role);
+	}
+	
+	@Override
+	public Configuration saveConfiguration(Configuration configuration) {
+		entityManager.persist(configuration);
+		return configuration;
 	}
 }

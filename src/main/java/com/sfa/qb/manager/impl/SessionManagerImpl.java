@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +27,6 @@ import nl.bitwalker.useragentutils.UserAgent;
 import org.jboss.as.controller.security.SecurityContext;
 
 import com.google.gson.Gson;
-import com.sfa.persistence.SessionFactory;
-import com.sfa.persistence.impl.SessionFactoryImpl;
 import com.sfa.qb.controller.MainController;
 import com.sfa.qb.controller.TemplatesEnum;
 import com.sfa.qb.login.oauth.OAuthConsumer;
@@ -39,8 +34,8 @@ import com.sfa.qb.login.oauth.OAuthServiceProvider;
 import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.manager.SessionManager;
+import com.sfa.qb.model.entities.Configuration;
 import com.sfa.qb.model.entities.LoginHistory;
-import com.sfa.qb.model.entities.SystemProperty;
 import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.model.sobject.User;
 import com.sfa.qb.qualifiers.SessionUser;
@@ -72,6 +67,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	
 	@Inject
 	private MainController mainController;
+	
+	@Inject
+	private Configuration configuration;
 		
 	@Produces
 	@Named
@@ -107,25 +105,30 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		//syncProperties();
 		
-		/**
-		 * setup the oauth service provider 
-		 */
-		
-		OAuthServiceProvider serviceProvider = new OAuthServiceProvider();				
-		serviceProvider.setInstance(System.getProperty("salesforce.instance"));
-		serviceProvider.setClientId(System.getProperty("salesforce.oauth.clientId"));
-		serviceProvider.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
-		serviceProvider.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
-		serviceProvider.setDisplay("popup");
-		serviceProvider.setPrompt("login");
-		serviceProvider.setScope("full refresh_token");
-		serviceProvider.setStartUrl("/initialize.jsf");
-		
-		/**
-		 * initialize the OAuthConsumer
-		 */
-		
-		this.oauthConsumer = new OAuthConsumer(serviceProvider);
+		if (configuration == null) {
+			mainController.setMainArea(TemplatesEnum.SETUP);
+		} else {
+			
+			/**
+			 * setup the oauth service provider 
+			 */
+			
+			OAuthServiceProvider serviceProvider = new OAuthServiceProvider();				
+			serviceProvider.setInstance(System.getProperty("salesforce.instance"));
+			serviceProvider.setClientId(System.getProperty("salesforce.oauth.clientId"));
+			serviceProvider.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
+			serviceProvider.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
+			serviceProvider.setDisplay("popup");
+			serviceProvider.setPrompt("login");
+			serviceProvider.setScope("full refresh_token");
+			serviceProvider.setStartUrl("/initialize.jsf");
+			
+			/**
+			 * initialize the OAuthConsumer
+			 */
+			
+			this.oauthConsumer = new OAuthConsumer(serviceProvider);
+		}
 		
 		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
 	}
@@ -340,37 +343,6 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getStackTrace()[0].toString()));
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void syncProperties() {
-	    Query query = entityManager.createQuery("Select p From SystemProperty p");
-	    List<SystemProperty> propertyList = query.getResultList();
-		
-		Properties properties = new Properties();
-		try {
-			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("quotebuilder.properties"));						
-		} catch (IOException e) {
-			logger.severe("Unable to load quotebuilder.properties file: " + e.getMessage());
-			return;
-		} 
-		
-		for (String key : properties.stringPropertyNames()) {
-			boolean isKeyFound = false;
-			for (SystemProperty systemProperty : propertyList) {
-				if (key.equals(systemProperty.getName())) {
-					isKeyFound = true;
-					System.setProperty(systemProperty.getName(), systemProperty.getValue());
-				}
-			}
-			
-			if (! isKeyFound) {
-				SystemProperty systemProperty = new SystemProperty();
-				systemProperty.setModule("OAUTH");
-				systemProperty.setName(key);
-				entityManager.persist(systemProperty);
-			} 
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.sfa.qb.service;
 
+import com.sfa.qb.model.entities.Configuration;
 import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.Pricebook;
 import com.sfa.qb.model.entities.Profile;
@@ -15,4 +16,5 @@ public interface PersistenceService {
 	public void saveUser(User user);
 	public void saveProfile(Profile profile);
 	public void saveRole(UserRole role);
+	public Configuration saveConfiguration(Configuration configuration);
 }

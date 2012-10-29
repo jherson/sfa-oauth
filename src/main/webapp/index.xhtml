@@ -91,7 +91,8 @@
 
 		<h:panelGroup layout="block">
 
-			<a4j:commandLink id="setup">
+			<a4j:commandLink id="setupLink" status="waitstatus" render="mainArea"
+				execute="@this" actionListener="#{homeController.goToSetup}">
 				<h:graphicImage url="/resources/images/settings.png" />
 			</a4j:commandLink>
 

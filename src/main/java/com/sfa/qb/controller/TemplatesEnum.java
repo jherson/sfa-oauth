@@ -7,6 +7,7 @@ import javax.enterprise.inject.Model;
 public enum TemplatesEnum {
 
 	INITIALIZE("initialize.xhtml"),
+	SETUP("setup.xhtml"),
 	HOME("home.xhtml"), 
 	PREFERENCES("preferences.xhtml"),
 	QUOTE_MANAGER("quotemanager.xhtml"), 

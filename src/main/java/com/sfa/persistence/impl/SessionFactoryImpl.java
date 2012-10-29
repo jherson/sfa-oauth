@@ -6,6 +6,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
 import com.sfa.persistence.SessionFactory;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
@@ -15,6 +18,9 @@ import com.sforce.ws.ConnectorConfig;
 public class SessionFactoryImpl implements SessionFactory {
 
 	private static final Logger log = Logger.getLogger(SessionFactoryImpl.class.getName());
+	
+	@Inject
+	EntityManager entityManager;
 
 	@Override
 	public void openSession() {

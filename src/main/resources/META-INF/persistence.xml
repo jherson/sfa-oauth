@@ -15,7 +15,7 @@
 		<class>com.sfa.qb.model.entities.Profile</class>
 		<class>com.sfa.qb.model.entities.UserRole</class>
 		<class>com.sfa.qb.model.entities.UserPreferences</class>
-		<class>com.sfa.qb.model.entities.SystemProperty</class>
+		<class>com.sfa.qb.model.entities.Configuration</class>
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.cache.use_second_level_cache" value="true" />
