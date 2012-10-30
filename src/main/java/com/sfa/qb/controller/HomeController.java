@@ -9,18 +9,13 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
-import com.sfa.qb.data.ConfigurationBean;
 import com.sfa.qb.model.chatter.Feed;
-import com.sfa.qb.model.entities.Configuration;
 import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.model.sobject.Quote;
 import com.sfa.qb.model.sobject.User;
-import com.sfa.qb.qualifiers.Create;
 import com.sfa.qb.qualifiers.ListQuotes;
 import com.sfa.qb.qualifiers.QueryFeed;
-import com.sfa.qb.qualifiers.Save;
 import com.sfa.qb.qualifiers.SessionUser;
-import com.sfa.qb.qualifiers.Test;
 import com.sfa.qb.qualifiers.ViewQuote;
 import com.sfa.qb.service.PersistenceService;
 
@@ -46,13 +41,7 @@ public class HomeController {
 		
 	@Inject
 	private Event<Feed> feedEvent;
-	
-	@Inject
-	private Event<Configuration> configurationEvent;
-	
-	@Inject
-	private ConfigurationBean configurationBean;
-	
+		
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<ViewQuote> VIEW_QUOTE = new AnnotationLiteral<ViewQuote>() {};
 	
@@ -60,16 +49,7 @@ public class HomeController {
 	private static final AnnotationLiteral<ListQuotes> LIST_QUOTES = new AnnotationLiteral<ListQuotes>() {};
 	
 	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<QueryFeed> QUERY_FEED = new AnnotationLiteral<QueryFeed>() {};
-		
-	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<Test> TEST_CONFIGURATION  = new AnnotationLiteral<Test>() {};
-	
-	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<Save> SAVE_CONFIGURATION  = new AnnotationLiteral<Save>() {};
-	
-	@SuppressWarnings("serial")
-	private static final AnnotationLiteral<Create> CREATE_CONFIGURATION  = new AnnotationLiteral<Create>() {};
+	private static final AnnotationLiteral<QueryFeed> QUERY_FEED = new AnnotationLiteral<QueryFeed>() {};	
 	
 	@PostConstruct
 	public void init() {
@@ -114,18 +94,5 @@ public class HomeController {
 	
 	public void goToSetup(ActionEvent event) {
 		mainController.setMainArea(TemplatesEnum.SETUP);
-	}
-	
-	public void createConfiguration() {
-		Configuration configuration = new Configuration();
-		configurationEvent.select(CREATE_CONFIGURATION).fire(configuration);
-	}
-	
-	public void saveConfiguration(Configuration configuration) {
-		configurationEvent.select(SAVE_CONFIGURATION).fire(configuration);
-	}
-	
-	public void testConfiguration(Configuration configuration) {
-		configurationEvent.select(TEST_CONFIGURATION).fire(configuration);
 	}
 }

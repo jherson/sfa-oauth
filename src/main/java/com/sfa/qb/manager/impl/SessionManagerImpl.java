@@ -38,6 +38,7 @@ import com.sfa.qb.model.entities.Configuration;
 import com.sfa.qb.model.entities.LoginHistory;
 import com.sfa.qb.model.entities.UserPreferences;
 import com.sfa.qb.model.sobject.User;
+import com.sfa.qb.qualifiers.SalesforceConfiguration;
 import com.sfa.qb.qualifiers.SessionUser;
 import com.sfa.qb.service.PersistenceService;
 import com.sfa.qb.util.DateUtil;
@@ -69,6 +70,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private MainController mainController;
 	
 	@Inject
+	@SalesforceConfiguration
 	private Configuration configuration;
 		
 	@Produces
@@ -105,8 +107,17 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 		
 		//syncProperties();
 		
-		if (configuration == null) {
+		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
+		
+		if (configuration != null) {
+			
+			/**
+			 * if there is no active configuration then go to setup page 
+			 */
+			
 			mainController.setMainArea(TemplatesEnum.SETUP);
+			redirect(INDEX_PAGE);
+			
 		} else {
 			
 			/**
@@ -128,9 +139,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			 */
 			
 			this.oauthConsumer = new OAuthConsumer(serviceProvider);
-		}
-		
-		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
+		}				
 	}
 	
 	@PreDestroy

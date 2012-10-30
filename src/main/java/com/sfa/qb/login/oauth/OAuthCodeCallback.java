@@ -1,8 +1,12 @@
 package com.sfa.qb.login.oauth;
 
+import java.io.Serializable;
+
 import javax.security.auth.callback.Callback;
 
-public class OAuthCodeCallback implements Callback {
+public class OAuthCodeCallback implements Callback, Serializable {
+
+	private static final long serialVersionUID = 1311717852522152761L;
 	
 	private String code;
 	

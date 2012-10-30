@@ -95,7 +95,7 @@ public class QuoteLineItemListDataTableBean {
 				
 				FacesContext context = FacesContext.getCurrentInstance();
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, errorMessage);
-				FacesContext.getCurrentInstance().addMessage(inputText.getClientId(context), message);
+				context.addMessage(inputText.getClientId(context), message);
 				
 				log.info(errorMessage);
 			}

@@ -54,7 +54,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 	
 	@Override
 	public Configuration saveConfiguration(Configuration configuration) {
-		entityManager.persist(configuration);
+		entityManager.merge(configuration);
 		return configuration;
 	}
 }

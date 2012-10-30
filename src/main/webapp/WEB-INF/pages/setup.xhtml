@@ -15,133 +15,133 @@
 		</f:facet>
 
 		<a4j:outputPanel>
-			<a4j:region>
-				<h:panelGrid width="100%" columns="1" cellpadding="3"
-					layout="inline-block">
+			<h:panelGrid width="100%" columns="1" cellpadding="3"
+				layout="inline-block">
 
-					<h:panelGroup>
+				<h:panelGroup>
 
-						<table style="width: 100%">
+					<table style="width: 100%">
 
-							<tr>
-								<td width="100">#{msgs.name}</td>
-								<td width="300"><h:inputText
-										disabled="#{not configurationBean.configuration.editable}"
-										size="50" value="#{configurationBean.configuration.name}" />
+						<tr>
+							<td width="100">#{msgs.name}</td>
+							<td width="300"><h:inputText
+									disabled="#{not setupController.configuration.editable}"
+									size="50" value="#{setupController.configuration.name}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.instance}</td>
+							<td width="300"><h:selectOneMenu
+									disabled="#{not setupController.configuration.editable}"
+									style="width: 150px;"
+									value="#{setupController.configuration.instance}">
+									<f:selectItem itemLabel="Production"
+										itemValue="https://login.salesforce.com" />
+									<f:selectItem itemLabel="Sandbox"
+										itemValue="https://test.salesforce.com" />
+								</h:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.username}</td>
+							<td width="300"><h:inputText
+									disabled="#{not setupController.configuration.editable}"
+									size="60" value="#{setupController.configuration.username}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.password}</td>
+							<td width="300"><h:inputSecret
+									disabled="#{not setupController.configuration.editable}"
+									redisplay="true" size="60"
+									value="#{setupController.configuration.password}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.securityToken}</td>
+							<td width="300"><h:inputText
+									disabled="#{not setupController.configuration.editable}"
+									size="25"
+									value="#{setupController.configuration.securityToken}" /></td>
+						</tr>
+						<tr height="22">
+							<td width="100">#{msgs.apiVersion}</td>
+							<td width="300"><h:inputText
+									disabled="#{not setupController.configuration.editable}"
+									size="10" value="#{setupController.configuration.apiVersion}" /></td>
+						</tr>
 
-								</td>
-							</tr>
-							<tr>
-								<td width="100">#{msgs.instance}</td>
-								<td width="300"><h:selectOneMenu
-										disabled="#{not configurationBean.configuration.editable}"
-										style="width: 150px;"
-										value="#{configurationBean.configuration.instance}">
-										<f:selectItem itemLabel="Production"
-											itemValue="https://login.salesforce.com" />
-										<f:selectItem itemLabel="Sandbox"
-											itemValue="https://test.salesforce.com" />
-									</h:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td width="100">#{msgs.username}</td>
-								<td width="300"><h:inputText
-										disabled="#{not configurationBean.configuration.editable}"
-										size="60" value="#{configurationBean.configuration.username}" /></td>
-							</tr>
-							<tr>
-								<td width="100">#{msgs.password}</td>
-								<td width="300"><h:inputSecret
-										disabled="#{not configurationBean.configuration.editable}"
-										redisplay="true" size="60"
-										value="#{configurationBean.configuration.password}" /></td>
-							</tr>
-							<tr>
-								<td width="100">#{msgs.securityToken}</td>
-								<td width="300"><h:inputText
-										disabled="#{not configurationBean.configuration.editable}"
-										size="25"
-										value="#{configurationBean.configuration.securityToken}" /></td>
-							</tr>
-							<tr height="22">
-								<td width="100">#{msgs.apiVersion}</td>
-								<td width="300"><h:inputText
-										disabled="#{not configurationBean.configuration.editable}"
-										size="10"
-										value="#{configurationBean.configuration.apiVersion}" /></td>
-							</tr>
-							
-							<tr>
-								<td width="100">#{msgs.clientId}</td>
-								<td width="300"><h:inputText
-										disabled="#{not configurationBean.configuration.editable}"
-										size="100" value="#{configurationBean.configuration.clientId}" /></td>
-							</tr>
-							<tr>
-								<td width="100">#{msgs.clientSecret}</td>
-								<td width="300"><h:inputSecret
-										disabled="#{not configurationBean.configuration.editable}"
-										redisplay="true" size="30"
-										value="#{configurationBean.configuration.clientSecret}" /></td>
-							</tr>
-							<tr>
-								<td width="100">#{msgs.redirectUri}</td>
-								<td width="300"><h:inputText
-										disabled="#{not configurationBean.configuration.editable}"
-										size="120"
-										value="#{configurationBean.configuration.redirectUri}" /></td>
-							</tr>							
-							<tr height="22">
-								<td width="100">#{msgs.authEndpoint}</td>
-								<td width="300"><h:outputText
-										value="#{configurationBean.configuration.authEndpoint}" /></td>
-							</tr>
-							<tr height="22">
-								<td width="100">#{msgs.serviceEndpoint}</td>
-								<td width="300"><h:outputText
-										value="#{configurationBean.configuration.serviceEndpoint}" /></td>
-							</tr>
-							<tr height="25">
-								<td width="100">#{msgs.apiEndpoint}</td>
-								<td width="300"><h:outputText
-										value="#{configurationBean.configuration.apiEndpoint}" /></td>
-							</tr>
-							
-						</table>
-					</h:panelGroup>
+						<tr>
+							<td width="100">#{msgs.clientId}</td>
+							<td width="300"><h:inputText
+									disabled="#{not setupController.configuration.editable}"
+									size="100" value="#{setupController.configuration.clientId}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.clientSecret}</td>
+							<td width="300"><h:inputSecret
+									disabled="#{not setupController.configuration.editable}"
+									redisplay="true" size="30"
+									value="#{setupController.configuration.clientSecret}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.redirectUri}</td>
+							<td width="300"><h:inputText
+									disabled="#{not setupController.configuration.editable}"
+									size="120" value="#{setupController.configuration.redirectUri}" /></td>
+						</tr>
+						<tr height="22">
+							<td width="100">#{msgs.authEndpoint}</td>
+							<td width="300"><h:outputText
+									value="#{setupController.configuration.authEndpoint}" /></td>
+						</tr>
+						<tr height="22">
+							<td width="100">#{msgs.serviceEndpoint}</td>
+							<td width="300"><h:outputText
+									value="#{setupController.configuration.serviceEndpoint}" /></td>
+						</tr>
+						<tr height="25">
+							<td width="100">#{msgs.apiEndpoint}</td>
+							<td width="300"><h:outputText
+									value="#{setupController.configuration.apiEndpoint}" /></td>
+						</tr>
+						<tr height="25">
+						    <td width="100">#{msgs.status}</td>
+                            <td width="300"><rich:message for="testButton" /></td>						
+						</tr>
 
-				</h:panelGrid>
-
-				<br />
-
-				<h:panelGroup style="display: block; text-align: right">
-
-					<a4j:commandButton value="#{msgs.edit}" styleClass="commandButton"
-						action="#{homeController.testConfiguration(configurationBean.configuration)}"
-						render="setupPanel">
-					</a4j:commandButton>
-
-					<a4j:commandButton value="#{msgs.test}" styleClass="commandButton"
-						action="#{homeController.testConfiguration(configurationBean.configuration)}"
-						render="setupPanel">
-					</a4j:commandButton>
-
-					<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
-						action="#{homeController.saveConfiguration(configurationBean.configuration)}"
-						render="setupPanel">
-					</a4j:commandButton>
-
-					<h:outputText value="  " escape="false" />
-
-					<a4j:commandButton value="#{msgs.cancel}"
-						styleClass="commandButton" status="waitStatus" ajaxSingle="true"
-						bypassUpdates="true" immediate="true">
-					</a4j:commandButton>
-
+					</table>
 				</h:panelGroup>
-			</a4j:region>
-		</a4j:outputPanel>
 
+			</h:panelGrid>
+
+			<br />
+
+			<h:panelGroup style="display: block; text-align: right">
+
+				<a4j:commandButton value="#{msgs.edit}" styleClass="commandButton"
+					action="#{setupController.editConfiguration}" render="setupPanel"
+					rendered="#{not setupController.configuration.editable}" status="waitstatus">
+				</a4j:commandButton>
+
+				<a4j:commandButton id="testButton" value="#{msgs.test}"
+					styleClass="commandButton"
+					actionListener="#{setupController.testConfiguration}"
+					render="setupPanel">
+				</a4j:commandButton>
+
+				<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
+					action="#{setupController.saveConfiguration}" render="setupPanel"
+					rendered="#{setupController.configuration.editable}">
+				</a4j:commandButton>
+
+				<h:outputText value="  " escape="false" />
+
+				<a4j:commandButton value="#{msgs.reset}" styleClass="commandButton" render="setupPanel"
+				    status="waitstatus" type="reset" action="#{setupController.resetConfiguration}" 
+					rendered="#{setupController.configuration.editable}" bypassUpdates="true" immediate="true" ajaxSingle="true" >
+				</a4j:commandButton>							
+				
+			</h:panelGroup>
+			
+		</a4j:outputPanel>
+		
 	</rich:panel>
 
 </ui:composition>

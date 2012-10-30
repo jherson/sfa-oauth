@@ -1,6 +1,7 @@
 package com.sfa.qb.login.oauth;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -28,8 +29,10 @@ import com.sfa.qb.service.impl.QuoteServiceImpl;
 import com.sforce.ws.ConnectionException;
 
 @SuppressWarnings("unused")
-public class OAuthLoginModule implements LoginModule {
+public class OAuthLoginModule implements LoginModule, Serializable {
 	
+	private static final long serialVersionUID = 1328002810741307326L;
+
 	private static Logger log = Logger.getLogger(OAuthLoginModule.class.getName()); 	
 	
 	private Subject subject;

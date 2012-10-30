@@ -68,7 +68,7 @@
 			<div class="header-cell">
 				<a4j:commandLink status="waitstatus"
 					render="mainArea" execute="@this"
-					rendered="#{not sessionManager.loggedIn}"
+					rendered="#{sessionManager.loggedIn}"
 					actionListener="#{homeController.goToSetup}">
 					<h:graphicImage url="/resources/images/settings.png" />
 				</a4j:commandLink>
@@ -77,8 +77,8 @@
 			<div class="header-cell">
 				<a4j:commandLink actionListener="#{homeController.goToSetup}"
 					value="#{msgs.setup}"
+					rendered="#{sessionManager.loggedIn}"
 					status="waitstatus" render="mainArea"
-					rendered="#{not sessionManager.loggedIn}"
 					style="color:#{a4jSkin.generalTextColor}; text-decoration: none; font-size: 14px;">
 				</a4j:commandLink>
 			</div>
