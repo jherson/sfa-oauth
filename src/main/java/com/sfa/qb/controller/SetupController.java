@@ -3,18 +3,20 @@ package com.sfa.qb.controller;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
 import com.sfa.qb.model.entities.Configuration;
+import com.sfa.qb.qualifiers.Create;
 import com.sfa.qb.qualifiers.MessageBundle;
-import com.sfa.qb.qualifiers.SalesforceConfiguration;
+import com.sfa.qb.qualifiers.Reset;
 import com.sfa.qb.qualifiers.Update;
 import com.sfa.qb.service.PersistenceService;
 import com.sforce.soap.partner.Connector;
@@ -30,6 +32,9 @@ public class SetupController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
+	private Logger log;
+	
+	@Inject
 	private PersistenceService persistenceService;
 	
 	@Inject
@@ -37,38 +42,38 @@ public class SetupController implements Serializable {
 	
 	@Inject
 	@MessageBundle
-	transient ResourceBundle messages;
-	
-    @Inject
-    @SalesforceConfiguration
-    private Configuration configuration;
-    
+	private ResourceBundle messages;
+	    
 	@Inject
 	private Event<Configuration> configurationEvent;	
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<Update> UPDATE_CONFIGURATION  = new AnnotationLiteral<Update>() {};
 	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<Reset> RESET_CONFIGURATION  = new AnnotationLiteral<Reset>() {};
+	
+	@SuppressWarnings("serial")
+	private static final AnnotationLiteral<Create> CREATE_CONFIGURATION  = new AnnotationLiteral<Create>() {};
+	
 	private static final String authEndpoint = "{0}/services/Soap/u/{1}";
+	
+	@PostConstruct
+	public void init() {
+		log.info("init");
+	}
     	
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-	
-	public void setConfiguration(Configuration configuration){
-		this.configuration = configuration;
-	}
-	
 	public void createConfiguration() {
-		this.configuration = new Configuration();
-		this.configuration.setEditable(Boolean.TRUE);
+		Configuration configuration = new Configuration();
+		configuration.setEditable(Boolean.TRUE);
+		configurationEvent.select(CREATE_CONFIGURATION).fire(configuration);
 	}
 	
-	public void editConfiguration() {
+	public void editConfiguration(Configuration configuration) {
 		configuration.setEditable(Boolean.TRUE);
 	}
 	
-	public void testConfiguration(ActionEvent event) {
+	public void testConfiguration(Configuration configuration) {
 		
 		Object[] params = new Object[] {configuration.getInstance(), configuration.getApiVersion()};
 		
@@ -85,9 +90,7 @@ public class SetupController implements Serializable {
 			connection = Connector.newConnection(config);	
 			configuration.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
 			configuration.setApiEndpoint(connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-											
-			configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
-			
+																	
 			message = new FacesMessage(FacesMessage.SEVERITY_INFO, null, messages.getString("success"));
 			
 		} catch (LoginFault lf) {
@@ -98,21 +101,22 @@ public class SetupController implements Serializable {
 			            
 			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, lf.getExceptionMessage());
 			
-		} catch (ConnectionException e) {
+		} catch (ConnectionException ce) {
 			
 			configuration.setAuthEndpoint(null);
 			configuration.setServiceEndpoint(null);
 			configuration.setApiEndpoint(null);	
 			            
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage());
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ce.getMessage());
 			
 		}				
 		
-		setConfiguration(configuration);
-		context.addMessage(event.getComponent().getClientId(), message);
+		configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
+				
+		context.addMessage(FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:testButton").getClientId(), message);
 	}
 	
-	public void saveConfiguration() {
+	public void saveConfiguration(Configuration configuration) {
 //      if (configuration.getCreatedById() == null) {
 //      configuration.setCreatedById(oauth.getIdentity().getUserId());
 //      configuration.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -123,13 +127,11 @@ public class SetupController implements Serializable {
 		
 		configuration.setEditable(Boolean.FALSE);
 		configuration = persistenceService.saveConfiguration(configuration);
-		
-		setConfiguration(configuration);
-		
+				
 		configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);		
 	}
 	
-	public void resetConfiguration() {
-		configuration.setEditable(Boolean.FALSE);
+	public void resetConfiguration(Configuration configuration) {
+		configurationEvent.select(RESET_CONFIGURATION).fire(configuration);			
 	}
 }

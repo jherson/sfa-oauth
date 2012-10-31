@@ -70,7 +70,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 	private MainController mainController;
 	
 	@Inject
-	@SalesforceConfiguration
+    @SalesforceConfiguration
 	private Configuration configuration;
 		
 	@Produces

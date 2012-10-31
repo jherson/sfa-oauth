@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="Configuration", uniqueConstraints = @UniqueConstraint(columnNames = {"Name"}))
@@ -25,6 +26,7 @@ public class Configuration implements Serializable {
 	private int id;
 	
 	@Column(name="Name", length=50, unique=true)
+	@NotNull
 	private String name;
 	
 	@Column(name="Instance", length=30)
