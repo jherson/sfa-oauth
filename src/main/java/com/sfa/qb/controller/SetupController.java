@@ -1,6 +1,7 @@
 package com.sfa.qb.controller;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -13,8 +14,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.model.entities.Configuration;
-import com.sfa.qb.model.entities.User;
+import com.sfa.qb.model.setup.SetupUser;
+import com.sfa.qb.model.sobject.User;
 import com.sfa.qb.qualifiers.Create;
 import com.sfa.qb.qualifiers.MessageBundle;
 import com.sfa.qb.qualifiers.Reset;
@@ -46,7 +49,7 @@ public class SetupController implements Serializable {
 	private ResourceBundle messages;
 	    
 	@Inject
-	private Event<Configuration> configurationEvent;	
+	private Event<Configuration> configurationEvent;		
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<Update> UPDATE_CONFIGURATION  = new AnnotationLiteral<Update>() {};
@@ -57,9 +60,10 @@ public class SetupController implements Serializable {
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<Create> CREATE_CONFIGURATION  = new AnnotationLiteral<Create>() {};
 	
-	private static final String authEndpoint = "{0}/services/Soap/u/";
+	private static final String AUTH_ENDPOINT = "{0}/services/Soap/u/";
 	
-	private static final String apiVersion = "26.0";
+	private static final String API_VERSION = "26.0";
+	
 	
 	@PostConstruct
 	public void init() {
@@ -77,9 +81,7 @@ public class SetupController implements Serializable {
 	}
 	
 	public void testConfiguration(Configuration configuration) {
-		
-		configuration.setAuthEndpoint(MessageFormat.format(authEndpoint + apiVersion, configuration.getInstance()));				
-
+					
 		ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(configuration.getAuthEndpoint());
     	config.setUsername(configuration.getUsername());
@@ -118,13 +120,12 @@ public class SetupController implements Serializable {
 	}
 	
 	public void saveConfiguration(Configuration configuration) {
-//      if (configuration.getCreatedById() == null) {
-//      configuration.setCreatedById(oauth.getIdentity().getUserId());
-//      configuration.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//  }
-//  
-//  configuration.setLastModifiedById(oauth.getIdentity().getUserId());
-//  configuration.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
+		
+        if (configuration.getCreatedDate() == null) {
+            configuration.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        }
+  
+        configuration.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
 		
 		configuration.setEditable(Boolean.FALSE);
 		configuration = persistenceService.saveConfiguration(configuration);
@@ -136,43 +137,34 @@ public class SetupController implements Serializable {
 		configurationEvent.select(RESET_CONFIGURATION).fire(configuration);			
 	}
 	
-	public void administratorLogin(Configuration configuration) {
-		configuration.setAuthEndpoint(MessageFormat.format(authEndpoint + apiVersion, configuration.getInstance()));				
+	public void login(SetupUser setupUser) {
+		String authEndpoint = MessageFormat.format(AUTH_ENDPOINT + API_VERSION, setupUser.getInstance());				
 
 		ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(configuration.getAuthEndpoint());
-    	config.setUsername(configuration.getAdministrator().getUserName());
-		config.setPassword(configuration.getAdministrator().getPassword() + configuration.getAdministrator().getSecurityToken());
+    	config.setAuthEndpoint(authEndpoint);
+    	config.setUsername(setupUser.getUsername());
+		config.setPassword(setupUser.getPassword() + setupUser.getSecurityToken());
 
-		FacesMessage message = null;
 		PartnerConnection connection = null;
 		try {					
-			connection = Connector.newConnection(config);	
-			configuration.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
-			configuration.setApiEndpoint(connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
-																	
-			message = new FacesMessage(FacesMessage.SEVERITY_INFO, null, messages.getString("success"));
+			connection = Connector.newConnection(config);		
 			
-		} catch (LoginFault lf) {
+			log.info("setup user logged in successfully");
 			
-			configuration.setAuthEndpoint(null);
-			configuration.setServiceEndpoint(null);
-			configuration.setApiEndpoint(null);	
-			            
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, lf.getExceptionMessage());
+			Configuration configuration = new Configuration();
+			configuration.setInstance(setupUser.getInstance());
+			configuration.setAuthEndpoint(authEndpoint);		
+	        configuration.setCreatedById(connection.getUserInfo().getUserId());	  
+		    configuration.setLastModifiedById(connection.getUserInfo().getUserId());
+		    
+		    configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
 			
-		} catch (ConnectionException ce) {
-			
-			configuration.setAuthEndpoint(null);
-			configuration.setServiceEndpoint(null);
-			configuration.setApiEndpoint(null);	
-			            
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ce.getMessage());
-			
-		}				
-				
-		configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
-		
-		context.addMessage(FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:testButton").getClientId(), message);
+		} catch (LoginFault lf) {			            
+			setupUser.setStatus(lf.getExceptionMessage());
+			return;
+		} catch (ConnectionException ce) {			            
+			setupUser.setStatus(ce.getMessage());
+			return;
+		}								
 	}
 }

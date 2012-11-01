@@ -6,9 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:panel id="setupPanel" layout="block" style="width: 1000px;">
-
-		<br />
+	<rich:panel id="setupPanel" layout="block" style="width: 900px;">
 
 		<f:facet name="header">
 			<h:outputText value="#{msgs.configuration}" />
@@ -21,12 +19,10 @@
 				<h:panelGroup>
 
 					<table style="width: 100%">
-					<tr>
+						<tr>
 							<td width="100">#{msgs.instance}</td>
-							<td width="300"><h:selectOneMenu
-								
-									style="width: 150px;"
-									value="#{configuration.instance}">
+							<td width="300"><h:selectOneMenu style="width: 150px;"
+									value="#{setupUser.instance}">
 									<f:selectItem itemLabel="Production"
 										itemValue="https://login.salesforce.com" />
 									<f:selectItem itemLabel="Sandbox"
@@ -35,135 +31,36 @@
 						</tr>
 						<tr>
 							<td width="100">#{msgs.username}</td>
-							<td width="300"><h:inputText
-								
-									size="60" value="#{configuration.administrator.userName}" /></td>
+							<td width="300"><h:inputText size="60"
+									value="#{setupUser.username}" /></td>
 						</tr>
 						<tr>
 							<td width="100">#{msgs.password}</td>
-							<td width="300"><h:inputSecret
-								
-									redisplay="true" size="60"
-									value="#{configuration.administrator.password}" /></td>
+							<td width="300"><h:inputSecret redisplay="true" size="60"
+									value="#{setupUser.password}" /></td>
 						</tr>
 						<tr>
 							<td width="100">#{msgs.securityToken}</td>
-							<td width="300"><h:inputText
-							
-									size="30"
-									value="#{configuration.administrator.securityToken}" /></td>
+							<td width="300"><h:inputText size="30"
+									value="#{setupUser.securityToken}" /></td>
 						</tr>
-
-						<tr>
-							<td width="100">#{msgs.name}</td>
-							<td width="300"><h:inputText
-									disabled="#{not configuration.editable}"
-									size="50" value="#{configuration.name}"
-									requiredMessage="#{msgs.nameRequiredMessage}">
-									<rich:validator />
-								</h:inputText></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.username}</td>
-							<td width="300"><h:inputText
-									disabled="#{not configuration.editable}"
-									size="60" value="#{configuration.username}" /></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.password}</td>
-							<td width="300"><h:inputSecret
-									disabled="#{not configuration.editable}"
-									redisplay="true" size="60"
-									value="#{configuration.password}" /></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.securityToken}</td>
-							<td width="300"><h:inputText
-									disabled="#{not configuration.editable}"
-									size="30"
-									value="#{configuration.securityToken}" /></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.clientId}</td>
-							<td width="300"><h:inputText
-									disabled="#{not configuration.editable}"
-									size="100" value="#{configuration.clientId}" /></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.clientSecret}</td>
-							<td width="300"><h:inputSecret
-									disabled="#{not configuration.editable}"
-									redisplay="true" size="30"
-									value="#{configuration.clientSecret}" /></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.redirectUri}</td>
-							<td width="300"><h:inputText
-									disabled="#{not configuration.editable}"
-									size="120" value="#{configuration.redirectUri}" /></td>
-						</tr>
-						<tr height="22">
-							<td width="100">#{msgs.authEndpoint}</td>
-							<td width="300"><h:outputText
-									value="#{configuration.authEndpoint}" /></td>
-						</tr>
-						<tr height="22">
-							<td width="100">#{msgs.serviceEndpoint}</td>
-							<td width="300"><h:outputText
-									value="#{configuration.serviceEndpoint}" /></td>
-						</tr>
-						<tr height="25">
-							<td width="100">#{msgs.apiEndpoint}</td>
-							<td width="300"><h:outputText
-									value="#{configuration.apiEndpoint}" /></td>
-						</tr>
-						<tr height="25">
-							<td width="100">#{msgs.status}</td>
-							<td width="300"><rich:message for="testButton" /></td>
-						</tr>
-
 					</table>
+
+					<h:panelGroup style="display: block; text-align: right">
+
+						<a4j:commandButton value="#{msgs.login}"
+							styleClass="commandButton"
+							action="#{setupController.login(setupUser)}"
+							render="setupPanel"
+							status="waitstatus">
+						</a4j:commandButton>
+
+					</h:panelGroup>
+
 				</h:panelGroup>
-
-			</h:panelGrid>
-
-			<br />
-
-			<h:panelGroup style="display: block; text-align: right">
 			
-			    <a4j:commandButton value="#{msgs.login}" styleClass="commandButton"
-					action="#{setupController.administratorLogin(configuration)}" render="setupPanel"
-					rendered="#{empty configuration.administrator.id}"
-					status="waitstatus">
-				</a4j:commandButton>
-
-				<a4j:commandButton value="#{msgs.edit}" styleClass="commandButton"
-					action="#{setupController.editConfiguration(configuration)}" render="setupPanel"
-					rendered="#{not configuration.editable}"
-					status="waitstatus">
-				</a4j:commandButton>
-
-				<a4j:commandButton id="testButton" value="#{msgs.test}"
-					styleClass="commandButton"
-					action="#{setupController.testConfiguration(configuration)}"
-					render="setupPanel">
-				</a4j:commandButton>
-
-				<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
-					action="#{setupController.saveConfiguration(configuration)}" render="setupPanel"
-					rendered="#{configuration.editable}">
-				</a4j:commandButton>
-
-				<h:outputText value="  " escape="false" />
-
-				<a4j:commandButton value="#{msgs.cancel}" styleClass="commandButton"
-					render="setupPanel"  
-					action="#{setupController.resetConfiguration(configuration)}" 
-					rendered="#{configuration.editable}">
-				</a4j:commandButton>
-
-			</h:panelGroup>
-
+             </h:panelGrid>
+             
 		</a4j:outputPanel>
 
 	</rich:panel>

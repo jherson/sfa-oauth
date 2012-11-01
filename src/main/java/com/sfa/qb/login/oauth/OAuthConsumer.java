@@ -12,7 +12,8 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sfa.qb.login.oauth.callback.OAuthCallbackHandler;
+import com.sfa.qb.login.oauth.callback.OAuthCodeCallbackHandler;
+import com.sfa.qb.login.oauth.callback.OAuthRefreshTokenCallbackHandler;
 
 public class OAuthConsumer implements Serializable {
 
@@ -22,6 +23,8 @@ public class OAuthConsumer implements Serializable {
 	
     public OAuthConsumer(OAuthServiceProvider serviceProvider) {
     	this.serviceProvider = serviceProvider;
+    	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
+		Configuration.setConfiguration(oauthConfig);
     }
 
     public String getOAuthTokenUrl() throws UnsupportedEncodingException {
@@ -47,17 +50,16 @@ public class OAuthConsumer implements Serializable {
     	
     }
     
-    public Subject authenticate(String code) throws LoginException {
-    	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
-		Configuration.setConfiguration(oauthConfig);
+    public Subject authenticate(String code) throws LoginException {    	
 		
-		loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(code));	
-		loginContext.login();
-		
+		loginContext = new LoginContext("OAuth", new OAuthCodeCallbackHandler(code));	
+		loginContext.login();		
 		return loginContext.getSubject();
     }
     
-    public Subject refreshToken() throws LoginException {
+    public Subject refreshToken(String refreshToken) throws LoginException {
+    	
+    	loginContext = new LoginContext("OAuth", new OAuthRefreshTokenCallbackHandler(refreshToken));	
     	loginContext.login();
     	return loginContext.getSubject();
     }

@@ -73,9 +73,6 @@ public class Configuration implements Serializable {
 	
 	@Column(name="LastModifiedDate")
 	private Timestamp lastModifiedDate;
-	
-	@Transient
-	private User administrator;
 
 	@Transient
 	private Boolean editable;
@@ -227,13 +224,5 @@ public class Configuration implements Serializable {
 
 	public void setLastModifiedDate(Timestamp lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
-	}
-	
-	public User getAdministrator() {
-		return administrator;
-	}
-
-	public void setAdministrator(User administrator) {
-		this.administrator = administrator;
 	}
 }

@@ -43,7 +43,7 @@ public class ConfigurationProducer implements Serializable {
 		log.info("init");
 		Query query = entityManager.createQuery("Select c From Configuration c"); 
 		if (query.getResultList() != null || query.getResultList().size() > 0) {
-		    configuration = (Configuration) query.getResultList().get(0);		    
+		    configuration = (Configuration) query.getResultList().get(0);		    		    
 		} 
 	}
 	

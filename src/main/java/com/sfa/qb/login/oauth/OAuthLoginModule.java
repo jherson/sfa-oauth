@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.login.oauth.callback.OAuthCodeCallback;
+import com.sfa.qb.login.oauth.callback.OAuthRefreshTokenCallback;
 import com.sfa.qb.login.oauth.model.Identity;
 import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.login.oauth.service.OAuthService;
@@ -80,7 +81,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		String redirectUri = options.get("redirectUri").toString();
 		
 		String authResponse = null;
-		if (oauth == null) {			
+		
+		if (callbackHandler instanceof OAuthCodeCallback) {
 			
 			Callback[] callbacks = new Callback[1];
 			callbacks[0] = new OAuthCodeCallback();
@@ -93,13 +95,28 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 				throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
 			}
 			
-			OAuthCodeCallback oauthCodeCallback = (OAuthCodeCallback) callbacks[0];		
+			OAuthCodeCallback callback = (OAuthCodeCallback) callbacks[0];		
 									
-			authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, oauthCodeCallback.getCode());
+			authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, callback.getCode());
 			
-		} else {
-			authResponse = oauthService.refreshAuthToken(instance, clientId, clientSecret, oauth.getRefreshToken());	
-		}
+		} else if (callbackHandler instanceof OAuthRefreshTokenCallback) {
+			
+			Callback[] callbacks = new Callback[1];
+			callbacks[0] = new OAuthRefreshTokenCallback();
+	
+			try {
+				callbackHandler.handle(callbacks);
+			} catch (IOException e) {
+				throw new LoginException("IOException calling handle on callbackHandler");
+			} catch (UnsupportedCallbackException e) {
+				throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
+			}
+			
+			OAuthRefreshTokenCallback callback = (OAuthRefreshTokenCallback) callbacks[0];	
+			
+			authResponse = oauthService.refreshAuthToken(instance, clientId, clientSecret, callback.getRefreshToken());
+			
+		}						
 				
 		oauth = new Gson().fromJson(authResponse, OAuth.class);
 				
