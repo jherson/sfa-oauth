@@ -12,6 +12,8 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sfa.qb.login.oauth.callback.OAuthCallbackHandler;
+
 public class OAuthConsumer implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
@@ -39,6 +41,10 @@ public class OAuthConsumer implements Serializable {
     
     public void login(HttpServletResponse response) throws UnsupportedEncodingException, IOException {
     	response.sendRedirect(getOAuthTokenUrl());
+    }
+    
+    public void login(String username, String password, String securityToken) throws LoginException {
+    	
     }
     
     public Subject authenticate(String code) throws LoginException {

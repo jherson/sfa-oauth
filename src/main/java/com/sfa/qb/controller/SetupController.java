@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import com.sfa.qb.model.entities.Configuration;
+import com.sfa.qb.model.entities.User;
 import com.sfa.qb.qualifiers.Create;
 import com.sfa.qb.qualifiers.MessageBundle;
 import com.sfa.qb.qualifiers.Reset;
@@ -56,7 +57,9 @@ public class SetupController implements Serializable {
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<Create> CREATE_CONFIGURATION  = new AnnotationLiteral<Create>() {};
 	
-	private static final String authEndpoint = "{0}/services/Soap/u/{1}";
+	private static final String authEndpoint = "{0}/services/Soap/u/";
+	
+	private static final String apiVersion = "26.0";
 	
 	@PostConstruct
 	public void init() {
@@ -75,9 +78,7 @@ public class SetupController implements Serializable {
 	
 	public void testConfiguration(Configuration configuration) {
 		
-		Object[] params = new Object[] {configuration.getInstance(), configuration.getApiVersion()};
-		
-		configuration.setAuthEndpoint(MessageFormat.format(authEndpoint, params));				
+		configuration.setAuthEndpoint(MessageFormat.format(authEndpoint + apiVersion, configuration.getInstance()));				
 
 		ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(configuration.getAuthEndpoint());
@@ -133,5 +134,45 @@ public class SetupController implements Serializable {
 	
 	public void resetConfiguration(Configuration configuration) {
 		configurationEvent.select(RESET_CONFIGURATION).fire(configuration);			
+	}
+	
+	public void administratorLogin(Configuration configuration) {
+		configuration.setAuthEndpoint(MessageFormat.format(authEndpoint + apiVersion, configuration.getInstance()));				
+
+		ConnectorConfig config = new ConnectorConfig();
+    	config.setAuthEndpoint(configuration.getAuthEndpoint());
+    	config.setUsername(configuration.getAdministrator().getUserName());
+		config.setPassword(configuration.getAdministrator().getPassword() + configuration.getAdministrator().getSecurityToken());
+
+		FacesMessage message = null;
+		PartnerConnection connection = null;
+		try {					
+			connection = Connector.newConnection(config);	
+			configuration.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
+			configuration.setApiEndpoint(connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
+																	
+			message = new FacesMessage(FacesMessage.SEVERITY_INFO, null, messages.getString("success"));
+			
+		} catch (LoginFault lf) {
+			
+			configuration.setAuthEndpoint(null);
+			configuration.setServiceEndpoint(null);
+			configuration.setApiEndpoint(null);	
+			            
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, lf.getExceptionMessage());
+			
+		} catch (ConnectionException ce) {
+			
+			configuration.setAuthEndpoint(null);
+			configuration.setServiceEndpoint(null);
+			configuration.setApiEndpoint(null);	
+			            
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ce.getMessage());
+			
+		}				
+				
+		configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
+		
+		context.addMessage(FacesContext.getCurrentInstance().getViewRoot().findComponent("mainForm:testButton").getClientId(), message);
 	}
 }

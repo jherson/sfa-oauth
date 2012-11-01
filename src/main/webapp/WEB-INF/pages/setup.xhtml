@@ -21,6 +21,38 @@
 				<h:panelGroup>
 
 					<table style="width: 100%">
+					<tr>
+							<td width="100">#{msgs.instance}</td>
+							<td width="300"><h:selectOneMenu
+								
+									style="width: 150px;"
+									value="#{configuration.instance}">
+									<f:selectItem itemLabel="Production"
+										itemValue="https://login.salesforce.com" />
+									<f:selectItem itemLabel="Sandbox"
+										itemValue="https://test.salesforce.com" />
+								</h:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.username}</td>
+							<td width="300"><h:inputText
+								
+									size="60" value="#{configuration.administrator.userName}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.password}</td>
+							<td width="300"><h:inputSecret
+								
+									redisplay="true" size="60"
+									value="#{configuration.administrator.password}" /></td>
+						</tr>
+						<tr>
+							<td width="100">#{msgs.securityToken}</td>
+							<td width="300"><h:inputText
+							
+									size="30"
+									value="#{configuration.administrator.securityToken}" /></td>
+						</tr>
 
 						<tr>
 							<td width="100">#{msgs.name}</td>
@@ -30,18 +62,6 @@
 									requiredMessage="#{msgs.nameRequiredMessage}">
 									<rich:validator />
 								</h:inputText></td>
-						</tr>
-						<tr>
-							<td width="100">#{msgs.instance}</td>
-							<td width="300"><h:selectOneMenu
-									disabled="#{not configuration.editable}"
-									style="width: 150px;"
-									value="#{configuration.instance}">
-									<f:selectItem itemLabel="Production"
-										itemValue="https://login.salesforce.com" />
-									<f:selectItem itemLabel="Sandbox"
-										itemValue="https://test.salesforce.com" />
-								</h:selectOneMenu></td>
 						</tr>
 						<tr>
 							<td width="100">#{msgs.username}</td>
@@ -60,16 +80,9 @@
 							<td width="100">#{msgs.securityToken}</td>
 							<td width="300"><h:inputText
 									disabled="#{not configuration.editable}"
-									size="25"
+									size="30"
 									value="#{configuration.securityToken}" /></td>
 						</tr>
-						<tr height="22">
-							<td width="100">#{msgs.apiVersion}</td>
-							<td width="300"><h:inputText
-									disabled="#{not configuration.editable}"
-									size="10" value="#{configuration.apiVersion}" /></td>
-						</tr>
-
 						<tr>
 							<td width="100">#{msgs.clientId}</td>
 							<td width="300"><h:inputText
@@ -117,6 +130,12 @@
 			<br />
 
 			<h:panelGroup style="display: block; text-align: right">
+			
+			    <a4j:commandButton value="#{msgs.login}" styleClass="commandButton"
+					action="#{setupController.administratorLogin(configuration)}" render="setupPanel"
+					rendered="#{empty configuration.administrator.id}"
+					status="waitstatus">
+				</a4j:commandButton>
 
 				<a4j:commandButton value="#{msgs.edit}" styleClass="commandButton"
 					action="#{setupController.editConfiguration(configuration)}" render="setupPanel"

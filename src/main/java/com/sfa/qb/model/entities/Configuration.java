@@ -44,9 +44,6 @@ public class Configuration implements Serializable {
 	@Column(name="RedirectUri", length=120)
 	private String redirectUri;
 	
-	@Column(name="ApiVersion", length=10)
-	private String apiVersion;
-	
 	@Column(name="Username", length=60)
 	private String username;
 	
@@ -76,6 +73,9 @@ public class Configuration implements Serializable {
 	
 	@Column(name="LastModifiedDate")
 	private Timestamp lastModifiedDate;
+	
+	@Transient
+	private User administrator;
 
 	@Transient
 	private Boolean editable;
@@ -139,14 +139,6 @@ public class Configuration implements Serializable {
 
 	public void setRedirectUri(String redirectUri) {
 		this.redirectUri = redirectUri;
-	}
-	
-	public String getApiVersion() {
-		return apiVersion;
-	}
-
-	public void setApiVersion(String apiVersion) {
-		this.apiVersion = apiVersion;
 	}
 
 	public String getUsername() {
@@ -235,5 +227,13 @@ public class Configuration implements Serializable {
 
 	public void setLastModifiedDate(Timestamp lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+	
+	public User getAdministrator() {
+		return administrator;
+	}
+
+	public void setAdministrator(User administrator) {
+		this.administrator = administrator;
 	}
 }

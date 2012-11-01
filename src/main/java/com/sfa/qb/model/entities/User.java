@@ -116,6 +116,9 @@ public class User implements Serializable {
 	@Column(name="TimeZone")
 	private String timeZone;
 	
+	@Column(name="IsAdministrator")
+	private Boolean isAdministrator;
+
 	@Transient
 	private UserPreferences userPreferences;
 	
@@ -134,7 +137,13 @@ public class User implements Serializable {
 	@Transient
 	private OAuth oauth;
 	
-
+	@Transient
+	private String password;
+	
+	@Transient
+	private String securityToken;
+	
+	
 	public User() {
 		
 	}
@@ -425,5 +434,29 @@ public class User implements Serializable {
 
 	public void setUserPreferences(UserPreferences userPreferences) {
 		this.userPreferences = userPreferences;
+	}
+	
+	public Boolean getIsAdministrator() {
+		return isAdministrator;
+	}
+
+	public void setIsAdministrator(Boolean isAdministrator) {
+		this.isAdministrator = isAdministrator;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getSecurityToken() {
+		return securityToken;
+	}
+
+	public void setSecurityToken(String securityToken) {
+		this.securityToken = securityToken;
 	}
 }

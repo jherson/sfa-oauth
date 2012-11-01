@@ -20,6 +20,7 @@ import org.jboss.resteasy.client.ClientResponse;
 import com.google.gson.Gson;
 import com.sfa.persistence.connection.ConnectionManager;
 import com.sfa.qb.exception.ServiceException;
+import com.sfa.qb.login.oauth.callback.OAuthCodeCallback;
 import com.sfa.qb.login.oauth.model.Identity;
 import com.sfa.qb.login.oauth.model.OAuth;
 import com.sfa.qb.login.oauth.service.OAuthService;
