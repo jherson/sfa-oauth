@@ -14,10 +14,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.model.entities.Configuration;
 import com.sfa.qb.model.setup.SetupUser;
-import com.sfa.qb.model.sobject.User;
 import com.sfa.qb.qualifiers.Create;
 import com.sfa.qb.qualifiers.MessageBundle;
 import com.sfa.qb.qualifiers.Reset;
@@ -49,7 +47,10 @@ public class SetupController implements Serializable {
 	private ResourceBundle messages;
 	    
 	@Inject
-	private Event<Configuration> configurationEvent;		
+	private Event<Configuration> configurationEvent;
+	
+	@Inject
+	private MainController mainController;
 	
 	@SuppressWarnings("serial")
 	private static final AnnotationLiteral<Update> UPDATE_CONFIGURATION  = new AnnotationLiteral<Update>() {};
@@ -158,13 +159,20 @@ public class SetupController implements Serializable {
 		    configuration.setLastModifiedById(connection.getUserInfo().getUserId());
 		    
 		    configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
-			
+		    
+		    mainController.setMainArea(TemplatesEnum.SALESFORCE_CONFIGURATION);
+		    
+		    setupUser.setStatus(null);
+		    return;
+		    
 		} catch (LoginFault lf) {			            
 			setupUser.setStatus(lf.getExceptionMessage());
 			return;
+			
 		} catch (ConnectionException ce) {			            
 			setupUser.setStatus(ce.getMessage());
 			return;
+			
 		}								
 	}
 }

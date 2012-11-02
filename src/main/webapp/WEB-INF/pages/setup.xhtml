@@ -6,15 +6,14 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:panel id="setupPanel" layout="block" style="width: 900px;">
+	<rich:panel id="setupPanel" layout="block" style="width: 600px;">
 
 		<f:facet name="header">
-			<h:outputText value="#{msgs.configuration}" />
+			<h:outputText value="#{msgs.login}" />
 		</f:facet>
 
 		<a4j:outputPanel>
-			<h:panelGrid width="100%" columns="1" cellpadding="3"
-				layout="inline-block">
+			<h:panelGrid width="100%" columns="1" layout="inline-block">
 
 				<h:panelGroup>
 
@@ -44,23 +43,31 @@
 							<td width="300"><h:inputText size="30"
 									value="#{setupUser.securityToken}" /></td>
 						</tr>
+
+						<tr>
+							<td width="100"></td>
+							<td width="300"><h:outputText
+									value="#{setupUser.status}" /></td>
+
+						</tr>
+
 					</table>
 
 					<h:panelGroup style="display: block; text-align: right">
 
 						<a4j:commandButton value="#{msgs.login}"
 							styleClass="commandButton"
+							render="mainArea"
 							action="#{setupController.login(setupUser)}"
-							render="setupPanel"
 							status="waitstatus">
 						</a4j:commandButton>
 
 					</h:panelGroup>
 
 				</h:panelGroup>
-			
-             </h:panelGrid>
-             
+
+			</h:panelGrid>
+
 		</a4j:outputPanel>
 
 	</rich:panel>
