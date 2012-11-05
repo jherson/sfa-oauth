@@ -13,6 +13,7 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.jboss.as.controller.security.SecurityContext;
 import org.jboss.as.naming.InitialContextFactory;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -56,7 +57,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	public boolean commit() throws LoginException {
 		
 		if (success) {
-			subject.getPrincipals().add(new OAuthPrincipal(oauth));		    
+			subject.getPrincipals().add(new OAuthPrincipal(oauth));	
 		} 
 	    
 	    return success;
@@ -82,7 +83,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		
 		String authResponse = null;
 		
-		if (callbackHandler instanceof OAuthCodeCallback) {
+		//if (callbackHandler instanceof OAuthCodeCallback) {
 			
 			Callback[] callbacks = new Callback[1];
 			callbacks[0] = new OAuthCodeCallback();
@@ -99,24 +100,24 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 									
 			authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, callback.getCode());
 			
-		} else if (callbackHandler instanceof OAuthRefreshTokenCallback) {
+		//} else if (callbackHandler instanceof OAuthRefreshTokenCallback) {
 			
-			Callback[] callbacks = new Callback[1];
-			callbacks[0] = new OAuthRefreshTokenCallback();
+		//	Callback[] callbacks = new Callback[1];
+		//	callbacks[0] = new OAuthRefreshTokenCallback();
 	
-			try {
-				callbackHandler.handle(callbacks);
-			} catch (IOException e) {
-				throw new LoginException("IOException calling handle on callbackHandler");
-			} catch (UnsupportedCallbackException e) {
-				throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
-			}
+		//	try {
+		//		callbackHandler.handle(callbacks);
+		//	} catch (IOException e) {
+		//		throw new LoginException("IOException calling handle on callbackHandler");
+		//	} catch (UnsupportedCallbackException e) {
+		//		throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
+		//	}
 			
-			OAuthRefreshTokenCallback callback = (OAuthRefreshTokenCallback) callbacks[0];	
+		//	OAuthRefreshTokenCallback callback = (OAuthRefreshTokenCallback) callbacks[0];	
 			
-			authResponse = oauthService.refreshAuthToken(instance, clientId, clientSecret, callback.getRefreshToken());
+		//	authResponse = oauthService.refreshAuthToken(instance, clientId, clientSecret, callback.getRefreshToken());
 			
-		}						
+		//}						
 				
 		oauth = new Gson().fromJson(authResponse, OAuth.class);
 				

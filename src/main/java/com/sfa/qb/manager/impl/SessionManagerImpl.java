@@ -105,17 +105,15 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 				
 		//en-US,en;q=0.8
 		
-		//syncProperties();
-		
 		this.INDEX_PAGE = context.getExternalContext().getRequestContextPath() + "/index.jsf";
 		
-		if (configuration != null) {
+		if (configuration == null) {
 			
 			/**
-			 * if there is no active configuration then go to setup page 
+			 * if there is no active configuration then go to setup login page 
 			 */
 			
-			mainController.setMainArea(TemplatesEnum.SETUP);
+			mainController.setMainArea(TemplatesEnum.SETUP_LOGIN);
 			redirect(INDEX_PAGE);
 			
 		} else {
@@ -125,9 +123,9 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			 */
 			
 			OAuthServiceProvider serviceProvider = new OAuthServiceProvider();				
-			serviceProvider.setInstance(System.getProperty("salesforce.instance"));
-			serviceProvider.setClientId(System.getProperty("salesforce.oauth.clientId"));
-			serviceProvider.setClientSecret(System.getProperty("salesforce.oauth.clientSecret"));
+			serviceProvider.setInstance(configuration.getInstance());
+			serviceProvider.setClientId(configuration.getClientId());
+			serviceProvider.setClientSecret(configuration.getClientSecret());
 			serviceProvider.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
 			serviceProvider.setDisplay("popup");
 			serviceProvider.setPrompt("login");
@@ -332,7 +330,7 @@ public class SessionManagerImpl implements Serializable, SessionManager {
 			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();	
 			
 			code = request.getParameter("code");
-									
+
 			if (code == null) {
 				login();
 			} 

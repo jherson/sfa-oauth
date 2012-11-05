@@ -32,6 +32,12 @@ public class PricebookEntry implements Serializable {
 	@Column(name="UnitPrice")
 	private Double unitPrice;
 	
+	@Column(name="IsActive")
+	private Boolean isActive;
+	
+	@Column(name="IsDeleted")
+	private Boolean isDeleted;
+	
 	@OneToOne
     @JoinColumn(name = "ProductId", referencedColumnName = "Id")
 	private Product product;
@@ -74,6 +80,22 @@ public class PricebookEntry implements Serializable {
 
 	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+	
+	public Boolean getIsActive() {
+		return isActive;
+	}
+	
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+	
+	public Boolean getIsDeleted() {
+		return this.isDeleted;
+	}
+	
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public Product getProduct() {

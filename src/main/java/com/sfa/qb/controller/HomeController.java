@@ -92,7 +92,7 @@ public class HomeController {
 		mainController.setMainArea(TemplatesEnum.QUOTE_MANAGER);
 	}
 	
-	public void goToSetup(ActionEvent event) {
+	public void showSetup(ActionEvent event) {
 		mainController.setMainArea(TemplatesEnum.SETUP);
 	}
 }

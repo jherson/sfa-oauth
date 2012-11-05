@@ -6,7 +6,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-	<rich:panel layout="block" style="width: 900px;">
+	<rich:panel id="salesforceConfigurationPanel" layout="block" style="width: 900px;">
 
 		<f:facet name="header">
 			<h:outputText value="#{msgs.configuration}" />
@@ -19,7 +19,7 @@
 					<td width="100">#{msgs.instance}</td>
 					<td width="300"><h:selectOneMenu style="width: 150px;"
 							value="#{configuration.instance}"
-							disabled="#{not configuration.editable}">
+							disabled="#{not configuration.editable or empty configuration.id}">
 							<f:selectItem itemLabel="Production"
 								itemValue="https://login.salesforce.com" />
 							<f:selectItem itemLabel="Sandbox"
@@ -65,12 +65,6 @@
 							disabled="#{not configuration.editable}" redisplay="true"
 							size="30" value="#{configuration.clientSecret}" /></td>
 				</tr>
-				<tr>
-					<td width="100">#{msgs.redirectUri}</td>
-					<td width="300"><h:inputText
-							disabled="#{not configuration.editable}" size="120"
-							value="#{configuration.redirectUri}" /></td>
-				</tr>
 				<tr height="22">
 					<td width="100">#{msgs.authEndpoint}</td>
 					<td width="300"><h:outputText
@@ -99,25 +93,25 @@
 
 			<a4j:commandButton value="#{msgs.edit}" styleClass="commandButton"
 				action="#{setupController.editConfiguration(configuration)}"
-				render="setupPanel" rendered="#{not configuration.editable}"
+				render="salesforceConfigurationPanel" rendered="#{not configuration.editable}"
 				status="waitstatus">
 			</a4j:commandButton>
 
 			<a4j:commandButton id="testButton" value="#{msgs.test}"
 				styleClass="commandButton"
 				action="#{setupController.testConfiguration(configuration)}"
-				render="setupPanel">
+				render="salesforceConfigurationPanel">
 			</a4j:commandButton>
 
 			<a4j:commandButton value="#{msgs.save}" styleClass="commandButton"
 				action="#{setupController.saveConfiguration(configuration)}"
-				render="setupPanel" rendered="#{configuration.editable}">
+				render="mainArea" rendered="#{configuration.editable}">
 			</a4j:commandButton>
 
 			<h:outputText value="  " escape="false" />
 
 			<a4j:commandButton value="#{msgs.cancel}" styleClass="commandButton"
-				render="setupPanel"
+				render="salesforceConfigurationPanel"
 				action="#{setupController.resetConfiguration(configuration)}"
 				rendered="#{configuration.editable}">
 			</a4j:commandButton>

@@ -50,15 +50,13 @@ public class OAuthConsumer implements Serializable {
     	
     }
     
-    public Subject authenticate(String code) throws LoginException {    	
-		
+    public Subject authenticate(String code) throws LoginException {    		
 		loginContext = new LoginContext("OAuth", new OAuthCodeCallbackHandler(code));	
 		loginContext.login();		
 		return loginContext.getSubject();
     }
     
-    public Subject refreshToken(String refreshToken) throws LoginException {
-    	
+    public Subject refreshToken(String refreshToken) throws LoginException {  	
     	loginContext = new LoginContext("OAuth", new OAuthRefreshTokenCallbackHandler(refreshToken));	
     	loginContext.login();
     	return loginContext.getSubject();

@@ -29,7 +29,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 	
 	@Override
 	public void saveUserPreferences(UserPreferences userPreferences) {
-		entityManager.merge(userPreferences);
+		entityManager.persist(userPreferences);
 	}
 	
 	@Override

@@ -19,8 +19,8 @@ public class ConnectionManager {
 		return connection.openConnection(sessionId);
 	}
 	
-	public static PartnerConnection openConnection(String username, String password) throws ConnectionException {
-		return connection.openConnection(username, password);
+	public static PartnerConnection openConnection(String authEndpoint, String username, String password) throws ConnectionException {
+		return connection.openConnection(authEndpoint, username, password);
 	}
 	
     public static void setConnection(PartnerConnection partnerConnection) {

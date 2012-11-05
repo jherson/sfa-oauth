@@ -48,7 +48,7 @@ public class Product implements Serializable {
 	private String unitOfMeasure;
 	
 	@Column(name="Term")
-	private Integer term;
+	private Double term;
 	
 	@Column(name="Configurable")
 	private Boolean configurable;
@@ -56,11 +56,26 @@ public class Product implements Serializable {
 	@Column(name="IsActive")
 	private Boolean isActive;
 	
+	@Column(name="CurrencyIsoCode", length=3)
+	private String currencyIsoCode;
+	
+	@Column(name="IsDeleted")
+	private Boolean isDeleted;
+	
+	@Column(name="SKUType")
+	private String skuType;
+	
+	@Column(name="ChannelAvailable")
+	private String channelAvailable;
+	
+	@Column(name="ForNFR")
+	private Boolean forNfr;
+	
 
 	public Product() {
 
 	}
-		
+	
 	public int getId() {
 		return id;
 	}
@@ -72,11 +87,11 @@ public class Product implements Serializable {
 	public String getSalesforceId() {
 		return salesforceId;
 	}
-
+	
 	public void setSalesforceId(String salesforceId) {
 		this.salesforceId = salesforceId;
 	}
-
+		
 	public String getName() {
 		return name;
 	}
@@ -133,11 +148,11 @@ public class Product implements Serializable {
 		this.unitOfMeasure = unitOfMeasure;
 	}
 
-	public Integer getTerm() {
+	public Double getTerm() {
 		return term;
 	}
 
-	public void setTerm(Integer term) {
+	public void setTerm(Double term) {
 		this.term = term;
 	}
 
@@ -155,6 +170,46 @@ public class Product implements Serializable {
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public String getCurrencyIsoCode() {
+		return currencyIsoCode;
+	}
+
+	public void setCurrencyIsoCode(String currencyIsoCode) {
+		this.currencyIsoCode = currencyIsoCode;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public String getSkuType() {
+		return skuType;
+	}
+
+	public void setSkuType(String skuType) {
+		this.skuType = skuType;
+	}
+
+	public String getChannelAvailable() {
+		return channelAvailable;
+	}
+
+	public void setChannelAvailable(String channelAvailable) {
+		this.channelAvailable = channelAvailable;
+	}
+
+	public Boolean getForNfr() {
+		return forNfr;
+	}
+
+	public void setForNfr(Boolean forNfr) {
+		this.forNfr = forNfr;
 	}
 	
 	@Override

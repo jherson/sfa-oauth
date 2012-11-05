@@ -56,13 +56,13 @@ public class Connection implements SessionRenewer {
     	return getConnection();
     }
     
-    public PartnerConnection openConnection(String username, String password) throws ConnectionException {
+    public PartnerConnection openConnection(String authEndpoint, String username, String password) throws ConnectionException {
     	
     	if (getConnection() != null)
     		return getConnection();
     	
     	ConnectorConfig config = new ConnectorConfig();
-    	config.setAuthEndpoint(MessageFormat.format(System.getProperty("salesforce.authEndpoint"), System.getProperty("salesforce.instance")));
+    	config.setAuthEndpoint(authEndpoint);
     	config.setUsername(username);
 		config.setPassword(password);
 						

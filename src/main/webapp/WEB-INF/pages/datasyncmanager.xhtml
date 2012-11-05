@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<rich:panel id="datasyncmanagerPanel" layout="block" style="width: 900px;">
+
+		<f:facet name="header">
+			<h:outputText value="#{msgs.datasyncManager}" />
+		</f:facet>
+		
+		<h:panelGroup>
+
+			<table style="width: 100%">
+				<tr>
+					<td width="100">#{msgs.productSync}</td>
+					<td width="300"><a4j:commandButton value="#{msgs.run}" styleClass="commandButton"
+				 action="#{dataSyncController.syncProducts()}" shape="circle">
+			</a4j:commandButton></td>
+				</tr>
+				<tr>
+					<td width="100">#{msgs.name}</td>
+					<td width="300"></td>
+				</tr>
+		</table>	
+		
+		</h:panelGroup>	
+		
+	</rich:panel>	
+
+</ui:composition>

@@ -14,6 +14,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import com.sfa.qb.model.entities.Configuration;
@@ -41,10 +42,12 @@ public class ConfigurationProducer implements Serializable {
 	@PostConstruct
 	public void queryConfiguration() {
 		log.info("init");
-		Query query = entityManager.createQuery("Select c From Configuration c"); 
-		if (query.getResultList() != null || query.getResultList().size() > 0) {
-		    configuration = (Configuration) query.getResultList().get(0);		    		    
-		} 
+		try {
+		    Query query = entityManager.createQuery("Select c From Configuration c Where IsActive = true"); 
+		    configuration = (Configuration) query.getSingleResult();
+		} catch (NoResultException nre) {
+			log.info("No configuration found...entering setup");
+		}
 	}
 	
 	@Produces
@@ -55,7 +58,11 @@ public class ConfigurationProducer implements Serializable {
 		return configuration;
 	}
 	
-	public void onUpdateConfiguration(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Update @Create final Configuration configuration) {
+	public void onUpdateConfiguration(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Update final Configuration configuration) {
+		this.configuration = configuration;
+	}
+	
+	public void onCreateConfiguration(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Create final Configuration configuration) {
 		this.configuration = configuration;
 	}
 	

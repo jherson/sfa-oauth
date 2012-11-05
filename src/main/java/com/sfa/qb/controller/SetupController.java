@@ -70,12 +70,6 @@ public class SetupController implements Serializable {
 	public void init() {
 		log.info("init");
 	}
-    	
-	public void createConfiguration() {
-		Configuration configuration = new Configuration();
-		configuration.setEditable(Boolean.TRUE);
-		configurationEvent.select(CREATE_CONFIGURATION).fire(configuration);
-	}
 	
 	public void editConfiguration(Configuration configuration) {
 		configuration.setEditable(Boolean.TRUE);
@@ -92,6 +86,7 @@ public class SetupController implements Serializable {
 		PartnerConnection connection = null;
 		try {					
 			connection = Connector.newConnection(config);	
+			configuration.setIsActive(Boolean.TRUE);
 			configuration.setServiceEndpoint(connection.getConfig().getServiceEndpoint());
 			configuration.setApiEndpoint(connection.getConfig().getServiceEndpoint().substring(0, connection.getConfig().getServiceEndpoint().indexOf("/Soap")));
 																	
@@ -139,31 +134,62 @@ public class SetupController implements Serializable {
 	}
 	
 	public void login(SetupUser setupUser) {
+		
+		/**
+		 * format the authEndpoint string
+		 */
+		
 		String authEndpoint = MessageFormat.format(AUTH_ENDPOINT + API_VERSION, setupUser.getInstance());				
 
+		/**
+		 * create the ConnectorConfig object for the PartnerConnection
+		 */
+		
 		ConnectorConfig config = new ConnectorConfig();
     	config.setAuthEndpoint(authEndpoint);
     	config.setUsername(setupUser.getUsername());
 		config.setPassword(setupUser.getPassword() + setupUser.getSecurityToken());
 
 		PartnerConnection connection = null;
-		try {					
+		try {		
+			
+			/**
+			 * log into Salesforce 
+			 */
+			
 			connection = Connector.newConnection(config);		
 			
-			log.info("setup user logged in successfully");
+			/**
+			 * create the Configuration object
+			 */
 			
 			Configuration configuration = new Configuration();
 			configuration.setInstance(setupUser.getInstance());
-			configuration.setAuthEndpoint(authEndpoint);		
+			configuration.setAuthEndpoint(authEndpoint);					
 	        configuration.setCreatedById(connection.getUserInfo().getUserId());	  
 		    configuration.setLastModifiedById(connection.getUserInfo().getUserId());
+		    configuration.setEditable(Boolean.TRUE);
 		    
-		    configurationEvent.select(UPDATE_CONFIGURATION).fire(configuration);
+		    /**
+		     * clear values from the setup user
+		     */
 		    
-		    mainController.setMainArea(TemplatesEnum.SALESFORCE_CONFIGURATION);
-		    
+		    setupUser.setInstance(null);
+		    setupUser.setUsername(null);
+		    setupUser.setSecurityToken(null);
+		    setupUser.setPassword(null);
 		    setupUser.setStatus(null);
-		    return;
+		    
+		    /**
+		     * invoke the @Create Observer method in the Producer class
+		     */
+		    configurationEvent.select(CREATE_CONFIGURATION).fire(configuration);
+		    
+		    /**
+		     * route to the salesforce configuration page
+		     */
+		    
+		    mainController.setMainArea(TemplatesEnum.SETUP);
 		    
 		} catch (LoginFault lf) {			            
 			setupUser.setStatus(lf.getExceptionMessage());

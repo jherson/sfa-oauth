@@ -30,6 +30,8 @@ public class Util {
 			if (iterator.hasNext()) {
 		        return iterator.next();
 			}
+		} else {
+			System.out.println("subject is null");
 		}
     	return null;
 	}

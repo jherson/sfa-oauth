@@ -6,6 +6,7 @@ import javax.enterprise.inject.Model;
 
 public enum TemplatesEnum {
 
+	SETUP_LOGIN("setuplogin.xhtml"),
 	SALESFORCE_CONFIGURATION("salesforceconfiguration.xhtml"),
 	SETUP("setup.xhtml"),
 	INITIALIZE("initialize.xhtml"),	

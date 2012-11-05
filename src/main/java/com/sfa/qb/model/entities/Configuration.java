@@ -41,9 +41,6 @@ public class Configuration implements Serializable {
 	@Column(name="ClientSecret", length=30)
 	private String clientSecret;
 	
-	@Column(name="RedirectUri", length=120)
-	private String redirectUri;
-	
 	@Column(name="Username", length=60)
 	private String username;
 	
@@ -128,14 +125,6 @@ public class Configuration implements Serializable {
 
 	public void setClientSecret(String clientSecret) {
 		this.clientSecret = clientSecret;
-	}
-
-	public String getRedirectUri() {
-		return redirectUri;
-	}
-
-	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
 	}
 
 	public String getUsername() {

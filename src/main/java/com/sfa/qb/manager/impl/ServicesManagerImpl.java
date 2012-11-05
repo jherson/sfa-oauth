@@ -1,11 +1,16 @@
 package com.sfa.qb.manager.impl;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.security.auth.Subject;
+
+import org.jboss.as.controller.security.SecurityContext;
 
 import com.sfa.qb.exception.ServiceException;
+import com.sfa.qb.login.oauth.OAuthPrincipal;
 import com.sfa.qb.manager.ServicesManager;
 import com.sfa.qb.service.ChatterService;
 import com.sfa.qb.service.CommonService;
@@ -148,6 +153,17 @@ public class ServicesManagerImpl implements ServicesManager, Serializable {
 	}
 	
 	private String getSessionId() {
-		return Util.getOAuthPrincipal().getOAuth().getAccessToken();
+		Subject subject = SecurityContext.getSubject();
+		if (subject != null) {
+			Iterator<OAuthPrincipal> iterator = subject.getPrincipals(OAuthPrincipal.class).iterator();
+			if (iterator.hasNext()) {
+				String sessionId = iterator.next().getOAuth().getAccessToken();
+				System.out.println("getSessionId: " + sessionId);
+		        return sessionId;
+			}
+		} else {
+			System.out.println("subject is null");
+		}
+		return null;
 	}
 }
