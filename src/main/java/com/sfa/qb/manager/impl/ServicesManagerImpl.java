@@ -12,10 +12,11 @@ import org.jboss.as.controller.security.SecurityContext;
 import com.sfa.qb.exception.ServiceException;
 import com.sfa.qb.login.oauth.OAuthPrincipal;
 import com.sfa.qb.manager.ServicesManager;
+import com.sfa.qb.model.sobject.User;
+import com.sfa.qb.qualifiers.SessionUser;
 import com.sfa.qb.service.ChatterService;
 import com.sfa.qb.service.CommonService;
 import com.sfa.qb.service.QuoteService;
-import com.sfa.qb.util.Util;
 
 @Named(value="servicesManager")
 

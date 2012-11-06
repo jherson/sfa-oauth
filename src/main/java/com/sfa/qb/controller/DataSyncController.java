@@ -10,7 +10,9 @@ import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import com.sfa.persistence.connection.ConnectionManager;
@@ -38,8 +40,8 @@ public class DataSyncController {
 	@PersistenceUnit
 	private EntityManagerFactory entityManagerFactory;
 	
-	@Resource
-	private UserTransaction userTransaction;
+	@Resource 
+	private UserTransaction utx;
 
 	@Inject
 	private PersistenceService writer;
@@ -73,6 +75,8 @@ public class DataSyncController {
 	}
 	
 	public void syncProducts() {
+		String productQuery = "Select";
+		
 		String query = "Select " +
 				"Id, " +
 				"CurrencyIsoCode, " +
@@ -106,7 +110,10 @@ public class DataSyncController {
 			QueryResult queryResult = connection.query(query);
 			
 			log.info("queryResult size: " + queryResult.getSize());
-			while (! queryResult.isDone()) {
+			
+			boolean done = false;
+			
+			while (! done) {
 				for (SObject sobject : queryResult.getRecords()) {
 					
 					XmlObject xmlObject = sobject.getChild("Product2");
@@ -142,24 +149,35 @@ public class DataSyncController {
 					pricebookEntry.setIsDeleted(Boolean.valueOf(sobject.getField("IsDeleted").toString()));
 					pricebookEntry.setUnitPrice(Double.valueOf(sobject.getField("UnitPrice").toString()));
 					pricebookEntry.setPricebook(pricebook);
-					pricebookEntry.setProduct(product);
+					
+					log.info(pricebookEntry.getSalesforceId());
 					
 					EntityManager entityManager = entityManagerFactory.createEntityManager();
 					try {
-						userTransaction.begin();
-						entityManager.persist(pricebookEntry);
-						userTransaction.commit();
+						
+						utx.begin();
+						entityManager.joinTransaction();
+						entityManager.persist(product);
+						utx.commit();
 						
 					} catch (Exception e) {
-						e.printStackTrace();
-						try {
-							userTransaction.rollback();
-						} catch (Exception ex) {
-                            ex.printStackTrace();
-						} 
-					} 
+					    if (utx != null)
+							try {
+								utx.rollback();
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							} 
+
+					} finally {
+						entityManager.close();
+					}
 				}
+				
+				if (! queryResult.isDone())
+					done = true;
 			}
+			
+			entityManagerFactory.close();
 			
 		} catch (ConnectionException e) {
 			e.printStackTrace();
