@@ -3,182 +3,28 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.redhat.sforce</groupId>
-	<artifactId>quotebuilder</artifactId>
-	<packaging>war</packaging>
+	<groupId>com.sfa.login</groupId>
+	<artifactId>oauth</artifactId>
+	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>quotebuilder</name>
-
-	<url>http://jboss.org/richfaces</url>
+	<name>oauth</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<javaee6.with.tools.version>1.0.0.Final</javaee6.with.tools.version>
-		<maven.war.plugin.version>2.1.1</maven.war.plugin.version>
 		<resteasy.version>2.3.1.GA</resteasy.version>
-		<org.richfaces.bom.version>4.2.3.Final</org.richfaces.bom.version>
-		<jboss-as-maven-plugin-version>7.1.2.Final</jboss-as-maven-plugin-version>
-		<version.arquillian_core>1.0.0.CR4</version.arquillian_core>
-		<seam.solder.version>3.0.0.Final</seam.solder.version>
-		<force.api.version>26.0.0</force.api.version>
-		<infinispan.version>5.1.7.Final</infinispan.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>jboss-public-repository</id>
-			<name>JBoss Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>jboss-public-repository</id>
-			<name>JBoss Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.bom</groupId>
-				<artifactId>jboss-javaee-6.0-with-tools</artifactId>
-				<version>${javaee6.with.tools.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.richfaces</groupId>
-				<artifactId>richfaces-bom</artifactId>
-				<version>${org.richfaces.bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
-
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<scope>provided</scope>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>1.2</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.jboss.msc</groupId>
-			<artifactId>jboss-msc</artifactId>
-			<version>1.0.2.GA</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.annotation</groupId>
-			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.ws.rs</groupId>
-			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.jbossas</groupId>
-			<artifactId>jboss-as-jmx</artifactId>
-			<version>5.1.0.GA</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.ejb</groupId>
-			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.2.0.Final</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.faces</groupId>
-			<artifactId>jboss-jsf-api_2.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.servlet</groupId>
-			<artifactId>jboss-servlet-api_3.0_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.richfaces.core</groupId>
-			<artifactId>richfaces-core-impl</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>guava</artifactId>
-					<groupId>com.google.guava</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.richfaces.ui</groupId>
-			<artifactId>richfaces-components-ui</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.atmosphere</groupId>
-			<artifactId>atmosphere-runtime</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.infinispan</groupId>
-			<artifactId>infinispan-cdi</artifactId>
-			<version>${infinispan.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-			<version>1.2.0.Final</version>
-			<scope>provided</scope>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
 		</dependency>
 
 		<dependency>
@@ -189,140 +35,26 @@
 		</dependency>
 
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
 		</dependency>
 
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.force.api</groupId>
-			<artifactId>force-wsc</artifactId>
-			<version>${force.api.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.force.api</groupId>
-			<artifactId>force-partner-api</artifactId>
-			<version>${force.api.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.force.api</groupId>
-			<artifactId>force-metadata-api</artifactId>
-			<version>${force.api.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.ocpsoft</groupId>
-			<artifactId>prettyfaces-jsf2</artifactId>
-			<version>3.3.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>nl.bitwalker</groupId>
-			<artifactId>UserAgentUtils</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-
-<dependency>
-	<groupId>org.jboss.as</groupId>
-	<artifactId>jboss-as-security</artifactId>
-	<version>7.1.1.Final</version>
-</dependency>
 
 	</dependencies>
 
+
 	<build>
-		<finalName>quotebuilder</finalName>
 		<plugins>
-
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven.war.plugin.version}</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<archive>
-						<manifestEntries>
-							<Dependencies>com.google.guava,org.slf4j</Dependencies>
-						</manifestEntries>
-					</archive>
+					<useDefaultManifestFile>true</useDefaultManifestFile>
 				</configuration>
 			</plugin>
-
 		</plugins>
-
 	</build>
-
-	<profiles>
-		<profile>
-			<!-- An optional Arquillian testing profile that executes tests in your 
-				JBoss AS instance -->
-			<!-- This profile will start a new JBoss AS instance, and execute the 
-				test, shutting it down when done -->
-			<!-- Run with: mvn clean test -Parq-jbossas-managed -->
-			<id>arq-jbossas-managed</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.as</groupId>
-					<artifactId>jboss-as-arquillian-container-managed</artifactId>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-
-		<profile>
-			<!-- An optional Arquillian testing profile that executes tests in a remote 
-				JBoss AS instance -->
-			<!-- Run with: mvn clean test -Parq-jbossas-remote -->
-			<id>arq-jbossas-remote</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.as</groupId>
-					<artifactId>jboss-as-arquillian-container-remote</artifactId>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 
 </project>
