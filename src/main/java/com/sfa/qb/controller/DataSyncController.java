@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
@@ -75,7 +76,6 @@ public class DataSyncController {
 	}
 	
 	public void syncProducts() {
-		String productQuery = "Select";
 		
 		String query = "Select " +
 				"Id, " +
@@ -102,7 +102,8 @@ public class DataSyncController {
 				"Product2.Unit_Of_Measure__c, " +
 				"Product2.for_NFR__c " +
 				"From PricebookEntry " +
-				"Where Pricebook2.Name = 'Global Price Book'";
+				"Where Pricebook2.Name = 'Global Price Book' " +
+				"Order By Product2.Id";
 		
 		try {
 			PartnerConnection connection = ConnectionManager.openConnection(configuration.getAuthEndpoint(), configuration.getUsername(), configuration.getPassword());
@@ -118,22 +119,28 @@ public class DataSyncController {
 					
 					XmlObject xmlObject = sobject.getChild("Product2");
 					
-					Product product = new Product();
-					product.setSalesforceId(xmlObject.getField("Id").toString());
-					product.setChannelAvailable(xmlObject.getField("Channel_Available__c").toString());
-					product.setConfigurable(Boolean.valueOf(xmlObject.getField("Configurable__c").toString()));
-					product.setCurrencyIsoCode(xmlObject.getField("CurrencyIsoCode").toString());
-					product.setDescription(xmlObject.getField("Description").toString());
-					product.setFamily(xmlObject.getField("Family").toString());
-					product.setForNfr(Boolean.valueOf(xmlObject.getField("for_NFR__c").toString()));
-					product.setIsActive(Boolean.valueOf(xmlObject.getField("IsActive").toString()));
-					product.setIsDeleted(Boolean.valueOf(xmlObject.getField("IsDeleted").toString()));
-					product.setName(xmlObject.getField("Name").toString());
-					product.setPrimaryBusinessUnit(xmlObject.getField("Primary_Business_Unit__c").toString());
-					product.setProductLine(xmlObject.getField("Product_Line__c").toString());
-					//product.setSkuType(xmlObject.getField("SKU_Type__c").toString());
-					product.setTerm(Double.valueOf(xmlObject.getField("Term__c").toString()));
-					product.setUnitOfMeasure(xmlObject.getField("Unit_Of_Measure__c").toString());
+					Product product = queryProduct(xmlObject.getField("Id").toString());
+					
+					if (product == null) {
+						
+						product = new Product();
+						product.setSalesforceId(xmlObject.getField("Id").toString());
+						product.setChannelAvailable(xmlObject.getField("Channel_Available__c").toString());
+						product.setConfigurable(Boolean.valueOf(xmlObject.getField("Configurable__c").toString()));
+						product.setCurrencyIsoCode(xmlObject.getField("CurrencyIsoCode").toString());
+						product.setDescription(xmlObject.getField("Description").toString());
+						product.setFamily(xmlObject.getField("Family").toString());
+						product.setForNfr(Boolean.valueOf(xmlObject.getField("for_NFR__c").toString()));
+						product.setIsActive(Boolean.valueOf(xmlObject.getField("IsActive").toString()));
+						product.setIsDeleted(Boolean.valueOf(xmlObject.getField("IsDeleted").toString()));
+						product.setName(xmlObject.getField("Name").toString());
+						product.setPrimaryBusinessUnit(xmlObject.getField("Primary_Business_Unit__c").toString());
+						product.setProductLine(xmlObject.getField("Product_Line__c").toString());
+						//product.setSkuType(xmlObject.getField("SKU_Type__c").toString());
+						product.setTerm(Double.valueOf(xmlObject.getField("Term__c").toString()));
+						product.setUnitOfMeasure(xmlObject.getField("Unit_Of_Measure__c").toString());
+						
+					}
 					
 					xmlObject = sobject.getChild("Pricebook2");
 					
@@ -150,14 +157,18 @@ public class DataSyncController {
 					pricebookEntry.setUnitPrice(Double.valueOf(sobject.getField("UnitPrice").toString()));
 					pricebookEntry.setPricebook(pricebook);
 					
-					log.info(pricebookEntry.getSalesforceId());
-					
 					EntityManager entityManager = entityManagerFactory.createEntityManager();
 					try {
 						
 						utx.begin();
 						entityManager.joinTransaction();
-						entityManager.persist(product);
+						
+						if (Integer.valueOf(product.getId()) == null) {
+						    entityManager.persist(product);
+						}
+						
+					    pricebookEntry.setProduct(product);
+					    entityManager.persist(pricebookEntry);
 						utx.commit();
 						
 					} catch (Exception e) {
@@ -218,6 +229,12 @@ public class DataSyncController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private Product queryProduct(String salesforceId) {
+		Query query = entityManagerFactory.createEntityManager().createQuery("Select p From Product Where SalesforceId = :salesforceId");
+		query.setParameter("salesforceId", salesforceId);
+		return (Product) query.getSingleResult();
 	}
 	
 	private int pricebookIdResolver(String pricebookId) {
