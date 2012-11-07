@@ -31,6 +31,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 			response = request.post(String.class);
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
 		}
 		
 		return response.getEntity();		
@@ -49,6 +51,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 			response = request.get(String.class);
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
 		}
 		
 		return response.getEntity();	
@@ -65,6 +69,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 			request.post();
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
 		}
 	}
 
@@ -85,6 +91,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 			response = request.post(String.class);
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
 		}
 		
 		return response.getEntity();	

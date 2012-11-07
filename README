@@ -1,0 +1,168 @@
+usage:
+
+
+1) 
+
+add this entry to the configuration file (standalone.xml, standalone-ha.xml, standalone-full-ha.xml) 
+
+<security-domain name="OAuthRealm">
+    <authentication>
+        <login-module code="com.sfa.login.oauth.OAuthLoginModule" flag="required"/>
+        <module-option name="instance" value="<salesforce instance>"/>
+        <module-option name="clientId" value="<oauth client id>"/>
+        <module-option name="clientSecret" value="<oauth client secret"/>
+        <module-option name="redirectUri" value="<redirect URI>"/>
+        <module-option name="scope" value="<scope>"/>
+        <module-option name="prompt" value="<value>"/>
+        <module-option name="display" value="<display>"/>
+        <module-option name="startUrl" value="<start Url>"/>       
+    </authentication>
+</security-domain>
+
+for module-options details please review Salesforce's oauth setup guide: 
+http://wiki.developerforce.com/page/Digging_Deeper_into_OAuth_2.0_on_Force.com
+
+
+add this entry to the WEB-INF/jboss-web.xml file (create it if it doesn't exist)
+
+<jboss-web>
+  <security-domain>java:/jaas/OAuthRealm</security-domain>
+</jboss-web>
+
+OAuthConsumer oauthConsumer = new OAuthConsumer(); 
+
+2)
+
+or you can configure it in code:
+
+OAuthServiceProvider serviceProvider = new OAuthServiceProvider();				
+serviceProvider.setInstance(configuration.getInstance());
+serviceProvider.setClientId(configuration.getClientId());
+serviceProvider.setClientSecret(configuration.getClientSecret());
+serviceProvider.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
+serviceProvider.setDisplay("popup");
+serviceProvider.setPrompt("login");
+serviceProvider.setScope("full refresh_token");
+serviceProvider.setStartUrl("/initialize.jsf");
+
+OAuthConsumer oauthConsumer = new OAuthConsumer(serviceProvider);   
+
+login:
+
+using FacesContext
+
+jsf: oauthConsumer.login(FacesContext);
+
+or HttpServletResponse
+
+jsp: oauthConsumer.loging(HttpServletResponse);
+
+authenticate:
+
+javax.security.auth.Subject subject = oauthConsumer.authenticate(code);
+
+Subject has the OAuthPrincipal which contains the following information about the user:
+
+OAuth:
+
+id
+issuedAt
+refreshToken
+instanceUrl
+signature
+accessToken
+error
+errorDescription
+
+Identity:
+
+	@SerializedName("id")
+	private String id;
+	
+	@SerializedName("asserted_user")
+	private Boolean assertedUser;
+	
+	@SerializedName("user_id")
+	private String userId;
+	
+	@SerializedName("organization_id")
+	private String organizationId;
+	
+	@SerializedName("username")
+	private String username;
+	
+	@SerializedName("nick_name")
+	private String nickName;
+	
+	@SerializedName("display_name")
+	private String displayName;
+	
+	@SerializedName("email")
+	private String email;
+	
+	@SerializedName("active")
+	private Boolean active;
+	
+	@SerializedName("user_type")
+	private String userType;
+	
+	@SerializedName("language")
+	private String language;
+	
+	@SerializedName("locale")
+	private Locale locale;
+	
+	@SerializedName("utcOffset")
+	private String utcOffset; 
+	
+	@SerializedName("photos")
+	private Photos photos;
+	
+	@SerializedName("urls")
+	private Urls urls;
+	
+photos:
+	
+picture;
+thumbnail;
+
+Urls:
+
+private String enterprise;
+	
+	@SerializedName("metadata")
+	private String metadata;
+	
+	@SerializedName("partner")
+	private String partner;
+	
+	@SerializedName("rest")
+	private String rest;
+	
+	@SerializedName("sobjects")
+	private String sobjects;
+	
+	@SerializedName("search")
+	private String search;
+	
+	@SerializedName("query")
+	private String query;
+	
+	@SerializedName("recent")
+	private String recent;
+	
+	@SerializedName("profile")
+	private String profile;
+	
+	@SerializedName("feeds")
+	private String feeds;
+	
+	@SerializedName("feed_items")
+	private String feedItems;
+
+	@SerializedName("groups")
+	private String groups; 
+
+	@SerializedName("users")
+	private String users;
+refresh oauthToken

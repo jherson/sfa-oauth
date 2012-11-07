@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.security.auth.Subject;
+import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
@@ -18,24 +20,30 @@ import com.sfa.login.oauth.callback.OAuthRefreshTokenCallbackHandler;
 public class OAuthConsumer implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
-	private OAuthServiceProvider serviceProvider;
 	private LoginContext loginContext;
 	
+	public OAuthConsumer() {
+		
+	}
+	
     public OAuthConsumer(OAuthServiceProvider serviceProvider) {
-    	this.serviceProvider = serviceProvider;
     	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
 		Configuration.setConfiguration(oauthConfig);
     }
 
+    @SuppressWarnings("unchecked")
     public String getOAuthTokenUrl() throws UnsupportedEncodingException {
-    	return serviceProvider.getInstance() 
+    	AppConfigurationEntry[] entries = Configuration.getConfiguration().getAppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule");    	
+		Map<String,String> optionsMap = (Map<String, String>) entries[0];
+		
+    	return optionsMap.get("instance") 
     			+ "/services/oauth2/authorize?response_type=code"
-				+ "&client_id=" + serviceProvider.getClientId()
-				+ "&redirect_uri=" + URLEncoder.encode(serviceProvider.getRedirectUri(), "UTF-8")
-				+ "&scope=" + URLEncoder.encode(serviceProvider.getScope(), "UTF-8")
-				+ "&prompt=" + serviceProvider.getPrompt()
-				+ "&display=" + serviceProvider.getDisplay()
-				+ "&startURL=" + serviceProvider.getStartUrl();        					
+				+ "&client_id=" + optionsMap.get("clientId")
+				+ "&redirect_uri=" + URLEncoder.encode(optionsMap.get("redirectUri"), "UTF-8")
+				+ "&scope=" + URLEncoder.encode(optionsMap.get("scope"), "UTF-8")
+				+ "&prompt=" + optionsMap.get("prompt")
+				+ "&display=" + optionsMap.get("display")
+				+ "&startURL=" + optionsMap.get("startUrl");        					
     }
     
     public void login(FacesContext context) throws UnsupportedEncodingException, IOException {

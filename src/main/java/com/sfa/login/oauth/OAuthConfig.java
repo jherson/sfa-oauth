@@ -24,9 +24,13 @@ public class OAuthConfig extends Configuration implements Serializable {
 		optionsMap.put("clientId", serviceProvider.getClientId());
 		optionsMap.put("clientSecret", serviceProvider.getClientSecret());
 		optionsMap.put("redirectUri", serviceProvider.getRedirectUri());
+		optionsMap.put("scope", serviceProvider.getScope());
+		optionsMap.put("prompt", serviceProvider.getPrompt());
+		optionsMap.put("display", serviceProvider.getDisplay());
+		optionsMap.put("startUrl", serviceProvider.getStartUrl());
 		
 		AppConfigurationEntry[] entries = new AppConfigurationEntry[1];
-		entries[0] = new AppConfigurationEntry("com.sfa.qb.login.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);
+		entries[0] = new AppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);
 		
 		return entries;
 	}
