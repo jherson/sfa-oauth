@@ -31,16 +31,15 @@ public class OAuthConsumer implements Serializable {
 		Configuration.setConfiguration(oauthConfig);
     }
 
-    @SuppressWarnings("unchecked")
     public String getOAuthTokenUrl() throws UnsupportedEncodingException {
     	AppConfigurationEntry[] entries = Configuration.getConfiguration().getAppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule");    	
-		Map<String,String> optionsMap = (Map<String, String>) entries[0];
+		Map<String,?> optionsMap = entries[0].getOptions();
 		
     	return optionsMap.get("instance") 
     			+ "/services/oauth2/authorize?response_type=code"
 				+ "&client_id=" + optionsMap.get("clientId")
-				+ "&redirect_uri=" + URLEncoder.encode(optionsMap.get("redirectUri"), "UTF-8")
-				+ "&scope=" + URLEncoder.encode(optionsMap.get("scope"), "UTF-8")
+				+ "&redirect_uri=" + URLEncoder.encode(String.valueOf(optionsMap.get("redirectUri")), "UTF-8")
+				+ "&scope=" + URLEncoder.encode(String.valueOf(optionsMap.get("scope")), "UTF-8")
 				+ "&prompt=" + optionsMap.get("prompt")
 				+ "&display=" + optionsMap.get("display")
 				+ "&startURL=" + optionsMap.get("startUrl");        					

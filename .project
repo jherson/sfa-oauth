@@ -11,7 +11,7 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.wst.validation.validationbuilder</name>
+			<name>org.jboss.tools.jst.web.kb.kbbuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -20,8 +20,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.wst.validation.validationbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.jboss.tools.jst.web.kb.kbnature</nature>
 	</natures>
 </projectDescription>
