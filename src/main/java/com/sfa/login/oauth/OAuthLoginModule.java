@@ -17,10 +17,13 @@ import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
+import com.sfa.login.oauth.callback.OAuthCallbackHandler;
 import com.sfa.login.oauth.callback.OAuthCodeCallback;
 import com.sfa.login.oauth.callback.OAuthRefreshTokenCallback;
 import com.sfa.login.oauth.model.Identity;
-import com.sfa.login.oauth.model.OAuth;
+import com.sfa.login.oauth.model.Token;
+import com.sfa.login.oauth.principal.TokenPrincipal;
+import com.sfa.login.oauth.principal.IdentityPrincipal;
 import com.sfa.login.oauth.service.OAuthService;
 import com.sfa.login.oauth.service.impl.OAuthServiceImpl;
 
@@ -39,7 +42,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	private OAuthService oauthService;
 	
 	private Boolean success;
-	private OAuth oauth;
+	private Token token;
+	private Identity identity;
 
 	@Override
 	public boolean abort() throws LoginException {
@@ -50,7 +54,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	public boolean commit() throws LoginException {
 		
 		if (success) {
-			subject.getPrincipals().add(new OAuthPrincipal(oauth));	
+			subject.getPrincipals().add(new TokenPrincipal(token));	
+			subject.getPrincipals().add(new IdentityPrincipal(identity));
 		} 
 	    
 	    return success;
@@ -89,9 +94,11 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 				throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
 			}
 			
+			OAuthCallbackHandler oauthCallbackHandler = (OAuthCallbackHandler) callbackHandler;
+			
 			OAuthCodeCallback callback = (OAuthCodeCallback) callbacks[0];		
 									
-			authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, callback.getCode());
+			authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, oauthCallbackHandler.getCode());
 			
 		//} else if (callbackHandler instanceof OAuthRefreshTokenCallback) {
 			
@@ -112,16 +119,15 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			
 		//}						
 				
-		oauth = new Gson().fromJson(authResponse, OAuth.class);
+		token = new Gson().fromJson(authResponse, Token.class);
 				
-		if (oauth.getError() != null) {
-		 	throw new FailedLoginException(oauth.getErrorDescription());		 
+		if (token.getError() != null) {
+		 	throw new FailedLoginException(token.getErrorDescription());		 
 		}	
 			    			    			
-		String identityResponse = oauthService.getIdentity(oauth.getInstanceUrl(), oauth.getId(), oauth.getAccessToken());
-		Identity identity = new Gson().fromJson(identityResponse, Identity.class);
-			    
-		oauth.setIdentity(identity);
+		String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
+		
+		identity = new Gson().fromJson(identityResponse, Identity.class);			    
 			    
 		success = Boolean.TRUE;
 				
@@ -130,8 +136,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 
 	@Override
 	public boolean logout() throws LoginException {		
-		oauthService.revokeToken(options.get("instance").toString(), oauth.getAccessToken());		
-		subject.getPrincipals(OAuthPrincipal.class).clear();
+		oauthService.revokeToken(options.get("instance").toString(), token.getAccessToken());		
+		subject.getPrincipals().clear();
 		return true;
 	}	
 }

@@ -7,34 +7,23 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-
-public class OAuthCodeCallbackHandler implements CallbackHandler, Serializable {
-	 
-	private static final long serialVersionUID = 4440714717399157192L;
+public class OAuthCallbackHandler implements CallbackHandler, Serializable {
+	
+	private static final long serialVersionUID = -5406905785684587233L;
 	
 	private String code;
+	private String refreshToken;
 	private String username;
 	private String password;
 	private String securityToken;
-	
-	public OAuthCodeCallbackHandler(String code) {
-		this.code = code;
+
+	public OAuthCallbackHandler() {
+		
 	}
-	
-//	public OAuthCallbackHandler(String username, String password, String securityToken) {
-//		this.username = username;
-//		this.password = password;
-//		this.securityToken = securityToken;
-//	}
-	
-	public String getCode() {
-		return code;
-	}
-//	
 
 	@Override
 	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {		
-		
+
 		for (int i = 0; i < callbacks.length; i++) {
 			Callback callback = callbacks[i];
 			if (callback instanceof OAuthCodeCallback) {
@@ -52,6 +41,47 @@ public class OAuthCodeCallbackHandler implements CallbackHandler, Serializable {
 			} else {
 				throw new UnsupportedCallbackException(callback, "Unsupported callback type");
 			}
-		}				
+		}	
+		
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+	
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getSecurityToken() {
+		return securityToken;
+	}
+
+	public void setSecurityToken(String securityToken) {
+		this.securityToken = securityToken;
 	}
 }
