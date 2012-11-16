@@ -80,25 +80,21 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		String redirectUri = options.get("redirectUri").toString();
 		
 		String authResponse = null;
-		
-		//if (callbackHandler instanceof OAuthCodeCallback) {
 			
-			Callback[] callbacks = new Callback[1];
-			callbacks[0] = new OAuthCodeCallback();
+		Callback[] callbacks = new Callback[1];
+		callbacks[0] = new OAuthCodeCallback();
 	
-			try {
-				callbackHandler.handle(callbacks);
-			} catch (IOException e) {
-				throw new LoginException("IOException calling handle on callbackHandler");
-			} catch (UnsupportedCallbackException e) {
-				throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
-			}
+		try {
+			callbackHandler.handle(callbacks);
+		} catch (IOException e) {
+			throw new LoginException("IOException calling handle on callbackHandler");
+		} catch (UnsupportedCallbackException e) {
+			throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
+		}
 			
-			OAuthCallbackHandler oauthCallbackHandler = (OAuthCallbackHandler) callbackHandler;
-			
-			OAuthCodeCallback callback = (OAuthCodeCallback) callbacks[0];		
+		OAuthCodeCallback callback = (OAuthCodeCallback) callbacks[0];		
 									
-			authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, oauthCallbackHandler.getCode());
+		authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, callback.getCode());
 			
 		//} else if (callbackHandler instanceof OAuthRefreshTokenCallback) {
 			
