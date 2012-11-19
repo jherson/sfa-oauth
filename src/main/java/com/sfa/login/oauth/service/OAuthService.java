@@ -4,6 +4,7 @@ import javax.security.auth.login.LoginException;
 
 public interface OAuthService {
 
+	public String getAuthResponse(String instance, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException;
 	public String getAuthResponse(String instance, String clientId, String clientSecret, String redirectUri, String code) throws LoginException;
 	public String getIdentity(String instanceUrl, String id, String accessToken) throws LoginException;
 	public void revokeToken(String instance, String accessToken) throws LoginException;	

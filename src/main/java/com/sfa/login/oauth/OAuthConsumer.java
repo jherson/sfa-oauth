@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -16,11 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.sfa.login.oauth.callback.OAuthCodeCallbackHandler;
 import com.sfa.login.oauth.callback.OAuthRefreshTokenCallbackHandler;
+import com.sfa.login.oauth.callback.OAuthUserNamePasswordCallbackHandler;
+import com.sfa.login.oauth.model.Identity;
+import com.sfa.login.oauth.model.Token;
+import com.sfa.login.oauth.principal.IdentityPrincipal;
+import com.sfa.login.oauth.principal.TokenPrincipal;
 
 public class OAuthConsumer implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
 	private LoginContext loginContext;
+	private Subject subject;
 	
 	public OAuthConsumer() {
 		
@@ -54,22 +61,44 @@ public class OAuthConsumer implements Serializable {
     }
     
     public void login(String username, String password, String securityToken) throws LoginException {
-    	
+    	loginContext = new LoginContext("OAuth", new OAuthUserNamePasswordCallbackHandler(username, password, securityToken));	
+    	loginContext.login();	
+    	setSubject(loginContext.getSubject());
     }
     
-    public Subject authenticate(String code) throws LoginException {    		
+    public void authenticate(String code) throws LoginException {    	
 		loginContext = new LoginContext("OAuth", new OAuthCodeCallbackHandler(code));	
-		loginContext.login();		
-		return loginContext.getSubject();
+		loginContext.login();
+		setSubject(loginContext.getSubject());
     }
     
-    public Subject refreshToken(String refreshToken) throws LoginException {  	
+    public void refreshToken(String refreshToken) throws LoginException {  	
     	loginContext = new LoginContext("OAuth", new OAuthRefreshTokenCallbackHandler(refreshToken));	
     	loginContext.login();
-    	return loginContext.getSubject();
+    	setSubject(loginContext.getSubject());
     }
     
     public void logout() throws LoginException {
     	loginContext.logout();
+    }
+    
+    public Identity getIdentity() {
+    	Iterator<IdentityPrincipal> iterator = subject.getPrincipals(IdentityPrincipal.class).iterator();
+		if (iterator.hasNext()) {
+	        return iterator.next().getIdentity();
+		}
+		return null;
+    }
+    
+    public Token getToken() {
+    	Iterator<TokenPrincipal> iterator = subject.getPrincipals(TokenPrincipal.class).iterator();
+		if (iterator.hasNext()) {
+	        return iterator.next().getToken();
+		}
+		return null;
+    }
+    
+    private void setSubject(Subject subject) {
+    	this.subject = subject;
     }
 }

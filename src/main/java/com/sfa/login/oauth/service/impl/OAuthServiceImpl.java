@@ -14,6 +14,31 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	private static final long serialVersionUID = 1819521597953621629L;
 	
 	@Override
+	public String getAuthResponse(String instance, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException {
+        String url = instance + "/services/oauth2/token";
+        
+		ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/json");	
+		request.header("X-PrettyPrint", "1");
+		request.queryParameter("grant_type", "password");		
+		request.queryParameter("client_id", clientId);
+		request.queryParameter("client_secret", clientSecret);
+		request.queryParameter("username", username);
+		request.queryParameter("password", password);
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
+		}
+		
+		return response.getEntity();	
+	}
+	
+	@Override
 	public String getAuthResponse(String instance, String clientId, String clientSecret, String redirectUri, String code) throws LoginException {
         String url = instance + "/services/oauth2/token";
         

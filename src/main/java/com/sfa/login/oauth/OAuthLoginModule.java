@@ -9,17 +9,22 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.Configuration;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.jboss.as.controller.security.SecurityContext;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
-import com.sfa.login.oauth.callback.OAuthCallbackHandler;
+import com.sfa.login.oauth.callback.OAuthUserNamePasswordCallbackHandler;
 import com.sfa.login.oauth.callback.OAuthCodeCallback;
+import com.sfa.login.oauth.callback.OAuthPasswordCallback;
 import com.sfa.login.oauth.callback.OAuthRefreshTokenCallback;
+import com.sfa.login.oauth.callback.OAuthSecurityTokenCallback;
+import com.sfa.login.oauth.callback.OAuthUserNameCallback;
 import com.sfa.login.oauth.model.Identity;
 import com.sfa.login.oauth.model.Token;
 import com.sfa.login.oauth.principal.TokenPrincipal;
@@ -57,6 +62,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			subject.getPrincipals().add(new TokenPrincipal(token));	
 			subject.getPrincipals().add(new IdentityPrincipal(identity));
 		} 
+		
+		SecurityContext.setSubject(subject);
 	    
 	    return success;
 	}
@@ -78,11 +85,15 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		String clientId = options.get("clientId").toString();
 		String clientSecret = options.get("clientSecret").toString();
 		String redirectUri = options.get("redirectUri").toString();
-		
-		String authResponse = null;
+				
+		String authResponse = null;				
 			
 		Callback[] callbacks = new Callback[1];
 		callbacks[0] = new OAuthCodeCallback();
+		//callbacks[1] = new OAuthRefreshTokenCallback();
+		//callbacks[2] = new OAuthUserNameCallback();
+		//callbacks[3] = new OAuthPasswordCallback();
+		//callbacks[4] = new OAuthSecurityTokenCallback();
 	
 		try {
 			callbackHandler.handle(callbacks);
@@ -134,6 +145,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	public boolean logout() throws LoginException {		
 		oauthService.revokeToken(options.get("instance").toString(), token.getAccessToken());		
 		subject.getPrincipals().clear();
+		SecurityContext.clearSubject();
 		return true;
 	}	
 }

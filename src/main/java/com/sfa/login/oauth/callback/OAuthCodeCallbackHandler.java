@@ -13,24 +13,14 @@ public class OAuthCodeCallbackHandler implements CallbackHandler, Serializable {
 	private static final long serialVersionUID = 4440714717399157192L;
 	
 	private String code;
-	private String username;
-	private String password;
-	private String securityToken;
 	
 	public OAuthCodeCallbackHandler(String code) {
 		this.code = code;
 	}
-	
-//	public OAuthCallbackHandler(String username, String password, String securityToken) {
-//		this.username = username;
-//		this.password = password;
-//		this.securityToken = securityToken;
-//	}
-	
+		
 	public String getCode() {
 		return code;
 	}
-//	
 
 	@Override
 	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {		
@@ -40,15 +30,6 @@ public class OAuthCodeCallbackHandler implements CallbackHandler, Serializable {
 			if (callback instanceof OAuthCodeCallback) {
 				OAuthCodeCallback codeCallback = (OAuthCodeCallback) callback;
 				codeCallback.setCode(code);
-			} else if (callback instanceof OAuthUserNameCallback) {
-				OAuthUserNameCallback usernameCallback = (OAuthUserNameCallback) callback;
-				usernameCallback.setUserName(username);
-			} else if (callback instanceof OAuthPasswordCallback) {
-				OAuthPasswordCallback passwordCallback = (OAuthPasswordCallback) callback;
-				passwordCallback.setPassword(password);
-			} else if (callback instanceof OAuthSecurityTokenCallback) {
-				OAuthSecurityTokenCallback securityTokenCallback = (OAuthSecurityTokenCallback) callback;
-				securityTokenCallback.setSecurityToken(securityToken);
 			} else {
 				throw new UnsupportedCallbackException(callback, "Unsupported callback type");
 			}
