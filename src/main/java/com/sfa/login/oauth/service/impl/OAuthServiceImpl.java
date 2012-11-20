@@ -24,7 +24,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		request.queryParameter("client_id", clientId);
 		request.queryParameter("client_secret", clientSecret);
 		request.queryParameter("username", username);
-		request.queryParameter("password", password);
+		request.queryParameter("password", password + securityToken);
 		
 		ClientResponse<String> response = null;
 		try {

@@ -15,13 +15,14 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sfa.login.oauth.callback.OAuthCodeCallbackHandler;
-import com.sfa.login.oauth.callback.OAuthRefreshTokenCallbackHandler;
-import com.sfa.login.oauth.callback.OAuthUserNamePasswordCallbackHandler;
+import com.sfa.login.oauth.callback.OAuthFlowType;
+import com.sfa.login.oauth.callback.OAuthCallbackHandler;
 import com.sfa.login.oauth.model.Identity;
 import com.sfa.login.oauth.model.Token;
 import com.sfa.login.oauth.principal.IdentityPrincipal;
 import com.sfa.login.oauth.principal.TokenPrincipal;
+
+//import org.apache.catalina.authenticator.FormAuthenticator; 
 
 public class OAuthConsumer implements Serializable {
 
@@ -61,19 +62,61 @@ public class OAuthConsumer implements Serializable {
     }
     
     public void login(String username, String password, String securityToken) throws LoginException {
-    	loginContext = new LoginContext("OAuth", new OAuthUserNamePasswordCallbackHandler(username, password, securityToken));	
+    	
+		Map<String,?> optionsMap = getOptionsMap();
+		
+    	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
+    			OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType(),
+    			optionsMap.get("instance").toString(), 
+    			optionsMap.get("clientId").toString(), 
+    			optionsMap.get("clientSecret").toString(), 
+    			null, 
+    			null, 
+    			null, 
+    			username, 
+    			password, 
+    			securityToken));
+    	
     	loginContext.login();	
     	setSubject(loginContext.getSubject());
     }
     
-    public void authenticate(String code) throws LoginException {    	
-		loginContext = new LoginContext("OAuth", new OAuthCodeCallbackHandler(code));	
+    public void authenticate(String code) throws LoginException {
+    	
+        Map<String,?> optionsMap = getOptionsMap();
+		
+    	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
+    			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
+    			optionsMap.get("instance").toString(), 
+    			optionsMap.get("clientId").toString(), 
+    			optionsMap.get("clientSecret").toString(), 
+    			optionsMap.get("redirectUri").toString(), 
+    			code, 
+    			null, 
+    			null, 
+    			null, 
+    			null));	
+    	
 		loginContext.login();
 		setSubject(loginContext.getSubject());
     }
     
     public void refreshToken(String refreshToken) throws LoginException {  	
-    	loginContext = new LoginContext("OAuth", new OAuthRefreshTokenCallbackHandler(refreshToken));	
+    	
+        Map<String,?> optionsMap = getOptionsMap();
+		
+    	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
+    			OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType(),
+    			optionsMap.get("instance").toString(), 
+    			optionsMap.get("clientId").toString(), 
+    			optionsMap.get("clientSecret").toString(), 
+    			null, 
+    			null, 
+    			refreshToken, 
+    			null, 
+    			null, 
+    			null));
+    	
     	loginContext.login();
     	setSubject(loginContext.getSubject());
     }
@@ -100,5 +143,10 @@ public class OAuthConsumer implements Serializable {
     
     private void setSubject(Subject subject) {
     	this.subject = subject;
+    }
+    
+    private Map<String,?> getOptionsMap() {
+    	AppConfigurationEntry[] entries = Configuration.getConfiguration().getAppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule");    	
+		return entries[0].getOptions();
     }
 }

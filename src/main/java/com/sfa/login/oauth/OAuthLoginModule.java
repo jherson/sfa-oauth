@@ -19,12 +19,8 @@ import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
-import com.sfa.login.oauth.callback.OAuthUserNamePasswordCallbackHandler;
-import com.sfa.login.oauth.callback.OAuthCodeCallback;
-import com.sfa.login.oauth.callback.OAuthPasswordCallback;
-import com.sfa.login.oauth.callback.OAuthRefreshTokenCallback;
-import com.sfa.login.oauth.callback.OAuthSecurityTokenCallback;
-import com.sfa.login.oauth.callback.OAuthUserNameCallback;
+import com.sfa.login.oauth.callback.OAuthFlowType;
+import com.sfa.login.oauth.callback.OAuthCallback;
 import com.sfa.login.oauth.model.Identity;
 import com.sfa.login.oauth.model.Token;
 import com.sfa.login.oauth.principal.TokenPrincipal;
@@ -80,20 +76,9 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 
 	@Override
 	public boolean login() throws LoginException {
-		
-		String instance = options.get("instance").toString(); 
-		String clientId = options.get("clientId").toString();
-		String clientSecret = options.get("clientSecret").toString();
-		String redirectUri = options.get("redirectUri").toString();
-				
-		String authResponse = null;				
-			
+							
 		Callback[] callbacks = new Callback[1];
-		callbacks[0] = new OAuthCodeCallback();
-		//callbacks[1] = new OAuthRefreshTokenCallback();
-		//callbacks[2] = new OAuthUserNameCallback();
-		//callbacks[3] = new OAuthPasswordCallback();
-		//callbacks[4] = new OAuthSecurityTokenCallback();
+		callbacks[0] = new OAuthCallback();
 	
 		try {
 			callbackHandler.handle(callbacks);
@@ -103,29 +88,18 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
 		}
 			
-		OAuthCodeCallback callback = (OAuthCodeCallback) callbacks[0];		
-									
-		authResponse = oauthService.getAuthResponse(instance, clientId, clientSecret, redirectUri, callback.getCode());
-			
-		//} else if (callbackHandler instanceof OAuthRefreshTokenCallback) {
-			
-		//	Callback[] callbacks = new Callback[1];
-		//	callbacks[0] = new OAuthRefreshTokenCallback();
-	
-		//	try {
-		//		callbackHandler.handle(callbacks);
-		//	} catch (IOException e) {
-		//		throw new LoginException("IOException calling handle on callbackHandler");
-		//	} catch (UnsupportedCallbackException e) {
-		//		throw new LoginException("UnsupportedCallbackException calling handle on callbackHandler");
-		//	}
-			
-		//	OAuthRefreshTokenCallback callback = (OAuthRefreshTokenCallback) callbacks[0];	
-			
-		//	authResponse = oauthService.refreshAuthToken(instance, clientId, clientSecret, callback.getRefreshToken());
-			
-		//}						
-				
+		OAuthCallback callback = (OAuthCallback) callbacks[0];
+		
+		String authResponse = null;				
+		
+		if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW.getFlowType())) {
+			authResponse = oauthService.getAuthResponse(callback.getInstance(), callback.getClientId(), callback.getClientSecret(), callback.getRedirectUri(), callback.getCode());
+		} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType())) {
+			authResponse = oauthService.refreshAuthToken(callback.getInstance(), callback.getClientId(), callback.getClientSecret(), callback.getRefreshToken());
+		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType())) {
+			authResponse = oauthService.getAuthResponse(callback.getInstance(), callback.getClientId(),  callback.getClientSecret(), callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
+		}
+																		
 		token = new Gson().fromJson(authResponse, Token.class);
 				
 		if (token.getError() != null) {
