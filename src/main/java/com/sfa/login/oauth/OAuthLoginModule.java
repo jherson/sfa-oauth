@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -73,6 +74,41 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 
 	@Override
 	public boolean login() throws LoginException {
+		
+		/**
+		 * read in oauth parameters from handler options map
+		 */
+		
+		String endpoint = null;
+		String clientId = null;
+		String clientSecret = null;
+		String redirectUri = null;
+		
+		if (options.get(OAuthConstants.ENDPOINT_PARAMETER) != null) {
+			endpoint = options.get(OAuthConstants.ENDPOINT_PARAMETER).toString();
+		} else {
+			throw new LoginException("Missing endpoint parameter");
+		}
+			
+		if (options.get(OAuthConstants.CLIENT_ID_PARAMETER) != null) {
+			clientId = options.get(OAuthConstants.CLIENT_ID_PARAMETER).toString();
+		} else {
+			throw new LoginException("Missing client id parameter");
+		}
+		
+		if (options.get(OAuthConstants.CLIENT_SECRET_PARAMETER) != null) {
+			clientSecret = options.get(OAuthConstants.CLIENT_SECRET_PARAMETER).toString();
+		} else {
+			throw new LoginException("Missing client secret parameter");
+		}
+										
+		if (options.get(OAuthConstants.REDIRECT_URI_PARAMETER) != null) {
+			redirectUri = options.get(OAuthConstants.REDIRECT_URI_PARAMETER).toString();
+		}
+		
+		/**
+		 * process the callback hander
+		 */
 							
 		Callback[] callbacks = new Callback[1];
 		callbacks[0] = new OAuthCallback();
@@ -86,18 +122,12 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		}
 			
 		OAuthCallback callback = (OAuthCallback) callbacks[0];
+						
+		/**
+		 * get authResponse from Salesforce based on the flow type 
+		 */
 		
-		String endpoint = options.get(OAuthConstants.ENDPOINT_PARAMETER).toString();
-		String clientId = options.get(OAuthConstants.CLIENT_ID_PARAMETER).toString();
-		String clientSecret = options.get(OAuthConstants.CLIENT_SECRET_PARAMETER).toString();
-		String redirectUri = options.get(OAuthConstants.REDIRECT_URI_PARAMETER).toString();
-		
-		log.info("param: " + endpoint);
-		log.info("param: " + clientId);
-		log.info("param: " + clientSecret);
-		log.info("param: " + redirectUri);
-		
-		String authResponse = null;				
+		String authResponse = null;	
 		
 		if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW.getFlowType())) {
 			authResponse = oauthService.getAuthResponse(endpoint, clientId, clientSecret, redirectUri, callback.getCode());
@@ -106,16 +136,28 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType())) {
 			authResponse = oauthService.getAuthResponse(endpoint, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
 		}
+		
+		/**
+		 * parse the token response to the Token object
+		 */
 																		
 		token = new Gson().fromJson(authResponse, Token.class);
 				
 		if (token.getError() != null) {
 		 	throw new FailedLoginException(token.getErrorDescription());		 
 		}	
+		
+		/**
+		 * parce the identify response to the Identity object
+		 */
 			    			    			
 		String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
 		
-		identity = new Gson().fromJson(identityResponse, Identity.class);			    
+		identity = new Gson().fromJson(identityResponse, Identity.class);	
+		
+		/**
+		 * set success
+		 */
 			    
 		success = Boolean.TRUE;
 				

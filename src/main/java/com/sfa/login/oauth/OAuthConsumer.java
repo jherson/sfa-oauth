@@ -7,8 +7,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
@@ -36,10 +36,6 @@ public class OAuthConsumer implements Serializable {
     	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
 		Configuration.setConfiguration(oauthConfig);
     }
-    
-    private void initLoginContext() throws LoginException {
-    	loginContext = new LoginContext("OAuth", null, null);
-    }
 
     public String getOAuthTokenUrl() throws UnsupportedEncodingException {   
     	
@@ -54,48 +50,48 @@ public class OAuthConsumer implements Serializable {
 				+ "&display=" + optionsMap.get(OAuthConstants.DISPLAY_PARAMETER)
 				+ "&startURL=" + optionsMap.get(OAuthConstants.START_URL_PARAMETER);        					
     }
-    
-    public void login(FacesContext context) throws UnsupportedEncodingException, IOException, LoginException {
-    	initLoginContext();
-    	context.getExternalContext().redirect(getOAuthTokenUrl());
-    }
-    
+       
     public void login(HttpServletResponse response) throws UnsupportedEncodingException, IOException {
     	response.sendRedirect(getOAuthTokenUrl());
     }
     
     public void login(String username, String password, String securityToken) throws LoginException {    	
-		
-    	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
+    	
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType(),
     			null,
     			null, 
     			username, 
     			password, 
-    			securityToken));
-    	
-    	loginContext.login();	
-    	setSubject(loginContext.getSubject());
+    			securityToken);
+		    	    	
+    	login(callbackHandler);
     }
     
     public void authenticate(String code) throws LoginException {
     	
-		loginContext.login();
-		setSubject(loginContext.getSubject());
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
+    			code, 
+    			null, 
+    			null, 
+    			null, 
+    			null);
+    	
+    	login(callbackHandler);
     }
     
     public void refreshToken(String refreshToken) throws LoginException {  	
 		
-    	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType(),
     			null, 
     			refreshToken, 
     			null, 
     			null, 
-    			null));
+    			null);
     	
-    	loginContext.login();
-    	setSubject(loginContext.getSubject());
+    	login(callbackHandler);
     }
     
     public void logout() throws LoginException {
@@ -120,6 +116,12 @@ public class OAuthConsumer implements Serializable {
 	        return iterator.next().getToken();
 		}
 		return null;
+    }
+    
+    private void login(CallbackHandler callbackHander) throws LoginException {
+    	loginContext = new LoginContext("OAuth", null, callbackHander, Configuration.getConfiguration());    	
+    	loginContext.login();
+    	setSubject(loginContext.getSubject());
     }
     
     private void setSubject(Subject subject) {

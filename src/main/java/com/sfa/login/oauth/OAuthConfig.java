@@ -20,7 +20,7 @@ public class OAuthConfig extends Configuration implements Serializable {
 	@Override
 	public AppConfigurationEntry[] getAppConfigurationEntry(String name) {				
 		Map<String,String> optionsMap = new HashMap<String,String>();
-		optionsMap.put(OAuthConstants.CLIENT_ID_PARAMETER, serviceProvider.getEndpoint());
+		optionsMap.put(OAuthConstants.ENDPOINT_PARAMETER, serviceProvider.getEndpoint());
 		optionsMap.put(OAuthConstants.CLIENT_ID_PARAMETER, serviceProvider.getClientId());
 		optionsMap.put(OAuthConstants.CLIENT_SECRET_PARAMETER, serviceProvider.getClientSecret());
 		optionsMap.put(OAuthConstants.REDIRECT_URI_PARAMETER, serviceProvider.getRedirectUri());
