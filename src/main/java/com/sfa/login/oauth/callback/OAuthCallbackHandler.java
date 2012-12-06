@@ -12,10 +12,6 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 	private static final long serialVersionUID = 1173111272806803501L;
 	
 	private String flowType;
-	private String instance; 
-	private String clientId;
-	private String clientSecret;
-	private String redirectUri;
 	private String code;
 	private String refreshToken;
 	private String username;
@@ -24,10 +20,6 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 
 	public OAuthCallbackHandler(
 			String flowType,
-			String instance, 
-			String clientId, 
-			String clientSecret, 
-			String redirectUri, 
 			String code, 
 			String refreshToken, 
 			String username, 
@@ -35,10 +27,6 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 			String securityToken) {
 		
 		this.flowType = flowType;
-		this.instance = instance;
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.redirectUri = redirectUri;
 		this.code = code;
 		this.refreshToken = refreshToken;
 		this.username = username;
@@ -53,10 +41,6 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 			if (callback instanceof OAuthCallback) {
 				OAuthCallback oauthCallback = (OAuthCallback) callback;
 				oauthCallback.setFlowType(this.flowType);
-				oauthCallback.setInstance(this.instance);
-				oauthCallback.setClientId(this.clientId);
-				oauthCallback.setClientSecret(this.clientSecret);
-				oauthCallback.setRedirectUri(this.redirectUri);
 				oauthCallback.setCode(this.code);
 				oauthCallback.setRefreshToken(this.refreshToken);
 				oauthCallback.setUsername(this.username);

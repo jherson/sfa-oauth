@@ -6,7 +6,7 @@ public class OAuthServiceProvider implements Serializable {
 
 	private static final long serialVersionUID = 4658561512368737107L;
 	
-	private String instance;
+	private String endpoint;
 	private String clientId;
 	private String clientSecret;
 	private String redirectUri;
@@ -19,12 +19,12 @@ public class OAuthServiceProvider implements Serializable {
 		
 	}
 	
-	public String getInstance() {
-		return instance;
+	public String getEndpoint() {
+		return endpoint;
 	}
 	
-	public void setInstance(String instance) {
-		this.instance = instance;
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
 	}
 	
 	public String getClientId() {

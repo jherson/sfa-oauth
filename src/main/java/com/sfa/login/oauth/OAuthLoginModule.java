@@ -14,7 +14,6 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.jboss.as.controller.security.SecurityContext;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
@@ -58,8 +57,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			subject.getPrincipals().add(new TokenPrincipal(token));	
 			subject.getPrincipals().add(new IdentityPrincipal(identity));
 		} 
-		
-		SecurityContext.setSubject(subject);
 	    
 	    return success;
 	}
@@ -90,14 +87,24 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			
 		OAuthCallback callback = (OAuthCallback) callbacks[0];
 		
+		String endpoint = options.get(OAuthConstants.ENDPOINT_PARAMETER).toString();
+		String clientId = options.get(OAuthConstants.CLIENT_ID_PARAMETER).toString();
+		String clientSecret = options.get(OAuthConstants.CLIENT_SECRET_PARAMETER).toString();
+		String redirectUri = options.get(OAuthConstants.REDIRECT_URI_PARAMETER).toString();
+		
+		log.info("param: " + endpoint);
+		log.info("param: " + clientId);
+		log.info("param: " + clientSecret);
+		log.info("param: " + redirectUri);
+		
 		String authResponse = null;				
 		
 		if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW.getFlowType())) {
-			authResponse = oauthService.getAuthResponse(callback.getInstance(), callback.getClientId(), callback.getClientSecret(), callback.getRedirectUri(), callback.getCode());
+			authResponse = oauthService.getAuthResponse(endpoint, clientId, clientSecret, redirectUri, callback.getCode());
 		} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType())) {
-			authResponse = oauthService.refreshAuthToken(callback.getInstance(), callback.getClientId(), callback.getClientSecret(), callback.getRefreshToken());
+			authResponse = oauthService.refreshAuthToken(endpoint, clientId, clientSecret, callback.getRefreshToken());
 		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType())) {
-			authResponse = oauthService.getAuthResponse(callback.getInstance(), callback.getClientId(),  callback.getClientSecret(), callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
+			authResponse = oauthService.getAuthResponse(endpoint, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
 		}
 																		
 		token = new Gson().fromJson(authResponse, Token.class);
@@ -117,9 +124,12 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 
 	@Override
 	public boolean logout() throws LoginException {		
-		oauthService.revokeToken(options.get("instance").toString(), token.getAccessToken());		
+		oauthService.revokeToken(options.get(OAuthConstants.ENDPOINT_PARAMETER).toString(), token.getAccessToken());		
 		subject.getPrincipals().clear();
-		SecurityContext.clearSubject();
 		return true;
 	}	
+	
+	public void setCallbackHandler(CallbackHandler callbackHandler) {
+		this.callbackHandler = callbackHandler;
+	}
 }

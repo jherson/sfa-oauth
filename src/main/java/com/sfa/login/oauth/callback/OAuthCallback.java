@@ -9,10 +9,6 @@ public class OAuthCallback implements Callback, Serializable {
 	private static final long serialVersionUID = 7612224786750192425L;
 
 	private String flowType;
-	private String instance; 
-	private String clientId;
-	private String clientSecret;
-	private String redirectUri;
 	private String code;
 	private String refreshToken;
 	private String username;
@@ -30,38 +26,6 @@ public class OAuthCallback implements Callback, Serializable {
 
 	public void setFlowType(String flowType) {
 		this.flowType = flowType;
-	}
-
-	public String getInstance() {
-		return instance;
-	}
-
-	public void setInstance(String instance) {
-		this.instance = instance;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	public String getClientSecret() {
-		return clientSecret;
-	}
-
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-
-	public String getRedirectUri() {
-		return redirectUri;
-	}
-
-	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
 	}
 
 	public String getCode() {

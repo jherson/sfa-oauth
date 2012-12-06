@@ -22,8 +22,6 @@ import com.sfa.login.oauth.model.Token;
 import com.sfa.login.oauth.principal.IdentityPrincipal;
 import com.sfa.login.oauth.principal.TokenPrincipal;
 
-//import org.apache.catalina.authenticator.FormAuthenticator; 
-
 public class OAuthConsumer implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
@@ -31,29 +29,34 @@ public class OAuthConsumer implements Serializable {
 	private Subject subject;
 	
 	public OAuthConsumer() {
-		
+
 	}
 	
     public OAuthConsumer(OAuthServiceProvider serviceProvider) {
     	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
 		Configuration.setConfiguration(oauthConfig);
     }
+    
+    private void initLoginContext() throws LoginException {
+    	loginContext = new LoginContext("OAuth", null, null);
+    }
 
-    public String getOAuthTokenUrl() throws UnsupportedEncodingException {
-    	AppConfigurationEntry[] entries = Configuration.getConfiguration().getAppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule");    	
-		Map<String,?> optionsMap = entries[0].getOptions();
+    public String getOAuthTokenUrl() throws UnsupportedEncodingException {   
+    	
+		Map<String,?> optionsMap = getOptionsMap();
 		
-    	return optionsMap.get("instance") 
+    	return optionsMap.get(OAuthConstants.ENDPOINT_PARAMETER) 
     			+ "/services/oauth2/authorize?response_type=code"
-				+ "&client_id=" + optionsMap.get("clientId")
-				+ "&redirect_uri=" + URLEncoder.encode(String.valueOf(optionsMap.get("redirectUri")), "UTF-8")
-				+ "&scope=" + URLEncoder.encode(String.valueOf(optionsMap.get("scope")), "UTF-8")
-				+ "&prompt=" + optionsMap.get("prompt")
-				+ "&display=" + optionsMap.get("display")
-				+ "&startURL=" + optionsMap.get("startUrl");        					
+				+ "&client_id=" + optionsMap.get(OAuthConstants.CLIENT_ID_PARAMETER)
+				+ "&redirect_uri=" + URLEncoder.encode(String.valueOf(optionsMap.get(OAuthConstants.REDIRECT_URI_PARAMETER)), "UTF-8")
+				+ "&scope=" + URLEncoder.encode(String.valueOf(optionsMap.get(OAuthConstants.SCOPE_PARAMETER)), "UTF-8")
+				+ "&prompt=" + optionsMap.get(OAuthConstants.PROMPT_PARAMETER)
+				+ "&display=" + optionsMap.get(OAuthConstants.DISPLAY_PARAMETER)
+				+ "&startURL=" + optionsMap.get(OAuthConstants.START_URL_PARAMETER);        					
     }
     
-    public void login(FacesContext context) throws UnsupportedEncodingException, IOException {
+    public void login(FacesContext context) throws UnsupportedEncodingException, IOException, LoginException {
+    	initLoginContext();
     	context.getExternalContext().redirect(getOAuthTokenUrl());
     }
     
@@ -61,17 +64,11 @@ public class OAuthConsumer implements Serializable {
     	response.sendRedirect(getOAuthTokenUrl());
     }
     
-    public void login(String username, String password, String securityToken) throws LoginException {
-    	
-		Map<String,?> optionsMap = getOptionsMap();
+    public void login(String username, String password, String securityToken) throws LoginException {    	
 		
     	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
     			OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType(),
-    			optionsMap.get("instance").toString(), 
-    			optionsMap.get("clientId").toString(), 
-    			optionsMap.get("clientSecret").toString(), 
-    			null, 
-    			null, 
+    			null,
     			null, 
     			username, 
     			password, 
@@ -83,34 +80,14 @@ public class OAuthConsumer implements Serializable {
     
     public void authenticate(String code) throws LoginException {
     	
-        Map<String,?> optionsMap = getOptionsMap();
-		
-    	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
-    			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
-    			optionsMap.get("instance").toString(), 
-    			optionsMap.get("clientId").toString(), 
-    			optionsMap.get("clientSecret").toString(), 
-    			optionsMap.get("redirectUri").toString(), 
-    			code, 
-    			null, 
-    			null, 
-    			null, 
-    			null));	
-    	
 		loginContext.login();
 		setSubject(loginContext.getSubject());
     }
     
     public void refreshToken(String refreshToken) throws LoginException {  	
-    	
-        Map<String,?> optionsMap = getOptionsMap();
 		
     	loginContext = new LoginContext("OAuth", new OAuthCallbackHandler(
     			OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType(),
-    			optionsMap.get("instance").toString(), 
-    			optionsMap.get("clientId").toString(), 
-    			optionsMap.get("clientSecret").toString(), 
-    			null, 
     			null, 
     			refreshToken, 
     			null, 
@@ -123,6 +100,10 @@ public class OAuthConsumer implements Serializable {
     
     public void logout() throws LoginException {
     	loginContext.logout();
+    }
+    
+    public Subject getSubject() {
+    	return subject;
     }
     
     public Identity getIdentity() {

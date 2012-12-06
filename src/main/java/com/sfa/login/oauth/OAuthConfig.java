@@ -20,14 +20,14 @@ public class OAuthConfig extends Configuration implements Serializable {
 	@Override
 	public AppConfigurationEntry[] getAppConfigurationEntry(String name) {				
 		Map<String,String> optionsMap = new HashMap<String,String>();
-		optionsMap.put("instance", serviceProvider.getInstance());
-		optionsMap.put("clientId", serviceProvider.getClientId());
-		optionsMap.put("clientSecret", serviceProvider.getClientSecret());
-		optionsMap.put("redirectUri", serviceProvider.getRedirectUri());
-		optionsMap.put("scope", serviceProvider.getScope());
-		optionsMap.put("prompt", serviceProvider.getPrompt());
-		optionsMap.put("display", serviceProvider.getDisplay());
-		optionsMap.put("startUrl", serviceProvider.getStartUrl());
+		optionsMap.put(OAuthConstants.CLIENT_ID_PARAMETER, serviceProvider.getEndpoint());
+		optionsMap.put(OAuthConstants.CLIENT_ID_PARAMETER, serviceProvider.getClientId());
+		optionsMap.put(OAuthConstants.CLIENT_SECRET_PARAMETER, serviceProvider.getClientSecret());
+		optionsMap.put(OAuthConstants.REDIRECT_URI_PARAMETER, serviceProvider.getRedirectUri());
+		optionsMap.put(OAuthConstants.SCOPE_PARAMETER, serviceProvider.getScope());
+		optionsMap.put(OAuthConstants.PROMPT_PARAMETER, serviceProvider.getPrompt());
+		optionsMap.put(OAuthConstants.DISPLAY_PARAMETER, serviceProvider.getDisplay());
+		optionsMap.put(OAuthConstants.START_URL_PARAMETER, serviceProvider.getStartUrl());
 		
 		AppConfigurationEntry[] entries = new AppConfigurationEntry[1];
 		entries[0] = new AppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);
