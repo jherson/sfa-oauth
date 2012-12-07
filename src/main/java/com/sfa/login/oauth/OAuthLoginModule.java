@@ -84,8 +84,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		String clientSecret = null;
 		String redirectUri = null;
 		
-		if (options.get(OAuthConstants.ENDPOINT_PARAMETER) != null) {
-			endpoint = options.get(OAuthConstants.ENDPOINT_PARAMETER).toString();
+		if (options.get(OAuthConstants.TOKEN_URL) != null) {
+			endpoint = options.get(OAuthConstants.TOKEN_URL).toString();
 		} else {
 			throw new LoginException("Missing endpoint parameter");
 		}
@@ -166,7 +166,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 
 	@Override
 	public boolean logout() throws LoginException {		
-		oauthService.revokeToken(options.get(OAuthConstants.ENDPOINT_PARAMETER).toString(), token.getAccessToken());		
+		oauthService.revokeToken(options.get(OAuthConstants.TOKEN_URL).toString(), token.getAccessToken());		
 		subject.getPrincipals().clear();
 		return true;
 	}	

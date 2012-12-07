@@ -41,7 +41,7 @@ public class OAuthConsumer implements Serializable {
     	
 		Map<String,?> optionsMap = getOptionsMap();
 		
-    	return optionsMap.get(OAuthConstants.ENDPOINT_PARAMETER) 
+    	return optionsMap.get(OAuthConstants.TOKEN_URL) 
     			+ "/services/oauth2/authorize?response_type=code"
 				+ "&client_id=" + optionsMap.get(OAuthConstants.CLIENT_ID_PARAMETER)
 				+ "&redirect_uri=" + URLEncoder.encode(String.valueOf(optionsMap.get(OAuthConstants.REDIRECT_URI_PARAMETER)), "UTF-8")

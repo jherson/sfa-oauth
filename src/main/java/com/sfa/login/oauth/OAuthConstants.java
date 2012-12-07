@@ -2,7 +2,7 @@ package com.sfa.login.oauth;
 
 public class OAuthConstants {
 
-    public static final String ENDPOINT_PARAMETER = "endpoint";
+    public static final String TOKEN_URL = "token_url";
 
     public static final String CLIENT_ID_PARAMETER = "client_id";
 
