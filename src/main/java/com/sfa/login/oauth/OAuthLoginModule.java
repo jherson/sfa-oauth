@@ -87,7 +87,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		if (options.get(OAuthConstants.TOKEN_URL) != null) {
 			endpoint = options.get(OAuthConstants.TOKEN_URL).toString();
 		} else {
-			throw new LoginException("Missing endpoint parameter");
+			throw new LoginException("Missing token url");
 		}
 			
 		if (options.get(OAuthConstants.CLIENT_ID_PARAMETER) != null) {
