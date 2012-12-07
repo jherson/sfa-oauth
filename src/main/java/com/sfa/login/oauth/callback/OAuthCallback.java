@@ -3,6 +3,7 @@ package com.sfa.login.oauth.callback;
 import java.io.Serializable;
 
 import javax.security.auth.callback.Callback;
+import javax.servlet.http.HttpServletResponse;
 
 public class OAuthCallback implements Callback, Serializable {
 
@@ -14,6 +15,7 @@ public class OAuthCallback implements Callback, Serializable {
 	private String username;
 	private String password;
 	private String securityToken;
+	private HttpServletResponse response;
 	
 	public OAuthCallback() {
 		
@@ -66,5 +68,13 @@ public class OAuthCallback implements Callback, Serializable {
 
 	public void setSecurityToken(String securityToken) {
 		this.securityToken = securityToken;
+	}
+		
+	public HttpServletResponse getResponse() {
+		return response;
+	}
+	
+	public void setResponse(HttpServletResponse response) {
+		this.response = response;
 	}
 }

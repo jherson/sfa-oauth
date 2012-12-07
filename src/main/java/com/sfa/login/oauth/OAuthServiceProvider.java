@@ -13,6 +13,7 @@ public class OAuthServiceProvider implements Serializable {
 	private String scope;
 	private String prompt;
 	private String display;	
+	private String state;
 	private String startUrl;
 	
 	public OAuthServiceProvider() {
@@ -73,6 +74,14 @@ public class OAuthServiceProvider implements Serializable {
 
 	public void setDisplay(String display) {
 		this.display = display;
+	}
+	
+	public String getState() {
+		return state;
+	}
+	
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 	public String getStartUrl() {

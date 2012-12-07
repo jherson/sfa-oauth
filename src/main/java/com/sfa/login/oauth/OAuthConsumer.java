@@ -1,22 +1,17 @@
 package com.sfa.login.oauth;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.callback.OAuthCallbackHandler;
+import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.model.Identity;
 import com.sfa.login.oauth.model.Token;
 import com.sfa.login.oauth.principal.IdentityPrincipal;
@@ -29,35 +24,35 @@ public class OAuthConsumer implements Serializable {
 	private Subject subject;
 	
 	public OAuthConsumer() {
-
+		
 	}
 	
     public OAuthConsumer(OAuthServiceProvider serviceProvider) {
-    	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
-		Configuration.setConfiguration(oauthConfig);
+    	setConfiguration(serviceProvider);
     }
-
-    public String getOAuthTokenUrl() throws UnsupportedEncodingException {   
-    	
-		Map<String,?> optionsMap = getOptionsMap();
-		
-    	return optionsMap.get(OAuthConstants.TOKEN_URL) 
-    			+ "/services/oauth2/authorize?response_type=code"
-				+ "&client_id=" + optionsMap.get(OAuthConstants.CLIENT_ID_PARAMETER)
-				+ "&redirect_uri=" + URLEncoder.encode(String.valueOf(optionsMap.get(OAuthConstants.REDIRECT_URI_PARAMETER)), "UTF-8")
-				+ "&scope=" + URLEncoder.encode(String.valueOf(optionsMap.get(OAuthConstants.SCOPE_PARAMETER)), "UTF-8")
-				+ "&prompt=" + optionsMap.get(OAuthConstants.PROMPT_PARAMETER)
-				+ "&display=" + optionsMap.get(OAuthConstants.DISPLAY_PARAMETER)
-				+ "&startURL=" + optionsMap.get(OAuthConstants.START_URL_PARAMETER);        					
-    }
+	
+	public OAuthConsumer(OAuthServiceProvider serviceProvider, Subject subject) {
+		setConfiguration(serviceProvider);
+        setSubject(subject);        
+	}
        
-    public void login(HttpServletResponse response) throws UnsupportedEncodingException, IOException {
-    	response.sendRedirect(getOAuthTokenUrl());
+    public void login(HttpServletResponse response) throws LoginException {
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			response,
+    			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
+    			null, 
+    			null, 
+    			null, 
+    			null, 
+    			null);
+    	
+    	login(callbackHandler);
     }
     
-    public void login(String username, String password, String securityToken) throws LoginException {    	
+    public void authenticate(String username, String password, String securityToken) throws LoginException {    	
     	
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
     			OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType(),
     			null,
     			null, 
@@ -71,6 +66,7 @@ public class OAuthConsumer implements Serializable {
     public void authenticate(String code) throws LoginException {
     	
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
     			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
     			code, 
     			null, 
@@ -81,9 +77,25 @@ public class OAuthConsumer implements Serializable {
     	login(callbackHandler);
     }
     
+    public void authenticate() throws LoginException {
+    	
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
+    			OAuthFlowType.USER_AGENT_FLOW.getFlowType(),
+    			null, 
+    			null, 
+    			null, 
+    			null, 
+    			null);
+    	
+    	login(callbackHandler);
+    	
+    }
+    
     public void refreshToken(String refreshToken) throws LoginException {  	
 		
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
     			OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType(),
     			null, 
     			refreshToken, 
@@ -119,7 +131,7 @@ public class OAuthConsumer implements Serializable {
     }
     
     private void login(CallbackHandler callbackHander) throws LoginException {
-    	loginContext = new LoginContext("OAuth", null, callbackHander, Configuration.getConfiguration());    	
+    	loginContext = new LoginContext("OAuth", getSubject(), callbackHander, Configuration.getConfiguration());    	
     	loginContext.login();
     	setSubject(loginContext.getSubject());
     }
@@ -128,8 +140,8 @@ public class OAuthConsumer implements Serializable {
     	this.subject = subject;
     }
     
-    private Map<String,?> getOptionsMap() {
-    	AppConfigurationEntry[] entries = Configuration.getConfiguration().getAppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule");    	
-		return entries[0].getOptions();
+    private void setConfiguration(OAuthServiceProvider serviceProvider) {
+    	OAuthConfig oauthConfig = new OAuthConfig(serviceProvider);									
+		Configuration.setConfiguration(oauthConfig);
     }
 }
