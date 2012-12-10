@@ -1,6 +1,8 @@
 package com.sfa.login.oauth;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class OAuthServiceProvider implements Serializable {
 
@@ -9,7 +11,7 @@ public class OAuthServiceProvider implements Serializable {
 	private String tokenUrl;
 	private String clientId;
 	private String clientSecret;
-	private String redirectUri;
+	private String callbackUrl;
 	private String scope;
 	private String prompt;
 	private String display;	
@@ -24,71 +26,91 @@ public class OAuthServiceProvider implements Serializable {
 		return tokenUrl;
 	}
 	
-	public void setTokenUrl(String tokenUrl) {
+	public OAuthServiceProvider setTokenUrl(String tokenUrl) {
 		this.tokenUrl = tokenUrl;
+		return this;
 	}
 	
 	public String getClientId() {
 		return clientId;
 	}
 	
-	public void setClientId(String clientId) {
+	public OAuthServiceProvider setClientId(String clientId) {
 		this.clientId = clientId;
+		return this;
 	}
 	
 	public String getClientSecret() {
 		return clientSecret;
 	}
 	
-	public void setClientSecret(String clientSecret) {
+	public OAuthServiceProvider setClientSecret(String clientSecret) {
 		this.clientSecret = clientSecret;
+		return this;
 	}
 	
-	public String getRedirectUri() {
-		return redirectUri;
+	public String getCallbackUrl() {
+		return callbackUrl;
 	}
 	
-	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
+	public OAuthServiceProvider setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+		return this;
 	}
 	
 	public String getScope() {
-		return scope;
+		if (scope != null) {
+			try {
+				return URLEncoder.encode(scope, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 
-	public void setScope(String scope) {
+	public OAuthServiceProvider setScope(String scope) {
 		this.scope = scope;
+		return this;
 	}
 
 	public String getPrompt() {
 		return prompt;
 	}
 
-	public void setPrompt(String prompt) {
+	public OAuthServiceProvider setPrompt(String prompt) {
 		this.prompt = prompt;
+		return this;
 	}
 
 	public String getDisplay() {
 		return display;
 	}
 
-	public void setDisplay(String display) {
+	public OAuthServiceProvider setDisplay(String display) {
 		this.display = display;
+		return this;
 	}
 	
 	public String getState() {
 		return state;
 	}
 	
-	public void setState(String state) {
+	public OAuthServiceProvider setState(String state) {
 		this.state = state;
+		return this;
 	}
 	
 	public String getStartUrl() {
 		return startUrl;
 	}
 	
-	public void setStartUrl(String startUrl) {
+	public OAuthServiceProvider setStartUrl(String startUrl) {
 		this.startUrl = startUrl;
+		return this;
+	}
+	
+	public OAuthConsumer build() {
+		return new OAuthConsumer(this);
 	}
 }

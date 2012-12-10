@@ -13,7 +13,7 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 	private static final long serialVersionUID = 1173111272806803501L;
 	
 	private HttpServletResponse response;
-	private String flowType;
+	private OAuthFlowType flowType;
 	private String code;
 	private String refreshToken;
 	private String username;
@@ -22,7 +22,7 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 
 	public OAuthCallbackHandler(
 			HttpServletResponse response,
-			String flowType,			
+			OAuthFlowType flowType,			
 			String code, 
 			String refreshToken, 
 			String username, 

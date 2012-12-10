@@ -39,7 +39,7 @@ public class OAuthConsumer implements Serializable {
     public void login(HttpServletResponse response) throws LoginException {
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			response,
-    			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
+    			OAuthFlowType.WEB_SERVER_FLOW,
     			null, 
     			null, 
     			null, 
@@ -49,11 +49,10 @@ public class OAuthConsumer implements Serializable {
     	login(callbackHandler);
     }
     
-    public void authenticate(String username, String password, String securityToken) throws LoginException {    	
-    	
+    public void authenticate(String username, String password, String securityToken) throws LoginException {    	   	
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			null,
-    			OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType(),
+    			OAuthFlowType.USERNAME_PASSWORD_FLOW,
     			null,
     			null, 
     			username, 
@@ -63,11 +62,10 @@ public class OAuthConsumer implements Serializable {
     	login(callbackHandler);
     }
     
-    public void authenticate(String code) throws LoginException {
-    	
+    public void authenticate(String code) throws LoginException {    	
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			null,
-    			OAuthFlowType.WEB_SERVER_FLOW.getFlowType(),
+    			OAuthFlowType.WEB_SERVER_FLOW,
     			code, 
     			null, 
     			null, 
@@ -77,11 +75,10 @@ public class OAuthConsumer implements Serializable {
     	login(callbackHandler);
     }
     
-    public void authenticate() throws LoginException {
-    	
+    public void authenticate(HttpServletResponse response) throws LoginException {   	
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			null,
-    			OAuthFlowType.USER_AGENT_FLOW.getFlowType(),
+    			OAuthFlowType.USER_AGENT_FLOW,
     			null, 
     			null, 
     			null, 
@@ -96,7 +93,7 @@ public class OAuthConsumer implements Serializable {
 		
     	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
     			null,
-    			OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType(),
+    			OAuthFlowType.REFRESH_TOKEN_FLOW,
     			null, 
     			refreshToken, 
     			null, 

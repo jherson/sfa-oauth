@@ -66,17 +66,20 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		return response.getEntity();		
 	}
 	
-	@Override
 	public String getAuthResponse(String tokenUrl, String clientId, String redirectUri) throws LoginException {
-		String url = tokenUrl + "/services/oauth2/authorize"; 
+		String authorizationUrl = tokenUrl + "/services/oauth2/authorize";	
 		
-		ClientRequest request = new ClientRequest(url);
+		ClientRequest request = new ClientRequest(authorizationUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
 		request.header("X-PrettyPrint", "1");
-		request.queryParameter(OAuthConstants.RESPONSE_TYPE_PARAMETER, OAuthConstants.TOKEN_PARAMETER);
+		
+		request.queryParameter(OAuthConstants.RESPONSE_TYPE_PARAMETER, OAuthConstants.TOKEN_PARAMETER);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
+		request.queryParameter(OAuthConstants.SCOPE_PARAMETER, "api refresh_token");
+		request.queryParameter(OAuthConstants.PROMPT_PARAMETER, "login");
+		request.queryParameter(OAuthConstants.DISPLAY_PARAMETER, "popup");
 		
 		ClientResponse<String> response = null;
 		try {
@@ -96,8 +99,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Authorization", "OAuth " + accessToken);
 		request.header("Content-type", "application/json");
+		request.header("Authorization", "OAuth " + accessToken);
 		
 		ClientResponse<String> response = null;
 		try {

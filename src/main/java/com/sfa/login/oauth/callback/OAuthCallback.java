@@ -9,7 +9,7 @@ public class OAuthCallback implements Callback, Serializable {
 
 	private static final long serialVersionUID = 7612224786750192425L;
 
-	private String flowType;
+	private OAuthFlowType flowType;
 	private String code;
 	private String refreshToken;
 	private String username;
@@ -22,11 +22,11 @@ public class OAuthCallback implements Callback, Serializable {
 	}
 	
 
-	public String getFlowType() {
+	public OAuthFlowType getFlowType() {
 		return flowType;
 	}
 
-	public void setFlowType(String flowType) {
+	public void setFlowType(OAuthFlowType flowType) {
 		this.flowType = flowType;
 	}
 

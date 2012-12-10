@@ -23,7 +23,7 @@ public class OAuthConfig extends Configuration implements Serializable {
 		optionsMap.put(OAuthConstants.TOKEN_URL, serviceProvider.getTokenUrl());
 		optionsMap.put(OAuthConstants.CLIENT_ID_PARAMETER, serviceProvider.getClientId());
 		optionsMap.put(OAuthConstants.CLIENT_SECRET_PARAMETER, serviceProvider.getClientSecret());
-		optionsMap.put(OAuthConstants.REDIRECT_URI_PARAMETER, serviceProvider.getRedirectUri());
+		optionsMap.put(OAuthConstants.REDIRECT_URI_PARAMETER, serviceProvider.getCallbackUrl());
 		optionsMap.put(OAuthConstants.SCOPE_PARAMETER, serviceProvider.getScope());
 		optionsMap.put(OAuthConstants.PROMPT_PARAMETER, serviceProvider.getPrompt());
 		optionsMap.put(OAuthConstants.DISPLAY_PARAMETER, serviceProvider.getDisplay());

@@ -1,8 +1,16 @@
 package com.sfa.login.oauth;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import javax.net.ssl.HttpsURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -19,6 +27,12 @@ import javax.security.auth.spi.LoginModule;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
+import org.jboss.security.SecurityContext;
+import org.jboss.security.SecurityContextAssociation;
+import org.jboss.security.SecurityContextFactory;
+import org.jboss.security.SubjectInfo;
+import org.jboss.security.config.SecurityConfiguration;
+import org.jboss.security.plugins.JBossSecurityContext;
 
 import com.google.gson.Gson;
 import com.sfa.login.oauth.callback.OAuthFlowType;
@@ -57,8 +71,22 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	public boolean commit() throws LoginException {
 		
 		if (success) {
-			subject.getPrincipals().add(new TokenPrincipal(token));	
-			subject.getPrincipals().add(new IdentityPrincipal(identity));
+		    subject.getPrincipals(TokenPrincipal.class).clear();
+		    subject.getPrincipals(IdentityPrincipal.class).clear();
+		
+			if (token != null) {
+			    subject.getPrincipals().add(new TokenPrincipal(token));	
+			}
+			
+			if (identity != null) {
+			    subject.getPrincipals().add(new IdentityPrincipal(identity));
+			}
+			
+			SecurityContext securityContext = new JBossSecurityContext("OAuthRealm");
+			SubjectInfo subjectInfo = securityContext.getSubjectInfo();
+			subjectInfo.setAuthenticatedSubject(subject);
+			securityContext.setSubjectInfo(subjectInfo);
+		    SecurityContextAssociation.setSecurityContext(securityContext);
 		} 
 	    
 	    return success;
@@ -103,6 +131,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			
 		OAuthCallback callback = (OAuthCallback) callbacks[0];
 		
+		log.info(callback.getFlowType().toString());
+		
 		/**
 		 * if callback contains an HttpServletResponse 
 		 * then route the response to the OAuth url
@@ -112,32 +142,59 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		if (callback.getResponse() != null) {
 			
 			/**
-			 * build the OAuth URL from options
+			 * build the OAuth URL based on the flow from options
 			 */
 			
-			String authUrl = tokenUrl 
-					+ "/services/oauth2/authorize?response_type=code"
-					+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + clientId
-					+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + redirectUri
-					+ "&" + OAuthConstants.SCOPE_PARAMETER + "=" + getScope()
-					+ "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt()
-					+ "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();	
+			String authUrl = getAuthorizationUrl(tokenUrl, callback.getFlowType());
+			
+			log.info("auth URL: " + authUrl);
 			
 			/**
 			 * do the redirect
 			 */
+			
+//		    try {
+//				HttpsURLConnection request = (HttpsURLConnection) new URL(authUrl).openConnection();
+//				request.setDoOutput(Boolean.TRUE);
+//				request.setRequestMethod("POST");
+//				request.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+//				request.setRequestProperty("Content-Type", "application/json");
+//				request.setRequestProperty("Accept", "application/json");
+//				
+//				String params = "?" + OAuthConstants.RESPONSE_TYPE_PARAMETER + "=" + OAuthConstants.TOKEN_PARAMETER
+//						+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + getClientId()
+//						+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getRedirectUri()
+//						+ "&" + OAuthConstants.SCOPE_PARAMETER + "=" + URLEncoder.encode(getScope(),"UTF-8")
+//						+ "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt()
+//						+ "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();
+//				
+//				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(request.getOutputStream(), "UTF-8"));
+//				writer.write(params);
+//				writer.close();
+				
+				//request.setRequestProperty("Content-type", "application/json");
+				//request.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+//				request.connect();
+//				
+//				log.info(String.valueOf(request.getResponseCode()));
+//				log.info(request.getResponseMessage());
+//				
+//				BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+//                String inputLine;
+//                while ((inputLine = in.readLine()) != null) 
+//                    System.out.println(inputLine);
+//                in.close();
+//			} catch (MalformedURLException e) {
+//				log.log(Level.SEVERE, e.getMessage(), e);
+//			} catch (IOException e) {
+//				log.log(Level.SEVERE, e.getMessage(), e);
+//			}
 			
 			try {
 				callback.getResponse().sendRedirect(authUrl);
 			} catch (IOException e) {
                 log.log(Level.SEVERE, e.getMessage(), e);
 			}
-			
-			/**
-			 * set success to false which will call abort 
-			 */
-			
-			success = Boolean.FALSE;
 			
 		} else {
 						
@@ -147,15 +204,17 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			
 			String authResponse = null;	
 			
-			if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW.getFlowType())) {
+			if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW)) {
 				authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, redirectUri, callback.getCode());
-			} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW.getFlowType())) {
+			} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW)) {
 				authResponse = oauthService.refreshAuthToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
-			} else if (callback.getFlowType().equals(OAuthFlowType.USER_AGENT_FLOW.getFlowType())) {
-				
-			} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW.getFlowType())) {	
+			} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW)) {	
 				authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
-			} 
+			} else if (callback.getFlowType().equals(OAuthFlowType.USER_AGENT_FLOW)) {
+				authResponse = oauthService.getAuthResponse(tokenUrl, clientId, redirectUri);
+			} else {
+				throw new LoginException("Unsupported authorization flow: " + callback.getFlowType());
+			}
 			
 			/**
 			 * parse the token response to the Token object
@@ -173,15 +232,19 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 				    			    			
 			String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
 			
-			identity = new Gson().fromJson(identityResponse, Identity.class);	
-			
-			/**
-			 * set success
-			 */
-				    
-			success = Boolean.TRUE;
+			identity = new Gson().fromJson(identityResponse, Identity.class);
 		
 		}
+		
+		/**
+		 * set success
+		 */
+		
+		success = Boolean.TRUE;
+		
+       /**
+        * return success
+        */
 				
 		return success;
 	}
@@ -192,6 +255,27 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		subject.getPrincipals().clear();
 		return true;
 	}	
+	
+	private String getAuthorizationUrl(String instance, OAuthFlowType flowType) throws LoginException {
+		String responseType = null;
+		if (flowType.equals(OAuthFlowType.WEB_SERVER_FLOW)) {
+			responseType = OAuthConstants.CODE_PARAMETER;
+		} else if (flowType.equals(OAuthFlowType.USER_AGENT_FLOW)) {
+			responseType = OAuthConstants.TOKEN_PARAMETER;
+		} else {
+			throw new LoginException("Unsupported authorization flow: " + flowType);
+		}
+		
+		String authorizationUrl = instance + "/services/oauth2/authorize"
+				+ "?" + OAuthConstants.RESPONSE_TYPE_PARAMETER + "=" + responseType
+				+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + getClientId()
+				+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getRedirectUri()
+				+ "&" + OAuthConstants.SCOPE_PARAMETER + "=" + getScope()
+				+ "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt()
+				+ "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();
+					
+		return authorizationUrl;
+	}
 	
 	private String getTokenUrl() throws LoginException {
 		if (options.get(OAuthConstants.TOKEN_URL) != null) {
