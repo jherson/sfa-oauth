@@ -9,9 +9,13 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import javax.net.ssl.HttpsURLConnection;
+
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -25,14 +29,10 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.jboss.as.controller.security.SecurityContext;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
-import org.jboss.security.SecurityContext;
-import org.jboss.security.SecurityContextAssociation;
-import org.jboss.security.SecurityContextFactory;
-import org.jboss.security.SubjectInfo;
-import org.jboss.security.config.SecurityConfiguration;
-import org.jboss.security.plugins.JBossSecurityContext;
+
 
 import com.google.gson.Gson;
 import com.sfa.login.oauth.callback.OAuthFlowType;
@@ -80,13 +80,9 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			
 			if (identity != null) {
 			    subject.getPrincipals().add(new IdentityPrincipal(identity));
-			}
+			}	
 			
-			SecurityContext securityContext = new JBossSecurityContext("OAuthRealm");
-			SubjectInfo subjectInfo = securityContext.getSubjectInfo();
-			subjectInfo.setAuthenticatedSubject(subject);
-			securityContext.setSubjectInfo(subjectInfo);
-		    SecurityContextAssociation.setSecurityContext(securityContext);
+			SecurityContext.setSubject(subject);
 		} 
 	    
 	    return success;
@@ -131,8 +127,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			
 		OAuthCallback callback = (OAuthCallback) callbacks[0];
 		
-		log.info(callback.getFlowType().toString());
-		
 		/**
 		 * if callback contains an HttpServletResponse 
 		 * then route the response to the OAuth url
@@ -153,47 +147,10 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			 * do the redirect
 			 */
 			
-//		    try {
-//				HttpsURLConnection request = (HttpsURLConnection) new URL(authUrl).openConnection();
-//				request.setDoOutput(Boolean.TRUE);
-//				request.setRequestMethod("POST");
-//				request.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-//				request.setRequestProperty("Content-Type", "application/json");
-//				request.setRequestProperty("Accept", "application/json");
-//				
-//				String params = "?" + OAuthConstants.RESPONSE_TYPE_PARAMETER + "=" + OAuthConstants.TOKEN_PARAMETER
-//						+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + getClientId()
-//						+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getRedirectUri()
-//						+ "&" + OAuthConstants.SCOPE_PARAMETER + "=" + URLEncoder.encode(getScope(),"UTF-8")
-//						+ "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt()
-//						+ "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();
-//				
-//				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(request.getOutputStream(), "UTF-8"));
-//				writer.write(params);
-//				writer.close();
-				
-				//request.setRequestProperty("Content-type", "application/json");
-				//request.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-//				request.connect();
-//				
-//				log.info(String.valueOf(request.getResponseCode()));
-//				log.info(request.getResponseMessage());
-//				
-//				BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-//                String inputLine;
-//                while ((inputLine = in.readLine()) != null) 
-//                    System.out.println(inputLine);
-//                in.close();
-//			} catch (MalformedURLException e) {
-//				log.log(Level.SEVERE, e.getMessage(), e);
-//			} catch (IOException e) {
-//				log.log(Level.SEVERE, e.getMessage(), e);
-//			}
-			
 			try {
 				callback.getResponse().sendRedirect(authUrl);
 			} catch (IOException e) {
-                log.log(Level.SEVERE, e.getMessage(), e);
+				throw new LoginException("Unable to do the redirect: " + e);
 			}
 			
 		} else {
@@ -232,8 +189,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 				    			    			
 			String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
 			
-			identity = new Gson().fromJson(identityResponse, Identity.class);
-		
+			identity = new Gson().fromJson(identityResponse, Identity.class);		
 		}
 		
 		/**
