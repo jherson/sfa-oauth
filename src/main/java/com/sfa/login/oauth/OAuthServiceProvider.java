@@ -1,116 +1,129 @@
 package com.sfa.login.oauth;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.login.Configuration;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletResponse;
+
+import com.sfa.login.oauth.callback.OAuthCallbackHandler;
+import com.sfa.login.oauth.callback.OAuthFlowType;
 
 public class OAuthServiceProvider implements Serializable {
 
-	private static final long serialVersionUID = 4658561512368737107L;
+	private static final long serialVersionUID = 8065223488307981986L;
+	private static Logger log = Logger.getLogger(OAuthServiceProvider.class.getName()); 
+	private LoginContext loginContext;
+	private Subject subject;
 	
-	private String tokenUrl;
-	private String clientId;
-	private String clientSecret;
-	private String callbackUrl;
-	private String scope;
-	private String prompt;
-	private String display;	
-	private String state;
-	private String startUrl;
+    public OAuthServiceProvider(OAuthConfig oauthConfig) {
+    	setConfiguration(oauthConfig);
+    }
 	
-	public OAuthServiceProvider() {
+	public OAuthServiceProvider(OAuthConfig oauthConfig, Subject subject) {
+		setConfiguration(oauthConfig);
+        setSubject(subject);        
+	}
+       
+    public void login(HttpServletResponse response) throws LoginException {
+    	OAuthConfig oauthConfig = (OAuthConfig) Configuration.getConfiguration();
+    	
+    	/**
+		 * build the OAuth URL based on the flow from options
+		 */
 		
-	}
-	
-	public String getTokenUrl() {
-		return tokenUrl;
-	}
-	
-	public OAuthServiceProvider setTokenUrl(String tokenUrl) {
-		this.tokenUrl = tokenUrl;
-		return this;
-	}
-	
-	public String getClientId() {
-		return clientId;
-	}
-	
-	public OAuthServiceProvider setClientId(String clientId) {
-		this.clientId = clientId;
-		return this;
-	}
-	
-	public String getClientSecret() {
-		return clientSecret;
-	}
-	
-	public OAuthServiceProvider setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-		return this;
-	}
-	
-	public String getCallbackUrl() {
-		return callbackUrl;
-	}
-	
-	public OAuthServiceProvider setCallbackUrl(String callbackUrl) {
-		this.callbackUrl = callbackUrl;
-		return this;
-	}
-	
-	public String getScope() {
-		if (scope != null) {
-			try {
-				return URLEncoder.encode(scope, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+		String authUrl = oauthConfig.buildAuthUrl();
+		
+		log.info("auth URL: " + authUrl);
+		
+		/**
+		 * do the redirect
+		 */
+		
+		try {
+			response.sendRedirect(authUrl);
+		} catch (IOException e) {
+			throw new LoginException("Unable to do the redirect: " + e);
 		}
-		return null;
-	}
-
-	public OAuthServiceProvider setScope(String scope) {
-		this.scope = scope;
-		return this;
-	}
-
-	public String getPrompt() {
-		return prompt;
-	}
-
-	public OAuthServiceProvider setPrompt(String prompt) {
-		this.prompt = prompt;
-		return this;
-	}
-
-	public String getDisplay() {
-		return display;
-	}
-
-	public OAuthServiceProvider setDisplay(String display) {
-		this.display = display;
-		return this;
-	}
-	
-	public String getState() {
-		return state;
-	}
-	
-	public OAuthServiceProvider setState(String state) {
-		this.state = state;
-		return this;
-	}
-	
-	public String getStartUrl() {
-		return startUrl;
-	}
-	
-	public OAuthServiceProvider setStartUrl(String startUrl) {
-		this.startUrl = startUrl;
-		return this;
-	}
-	
-	public OAuthConsumer build() {
-		return new OAuthConsumer(this);
-	}
+    }
+    
+    public void authenticate(String username, String password, String securityToken) throws LoginException {    	   	
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
+    			OAuthFlowType.USERNAME_PASSWORD_FLOW,
+    			null,
+    			null, 
+    			username, 
+    			password, 
+    			securityToken);
+		    	    	
+    	login(callbackHandler);
+    }
+    
+    public void authenticate(String code) throws LoginException {    	
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
+    			OAuthFlowType.WEB_SERVER_FLOW,
+    			code, 
+    			null, 
+    			null, 
+    			null, 
+    			null);
+    	
+    	login(callbackHandler);
+    }
+    
+    public void authenticate(HttpServletResponse response) throws LoginException {   	
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
+    			OAuthFlowType.USER_AGENT_FLOW,
+    			null, 
+    			null, 
+    			null, 
+    			null, 
+    			null);
+    	
+    	login(callbackHandler);
+    	
+    }
+    
+    public void refreshToken(String refreshToken) throws LoginException {  			
+    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
+    			null,
+    			OAuthFlowType.REFRESH_TOKEN_FLOW,
+    			null, 
+    			refreshToken, 
+    			null, 
+    			null, 
+    			null);
+    	
+    	login(callbackHandler);
+    }
+    
+    public void logout() throws LoginException {
+    	loginContext.logout();
+    }
+    
+    public Subject getSubject() {
+    	return subject;
+    }
+    
+    public void setSubject(Subject subject) {
+    	this.subject = subject;
+    }
+    
+    private void login(CallbackHandler callbackHander) throws LoginException {
+    	loginContext = new LoginContext("OAuth", getSubject(), callbackHander, Configuration.getConfiguration());    	
+    	loginContext.login();
+    	setSubject(loginContext.getSubject());
+    }
+   
+    private void setConfiguration(OAuthConfig oauthConfig) {							
+		Configuration.setConfiguration(oauthConfig);
+    }
 }

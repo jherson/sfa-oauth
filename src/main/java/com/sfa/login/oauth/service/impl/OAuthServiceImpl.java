@@ -16,9 +16,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	
 	@Override
 	public String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException {
-        String url = tokenUrl + "/services/oauth2/token";
-        
-		ClientRequest request = new ClientRequest(url);
+		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
 		request.header("X-PrettyPrint", "1");
@@ -42,9 +40,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	
 	@Override
 	public String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String redirectUri, String code) throws LoginException {
-        String url = tokenUrl + "/services/oauth2/token";
-        
-		ClientRequest request = new ClientRequest(url);
+		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
 		request.header("X-PrettyPrint", "1");
@@ -66,10 +62,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		return response.getEntity();		
 	}
 	
-	public String getAuthResponse(String tokenUrl, String clientId, String redirectUri) throws LoginException {
-		String authorizationUrl = tokenUrl + "/services/oauth2/authorize";	
-		
-		ClientRequest request = new ClientRequest(authorizationUrl);
+	public String getAuthResponse(String authUrl, String clientId, String redirectUri) throws LoginException {
+		ClientRequest request = new ClientRequest(authUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
 		request.header("X-PrettyPrint", "1");

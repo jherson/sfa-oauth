@@ -2,7 +2,11 @@ package com.sfa.login.oauth;
 
 public class OAuthConstants {
 
-    public static final String TOKEN_URL = "token_url";
+    public static final String AUTHORIZE_URL = "authorizeUrl";
+    
+    public static final String TOKEN_URL = "tokenUrl";
+    
+    public static final String REVOKE_URL = "revokeUrl";
     
     public static final String GRANT_TYPE_PARAMETER = "grant_type";
     
