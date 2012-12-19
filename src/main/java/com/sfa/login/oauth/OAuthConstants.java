@@ -32,8 +32,6 @@ public class OAuthConstants {
     
     public static final String PROMPT_PARAMETER = "prompt";
     
-    public static final String START_URL_PARAMETER = "startUrl";
-    
     public static final String STATE_PARAMETER = "state";
     
     public static final String REFRESH_TOKEN_PARAMETER = "refresh_token";

@@ -22,11 +22,10 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private String prompt;
 	private String display;	
 	private String state;
-	private String startUrl;
 	private Boolean isSandbox;
 	
 	static {
-        ENDPOINTS = new HashMap<String, String>();
+        ENDPOINTS = new HashMap<String, String>();        
         ENDPOINTS.put(OAuthConstants.AUTHORIZE_URL, "https://test.salesforce.com/services/oauth2/authorize");
         ENDPOINTS.put(OAuthConstants.TOKEN_URL, "https://test.salesforce.com/services/oauth2/token");
         ENDPOINTS.put(OAuthConstants.REVOKE_URL, "https://test.salesforce.com/services/oauth2/revoke");
@@ -37,13 +36,28 @@ public class OAuthConfig extends Configuration implements Serializable {
 	}
 	
 	public String buildAuthUrl() {
-		return ENDPOINTS.get(OAuthConstants.AUTHORIZE_URL)
+		String authUrl = ENDPOINTS.get(OAuthConstants.AUTHORIZE_URL)
 				+ "?" + OAuthConstants.RESPONSE_TYPE_PARAMETER + "=" + OAuthConstants.CODE_PARAMETER
 				+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + getClientId()
-				+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getCallbackUrl()
-				+ "&" + OAuthConstants.SCOPE_PARAMETER + "=" + getScope()
-				+ "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt()
-				+ "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();
+				+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getCallbackUrl();
+		
+		if (getScope() != null) { 
+			authUrl +=  "&" + OAuthConstants.SCOPE_PARAMETER + "=" + getScope();
+		}
+		
+		if (getPrompt() != null) {
+			authUrl +=  "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt();
+		}
+		
+		if (getDisplay() != null) {
+			authUrl +=  "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();
+		}
+		
+		if (getState() != null) {
+			authUrl += "&" + OAuthConstants.STATE_PARAMETER + "=" + getState();
+		}
+		
+		return authUrl;
 	}
 	
 	public String getClientId() {
@@ -116,15 +130,6 @@ public class OAuthConfig extends Configuration implements Serializable {
 		return this;
 	}
 	
-	public String getStartUrl() {
-		return startUrl;
-	}
-	
-	public OAuthConfig setStartUrl(String startUrl) {
-		this.startUrl = startUrl;
-		return this;
-	}
-	
 	public Boolean getIsSandbox() {
 		return isSandbox;
 	}
@@ -149,7 +154,7 @@ public class OAuthConfig extends Configuration implements Serializable {
 		optionsMap.put(OAuthConstants.SCOPE_PARAMETER, this.getScope());
 		optionsMap.put(OAuthConstants.PROMPT_PARAMETER, this.getPrompt());
 		optionsMap.put(OAuthConstants.DISPLAY_PARAMETER, this.getDisplay());
-		optionsMap.put(OAuthConstants.START_URL_PARAMETER, this.getStartUrl());
+		optionsMap.put(OAuthConstants.STATE_PARAMETER, this.getState());
 	
 		AppConfigurationEntry[] entries = new AppConfigurationEntry[1];
 		entries[0] = new AppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);

@@ -2,7 +2,6 @@ package com.sfa.login.oauth;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -16,8 +15,7 @@ import com.sfa.login.oauth.callback.OAuthFlowType;
 
 public class OAuthServiceProvider implements Serializable {
 
-	private static final long serialVersionUID = 8065223488307981986L;
-	private static Logger log = Logger.getLogger(OAuthServiceProvider.class.getName()); 
+	private static final long serialVersionUID = 8065223488307981986L; 
 	private LoginContext loginContext;
 	private Subject subject;
 	
@@ -38,8 +36,6 @@ public class OAuthServiceProvider implements Serializable {
 		 */
 		
 		String authUrl = oauthConfig.buildAuthUrl();
-		
-		log.info("auth URL: " + authUrl);
 		
 		/**
 		 * do the redirect
