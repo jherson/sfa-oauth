@@ -109,9 +109,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	}
 
 	@Override
-	public void revokeToken(String tokenUrl, String accessToken) throws LoginException {
-		String revokeUrl = tokenUrl + "/services/oauth2/revoke";
-
+	public void revokeToken(String revokeUrl, String accessToken) throws LoginException {
 		ClientRequest request = new ClientRequest(revokeUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.queryParameter(OAuthConstants.TOKEN_PARAMETER, accessToken);
@@ -126,10 +124,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	}
 
 	@Override
-	public String refreshAuthToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException {
-        String url = tokenUrl + "/services/oauth2/token";
-        
-		ClientRequest request = new ClientRequest(url);
+	public String refreshAuthToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException {        
+		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
 		request.header("X-PrettyPrint", "1");

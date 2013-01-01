@@ -177,7 +177,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 
 	@Override
 	public boolean logout() throws LoginException {		
-		oauthService.revokeToken(String.valueOf(options.get(OAuthConstants.REVOKE_URL)), token.getAccessToken());		
+		oauthService.revokeToken(getRevokeUrl(), token.getAccessToken());		
 		subject.getPrincipals().clear();
 		return true;
 	}	
@@ -187,6 +187,14 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			return String.valueOf(options.get(OAuthConstants.TOKEN_URL));
 		} else {
 			throw new LoginException("Missing token url");
+		}
+	}
+	
+	private String getRevokeUrl() throws LoginException {
+		if (options.get(OAuthConstants.REVOKE_URL) != null) {
+			return String.valueOf(options.get(OAuthConstants.REVOKE_URL));
+		} else {
+			throw new LoginException("Missing revoke url");
 		}
 	}
 	

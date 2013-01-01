@@ -3,6 +3,7 @@ package com.sfa.login.oauth;
 import java.io.IOException;
 import java.io.Serializable;
 
+import javax.faces.context.FacesContext;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.Configuration;
@@ -32,6 +33,12 @@ public class OAuthServiceProvider implements Serializable {
     	OAuthConfig oauthConfig = (OAuthConfig) Configuration.getConfiguration();
     	
     	/**
+    	 * initialize a new Subject 
+    	 */
+    	
+    	setSubject(new Subject());
+    	
+    	/**
 		 * build the OAuth URL based on the flow from options
 		 */
 		
@@ -43,9 +50,37 @@ public class OAuthServiceProvider implements Serializable {
 		
 		try {
 			response.sendRedirect(authUrl);
+			return;
 		} catch (IOException e) {
 			throw new LoginException("Unable to do the redirect: " + e);
 		}
+    }
+    
+    public void login(FacesContext context) throws LoginException {
+        OAuthConfig oauthConfig = (OAuthConfig) Configuration.getConfiguration();
+    	
+    	/**
+    	 * initialize a new Subject 
+    	 */
+    	
+    	setSubject(new Subject());
+    	
+    	/**
+		 * build the OAuth URL based on the flow from options
+		 */
+		
+		String authUrl = oauthConfig.buildAuthUrl();
+		
+		/**
+		 * do the redirect
+		 */
+		
+		try {
+			context.getExternalContext().redirect(authUrl);
+			return;
+		} catch (IOException e) {
+			throw new LoginException("Unable to do the redirect: " + e);
+		}	
     }
     
     public void authenticate(String username, String password, String securityToken) throws LoginException {    	   	
