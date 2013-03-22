@@ -6,12 +6,13 @@
 	<groupId>com.sfa.login</groupId>
 	<artifactId>oauth</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>oauth</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<resteasy.version>2.3.1.GA</resteasy.version>
+                <github.maven.repository>file:///home/jherson/workspace/sfa-mvn-repo/releases</github.maven.repository>
 	</properties>
 
 	<dependencies>
@@ -44,6 +45,13 @@
 
 	</dependencies>
 
+        <distributionManagement>
+ 	        <repository>
+		        <id>maven-repo</id>
+		        <url>${github.maven.repository}</url>
+	        </repository>
+        </distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -55,6 +63,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>
