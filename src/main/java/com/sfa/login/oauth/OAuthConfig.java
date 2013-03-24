@@ -13,6 +13,8 @@ import javax.security.auth.login.AppConfigurationEntry;
 public class OAuthConfig extends Configuration implements Serializable {
 	
 	private static final long serialVersionUID = 7354592843495066771L;
+	private static final String LOGIN_URL = "https://login.salesforce.com";
+	private static final String TEST_URL = "https://test.salesforce.com";
 	private static final Map<String, String> ENDPOINTS;
 	
 	private String clientId;
@@ -26,17 +28,17 @@ public class OAuthConfig extends Configuration implements Serializable {
 	
 	static {
         ENDPOINTS = new HashMap<String, String>();        
-        ENDPOINTS.put(OAuthConstants.AUTHORIZE_URL, "https://test.salesforce.com/services/oauth2/authorize");
-        ENDPOINTS.put(OAuthConstants.TOKEN_URL, "https://test.salesforce.com/services/oauth2/token");
-        ENDPOINTS.put(OAuthConstants.REVOKE_URL, "https://test.salesforce.com/services/oauth2/revoke");
+        ENDPOINTS.put(OAuthConstants.AUTHORIZE_ENDPOINT, "/services/oauth2/authorize");
+        ENDPOINTS.put(OAuthConstants.TOKEN_ENDPOINT, "/services/oauth2/token");
+        ENDPOINTS.put(OAuthConstants.REVOKE_ENDPOINT, "/services/oauth2/revoke");
     }
 	
 	public OAuthConfig() {
-		
+		this.isSandbox = Boolean.FALSE;
 	}
 	
 	public String buildAuthUrl() {
-		String authUrl = ENDPOINTS.get(OAuthConstants.AUTHORIZE_URL)
+		String authUrl = getInstanceUrl() + ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT)
 				+ "?" + OAuthConstants.RESPONSE_TYPE_PARAMETER + "=" + OAuthConstants.CODE_PARAMETER
 				+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + getClientId()
 				+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getCallbackUrl();
@@ -146,8 +148,8 @@ public class OAuthConfig extends Configuration implements Serializable {
 	@Override
 	public AppConfigurationEntry[] getAppConfigurationEntry(String name) {				
 		Map<String,String> optionsMap = new HashMap<String,String>();
-		optionsMap.put(OAuthConstants.TOKEN_URL, ENDPOINTS.get(OAuthConstants.TOKEN_URL));
-		optionsMap.put(OAuthConstants.REVOKE_URL, ENDPOINTS.get(OAuthConstants.REVOKE_URL));
+		optionsMap.put(OAuthConstants.TOKEN_ENDPOINT, getInstanceUrl() + ENDPOINTS.get(OAuthConstants.TOKEN_ENDPOINT));
+		optionsMap.put(OAuthConstants.REVOKE_ENDPOINT, getInstanceUrl() + ENDPOINTS.get(OAuthConstants.REVOKE_ENDPOINT));
 		optionsMap.put(OAuthConstants.CLIENT_ID_PARAMETER, this.getClientId());
 		optionsMap.put(OAuthConstants.CLIENT_SECRET_PARAMETER, this.getClientSecret());
 		optionsMap.put(OAuthConstants.REDIRECT_URI_PARAMETER, this.getCallbackUrl());
@@ -160,5 +162,12 @@ public class OAuthConfig extends Configuration implements Serializable {
 		entries[0] = new AppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);
 		
 		return entries;
+	}
+	
+	private String getInstanceUrl() {
+		if (getIsSandbox())
+			return TEST_URL;
+		else
+			return LOGIN_URL;
 	}
 }

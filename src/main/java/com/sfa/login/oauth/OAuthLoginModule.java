@@ -183,24 +183,24 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	}	
 	
 	private String getTokenUrl() throws LoginException {
-		if (options.get(OAuthConstants.TOKEN_URL) != null) {
-			return String.valueOf(options.get(OAuthConstants.TOKEN_URL));
+		if (options.get(OAuthConstants.TOKEN_ENDPOINT) != null) {
+			return String.valueOf(options.get(OAuthConstants.TOKEN_ENDPOINT));
 		} else {
 			throw new LoginException("Missing token url");
 		}
 	}
 	
 	private String getRevokeUrl() throws LoginException {
-		if (options.get(OAuthConstants.REVOKE_URL) != null) {
-			return String.valueOf(options.get(OAuthConstants.REVOKE_URL));
+		if (options.get(OAuthConstants.REVOKE_ENDPOINT) != null) {
+			return String.valueOf(options.get(OAuthConstants.REVOKE_ENDPOINT));
 		} else {
 			throw new LoginException("Missing revoke url");
 		}
 	}
 	
 	private String getAuthUrl() throws LoginException {
-		if (options.get(OAuthConstants.AUTHORIZE_URL) != null) {
-			return String.valueOf(options.get(OAuthConstants.AUTHORIZE_URL));
+		if (options.get(OAuthConstants.AUTHORIZE_ENDPOINT) != null) {
+			return String.valueOf(options.get(OAuthConstants.AUTHORIZE_ENDPOINT));
 		} else {
 			throw new LoginException("Missing authorize url");
 		}
