@@ -136,8 +136,8 @@ public class OAuthConfig extends Configuration implements Serializable {
 		return isSandbox;
 	}
 	
-	public OAuthConfig setIsSandbox(String isSandbox) {
-		this.isSandbox = Boolean.valueOf(isSandbox);
+	public OAuthConfig setIsSandbox(Boolean isSandbox) {
+		this.isSandbox = isSandbox;
 		return this;
 	}
 	
