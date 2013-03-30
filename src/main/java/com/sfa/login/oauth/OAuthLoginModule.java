@@ -37,7 +37,9 @@ import com.google.gson.Gson;
 import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.callback.OAuthCallback;
 import com.sfa.login.oauth.model.Identity;
+import com.sfa.login.oauth.model.Organization;
 import com.sfa.login.oauth.model.Token;
+import com.sfa.login.oauth.principal.OrganizationPrincipal;
 import com.sfa.login.oauth.principal.TokenPrincipal;
 import com.sfa.login.oauth.principal.IdentityPrincipal;
 import com.sfa.login.oauth.service.OAuthService;
@@ -60,6 +62,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	private Boolean success;
 	private Token token;
 	private Identity identity;
+	private Organization organization;
 
 	@Override
 	public boolean abort() throws LoginException {
@@ -69,17 +72,15 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	@Override
 	public boolean commit() throws LoginException {
 		
-		if (success) {
-		    subject.getPrincipals(TokenPrincipal.class).clear();
-		    subject.getPrincipals(IdentityPrincipal.class).clear();
+		subject.getPrincipals(TokenPrincipal.class).clear();
+	    subject.getPrincipals(IdentityPrincipal.class).clear();
+	    subject.getPrincipals(OrganizationPrincipal.class).clear();
 		
-			if (token != null) {
-			    subject.getPrincipals().add(new TokenPrincipal(token));	
-			}
-			
-			if (identity != null) {
-			    subject.getPrincipals().add(new IdentityPrincipal(identity));
-			}	
+		if (success) {
+		    
+			subject.getPrincipals().add(new TokenPrincipal(token));	
+			subject.getPrincipals().add(new IdentityPrincipal(identity));
+			subject.getPrincipals().add(new OrganizationPrincipal(organization));
 			
 			SecurityContext.setSubject(subject);
 		} 
@@ -155,12 +156,20 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		}	
 		
 		/**
-		 * parce the identify response to the Identity object
+		 * parce the identity response to the Identity object
 		 */
 			    			    			
 		String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
 		
 		identity = new Gson().fromJson(identityResponse, Identity.class);		
+		
+		/**
+		 * parse the organization response to the Organization object
+		 */
+		
+		String organizationResponse = oauthService.getOrganizationInfo(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
+		
+		organization = new Gson().fromJson(organizationResponse, Organization.class);
 		
 		/**
 		 * set success

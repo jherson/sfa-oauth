@@ -47,11 +47,11 @@
         <distributionManagement>
  	        <repository>
 		        <id>maven-repo</id>
-		        <url>file:///home/jherson/workspace/sfa-mvn-repo/releases</url>
+		        <url>file:///${user.home}/workspace/sfa-mvn-repo/releases</url>
 	        </repository>
                 <snapshotRepository>
                         <id>maven-repo</id>
-                        <url>file:///home/jherson/workspace/sfa-mvn-repo/snapshots</url>
+                        <url>file:///${user.home}/workspace/sfa-mvn-repo/snapshots</url>
                 </snapshotRepository>
         </distributionManagement>
 

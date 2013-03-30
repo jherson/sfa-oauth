@@ -9,5 +9,7 @@ public interface OAuthService {
 	public String getIdentity(String tokenUrl, String id, String accessToken) throws LoginException;	
 	public String refreshAuthToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException;	
 	public String getAuthResponse(String tokenUrl, String clientId, String redirectUrl) throws LoginException;
+	public String getUserInfo(String restEndpoint, String userId, String accessToken) throws LoginException;
+	public String getOrganizationInfo(String restEndpoint, String organizationId, String accessToken) throws LoginException;
 	public void revokeToken(String revokeUrl, String accessToken) throws LoginException;
 }

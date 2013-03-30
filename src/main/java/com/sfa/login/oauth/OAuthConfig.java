@@ -141,6 +141,16 @@ public class OAuthConfig extends Configuration implements Serializable {
 		return this;
 	}
 	
+	public String getEndpoint() {
+		String endpoint = null;
+		if (getIsSandbox()) {
+			endpoint = TEST_URL;
+		} else {
+			endpoint = LOGIN_URL;
+		}
+		return endpoint;
+	}
+	
 	public OAuthServiceProvider build() {
 		return new OAuthServiceProvider(this);
 	}

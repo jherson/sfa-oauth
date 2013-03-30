@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Identity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4996085598592993920L;
 
 	@SerializedName("id")
 	private String id;
@@ -54,6 +54,9 @@ public class Identity implements Serializable {
 	@SerializedName("urls")
 	private Urls urls;
 	
+	public Identity() {
+		
+	}
 	
 	public String getId() {
 		return id;

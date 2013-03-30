@@ -146,4 +146,49 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		return response.getEntity();	
 	}
 
+	@Override
+	public String getUserInfo(String restEndpoint, String userId, String accessToken) throws LoginException {
+		String url = restEndpoint.replace("{version}", "latest");			
+		String query = "Select Profile.Name from User Where Id = " + userId;
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/x-www-form-urlencoded");
+		request.header("Content-type", "application/json");
+		request.header("Authorization", "OAuth " + accessToken);
+		request.queryParameter("q", query);	
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
+		}
+		
+		return response.getEntity();
+	}
+	
+	@Override
+	public String getOrganizationInfo(String restEndpoint, String organizationId, String accessToken) throws LoginException {
+		String url = restEndpoint.replace("{version}", "latest");		
+		String query = "Select Name from Orgaization Where Id = " + organizationId;
+		
+		ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/x-www-form-urlencoded");
+		request.header("Content-type", "application/json");
+		request.header("Authorization", "OAuth " + accessToken);
+		request.queryParameter("q", query);	
+		
+		ClientResponse<String> response = null;
+		try {
+			response = request.post(String.class);
+		} catch (Exception e) {
+			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
+		}
+		
+		return response.getEntity();
+	}
 }
