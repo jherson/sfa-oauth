@@ -1,6 +1,8 @@
 package com.sfa.login.oauth.service.impl;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.security.auth.login.LoginException;
 
@@ -13,6 +15,7 @@ import com.sfa.login.oauth.service.OAuthService;
 public class OAuthServiceImpl implements OAuthService, Serializable {
 
 	private static final long serialVersionUID = 1819521597953621629L;
+	private static final String API_VERSION = "27.0";
 	
 	@Override
 	public String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException {
@@ -148,14 +151,18 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 
 	@Override
 	public String getUserInfo(String restEndpoint, String userId, String accessToken) throws LoginException {
-		String url = restEndpoint.replace("v{version}", "latest");			
-		String query = "Select Profile.Name from User Where Id = " + userId;
+		String url = restEndpoint.replace("{version}", API_VERSION);			
+		String query = "Select Profile.Name from User Where Id = '" + userId + "'";
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");
 		request.header("Authorization", "OAuth " + accessToken);
-		request.queryParameter("q", query);	
+		try {
+			request.queryParameter("q", URLEncoder.encode(query, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+            throw new LoginException(e.getMessage());
+		}
 		
 		ClientResponse<String> response = null;
 		try {
@@ -171,14 +178,18 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	
 	@Override
 	public String getOrganizationInfo(String restEndpoint, String organizationId, String accessToken) throws LoginException {
-		String url = restEndpoint.replace("v{version}", "latest");		
-		String query = "Select Name from Orgaization Where Id = " + organizationId;
+		String url = restEndpoint.replace("{version}", API_VERSION);		
+		String query = "Select Id, Name from Organization Where Id = '" + organizationId + "'";
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");
 		request.header("Authorization", "OAuth " + accessToken);
-		request.queryParameter("q", query);	
+		try {
+			request.queryParameter("q", URLEncoder.encode(query, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+            throw new LoginException(e.getMessage());
+		}	
 		
 		ClientResponse<String> response = null;
 		try {
