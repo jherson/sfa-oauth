@@ -158,15 +158,11 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");
 		request.header("Authorization", "OAuth " + accessToken);
-		try {
-			request.queryParameter("q", URLEncoder.encode(query, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-            throw new LoginException(e.getMessage());
-		}
+		request.queryParameter("q", query);
 		
 		ClientResponse<String> response = null;
 		try {
-			response = request.post(String.class);
+			response = request.get(String.class);
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
 		} finally {
@@ -185,15 +181,11 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");
 		request.header("Authorization", "OAuth " + accessToken);
-		try {
-			request.queryParameter("q", URLEncoder.encode(query, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-            throw new LoginException(e.getMessage());
-		}	
+		request.queryParameter("q", query);	
 		
 		ClientResponse<String> response = null;
 		try {
-			response = request.post(String.class);
+			response = request.get(String.class);
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
 		} finally {

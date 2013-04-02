@@ -169,6 +169,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		
 		String organizationResponse = oauthService.getOrganizationInfo(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
 		
+		System.out.println(organizationResponse);
+		
 		organization = new Gson().fromJson(organizationResponse, Organization.class);
 		
 		/**
