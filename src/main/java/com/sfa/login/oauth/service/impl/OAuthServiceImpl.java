@@ -148,7 +148,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 
 	@Override
 	public String getUserInfo(String restEndpoint, String userId, String accessToken) throws LoginException {
-		String url = restEndpoint.replace("v{version}", "latest");			
+		String url = restEndpoint.replace("{version}", "27.0");			
 		String query = "Select Profile.Name from User Where Id = '" + userId + "'";
 		
 		ClientRequest request = new ClientRequest(url);
@@ -171,7 +171,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	
 	@Override
 	public String getOrganizationInfo(String restEndpoint, String organizationId, String accessToken) throws LoginException {
-		String url = restEndpoint.replace("v{version}", "latest");		
+		String url = restEndpoint.replace("{version}", "27.0");		
 		String query = "Select Id, Name from Organization Where Id = '" + organizationId + "'";
 		
 		ClientRequest request = new ClientRequest(url);

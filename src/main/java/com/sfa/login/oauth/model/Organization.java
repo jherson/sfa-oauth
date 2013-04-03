@@ -8,10 +8,10 @@ public class Organization implements Serializable {
 
 	private static final long serialVersionUID = 570127839450242725L;
 
-	@SerializedName("id")
+	@SerializedName("Id")
 	private String id;
 	
-	@SerializedName("name")
+	@SerializedName("Name")
 	private String name;
 	
 	public Organization() {

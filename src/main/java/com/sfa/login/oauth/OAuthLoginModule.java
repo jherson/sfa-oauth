@@ -34,6 +34,9 @@ import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.callback.OAuthCallback;
 import com.sfa.login.oauth.model.Identity;
@@ -146,7 +149,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		}
 		
 		/**
-		 * parse the token response to the Token object
+		 * parse the authResponse response into a Token object
 		 */
 																		
 		token = new Gson().fromJson(authResponse, Token.class);
@@ -156,22 +159,16 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		}	
 		
 		/**
-		 * parce the identity response to the Identity object
+		 * query the Salesforce Identity server for the user's Identity info
 		 */
 			    			    			
-		String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
-		
-		identity = new Gson().fromJson(identityResponse, Identity.class);		
+		identity = getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());	
 		
 		/**
-		 * parse the organization response to the Organization object
+		 * query Salesforce for the user's Organization info
 		 */
 		
-		String organizationResponse = oauthService.getOrganizationInfo(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
-		
-		System.out.println(organizationResponse);
-		
-		organization = new Gson().fromJson(organizationResponse, Organization.class);
+		organization = getOrganization(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
 		
 		/**
 		 * set success
@@ -263,5 +260,17 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		} else {
 			return null;
 		}
+	}
+	
+	private Identity getIdentity(String instanceUrl, String identityId, String accessToken) throws LoginException {
+        String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
+		return new Gson().fromJson(identityResponse, Identity.class);	
+	}
+	
+	private Organization getOrganization(String queryUrl, String organizationId, String accessToken) throws LoginException {
+        String organizationResponse = oauthService.getOrganizationInfo(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
+		JsonObject queryResult = new JsonParser().parse(organizationResponse).getAsJsonObject();
+		JsonArray records = queryResult.getAsJsonArray("records");
+		return new Gson().fromJson(records.get(0).getAsJsonObject(), Organization.class);
 	}
 }
