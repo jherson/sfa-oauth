@@ -40,9 +40,7 @@ import com.google.gson.JsonParser;
 import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.callback.OAuthCallback;
 import com.sfa.login.oauth.model.Identity;
-import com.sfa.login.oauth.model.Organization;
 import com.sfa.login.oauth.model.Token;
-import com.sfa.login.oauth.principal.OrganizationPrincipal;
 import com.sfa.login.oauth.principal.TokenPrincipal;
 import com.sfa.login.oauth.principal.IdentityPrincipal;
 import com.sfa.login.oauth.service.OAuthService;
@@ -65,7 +63,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	private Boolean success;
 	private Token token;
 	private Identity identity;
-	private Organization organization;
 
 	@Override
 	public boolean abort() throws LoginException {
@@ -77,13 +74,11 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		
 		subject.getPrincipals(TokenPrincipal.class).clear();
 	    subject.getPrincipals(IdentityPrincipal.class).clear();
-	    subject.getPrincipals(OrganizationPrincipal.class).clear();
 		
 		if (success) {
 		    
 			subject.getPrincipals().add(new TokenPrincipal(token));	
 			subject.getPrincipals().add(new IdentityPrincipal(identity));
-			subject.getPrincipals().add(new OrganizationPrincipal(organization));
 			
 			SecurityContext.setSubject(subject);
 		} 
@@ -163,12 +158,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		 */
 			    			    			
 		identity = getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());	
-		
-		/**
-		 * query Salesforce for the user's Organization info
-		 */
-		
-		organization = getOrganization(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
 		
 		/**
 		 * set success
@@ -265,12 +254,5 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	private Identity getIdentity(String instanceUrl, String identityId, String accessToken) throws LoginException {
         String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
 		return new Gson().fromJson(identityResponse, Identity.class);	
-	}
-	
-	private Organization getOrganization(String queryUrl, String organizationId, String accessToken) throws LoginException {
-        String organizationResponse = oauthService.getOrganizationInfo(identity.getUrls().getQuery(), identity.getOrganizationId(), token.getAccessToken());
-		JsonObject queryResult = new JsonParser().parse(organizationResponse).getAsJsonObject();
-		JsonArray records = queryResult.getAsJsonArray("records");
-		return new Gson().fromJson(records.get(0).getAsJsonObject(), Organization.class);
 	}
 }
