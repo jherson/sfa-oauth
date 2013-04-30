@@ -19,7 +19,6 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
-		request.header("X-PrettyPrint", "1");
 		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_PARAMETER);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
@@ -43,7 +42,6 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Content-type", "application/json");	
-		request.header("X-PrettyPrint", "1");
 		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_CODE_PARAMETER);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
@@ -65,9 +63,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	public String getAuthResponse(String authUrl, String clientId, String redirectUri) throws LoginException {
 		ClientRequest request = new ClientRequest(authUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Content-type", "application/json");	
-		request.header("X-PrettyPrint", "1");
-		
+		request.header("Content-type", "application/json");			
 		request.queryParameter(OAuthConstants.RESPONSE_TYPE_PARAMETER, OAuthConstants.TOKEN_PARAMETER);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
