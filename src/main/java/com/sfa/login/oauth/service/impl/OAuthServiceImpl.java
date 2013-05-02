@@ -1,6 +1,8 @@
 package com.sfa.login.oauth.service.impl;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.security.auth.login.LoginException;
 
@@ -18,12 +20,17 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	public String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException {
 		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Content-type", "application/json");	
-		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_PARAMETER);		
+		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_GRANT_TYPE);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
 		request.queryParameter(OAuthConstants.USERNAME_PARAMETER, username);
 		request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, password + securityToken);
+//		
+//		try {
+//			request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, URLEncoder.encode(password + securityToken, "UTF-8"));
+//		} catch (UnsupportedEncodingException e) {
+//			throw new LoginException(e.getMessage());
+//		}
 		
 		ClientResponse<String> response = null;
 		try {
@@ -40,9 +47,8 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	@Override
 	public String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String redirectUri, String code) throws LoginException {
 		ClientRequest request = new ClientRequest(tokenUrl);
-		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Content-type", "application/json");	
-		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_CODE_PARAMETER);		
+		request.header("Content-type", "application/x-www-form-urlencoded");	
+		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
 		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
@@ -62,8 +68,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	
 	public String getAuthResponse(String authUrl, String clientId, String redirectUri) throws LoginException {
 		ClientRequest request = new ClientRequest(authUrl);
-		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Content-type", "application/json");			
+		request.header("Content-type", "application/x-www-form-urlencoded");		
 		request.queryParameter(OAuthConstants.RESPONSE_TYPE_PARAMETER, OAuthConstants.TOKEN_PARAMETER);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
@@ -89,7 +94,6 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		
 		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Content-type", "application/json");
 		request.header("Authorization", "OAuth " + accessToken);
 		
 		ClientResponse<String> response = null;
@@ -123,12 +127,10 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	public String refreshAuthToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException {        
 		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Content-type", "application/json");	
-		request.header("X-PrettyPrint", "1");
-		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_TOKEN_PARAMETER);		
+		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE);		
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
-		request.queryParameter(OAuthConstants.REFRESH_TOKEN_PARAMETER, accessToken);
+		request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE, accessToken);
 		
 		ClientResponse<String> response = null;
 		try {

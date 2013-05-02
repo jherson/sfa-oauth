@@ -1,48 +1,27 @@
 package com.sfa.login.oauth;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import javax.net.ssl.HttpsURLConnection;
-
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.auth.login.Configuration;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 import org.jboss.as.controller.security.SecurityContext;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.callback.OAuthCallback;
+import com.sfa.login.oauth.callback.OAuthFlowType;
 import com.sfa.login.oauth.model.Identity;
 import com.sfa.login.oauth.model.Token;
-import com.sfa.login.oauth.principal.TokenPrincipal;
 import com.sfa.login.oauth.principal.IdentityPrincipal;
+import com.sfa.login.oauth.principal.TokenPrincipal;
 import com.sfa.login.oauth.service.OAuthService;
 import com.sfa.login.oauth.service.impl.OAuthServiceImpl;
 

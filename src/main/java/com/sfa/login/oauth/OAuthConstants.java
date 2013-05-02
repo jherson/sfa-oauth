@@ -8,7 +8,7 @@ public class OAuthConstants {
     
     public static final String REVOKE_ENDPOINT = "revokeUrl";
     
-    public static final String GRANT_TYPE_PARAMETER = "grant_type";
+    public static final String GRANT_TYPE_PARAMETER = "grant_type";        
     
     public static final String TOKEN_PARAMETER = "token";
     
@@ -34,7 +34,9 @@ public class OAuthConstants {
     
     public static final String STATE_PARAMETER = "state";
     
-    public static final String REFRESH_TOKEN_PARAMETER = "refresh_token";
+    public static final String REFRESH_GRANT_TYPE = "refresh_token";
     
-    public static final String AUTHORIZATION_CODE_PARAMETER = "authorization_code";
+    public static final String AUTHORIZATION_GRANT_TYPE = "authorization_code";
+    
+    public static final String PASSWORD_GRANT_TYPE = "password";
 }
