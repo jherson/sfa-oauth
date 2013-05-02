@@ -38,28 +38,39 @@ public class OAuthConfig extends Configuration implements Serializable {
 	}
 	
 	public String buildAuthUrl() {
-		String authUrl = getInstanceUrl() + ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT)
-				+ "?" + OAuthConstants.RESPONSE_TYPE_PARAMETER + "=" + OAuthConstants.CODE_PARAMETER
-				+ "&" + OAuthConstants.CLIENT_ID_PARAMETER + "=" + getClientId()
-				+ "&" + OAuthConstants.REDIRECT_URI_PARAMETER + "=" + getCallbackUrl();
-		
+		StringBuilder authUrl = new StringBuilder().
+				append(getInstanceUrl()).
+				append(ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT)).
+				append("?").
+				append(OAuthConstants.RESPONSE_TYPE_PARAMETER).
+				append("=").
+				append(OAuthConstants.CODE_PARAMETER).
+				append("&").
+				append(OAuthConstants.CLIENT_ID_PARAMETER).
+				append("=").
+				append(getClientId()).
+				append("&").
+				append(OAuthConstants.REDIRECT_URI_PARAMETER).
+				append("=").
+				append(getCallbackUrl());
+        
 		if (getScope() != null) { 
-			authUrl +=  "&" + OAuthConstants.SCOPE_PARAMETER + "=" + getScope();
+			authUrl.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
 		}
 		
 		if (getPrompt() != null) {
-			authUrl +=  "&" + OAuthConstants.PROMPT_PARAMETER + "=" + getPrompt();
+			authUrl.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
 		}
 		
 		if (getDisplay() != null) {
-			authUrl +=  "&" + OAuthConstants.DISPLAY_PARAMETER + "=" + getDisplay();
+			authUrl.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
 		}
 		
 		if (getState() != null) {
-			authUrl += "&" + OAuthConstants.STATE_PARAMETER + "=" + getState();
+			authUrl.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
 		}
 		
-		return authUrl;
+		return authUrl.toString();
 	}
 	
 	public String getClientId() {
@@ -139,16 +150,6 @@ public class OAuthConfig extends Configuration implements Serializable {
 	public OAuthConfig setIsSandbox(Boolean isSandbox) {
 		this.isSandbox = isSandbox;
 		return this;
-	}
-	
-	public String getEndpoint() {
-		String endpoint = null;
-		if (getIsSandbox()) {
-			endpoint = TEST_URL;
-		} else {
-			endpoint = LOGIN_URL;
-		}
-		return endpoint;
 	}
 	
 	public OAuthServiceProvider build() {

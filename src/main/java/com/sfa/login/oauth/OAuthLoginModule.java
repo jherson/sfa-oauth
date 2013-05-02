@@ -129,7 +129,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		token = new Gson().fromJson(authResponse, Token.class);
 				
 		if (token.getError() != null) {
-		 	throw new FailedLoginException(token.getErrorDescription());		 
+		 	throw new FailedLoginException(token.getError() + ": " + token.getErrorDescription());		 
 		}	
 		
 		/**
