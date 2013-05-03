@@ -37,22 +37,22 @@ public class OAuthConfig extends Configuration implements Serializable {
 		this.isSandbox = Boolean.FALSE;
 	}
 	
-	public String buildAuthUrl() {
-		StringBuilder authUrl = new StringBuilder().
-				append(getInstanceUrl()).
-				append(ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT)).
-				append("?").
-				append(OAuthConstants.RESPONSE_TYPE_PARAMETER).
-				append("=").
-				append(OAuthConstants.CODE_PARAMETER).
-				append("&").
-				append(OAuthConstants.CLIENT_ID_PARAMETER).
-				append("=").
-				append(getClientId()).
-				append("&").
-				append(OAuthConstants.REDIRECT_URI_PARAMETER).
-				append("=").
-				append(getCallbackUrl());
+	public String buildLoginUrl() {
+		StringBuilder authUrl = new StringBuilder()
+		        .append(getInstanceUrl())
+		        .append(ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT))
+		        .append("?")
+		        .append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
+		        .append("=")
+		        .append(OAuthConstants.CODE_PARAMETER)
+		        .append("&")
+		        .append(OAuthConstants.CLIENT_ID_PARAMETER)
+		        .append("=")
+		        .append(getClientId())
+		        .append("&")
+		        .append(OAuthConstants.REDIRECT_URI_PARAMETER)
+		        .append("=")
+		        .append(getCallbackUrl());
         
 		if (getScope() != null) { 
 			authUrl.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());

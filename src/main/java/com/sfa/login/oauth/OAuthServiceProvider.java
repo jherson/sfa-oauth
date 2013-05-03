@@ -42,14 +42,14 @@ public class OAuthServiceProvider implements Serializable {
 		 * build the OAuth URL based on the flow from options
 		 */
 		
-		String authUrl = oauthConfig.buildAuthUrl();
+		String loginUrl = oauthConfig.buildLoginUrl();
 		
 		/**
 		 * do the redirect
 		 */
 		
 		try {
-			response.sendRedirect(authUrl);
+			response.sendRedirect(loginUrl);
 			return;
 		} catch (IOException e) {
 			throw new LoginException("Unable to do the redirect: " + e);
@@ -69,7 +69,7 @@ public class OAuthServiceProvider implements Serializable {
 		 * build the OAuth URL based on the flow from options
 		 */
 		
-		String authUrl = oauthConfig.buildAuthUrl();
+		String authUrl = oauthConfig.buildLoginUrl();
 		
 		/**
 		 * do the redirect
