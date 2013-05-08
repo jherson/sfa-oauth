@@ -176,9 +176,12 @@ public class OAuthConfig extends Configuration implements Serializable {
 	}
 	
 	private String getInstanceUrl() {
-		if (getIsSandbox())
-			return TEST_URL;
-		else
-			return LOGIN_URL;
+		String instanceUrl = null;
+		if (getIsSandbox()) {
+			instanceUrl = TEST_URL;
+		} else {
+			instanceUrl = LOGIN_URL;
+		}
+		return instanceUrl;
 	}
 }
