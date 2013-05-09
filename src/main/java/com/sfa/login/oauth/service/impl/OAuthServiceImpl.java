@@ -3,10 +3,12 @@ package com.sfa.login.oauth.service.impl;
 import java.io.Serializable;
 
 import javax.security.auth.login.LoginException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
+//import javax.ws.rs.client.Client;
+//import javax.ws.rs.client.ClientBuilder;
+//import javax.ws.rs.client.Entity;
+//import javax.ws.rs.client.WebTarget;
+//import javax.ws.rs.core.Form;
+//import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -21,20 +23,16 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	@Override
 	public String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException {
 //		Client client = ClientBuilder.newClient();
-//		String response = client.target(tokenUrl)
+//		Response response = client.target(tokenUrl)
 //				.queryParam(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_GRANT_TYPE)
 //				.queryParam(OAuthConstants.CLIENT_ID_PARAMETER, clientId)
 //				.queryParam(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret)
 //				.queryParam(OAuthConstants.USERNAME_PARAMETER, username)
 //				.queryParam(OAuthConstants.PASSWORD_PARAMETER, password + securityToken)
 //				.request("Content-Type", "application/x-www-form-urlencoded")
-//				.post(null, String.class);
-		
-		System.out.println(tokenUrl);
-		System.out.println(clientId);
-		System.out.println(clientSecret);
-		System.out.println(username);
-		System.out.println(password + securityToken);
+//				.post(null);
+//		
+//		return response.readEntity(String.class);
 		
 		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-Type", "application/x-www-form-urlencoded");

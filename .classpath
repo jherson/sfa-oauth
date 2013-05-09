@@ -8,7 +8,7 @@
   <classpathentry kind="var" path="M2_REPO/javax/annotation/javax.annotation-api/1.2-b01/javax.annotation-api-1.2-b01.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/ws/rs/javax.ws.rs-api/2.0-m16/javax.ws.rs-api-2.0-m16.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar" sourcepath="M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.2/commons-codec-1.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
@@ -86,7 +86,7 @@
   <classpathentry kind="var" path="M2_REPO/org/jboss/jbossts/jbossjts-integration/4.16.4.Final/jbossjts-integration-4.16.4.Final.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jboss/web/jbossweb/7.0.0.CR2/jbossweb-7.0.0.CR2.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/jcip/jcip-annotations/1.0/jcip-annotations-1.0.jar"/>
-  <classpathentry kind="lib" path="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.19.x86_64/lib/tools.jar"/>
+  <classpathentry kind="lib" path="/Library/Java/JavaVirtualMachines/1.7.0.jdk/Contents/Home/lib/tools.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jgroups/jgroups/3.0.9.Final/jgroups-3.0.9.Final.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jboss/logmanager/log4j-jboss-logmanager/1.0.0.Final/log4j-jboss-logmanager-1.0.0.Final.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/picketbox/picketbox/4.0.9.Final/picketbox-4.0.9.Final.jar"/>
