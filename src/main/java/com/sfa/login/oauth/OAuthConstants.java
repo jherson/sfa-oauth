@@ -34,9 +34,11 @@ public class OAuthConstants {
     
     public static final String STATE_PARAMETER = "state";
     
+    public static final String OAUTH_TOKEN_PARAMETER = "oauth_token";
+    
     public static final String REFRESH_GRANT_TYPE = "refresh_token";
     
     public static final String AUTHORIZATION_GRANT_TYPE = "authorization_code";
     
-    public static final String PASSWORD_GRANT_TYPE = "password";
+    public static final String PASSWORD_GRANT_TYPE = "password";       
 }

@@ -40,7 +40,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
 		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
 		request.queryParameter(OAuthConstants.USERNAME_PARAMETER, username);
-		request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, password + securityToken);
+		request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, password + (securityToken != null ? securityToken : ""));
 		
 		ClientResponse<String> response = null;
 		try {
@@ -99,16 +99,16 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	}
 
 	@Override
-	public String getIdentity(String tokenUrl, String id, String accessToken) throws LoginException {
-		String url = tokenUrl + "/" + id.substring(id.indexOf("id"));
-		
-		ClientRequest request = new ClientRequest(url);
+	public String getIdentity(String instanceUrl, String identityUrl, String accessToken) throws LoginException {	
+		ClientRequest request = new ClientRequest(instanceUrl + "/" + identityUrl.substring(identityUrl.indexOf("id")));
 		request.header("Content-Type", "application/x-www-form-urlencoded");
-		request.header("Authorization", "OAuth " + accessToken);
+		request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, accessToken);
 		
 		ClientResponse<String> response = null;
 		try {
 			response = request.get(String.class);
+			System.out.println("getIdentity: " + response.getStatus());
+			System.out.println("getIdentity: " + response.getResponseStatus());
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
 		} finally {
