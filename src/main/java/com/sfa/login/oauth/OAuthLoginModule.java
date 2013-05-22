@@ -113,7 +113,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW)) {
 			authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, redirectUri, callback.getCode());
 		} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW)) {
-			authResponse = oauthService.refreshAuthToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
+			authResponse = oauthService.refreshToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
 		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW)) {	
 			authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
 		} else if (callback.getFlowType().equals(OAuthFlowType.USER_AGENT_FLOW)) {

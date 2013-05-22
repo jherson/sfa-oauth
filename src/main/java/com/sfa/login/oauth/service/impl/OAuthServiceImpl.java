@@ -100,15 +100,15 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 
 	@Override
 	public String getIdentity(String instanceUrl, String identityUrl, String accessToken) throws LoginException {	
-		ClientRequest request = new ClientRequest(instanceUrl + "/" + identityUrl.substring(identityUrl.indexOf("id")));
+		//ClientRequest request = new ClientRequest(instanceUrl + "/" + identityUrl.substring(identityUrl.indexOf("id")));
+                ClientRequest request = new ClientRequest(identityUrl);
 		request.header("Content-Type", "application/x-www-form-urlencoded");
 		request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, accessToken);
+                request.followRedirects(Boolean.TRUE);
 		
 		ClientResponse<String> response = null;
 		try {
 			response = request.get(String.class);
-			System.out.println("getIdentity: " + response.getStatus());
-			System.out.println("getIdentity: " + response.getResponseStatus());
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
 		} finally {
@@ -134,7 +134,7 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	}
 
 	@Override
-	public String refreshAuthToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException {        
+	public String refreshToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException {        
 		ClientRequest request = new ClientRequest(tokenUrl);
 		request.header("Content-Type", "application/x-www-form-urlencoded");
 		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE);		
