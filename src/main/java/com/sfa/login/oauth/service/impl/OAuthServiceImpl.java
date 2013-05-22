@@ -99,12 +99,11 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
 	}
 
 	@Override
-	public String getIdentity(String instanceUrl, String identityUrl, String accessToken) throws LoginException {	
-		//ClientRequest request = new ClientRequest(instanceUrl + "/" + identityUrl.substring(identityUrl.indexOf("id")));
-                ClientRequest request = new ClientRequest(identityUrl);
+	public String getIdentity(String identityUrl, String accessToken) throws LoginException {	
+        ClientRequest request = new ClientRequest(identityUrl);
 		request.header("Content-Type", "application/x-www-form-urlencoded");
 		request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, accessToken);
-                request.followRedirects(Boolean.TRUE);
+        request.followRedirects(Boolean.TRUE);
 		
 		ClientResponse<String> response = null;
 		try {

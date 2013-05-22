@@ -231,7 +231,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 	}
 	
 	private Identity getIdentity(Token token) throws LoginException {
-        String identityResponse = oauthService.getIdentity(token.getInstanceUrl(), token.getId(), token.getAccessToken());
+        String identityResponse = oauthService.getIdentity(token.getId(), token.getAccessToken());
 		return new Gson().fromJson(identityResponse, Identity.class);	
 	}
 }
