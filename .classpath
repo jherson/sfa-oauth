@@ -8,6 +8,8 @@
   <classpathentry kind="var" path="M2_REPO/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jboss/resteasy/resteasy-client/3.0.2.Final/resteasy-client-3.0.2.Final.jar"/>
@@ -101,7 +103,7 @@
   <classpathentry kind="var" path="M2_REPO/org/jboss/security/jboss-negotiation-spnego/2.2.0.SP1/jboss-negotiation-spnego-2.2.0.SP1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jboss/spec/javax/security/jacc/jboss-jacc-api_1.4_spec/1.0.2.Final/jboss-jacc-api_1.4_spec-1.0.2.Final.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/picketbox/picketbox-infinispan/4.0.9.Final/picketbox-infinispan-4.0.9.Final.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jboss/spec/javax/faces/jboss-jsf-api_2.1_spec/2.0.5.Final/jboss-jsf-api_2.1_spec-2.0.5.Final.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/faces/jsf-api/2.2.4/jsf-api-2.2.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"/>
 </classpath>
