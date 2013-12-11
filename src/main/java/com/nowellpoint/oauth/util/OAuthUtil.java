@@ -1,13 +1,13 @@
-package com.sfa.login.oauth.util;
+package com.nowellpoint.oauth.util;
 
 import java.util.Iterator;
 
 import javax.security.auth.Subject;
 
-import com.sfa.login.oauth.model.Identity;
-import com.sfa.login.oauth.model.Token;
-import com.sfa.login.oauth.principal.IdentityPrincipal;
-import com.sfa.login.oauth.principal.TokenPrincipal;
+import com.nowellpoint.oauth.model.Identity;
+import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.principal.IdentityPrincipal;
+import com.nowellpoint.principal.TokenPrincipal;
 
 public class OAuthUtil {
 

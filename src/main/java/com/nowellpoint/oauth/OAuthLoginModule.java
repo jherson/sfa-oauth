@@ -1,4 +1,4 @@
-package com.sfa.login.oauth;
+package com.nowellpoint.oauth;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,14 +16,14 @@ import javax.security.auth.spi.LoginModule;
 import org.jboss.as.controller.security.SecurityContext;
 
 import com.google.gson.Gson;
-import com.sfa.login.oauth.callback.OAuthCallback;
-import com.sfa.login.oauth.callback.OAuthFlowType;
-import com.sfa.login.oauth.model.Identity;
-import com.sfa.login.oauth.model.Token;
-import com.sfa.login.oauth.principal.IdentityPrincipal;
-import com.sfa.login.oauth.principal.TokenPrincipal;
-import com.sfa.login.oauth.service.OAuthService;
-import com.sfa.login.oauth.service.impl.OAuthServiceImpl;
+import com.nowellpoint.oauth.callback.OAuthCallback;
+import com.nowellpoint.oauth.callback.OAuthFlowType;
+import com.nowellpoint.oauth.model.Identity;
+import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.service.OAuthService;
+import com.nowellpoint.oauth.service.impl.OAuthServiceImpl;
+import com.nowellpoint.principal.IdentityPrincipal;
+import com.nowellpoint.principal.TokenPrincipal;
 
 @SuppressWarnings("unused")
 public class OAuthLoginModule implements LoginModule, Serializable {
@@ -116,8 +116,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			authResponse = oauthService.refreshToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
 		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW)) {	
 			authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
-		} else if (callback.getFlowType().equals(OAuthFlowType.USER_AGENT_FLOW)) {
-			authResponse = oauthService.getAuthResponse(getAuthUrl(), clientId, redirectUri);
 		} else {
 			throw new LoginException("Unsupported authorization flow: " + callback.getFlowType());
 		}

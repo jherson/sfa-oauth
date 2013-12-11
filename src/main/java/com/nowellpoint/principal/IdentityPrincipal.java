@@ -1,9 +1,9 @@
-package com.sfa.login.oauth.principal;
+package com.nowellpoint.principal;
 
 import java.io.Serializable;
 import java.security.Principal;
 
-import com.sfa.login.oauth.model.Identity;
+import com.nowellpoint.oauth.model.Identity;
 
 public class IdentityPrincipal implements Principal, Serializable {
 

@@ -1,4 +1,4 @@
-package com.sfa.login.oauth.callback;
+package com.nowellpoint.oauth.callback;
 
 import java.io.Serializable;
 

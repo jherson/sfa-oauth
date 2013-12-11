@@ -1,4 +1,4 @@
-package com.sfa.login.oauth;
+package com.nowellpoint.oauth;
 
 public class OAuthConstants {
 

@@ -1,4 +1,4 @@
-package com.sfa.login.oauth;
+package com.nowellpoint.oauth;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,8 +11,8 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sfa.login.oauth.callback.OAuthCallbackHandler;
-import com.sfa.login.oauth.callback.OAuthFlowType;
+import com.nowellpoint.oauth.callback.OAuthCallbackHandler;
+import com.nowellpoint.oauth.callback.OAuthFlowType;
 
 public class OAuthServiceProvider implements Serializable {
 
@@ -107,20 +107,6 @@ public class OAuthServiceProvider implements Serializable {
     			null);
     	
     	login(callbackHandler);
-    }
-    
-    public void authenticate(HttpServletResponse response) throws LoginException {   	
-    	OAuthCallbackHandler callbackHandler = new OAuthCallbackHandler(
-    			null,
-    			OAuthFlowType.USER_AGENT_FLOW,
-    			null, 
-    			null, 
-    			null, 
-    			null, 
-    			null);
-    	
-    	login(callbackHandler);
-    	
     }
     
     public void refreshToken(String refreshToken) throws LoginException {  			

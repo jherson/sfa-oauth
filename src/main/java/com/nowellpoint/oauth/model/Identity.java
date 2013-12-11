@@ -1,4 +1,4 @@
-package com.sfa.login.oauth.model;
+package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 import java.util.Locale;
