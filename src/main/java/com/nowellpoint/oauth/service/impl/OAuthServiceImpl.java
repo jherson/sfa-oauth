@@ -39,8 +39,12 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
         
         String authResponse = null;
         
+        System.out.println("response: " + response.getStatusInfo());
+        
         if (response.getStatusInfo() == Status.OK) {
         	authResponse = response.readEntity(String.class);
+        } else {        	
+        	System.out.println(response.readEntity(String.class));
         }
         
         response.close();
@@ -71,28 +75,6 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
         
         return authResponse;
 	}
-	
-//	public String getAuthResponse(String authUrl, String clientId, String redirectUri) throws LoginException {
-//		ClientRequest request = new ClientRequest(authUrl);
-//		request.header("Content-Type", "application/x-www-form-urlencoded");		
-//		request.queryParameter(OAuthConstants.RESPONSE_TYPE_PARAMETER, OAuthConstants.TOKEN_PARAMETER);		
-//		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
-//		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
-//		request.queryParameter(OAuthConstants.SCOPE_PARAMETER, "api refresh_token");
-//		request.queryParameter(OAuthConstants.PROMPT_PARAMETER, "login");
-//		request.queryParameter(OAuthConstants.DISPLAY_PARAMETER, "popup");
-//		
-//		ClientResponse<String> response = null;
-//		try {
-//			response = request.post(String.class);
-//		} catch (Exception e) {
-//			throw new LoginException(e.getMessage());
-//		} finally {
-//			request.clear();
-//		}
-//		
-//		return response.getEntity();	
-//	}
 
 	@Override
 	public String getIdentity(String identityUrl, String accessToken) throws LoginException {	

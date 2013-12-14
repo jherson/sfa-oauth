@@ -13,8 +13,6 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.jboss.as.controller.security.SecurityContext;
-
 import com.google.gson.Gson;
 import com.nowellpoint.oauth.callback.OAuthCallback;
 import com.nowellpoint.oauth.callback.OAuthFlowType;
@@ -59,7 +57,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			subject.getPrincipals().add(new TokenPrincipal(token));	
 			subject.getPrincipals().add(new IdentityPrincipal(identity));
 			
-			SecurityContext.setSubject(subject);
 		} 
 	    
 	    return success;

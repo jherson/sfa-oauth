@@ -170,7 +170,7 @@ public class OAuthConfig extends Configuration implements Serializable {
 		optionsMap.put(OAuthConstants.STATE_PARAMETER, this.getState());
 	
 		AppConfigurationEntry[] entries = new AppConfigurationEntry[1];
-		entries[0] = new AppConfigurationEntry("com.sfa.login.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);
+		entries[0] = new AppConfigurationEntry("com.nowellpoint.oauth.OAuthLoginModule", AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, optionsMap);
 		
 		return entries;
 	}
