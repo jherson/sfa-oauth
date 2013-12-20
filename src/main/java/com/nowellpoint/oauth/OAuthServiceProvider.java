@@ -11,12 +11,17 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.nowellpoint.oauth.callback.OAuthCallbackHandler;
 import com.nowellpoint.oauth.callback.OAuthFlowType;
+import com.nowellpoint.oauth.model.OrganizationInfo;
+import com.nowellpoint.oauth.service.OAuthService;
+import com.nowellpoint.oauth.service.impl.OAuthServiceImpl;
+import com.nowellpoint.oauth.util.OAuthUtil;
 
 public class OAuthServiceProvider implements Serializable {
 
-	private static final long serialVersionUID = 8065223488307981986L; 
+	private static final long serialVersionUID = 8065223488307981986L;
 	private LoginContext loginContext;
 	private Subject subject;
 	
@@ -132,6 +137,34 @@ public class OAuthServiceProvider implements Serializable {
     
     public void setSubject(Subject subject) {
     	this.subject = subject;
+    }
+    
+    public String getUserInfo() throws LoginException {
+    	String instanceUrl = OAuthUtil.getToken(getSubject()).getInstanceUrl();
+    	String accessToken = OAuthUtil.getToken(getSubject()).getAccessToken();
+    	String userId = OAuthUtil.getIdentity(getSubject()).getUserId();
+    	
+    	OAuthService oauthService = new OAuthServiceImpl();
+    	String sobject = oauthService.getSObject(OAuthConfig.getUserInfoUrl(instanceUrl, userId), accessToken);
+    	
+    	System.out.println(sobject);
+    	
+    	return sobject;
+    }
+    
+    public OrganizationInfo getOrganizationInfo() throws LoginException {
+    	String instanceUrl = OAuthUtil.getToken(getSubject()).getInstanceUrl();
+    	String accessToken = OAuthUtil.getToken(getSubject()).getAccessToken();
+    	String organizationId = OAuthUtil.getIdentity(getSubject()).getOrganizationId();
+    	
+    	OAuthService oauthService = new OAuthServiceImpl();
+    	String sobject = oauthService.getSObject(OAuthConfig.getOrganizationInfoUrl(instanceUrl, organizationId), accessToken);
+    	
+    	System.out.println(sobject);
+    	
+    	OrganizationInfo organizationInfo = new Gson().fromJson(sobject, OrganizationInfo.class);
+    	
+    	return organizationInfo;
     }
     
     private void login(CallbackHandler callbackHander) throws LoginException {

@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import com.nowellpoint.oauth.OAuthConfig;
 import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.model.Identity;
+import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
 import com.nowellpoint.oauth.util.OAuthUtil;
 
@@ -32,7 +34,30 @@ public class OAuthTest {
 		
 		assertNotNull(token);
 		
-		System.out.println("AccessToken: " + token.getAccessToken());
+		Identity identity = OAuthUtil.getIdentity(provider.getSubject());
+		
+		assertNotNull(identity);
+		
+		System.out.println(identity.getDisplayName());
+		
+		try {
+			String userInfo = provider.getUserInfo();
+			System.out.println(userInfo);
+		} catch (LoginException e) {
+			e.printStackTrace();
+		}
+		
+		OrganizationInfo organizationInfo = null;
+		
+		try {
+			organizationInfo = provider.getOrganizationInfo();
+		} catch (LoginException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(organizationInfo.getName());
+		
+		assertNotNull(organizationInfo);
 		
 		try {
 			provider.logout();

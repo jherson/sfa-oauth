@@ -61,4 +61,13 @@ public interface OAuthService {
 	 */
 	
 	void revokeToken(String revokeUrl, String accessToken) throws LoginException;
+	
+	/**
+	 * getUser
+	 * @param userUrl
+	 * @param accessToken
+	 * @return String
+	 */
+	
+	public String getSObject(String sobjectUrl, String accessToken) throws LoginException;
 }

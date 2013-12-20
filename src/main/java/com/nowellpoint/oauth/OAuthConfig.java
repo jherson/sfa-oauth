@@ -3,11 +3,11 @@ package com.nowellpoint.oauth;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.security.auth.login.Configuration;
-
 import javax.security.auth.login.AppConfigurationEntry;
 
 public class OAuthConfig extends Configuration implements Serializable {
@@ -15,7 +15,19 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private static final long serialVersionUID = 7354592843495066771L;
 	private static final String LOGIN_URL = "https://login.salesforce.com";
 	private static final String TEST_URL = "https://test.salesforce.com";
+	private static final String SOBJECTS_ENDPOINT = "{0}/services/data/v{1}/sobjects/";
+	public static final String API_VERSION = "29.0";
 	private static final Map<String, String> ENDPOINTS;
+	
+	private static final String USER_FIELDS = "Id,Username,LastName,FirstName,Name,CompanyName,Division,Department," +
+		"Title,Street,City,State,PostalCode,Country,Latitude,Longitude," +
+		"Email,SenderEmail,SenderName,Signature,Phone,Fax,MobilePhone,Alias," +
+		"CommunityNickname,IsActive,TimeZoneSidKey,UserRole.Id,UserRole.Name,LocaleSidKey," +
+		"EmailEncodingKey,Profile.Id,Profile.Name,Profile.PermissionsCustomizeApplication," +
+		"UserType,LanguageLocaleKey,EmployeeNumber,DelegatedApproverId,ManagerId,AboutMe";
+	
+	private static final String ORGANIZATION_FIELDS = "Id,Name,Division,Street,City,State,PostalCode,Country," +
+		"PrimaryContact,DefaultLocaleSidKey,LanguageLocaleKey,FiscalYearStartMonth";
 	
 	private String clientId;
 	private String clientSecret;
@@ -71,6 +83,24 @@ public class OAuthConfig extends Configuration implements Serializable {
 		}
 		
 		return authUrl.toString();
+	}
+	
+	public static String getUserInfoUrl(String instanceUrl, String userId) {
+		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
+				.append("User/")
+				.append(userId)
+				.append("?fields=")
+				.append(USER_FIELDS)
+				.toString();
+	}
+	
+	public static String getOrganizationInfoUrl(String instanceUrl, String userId) {
+		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
+				.append("Organization/")
+				.append(userId)
+				.append("?fields=")
+				.append(ORGANIZATION_FIELDS)
+				.toString();
 	}
 	
 	public String getClientId() {

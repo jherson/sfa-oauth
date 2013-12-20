@@ -130,8 +130,14 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		/**
 		 * query the Salesforce Identity server for the user's Identity info
 		 */
-			    			    			
-		identity = getIdentity(token);	
+			
+		String identityResponse = oauthService.getIdentity(token.getId(), token.getAccessToken());
+		
+		/**
+		 * 
+		 */
+		
+		identity = new Gson().fromJson(identityResponse, Identity.class);	
 		
 		/**
 		 * set success
@@ -223,10 +229,5 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		} else {
 			return null;
 		}
-	}
-	
-	private Identity getIdentity(Token token) throws LoginException {
-        String identityResponse = oauthService.getIdentity(token.getId(), token.getAccessToken());
-		return new Gson().fromJson(identityResponse, Identity.class);	
 	}
 }
