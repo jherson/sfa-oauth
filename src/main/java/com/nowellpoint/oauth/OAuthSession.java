@@ -6,16 +6,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
 
-public abstract class AuthenticationCallback {
+public abstract class OAuthSession {
 
-	public abstract void handle(AuthenticationContext context);
+	public abstract void handleCallback(OAuthSessionContext context);
 	
 	public void init(HttpServletRequest request, HttpServletResponse response, Token token, Identity identity) {
-		AuthenticationContext context = new AuthenticationContext();
+		OAuthSessionContext context = new OAuthSessionContext();
 		context.setRequest(request);
 		context.setResponse(response);
 		context.setIdentity(identity);
 		context.setToken(token);
-		handle(context);
+		handleCallback(context);
 	}
 }

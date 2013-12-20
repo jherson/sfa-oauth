@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
 
-public class AuthenticationContext implements Serializable {
+public class OAuthSessionContext implements Serializable {
 
 	/**
 	 * 
@@ -40,7 +40,7 @@ public class AuthenticationContext implements Serializable {
 	
 	private Identity identity;
 	
-	public AuthenticationContext() {
+	public OAuthSessionContext() {
 		
 	}
 
