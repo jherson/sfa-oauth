@@ -14,20 +14,13 @@ public class OAuthServiceProvider implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
 	
-	private String authorizationUrl;
-	
 	public OAuthServiceProvider() {
 		
 	}
 	
     public OAuthServiceProvider(OAuthConfig oauthConfig) {
-    	setAuthorizationUrl(oauthConfig.getAuthorizationUrl());
     	setConfiguration(oauthConfig);
     }
-	
-	public String getAuthorizationUrl() {
-		return authorizationUrl;
-	}
 	
 	public OAuthCallbackHandler getOAuthCallbackHandler(Verifier verifier) {
 		return new OAuthCallbackHandler(
@@ -63,7 +56,7 @@ public class OAuthServiceProvider implements Serializable {
 		Configuration.setConfiguration(oauthConfig);
     }
     
-    private void setAuthorizationUrl(String authorizationUrl) {
-    	this.authorizationUrl = authorizationUrl;
+    public OAuthConfig getConfiguration() {
+    	return (OAuthConfig) Configuration.getConfiguration();
     }
 }

@@ -20,6 +20,7 @@ import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.model.Verifier;
 import com.nowellpoint.oauth.service.OAuthService;
 import com.nowellpoint.oauth.service.impl.OAuthServiceImpl;
@@ -69,7 +70,7 @@ public class OAuthSession implements Serializable {
 		 * get the OAuth URL from the configured OAuthServiceProvider
 		 */
 		
-		String authUrl = oauthServiceProvider.getAuthorizationUrl();
+		String authUrl = oauthServiceProvider.getConfiguration().getAuthorizationUrl();
 		
 		/**
 		 * do the redirect
@@ -95,7 +96,7 @@ public class OAuthSession implements Serializable {
 		 * build the OAuth URL based on the flow from options
 		 */
 		
-    	String authUrl = oauthServiceProvider.getAuthorizationUrl();
+    	String authUrl = oauthServiceProvider.getConfiguration().getAuthorizationUrl();
 		
 		/**
 		 * do the redirect
@@ -133,6 +134,10 @@ public class OAuthSession implements Serializable {
     	setIdentity(null);
     }
     
+    public OAuthServiceProvider getOAuthServiceProvider() {
+    	return oauthServiceProvider;
+    }
+    
     public Subject getSubject() {
     	return subject;
     }
@@ -145,7 +150,7 @@ public class OAuthSession implements Serializable {
     	return identity;
     }
     
-    public String getUserInfo() throws LoginException {
+    public UserInfo getUserInfo() throws LoginException {
     	String instanceUrl = getToken().getInstanceUrl();
     	String accessToken = getToken().getAccessToken();
     	String userId = getIdentity().getUserId();
@@ -155,7 +160,9 @@ public class OAuthSession implements Serializable {
     	
     	System.out.println(sobject);
     	
-    	return sobject;
+    	UserInfo user = new Gson().fromJson(sobject, UserInfo.class);
+    	
+    	return user;
     }
     
     public OrganizationInfo getOrganizationInfo() throws LoginException {
@@ -168,9 +175,9 @@ public class OAuthSession implements Serializable {
     	
     	System.out.println(sobject);
     	
-    	OrganizationInfo organizationInfo = new Gson().fromJson(sobject, OrganizationInfo.class);
+    	OrganizationInfo organization = new Gson().fromJson(sobject, OrganizationInfo.class);
     	
-    	return organizationInfo;
+    	return organization;
     }
     
     private void login(CallbackHandler callbackHander) throws LoginException {

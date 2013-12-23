@@ -68,7 +68,10 @@ public class OAuthTest {
 	@Test
 	public void testUserInfo() {
 		try {
+			com.nowellpoint.oauth.model.UserInfo user = session.getUserInfo();
 			assertNotNull(session.getUserInfo());
+			System.out.println(user.getName());
+			System.out.println(user.getEmail());
 		} catch (LoginException e) {
 			e.printStackTrace();
 		}

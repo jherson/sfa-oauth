@@ -1,7 +1,6 @@
 package com.nowellpoint.oauth.web;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
@@ -11,20 +10,18 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nowellpoint.oauth.OAuthServiceProvider;
-import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.Salesforce;
+import org.jboss.logging.Logger;
 
-@WebServlet(value="/login")
-public class LoginServlet implements Servlet {
+import com.nowellpoint.oauth.OAuthSession;
+
+@WebServlet(value="/logout")
+public class LogoutServlet implements Servlet {
 	
 	@Inject
-	@Salesforce
-	private OAuthServiceProvider oauthServiceProvider;
+	private Logger log;
 	
 	@Inject
 	private OAuthSession oauthSession;
@@ -33,30 +30,17 @@ public class LoginServlet implements Servlet {
 	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
 		
 		HttpServletRequest request  = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		
-		boolean cookieExists = Boolean.FALSE;
-		
-		Cookie[] cookies = request.getCookies();                
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals("OAuthSessionID")) {           
-				cookieExists = Boolean.TRUE;
-			}
-		}  
-		
-		if (! cookieExists) {
-			Cookie cookie = new Cookie("OAuthSessionID", UUID.randomUUID().toString());
-			cookie.setMaxAge(365 * 24 * 60 * 60);
-			response.addCookie(cookie);
-		}
-		
-		oauthSession.setOAuthServiceProvider(oauthServiceProvider);
-		try {
-			oauthSession.login(response);
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        
+        try {
+			oauthSession.logout();
 		} catch (LoginException e) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, request.getRequestURI());
-			return;
-		}		
+			log.error(e);
+		}
+        
+        request.getSession().invalidate();
+		
+		response.sendRedirect(request.getContextPath() + oauthSession.getOAuthServiceProvider().getConfiguration().getLogoutRedirect());
 	}
 
 	@Override

@@ -25,6 +25,8 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private String display;	
 	private String state;
 	private Boolean useSandbox;
+	private String dataDirectory;
+	private String logoutRedirect;
 	
 	static {
         ENDPOINTS = new HashMap<String, String>();        
@@ -113,6 +115,24 @@ public class OAuthConfig extends Configuration implements Serializable {
 	
 	public OAuthConfig setUseSandbox(Boolean useSandbox) {
 		this.useSandbox = useSandbox;
+		return this;
+	}
+	
+	public String getDataDirectory() {
+		return dataDirectory;
+	}
+	
+	public OAuthConfig setDataDirectory(String dataDirectory) {
+		this.dataDirectory = dataDirectory;
+		return this;
+	}
+	
+	public String getLogoutRedirect() {
+		return logoutRedirect;
+	}
+	
+	public OAuthConfig setLogoutRedirect(String logoutRedirect) {
+		this.logoutRedirect = logoutRedirect;
 		return this;
 	}
 	
