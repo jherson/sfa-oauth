@@ -52,11 +52,9 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		subject.getPrincipals(TokenPrincipal.class).clear();
 	    subject.getPrincipals(IdentityPrincipal.class).clear();
 		
-		if (success) {
-		    
+		if (success) {		    
 			subject.getPrincipals().add(new TokenPrincipal(token));	
 			subject.getPrincipals().add(new IdentityPrincipal(identity));
-			
 		} 
 	    
 	    return success;
@@ -172,14 +170,6 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 			return String.valueOf(options.get(OAuthConstants.REVOKE_ENDPOINT));
 		} else {
 			throw new LoginException("Missing revoke url");
-		}
-	}
-	
-	private String getAuthUrl() throws LoginException {
-		if (options.get(OAuthConstants.AUTHORIZE_ENDPOINT) != null) {
-			return String.valueOf(options.get(OAuthConstants.AUTHORIZE_ENDPOINT));
-		} else {
-			throw new LoginException("Missing authorize url");
 		}
 	}
 	

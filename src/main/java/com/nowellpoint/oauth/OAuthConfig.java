@@ -3,7 +3,6 @@ package com.nowellpoint.oauth;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,20 +14,9 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private static final long serialVersionUID = 7354592843495066771L;
 	private static final String LOGIN_URL = "https://login.salesforce.com";
 	private static final String TEST_URL = "https://test.salesforce.com";
-	private static final String SOBJECTS_ENDPOINT = "{0}/services/data/v{1}/sobjects/";
-	public static final String API_VERSION = "29.0";
 	private static final Map<String, String> ENDPOINTS;
 	
-	private static final String USER_FIELDS = "Id,Username,LastName,FirstName,Name,CompanyName,Division,Department," +
-		"Title,Street,City,State,PostalCode,Country,Latitude,Longitude," +
-		"Email,SenderEmail,SenderName,Signature,Phone,Fax,MobilePhone,Alias," +
-		"CommunityNickname,IsActive,TimeZoneSidKey,UserRole.Id,UserRole.Name,LocaleSidKey," +
-		"EmailEncodingKey,Profile.Id,Profile.Name,Profile.PermissionsCustomizeApplication," +
-		"UserType,LanguageLocaleKey,EmployeeNumber,DelegatedApproverId,ManagerId,AboutMe";
-	
-	private static final String ORGANIZATION_FIELDS = "Id,Name,Division,Street,City,State,PostalCode,Country," +
-		"PrimaryContact,DefaultLocaleSidKey,LanguageLocaleKey,FiscalYearStartMonth";
-	
+	private String authorizationUrl;
 	private String clientId;
 	private String clientSecret;
 	private String callbackUrl;
@@ -36,7 +24,7 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private String prompt;
 	private String display;	
 	private String state;
-	private Boolean isSandbox;
+	private Boolean useSandbox;
 	
 	static {
         ENDPOINTS = new HashMap<String, String>();        
@@ -46,61 +34,7 @@ public class OAuthConfig extends Configuration implements Serializable {
     }
 	
 	public OAuthConfig() {
-		this.isSandbox = Boolean.FALSE;
-	}
-	
-	public String buildLoginUrl() {
-		StringBuilder authUrl = new StringBuilder()
-		        .append(getInstanceUrl())
-		        .append(ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT))
-		        .append("?")
-		        .append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
-		        .append("=")
-		        .append(OAuthConstants.CODE_PARAMETER)
-		        .append("&")
-		        .append(OAuthConstants.CLIENT_ID_PARAMETER)
-		        .append("=")
-		        .append(getClientId())
-		        .append("&")
-		        .append(OAuthConstants.REDIRECT_URI_PARAMETER)
-		        .append("=")
-		        .append(getCallbackUrl());
-        
-		if (getScope() != null) { 
-			authUrl.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
-		}
-		
-		if (getPrompt() != null) {
-			authUrl.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
-		}
-		
-		if (getDisplay() != null) {
-			authUrl.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
-		}
-		
-		if (getState() != null) {
-			authUrl.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
-		}
-		
-		return authUrl.toString();
-	}
-	
-	public static String getUserInfoUrl(String instanceUrl, String userId) {
-		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
-				.append("User/")
-				.append(userId)
-				.append("?fields=")
-				.append(USER_FIELDS)
-				.toString();
-	}
-	
-	public static String getOrganizationInfoUrl(String instanceUrl, String userId) {
-		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
-				.append("Organization/")
-				.append(userId)
-				.append("?fields=")
-				.append(ORGANIZATION_FIELDS)
-				.toString();
+		this.useSandbox = Boolean.FALSE;
 	}
 	
 	public String getClientId() {
@@ -173,16 +107,21 @@ public class OAuthConfig extends Configuration implements Serializable {
 		return this;
 	}
 	
-	public Boolean getIsSandbox() {
-		return isSandbox;
+	public Boolean getUseSandbox() {
+		return useSandbox;
 	}
 	
-	public OAuthConfig setIsSandbox(Boolean isSandbox) {
-		this.isSandbox = isSandbox;
+	public OAuthConfig setUseSandbox(Boolean useSandbox) {
+		this.useSandbox = useSandbox;
 		return this;
 	}
 	
+	public String getAuthorizationUrl() {
+		return authorizationUrl;
+	}
+	
 	public OAuthServiceProvider build() {
+		this.authorizationUrl = buildAuthorizationUrl();
 		return new OAuthServiceProvider(this);
 	}
 	
@@ -205,9 +144,43 @@ public class OAuthConfig extends Configuration implements Serializable {
 		return entries;
 	}
 	
+	private String buildAuthorizationUrl() {
+    	StringBuilder url = new StringBuilder().append(getInstanceUrl())
+    			.append(ENDPOINTS.get(OAuthConstants.AUTHORIZE_ENDPOINT))
+    			.append("?")
+    			.append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
+    			.append("=")
+    			.append(OAuthConstants.CODE_PARAMETER)
+    			.append("&")
+    			.append(OAuthConstants.CLIENT_ID_PARAMETER)
+    			.append("=")
+    			.append(getClientId())
+    			.append("&")
+    			.append(OAuthConstants.REDIRECT_URI_PARAMETER).append("=")
+    			.append(getCallbackUrl());
+    	
+    	if (getScope() != null) { 
+    		url.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
+    	}
+    	
+    	if (getPrompt() != null) {
+    		url.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
+    	}
+    	
+    	if (getDisplay() != null) {
+    		url.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
+    	}
+    	
+    	if (getState() != null) {
+    		url.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
+    	}
+    	
+    	return url.toString();
+    }
+	
 	private String getInstanceUrl() {
 		String instanceUrl = null;
-		if (getIsSandbox()) {
+		if (getUseSandbox()) {
 			instanceUrl = TEST_URL;
 		} else {
 			instanceUrl = LOGIN_URL;

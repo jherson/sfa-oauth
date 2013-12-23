@@ -80,4 +80,10 @@ public class UserInfo implements Serializable {
 	
 	@SerializedName("MobilePhone")
 	private String mobilePhone;
+	
+	private Attributes attributes;
+	
+	public UserInfo() {
+		
+	}
 }

@@ -49,6 +49,8 @@ public class OrganizationInfo implements Serializable {
 	@SerializedName("FiscalYearStartMonth")
 	private Integer fiscalYearStartMonth;
 	
+	private Attributes attributes;
+	
 	public OrganizationInfo() {
 		
 	}
@@ -147,5 +149,13 @@ public class OrganizationInfo implements Serializable {
 
 	public void setFiscalYearStartMonth(Integer fiscalYearStartMonth) {
 		this.fiscalYearStartMonth = fiscalYearStartMonth;
+	}
+
+	public Attributes getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
 	}
 }

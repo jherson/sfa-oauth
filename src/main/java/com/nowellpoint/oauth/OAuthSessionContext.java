@@ -5,9 +5,6 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nowellpoint.oauth.model.Identity;
-import com.nowellpoint.oauth.model.Token;
-
 public class OAuthSessionContext implements Serializable {
 
 	/**
@@ -32,13 +29,7 @@ public class OAuthSessionContext implements Serializable {
 	 * 
 	 */
 	
-	private Token token;
-	
-	/**
-	 * 
-	 */
-	
-	private Identity identity;
+	private OAuthSession oauthSession;
 	
 	public OAuthSessionContext() {
 		
@@ -60,19 +51,11 @@ public class OAuthSessionContext implements Serializable {
 		this.request = request;
 	}
 
-	public Token getToken() {
-		return token;
+	public OAuthSession getOauthSession() {
+		return oauthSession;
 	}
 
-	public void setToken(Token token) {
-		this.token = token;
-	}
-
-	public Identity getIdentity() {
-		return identity;
-	}
-
-	public void setIdentity(Identity identity) {
-		this.identity = identity;
+	public void setOauthSession(OAuthSession oauthSession) {
+		this.oauthSession = oauthSession;
 	}
 }
