@@ -15,6 +15,7 @@ import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.model.UserInfo;
 
 public class OAuthTest {
 	
@@ -67,25 +68,19 @@ public class OAuthTest {
 	
 	@Test
 	public void testUserInfo() {
-		try {
-			com.nowellpoint.oauth.model.UserInfo user = session.getUserInfo();
-			assertNotNull(session.getUserInfo());
-			System.out.println(user.getName());
-			System.out.println(user.getEmail());
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
+		System.out.println("testUserInfo");
+		UserInfo user = session.getUserInfo();
+		assertNotNull(session.getUserInfo());
+		System.out.println(user.getName());
+		System.out.println(user.getEmail());
 	}
 	
 	@Test
 	public void testOrganizationInfo() {
-		try {
-			OrganizationInfo organizationInfo = session.getOrganizationInfo();
-			assertNotNull(organizationInfo);
-			System.out.println(organizationInfo.getName());
-			System.out.println(organizationInfo.getAttributes().getUrl());
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
+		System.out.println("testOrganizationInfo");
+		OrganizationInfo organizationInfo = session.getOrganizationInfo();
+		assertNotNull(organizationInfo);
+		System.out.println(organizationInfo.getName());
+		System.out.println(organizationInfo.getAttributes().getUrl());
 	}
 }

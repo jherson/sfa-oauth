@@ -3,7 +3,6 @@ package com.nowellpoint.oauth;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -13,7 +12,6 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import com.google.gson.Gson;
 import com.nowellpoint.oauth.callback.OAuthCallback;
 import com.nowellpoint.oauth.callback.OAuthFlowType;
 import com.nowellpoint.oauth.model.Identity;
@@ -27,8 +25,6 @@ import com.nowellpoint.principal.TokenPrincipal;
 public class OAuthLoginModule implements LoginModule, Serializable {
 	
 	private static final long serialVersionUID = 1328002810741307326L;
-
-	private static Logger log = Logger.getLogger(OAuthLoginModule.class.getName()); 	
 	
 	private Subject subject;
 	private CallbackHandler callbackHandler;
@@ -100,27 +96,23 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		OAuthCallback callback = (OAuthCallback) callbacks[0];
 						
 		/**
-		 * get authResponse from Salesforce based on the flow type 
+		 * get the Token from Salesforce based on the flow type 
 		 */
 		
-		String authResponse = null;	
-		
 		if (callback.getFlowType().equals(OAuthFlowType.WEB_SERVER_FLOW)) {
-			authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, redirectUri, callback.getCode());
+			token = oauthService.authorize(tokenUrl, clientId, clientSecret, redirectUri, callback.getCode());
 		} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW)) {
-			authResponse = oauthService.refreshToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
+			token = oauthService.refreshToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
 		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW)) {	
-			authResponse = oauthService.getAuthResponse(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
+			token = oauthService.authorize(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
 		} else {
 			throw new LoginException("Unsupported authorization flow: " + callback.getFlowType());
 		}
-		
-		/**
-		 * parse the authResponse response into a Token object
-		 */
-																		
-		token = new Gson().fromJson(authResponse, Token.class);
 				
+		/**
+		 * check for any errors
+		 */
+		
 		if (token.getError() != null) {
 		 	throw new FailedLoginException(token.getError() + ": " + token.getErrorDescription());		 
 		}	
@@ -128,14 +120,8 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		/**
 		 * query the Salesforce Identity server for the user's Identity info
 		 */
-			
-		String identityResponse = oauthService.getIdentity(token.getId(), token.getAccessToken());
 		
-		/**
-		 * 
-		 */
-		
-		identity = new Gson().fromJson(identityResponse, Identity.class);	
+		identity = oauthService.getIdentity(token.getId(), token.getAccessToken());	
 		
 		/**
 		 * set success

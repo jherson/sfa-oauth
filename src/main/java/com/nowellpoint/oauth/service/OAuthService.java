@@ -2,44 +2,49 @@ package com.nowellpoint.oauth.service;
 
 import javax.security.auth.login.LoginException;
 
+import com.nowellpoint.oauth.model.Identity;
+import com.nowellpoint.oauth.model.OrganizationInfo;
+import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.model.UserInfo;
+
 public interface OAuthService {
 
 	/**
-	 * getAuthResponse
+	 * authorize
 	 * @param tokenUrl
 	 * @param clientId
 	 * @param clientSecret
 	 * @param username
 	 * @param password
 	 * @param securityToken
-	 * @return String
+	 * @return Token
 	 * @throws LoginException
 	 */
 	
-	String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException;
+	Token authorize(String tokenUrl, String clientId, String clientSecret, String username, String password, String securityToken) throws LoginException;
 	
 	/**
-	 * getAuthResponse
+	 * authorize
 	 * @param tokenUrl
 	 * @param clientId
 	 * @param clientSecret
 	 * @param redirectUri
 	 * @param code
-	 * @return String
+	 * @return Token
 	 * @throws LoginException
 	 */
-	
-	String getAuthResponse(String tokenUrl, String clientId, String clientSecret, String redirectUri, String code) throws LoginException;
+		
+	Token authorize(String tokenUrl, String clientId, String clientSecret, String redirectUri, String code) throws LoginException;
 	
 	/**
 	 * getIdentity
 	 * @param identityUrl
 	 * @param accessToken
-	 * @return String
+	 * @return Identity
 	 * @throws LoginException
 	 */
 	
-	String getIdentity(String identityUrl, String accessToken) throws LoginException;
+	Identity getIdentity(String identityUrl, String accessToken) throws LoginException;
 	
 	/**
 	 * refreshToken
@@ -47,11 +52,11 @@ public interface OAuthService {
 	 * @param clientId
 	 * @param clientSecret
 	 * @param accessToken
-	 * @return String
+	 * @return Token
 	 * @throws LoginException
 	 */
 	
-	String refreshToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException;
+	Token refreshToken(String tokenUrl, String clientId, String clientSecret, String accessToken) throws LoginException;
 	
 	/**
 	 * revokeToken
@@ -63,11 +68,22 @@ public interface OAuthService {
 	void revokeToken(String revokeUrl, String accessToken) throws LoginException;
 	
 	/**
-	 * getUser
-	 * @param userUrl
+	 * getUserInfo
+	 * @param sobjectUrl
 	 * @param accessToken
-	 * @return String
+	 * @return UserInfo
+	 * @throws LoginException
 	 */
 	
-	public String getSObject(String sobjectUrl, String accessToken) throws LoginException;
+	public UserInfo getUserInfo(String instanceUrl, String accessToken, String userId) throws LoginException;
+	
+	/**
+	 * getOrganizationInfo
+	 * @param sobjectUrl
+	 * @param accessToken
+	 * @return OrganizationInfo
+	 * @throws LoginException
+	 */
+	
+	OrganizationInfo getOrganizationInfo(String instanceUrl, String accessToken, String organizationId) throws LoginException;
 }

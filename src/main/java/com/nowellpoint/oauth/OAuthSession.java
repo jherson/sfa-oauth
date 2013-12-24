@@ -2,8 +2,9 @@ package com.nowellpoint.oauth;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -14,7 +15,9 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.LazyLoader;
+
 import com.nowellpoint.oauth.callback.OAuthCallbackHandler;
 import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.Identity;
@@ -31,24 +34,15 @@ import com.nowellpoint.principal.TokenPrincipal;
 public class OAuthSession implements Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
-	private static final String SOBJECTS_ENDPOINT = "{0}/services/data/v{1}/sobjects/";
-	private static final String API_VERSION = "29.0";
-	
-	private static final String USER_FIELDS = "Id,Username,LastName,FirstName,Name,CompanyName,Division,Department," +
-			"Title,Street,City,State,PostalCode,Country,Latitude,Longitude," +
-			"Email,SenderEmail,SenderName,Signature,Phone,Fax,MobilePhone,Alias," +
-			"CommunityNickname,IsActive,TimeZoneSidKey,UserRole.Id,UserRole.Name,LocaleSidKey," +
-			"EmailEncodingKey,Profile.Id,Profile.Name,Profile.PermissionsCustomizeApplication," +
-			"UserType,LanguageLocaleKey,EmployeeNumber,DelegatedApproverId,ManagerId,AboutMe";
-		
-	private static final String ORGANIZATION_FIELDS = "Id,Name,Division,Street,City,State,PostalCode,Country," +
-			"PrimaryContact,DefaultLocaleSidKey,LanguageLocaleKey,FiscalYearStartMonth";
+	private static Logger log = Logger.getLogger(OAuthSession.class.getName());
 	
 	private OAuthServiceProvider oauthServiceProvider;
 	private LoginContext loginContext;
 	private Subject subject;
 	private Token token;
 	private Identity identity;
+	private UserInfo user;
+	private OrganizationInfo organization;
 	
 	public OAuthSession() {
 		
@@ -114,6 +108,18 @@ public class OAuthSession implements Serializable {
     	Credentials credentials = new Credentials(username, password, securityToken);
     	OAuthCallbackHandler callbackHandler = oauthServiceProvider.getOAuthCallbackHandler(credentials);
     	login(callbackHandler);
+    	
+    	setUserInfo((UserInfo) Enhancer.create(UserInfo.class, new LazyLoader() {
+            public UserInfo loadObject() {
+            	return loadUserInfo();
+             }
+         }));
+    	
+    	setOrganizationInfo((OrganizationInfo) Enhancer.create(OrganizationInfo.class, new LazyLoader() {
+            public OrganizationInfo loadObject() {
+            	return loadOrganizationInfo();
+             }
+         }));
     }
     
     public void verify(String code) throws LoginException {    	
@@ -150,33 +156,53 @@ public class OAuthSession implements Serializable {
     	return identity;
     }
     
-    public UserInfo getUserInfo() throws LoginException {
+    private void setUserInfo(UserInfo user) {
+    	this.user = user;
+    }
+    
+    public UserInfo getUserInfo() {
+    	return user;
+    }
+    
+    private void setOrganizationInfo(OrganizationInfo organization) {
+    	this.organization = organization;
+    }
+    
+    public OrganizationInfo getOrganizationInfo() {
+    	return organization;
+    }
+    
+    private UserInfo loadUserInfo() {
     	String instanceUrl = getToken().getInstanceUrl();
     	String accessToken = getToken().getAccessToken();
     	String userId = getIdentity().getUserId();
     	
     	OAuthService oauthService = new OAuthServiceImpl();
-    	String sobject = oauthService.getSObject(getUserInfoUrl(instanceUrl, userId), accessToken);
     	
-    	System.out.println(sobject);
-    	
-    	UserInfo user = new Gson().fromJson(sobject, UserInfo.class);
-    	
+    	UserInfo user = null;
+		try {
+			user = oauthService.getUserInfo(instanceUrl, accessToken, userId);
+		} catch (LoginException e) {
+			log.log(Level.SEVERE, e.getMessage());
+		}
+
     	return user;
     }
     
-    public OrganizationInfo getOrganizationInfo() throws LoginException {
+    private OrganizationInfo loadOrganizationInfo() {
     	String instanceUrl = getToken().getInstanceUrl();
     	String accessToken = getToken().getAccessToken();
     	String organizationId = getIdentity().getOrganizationId();
     	
     	OAuthService oauthService = new OAuthServiceImpl();
-    	String sobject = oauthService.getSObject(getOrganizationInfoUrl(instanceUrl, organizationId), accessToken);
     	
-    	System.out.println(sobject);
-    	
-    	OrganizationInfo organization = new Gson().fromJson(sobject, OrganizationInfo.class);
-    	
+    	OrganizationInfo organization = null;
+		try {
+			organization = oauthService.getOrganizationInfo(instanceUrl, accessToken, organizationId);
+		} catch (LoginException e) {
+			log.log(Level.SEVERE, e.getMessage());
+		}
+
     	return organization;
     }
     
@@ -199,24 +225,6 @@ public class OAuthSession implements Serializable {
     private void setIdentity(Identity identity) {
     	this.identity = identity;
     }
-    
-	private String getUserInfoUrl(String instanceUrl, String userId) {
-		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
-				.append("User/")
-				.append(userId)
-				.append("?fields=")
-				.append(USER_FIELDS)
-				.toString();
-	}
-	
-	private String getOrganizationInfoUrl(String instanceUrl, String userId) {
-		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
-				.append("Organization/")
-				.append(userId)
-				.append("?fields=")
-				.append(ORGANIZATION_FIELDS)
-				.toString();
-	}
 	
 	private Identity getIdentity(Subject subject) {
 	    Iterator<IdentityPrincipal> iterator = subject.getPrincipals(IdentityPrincipal.class).iterator();
