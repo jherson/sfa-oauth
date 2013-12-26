@@ -1,168 +1,104 @@
-usage:
+Salesforce OAuth2 client for Openshift but can also be used for any JBoss EAP 6.x deployment.
 
+usage:
 
 1) 
 
-add this entry to the configuration file (standalone.xml, standalone-ha.xml, standalone-full-ha.xml) 
 
-<security-domain name="OAuthRealm">
-    <authentication>
-        <login-module code="com.sfa.login.oauth.OAuthLoginModule" flag="required"/>
-        <module-option name="instance" value="<salesforce instance>"/>
-        <module-option name="clientId" value="<oauth client id>"/>
-        <module-option name="clientSecret" value="<oauth client secret"/>
-        <module-option name="redirectUri" value="<redirect URI>"/>
-        <module-option name="scope" value="<scope>"/>
-        <module-option name="prompt" value="<value>"/>
-        <module-option name="display" value="<display>"/>
-        <module-option name="startUrl" value="<start Url>"/>       
-    </authentication>
-</security-domain>
+2) add maven dependency to your pom.xml:
 
-for module-options details please review Salesforce's oauth setup guide: 
-http://wiki.developerforce.com/page/Digging_Deeper_into_OAuth_2.0_on_Force.com
+<dependency>
+  <groupId>com.nowellpoint</groupId>
+  <artifactId>nowellpoint-oauth-api</artifactId>
+  <version>1.0</version>
+</dependency>
 
 
-add this entry to the WEB-INF/jboss-web.xml file (create it if it doesn't exist)
+3) add producer to your project:
 
-<jboss-web>
-  <security-domain>java:/jaas/OAuthRealm</security-domain>
-</jboss-web>
 
-OAuthConsumer oauthConsumer = new OAuthConsumer(); 
+public class Resources {
 
-2)
+    @Produces
+	@Salesforce
+	@ApplicationScoped
+	public OAuthServiceProvider produceOAuthServiceProvider() {
+		return new OAuthConfig().setClientId(<client id>)
+		        .setClientSecret(<client secret>)
+		        .setCallbackUrl("https://www.nowellpoint.com/authenticate")
+		        .setDisplay("popup")
+		        .setPrompt("login")
+		        .setScope("api refresh_token web")
+		        .setUseSandbox(Boolean.FALSE)
+		        .setLogoutRedirect("/")
+		        .setDataDirectory(System.getenv("OPENSHIFT_DATA_DIR"))
+		        .build();
+	}
+}
 
-or you can configure it in code:
+4) handle the authentication callback
 
-OAuthServiceProvider serviceProvider = new OAuthServiceProvider();				
-serviceProvider.setInstance(configuration.getInstance());
-serviceProvider.setClientId(configuration.getClientId());
-serviceProvider.setClientSecret(configuration.getClientSecret());
-serviceProvider.setRedirectUri(System.getProperty("salesforce.oauth.redirectUri"));
-serviceProvider.setDisplay("popup");
-serviceProvider.setPrompt("login");
-serviceProvider.setScope("full refresh_token");
-serviceProvider.setStartUrl("/initialize.jsf");
+    public class MyOAuthVerificationEvent extends OAuthVerificationEvent {
 
-OAuthConsumer oauthConsumer = new OAuthConsumer(serviceProvider);   
+        @Override
+	    public void onVerify(OAuthSessionContext context) {
+	    
+	        // do work with context if needed
+	        
+	        // OAuthSessionContext contains 
+	        // 	1. HttpServletRequest
+	        //	2. HttpServletResponse
+	        //	3. OAuthSession        
+	        
+	        OAuthSession oauthSession = context.getOauthSession();
+	        
+	        // OAuthSession provides the following Salesforce information
+	        //	1. Identity
+	        //	2. Token
+	        //	3. UserInfo
+	        //	4. OrganizationInfo
+	        
+	        try {
+	            context.getResponse().sendRedirect(context.getRequest().getContextPath() + redirectUrl);
+		    } catch (IOException e) {
+			    e.printStackTrace();
+		    }   
+        }
+    }
 
-login:
+5) add page with a login and logout link or button
 
-using FacesContext
+    <h:commandLink value="#{msgs.login}" onclick="window.location.href='login';return false;" />
+							
+    <h:commandLink value="#{msgs.logout}" onclick="window.location.href='logout';return false;" />
+    
+or include in a jsf action:
 
-jsf: oauthConsumer.login(FacesContext);
+    .xhtml
 
-or HttpServletResponse
+    <h:commandLink value="#{msgs.login}" action="#{session.login()}" />
+    
+    <h:commandLink value="#{msgs.logout}" action="#{session.logout()}" />
+    
+    Bean
 
-jsp: oauthConsumer.loging(HttpServletResponse);
-
-authenticate:
-
-javax.security.auth.Subject subject = oauthConsumer.authenticate(code);
-
-Subject has the OAuthPrincipal which contains the following information about the user:
-
-OAuth:
-
-id
-issuedAt
-refreshToken
-instanceUrl
-signature
-accessToken
-error
-errorDescription
-
-Identity:
-
-	@SerializedName("id")
-	private String id;
-	
-	@SerializedName("asserted_user")
-	private Boolean assertedUser;
-	
-	@SerializedName("user_id")
-	private String userId;
-	
-	@SerializedName("organization_id")
-	private String organizationId;
-	
-	@SerializedName("username")
-	private String username;
-	
-	@SerializedName("nick_name")
-	private String nickName;
-	
-	@SerializedName("display_name")
-	private String displayName;
-	
-	@SerializedName("email")
-	private String email;
-	
-	@SerializedName("active")
-	private Boolean active;
-	
-	@SerializedName("user_type")
-	private String userType;
-	
-	@SerializedName("language")
-	private String language;
-	
-	@SerializedName("locale")
-	private Locale locale;
-	
-	@SerializedName("utcOffset")
-	private String utcOffset; 
-	
-	@SerializedName("photos")
-	private Photos photos;
-	
-	@SerializedName("urls")
-	private Urls urls;
-	
-photos:
-	
-picture;
-thumbnail;
-
-Urls:
-
-private String enterprise;
-	
-	@SerializedName("metadata")
-	private String metadata;
-	
-	@SerializedName("partner")
-	private String partner;
-	
-	@SerializedName("rest")
-	private String rest;
-	
-	@SerializedName("sobjects")
-	private String sobjects;
-	
-	@SerializedName("search")
-	private String search;
-	
-	@SerializedName("query")
-	private String query;
-	
-	@SerializedName("recent")
-	private String recent;
-	
-	@SerializedName("profile")
-	private String profile;
-	
-	@SerializedName("feeds")
-	private String feeds;
-	
-	@SerializedName("feed_items")
-	private String feedItems;
-
-	@SerializedName("groups")
-	private String groups; 
-
-	@SerializedName("users")
-	private String users;
-refresh oauthToken
+    public class SessionBean {
+        
+        public void login() {
+            try {
+		        FacesContext.getCurrentInstance().getExternalContext().redirect("/login");
+	        } catch (IOException e) {
+		        throw new FacesException("Cannot redirect to " + path + " due to IOException.", e);
+	        } 
+        }
+        
+        public void logout() {
+            try {
+		        FacesContext.getCurrentInstance().getExternalContext().redirect("/logout");
+	        } catch (IOException e) {
+		        throw new FacesException("Cannot redirect to " + path + " due to IOException.", e);
+	        } 
+        }
+    
+    }
+    

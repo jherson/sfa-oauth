@@ -1,7 +1,7 @@
 package com.nowellpoint.oauth;
 
 import java.io.IOException;
-import java.io.Serializable;
+import java.io.Serializable;										
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,18 +108,6 @@ public class OAuthSession implements Serializable {
     	Credentials credentials = new Credentials(username, password, securityToken);
     	OAuthCallbackHandler callbackHandler = oauthServiceProvider.getOAuthCallbackHandler(credentials);
     	login(callbackHandler);
-    	
-    	setUserInfo((UserInfo) Enhancer.create(UserInfo.class, new LazyLoader() {
-            public UserInfo loadObject() {
-            	return loadUserInfo();
-             }
-         }));
-    	
-    	setOrganizationInfo((OrganizationInfo) Enhancer.create(OrganizationInfo.class, new LazyLoader() {
-            public OrganizationInfo loadObject() {
-            	return loadOrganizationInfo();
-             }
-         }));
     }
     
     public void verify(String code) throws LoginException {    	
@@ -209,9 +197,20 @@ public class OAuthSession implements Serializable {
     private void login(CallbackHandler callbackHander) throws LoginException {
     	loginContext = new LoginContext("OAuth", getSubject(), callbackHander, Configuration.getConfiguration());    	
     	loginContext.login();
+    	
     	setSubject(loginContext.getSubject());
     	setToken(getToken(loginContext.getSubject()));
-    	setIdentity(getIdentity(loginContext.getSubject()));
+    	setIdentity(getIdentity(loginContext.getSubject()));    	
+    	setUserInfo((UserInfo) Enhancer.create(UserInfo.class, new LazyLoader() {
+            public UserInfo loadObject() {
+            	return loadUserInfo();
+            }
+        }));
+    	setOrganizationInfo((OrganizationInfo) Enhancer.create(OrganizationInfo.class, new LazyLoader() {
+            public OrganizationInfo loadObject() {
+            	return loadOrganizationInfo();
+            }
+        }));
     }
     
     private void setSubject(Subject subject) {
