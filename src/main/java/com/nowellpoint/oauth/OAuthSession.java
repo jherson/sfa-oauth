@@ -110,7 +110,7 @@ public class OAuthSession implements Serializable {
     	login(callbackHandler);
     }
     
-    public void verify(String code) throws LoginException {    	
+    public void requestToken(String code) throws LoginException {    	
     	Verifier verifier = new Verifier(code);
     	OAuthCallbackHandler callbackHandler = oauthServiceProvider.getOAuthCallbackHandler(verifier);
     	login(callbackHandler);
@@ -199,8 +199,8 @@ public class OAuthSession implements Serializable {
     	loginContext.login();
     	
     	setSubject(loginContext.getSubject());
-    	setToken(getToken(loginContext.getSubject()));
-    	setIdentity(getIdentity(loginContext.getSubject()));    	
+    	setToken(getToken(getSubject()));
+    	setIdentity(getIdentity(getSubject()));    	
     	setUserInfo((UserInfo) Enhancer.create(UserInfo.class, new LazyLoader() {
             public UserInfo loadObject() {
             	return loadUserInfo();

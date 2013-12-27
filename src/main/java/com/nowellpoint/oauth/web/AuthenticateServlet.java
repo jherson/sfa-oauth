@@ -46,7 +46,7 @@ public class AuthenticateServlet implements Servlet {
         }
         
         try {
-			oauthSession.verify(code);
+			oauthSession.requestToken(code);
 		} catch (LoginException e) {
 			throw new ServletException(e.getMessage());
 		}   

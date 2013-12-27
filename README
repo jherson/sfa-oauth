@@ -2,8 +2,13 @@ Salesforce OAuth2 client for Openshift but can also be used for any JBoss EAP 6.
 
 usage:
 
-1) 
+1) Setup up Salesforce Connected app Setup -> Create -> Apps - Connected App 
 
+fill out required information and 
+1a. generate consumer key and consumer secret
+1b. set the Callback URL to https://<your hostname>:<your port>/authenticate
+
+for more information on creating a connected app: http://help.salesforce.com/apex/HTViewHelpDoc?id=connected_app_create.htm&language=en_US
 
 2) add maven dependency to your pom.xml:
 
@@ -19,19 +24,20 @@ usage:
 
 public class Resources {
 
+    ** Note: client id, client secret and callback url values are populated from step 1
+
     @Produces
 	@Salesforce
 	@ApplicationScoped
 	public OAuthServiceProvider produceOAuthServiceProvider() {
 		return new OAuthConfig().setClientId(<client id>)
 		        .setClientSecret(<client secret>)
-		        .setCallbackUrl("https://www.nowellpoint.com/authenticate")
+		        .setCallbackUrl(<callback URL>)
 		        .setDisplay("popup")
 		        .setPrompt("login")
 		        .setScope("api refresh_token web")
 		        .setUseSandbox(Boolean.FALSE)
 		        .setLogoutRedirect("/")
-		        .setDataDirectory(System.getenv("OPENSHIFT_DATA_DIR"))
 		        .build();
 	}
 }
