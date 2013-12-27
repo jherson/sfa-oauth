@@ -76,7 +76,7 @@ public class Resources {
 
     <h:commandLink value="#{msgs.login}" onclick="window.location.href='login';return false;" />
 							
-    <h:commandLink value="#{msgs.logout}" onclick="window.location.href='logout';return false;" />
+    <h:commandLink value="#{msgs.logout}" onclick="window.location.href='/logout';return false;" />
     
 or include in a jsf action:
 
