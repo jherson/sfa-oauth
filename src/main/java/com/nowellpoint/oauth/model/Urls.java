@@ -2,49 +2,51 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Urls implements Serializable  {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@SerializedName("enterprise")
+	@JsonProperty("enterprise")
 	private String enterprise;
 	
-	@SerializedName("metadata")
+	@JsonProperty("metadata")
 	private String metadata;
 	
-	@SerializedName("partner")
+	@JsonProperty("partner")
 	private String partner;
 	
-	@SerializedName("rest")
+	@JsonProperty("rest")
 	private String rest;
 	
-	@SerializedName("sobjects")
+	@JsonProperty("sobjects")
 	private String sobjects;
 	
-	@SerializedName("search")
+	@JsonProperty("search")
 	private String search;
 	
-	@SerializedName("query")
+	@JsonProperty("query")
 	private String query;
 	
-	@SerializedName("recent")
+	@JsonProperty("recent")
 	private String recent;
 	
-	@SerializedName("profile")
+	@JsonProperty("profile")
 	private String profile;
 	
-	@SerializedName("feeds")
+	@JsonProperty("feeds")
 	private String feeds;
 	
-	@SerializedName("feed_items")
+	@JsonProperty("feed_items")
 	private String feedItems;
 
-	@SerializedName("groups")
+	@JsonProperty("groups")
 	private String groups; 
 
-	@SerializedName("users")
+	@JsonProperty("users")
 	private String users;
 
 	public String getEnterprise() {

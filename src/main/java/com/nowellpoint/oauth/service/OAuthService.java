@@ -75,7 +75,7 @@ public interface OAuthService {
 	 * @throws LoginException
 	 */
 	
-	public UserInfo getUserInfo(String instanceUrl, String accessToken, String userId) throws LoginException;
+	UserInfo getUserInfo(Token token, Identity identity) throws LoginException;
 	
 	/**
 	 * getOrganizationInfo
@@ -85,5 +85,5 @@ public interface OAuthService {
 	 * @throws LoginException
 	 */
 	
-	OrganizationInfo getOrganizationInfo(String instanceUrl, String accessToken, String organizationId) throws LoginException;
+	OrganizationInfo getOrganizationInfo(Token token, Identity identity) throws LoginException;
 }

@@ -2,16 +2,16 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Photos implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@SerializedName("picture")
+	@JsonProperty("picture")
 	private String picture;
 	
-	@SerializedName("thumbnail")
+	@JsonProperty("thumbnail")
 	private String thumbnail;
 	
 

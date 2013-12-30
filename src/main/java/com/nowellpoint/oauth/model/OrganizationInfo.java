@@ -2,8 +2,10 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrganizationInfo implements Serializable {
 
 	/**
@@ -13,40 +15,40 @@ public class OrganizationInfo implements Serializable {
 	
 	private static final long serialVersionUID = -7062846116139974541L;
 	
-	@SerializedName("Id")
+	@JsonProperty("Id")
 	private String id;
 	
-	@SerializedName("Name")
+	@JsonProperty("Name")
 	private String name;
 	
-	@SerializedName("Division")
+	@JsonProperty("Division")
 	private String division;
 	
-	@SerializedName("Street")
+	@JsonProperty("Street")
 	private String street;
 	
-	@SerializedName("City")
+	@JsonProperty("City")
 	private String city;
 	
-	@SerializedName("State")
+	@JsonProperty("State")
 	private String state;
 	
-	@SerializedName("PostalCode")
+	@JsonProperty("PostalCode")
 	private String postalCode;
 	
-	@SerializedName("Country")
+	@JsonProperty("Country")
 	private String country;
 	
-	@SerializedName("PrimaryContact")
+	@JsonProperty("PrimaryContact")
 	private String primaryContact;
 	
-	@SerializedName("DefaultLocaleSidKey")
+	@JsonProperty("DefaultLocaleSidKey")
 	private String defaultLocaleSidKey;
 	
-	@SerializedName("LanguageLocaleKey")
+	@JsonProperty("LanguageLocaleKey")
 	private String languageLocaleKey;
 	
-	@SerializedName("FiscalYearStartMonth")
+	@JsonProperty("FiscalYearStartMonth")
 	private Integer fiscalYearStartMonth;
 	
 	private Attributes attributes;

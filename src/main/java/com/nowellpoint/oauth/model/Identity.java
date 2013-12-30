@@ -3,55 +3,57 @@ package com.nowellpoint.oauth.model;
 import java.io.Serializable;
 import java.util.Locale;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Identity implements Serializable {
 
 	private static final long serialVersionUID = -4996085598592993920L;
 
-	@SerializedName("id")
+	@JsonProperty("id")
 	private String id;
 	
-	@SerializedName("asserted_user")
+	@JsonProperty("asserted_user")
 	private Boolean assertedUser;
 	
-	@SerializedName("user_id")
+	@JsonProperty("user_id")
 	private String userId;
 	
-	@SerializedName("organization_id")
+	@JsonProperty("organization_id")
 	private String organizationId;
 	
-	@SerializedName("username")
+	@JsonProperty("username")
 	private String username;
 	
-	@SerializedName("nick_name")
+	@JsonProperty("nick_name")
 	private String nickName;
 	
-	@SerializedName("display_name")
+	@JsonProperty("display_name")
 	private String displayName;
 	
-	@SerializedName("email")
+	@JsonProperty("email")
 	private String email;
 	
-	@SerializedName("active")
+	@JsonProperty("active")
 	private Boolean active;
 	
-	@SerializedName("user_type")
+	@JsonProperty("user_type")
 	private String userType;
 	
-	@SerializedName("language")
+	@JsonProperty("language")
 	private String language;
 	
-	@SerializedName("locale")
+	@JsonProperty("locale")
 	private Locale locale;
 	
-	@SerializedName("utcOffset")
+	@JsonProperty("utcOffset")
 	private String utcOffset; 
 	
-	@SerializedName("photos")
+	@JsonProperty("photos")
 	private Photos photos;
 	
-	@SerializedName("urls")
+	@JsonProperty("urls")
 	private Urls urls;
 	
 	public Identity() {

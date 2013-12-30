@@ -1,7 +1,6 @@
 package com.nowellpoint.oauth.service.impl;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 import javax.security.auth.login.LoginException;
 //import javax.ws.rs.client.Client;
@@ -11,19 +10,9 @@ import javax.security.auth.login.LoginException;
 //import javax.ws.rs.core.Form;
 //import javax.ws.rs.core.Response;
 
-
-
-
-
-
-
-
-
-
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
-import com.google.gson.Gson;
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
@@ -34,8 +23,6 @@ import com.nowellpoint.oauth.service.OAuthService;
 public class OAuthServiceImpl implements OAuthService, Serializable {
 	
 	private static final long serialVersionUID = 1819521597953621629L;
-	
-	private static final String SOBJECTS_ENDPOINT = "{0}/services/data/v{1}/sobjects/";
 	
 	private static final String API_VERSION = "29.0";
 	
@@ -59,16 +46,16 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
         request.queryParameter(OAuthConstants.USERNAME_PARAMETER, username);
         request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, password + (securityToken != null ? securityToken : ""));
             
-        ClientResponse<String> response = null;
+        ClientResponse<Token> response = null;
         try {
-        	response = request.post(String.class);
+        	response = request.post(Token.class);
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         } finally {
             request.clear();
         }
-            
-        return new Gson().fromJson(response.getEntity(), Token.class);    
+        
+        return response.getEntity();
     }
     
     @Override
@@ -81,16 +68,16 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
         request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
         request.queryParameter(OAuthConstants.CODE_PARAMETER, code);
         
-        ClientResponse<String> response = null;
+        ClientResponse<Token> response = null;
         try {
-        	response = request.post(String.class);
+        	response = request.post(Token.class);
         } catch (Exception e) {
-        	throw new LoginException(e.getMessage());
+            throw new LoginException(e.getMessage());
         } finally {
-        	request.clear();
+            request.clear();
         }
         
-        return new Gson().fromJson(response.getEntity(), Token.class);
+        return response.getEntity();
     }
 
     @Override
@@ -100,16 +87,16 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
         request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, accessToken);
         request.followRedirects(Boolean.TRUE);
         
-        ClientResponse<String> response = null;
+        ClientResponse<Identity> response = null;
         try {
-            response = request.get(String.class);
+            response = request.get(Identity.class);
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         } finally {
             request.clear();
         }
             
-        return new Gson().fromJson(response.getEntity(), Identity.class);        
+        return response.getEntity();        
     }
 
     @Override
@@ -136,67 +123,72 @@ public class OAuthServiceImpl implements OAuthService, Serializable {
         request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
         request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE, accessToken);
         
-        ClientResponse<String> response = null;
+        ClientResponse<Token> response = null;
         try {
-            response = request.post(String.class);
+        	response = request.post(Token.class);
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         } finally {
             request.clear();
         }
         
-        return new Gson().fromJson(response.getEntity(), Token.class);      
+        return response.getEntity();
     }
     
     @Override
-    public UserInfo getUserInfo(String instanceUrl, String accessToken, String userId) throws LoginException {
-    	String url = getUserInfoUrl(instanceUrl, userId);
-    	String sobject = getSObject(url, accessToken);
-    	return new Gson().fromJson(sobject, UserInfo.class);
-    }
-    
-    @Override
-    public OrganizationInfo getOrganizationInfo(String instanceUrl, String accessToken, String organizationId) throws LoginException {
-    	String url = getOrganizationInfoUrl(instanceUrl, organizationId);
-    	String sobject = getSObject(url, accessToken);
-    	return new Gson().fromJson(sobject, OrganizationInfo.class);
-    }
-    
-	private String getUserInfoUrl(String instanceUrl, String userId) {
-		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
+    public UserInfo getUserInfo(Token token, Identity identity) throws LoginException {
+    	
+    	String url = new StringBuilder().append(getSObjectUrl(identity))
 				.append("User/")
-				.append(userId)
+				.append(identity.getUserId())
 				.append("?fields=")
 				.append(USER_FIELDS)
 				.toString();
-	}
-	
-	private String getOrganizationInfoUrl(String instanceUrl, String userId) {
-		return new StringBuilder().append(MessageFormat.format(SOBJECTS_ENDPOINT, instanceUrl, API_VERSION))
-				.append("Organization/")
-				.append(userId)
-				.append("?fields=")
-				.append(ORGANIZATION_FIELDS)
-				.toString();
-	}
-        
-    private String getSObject(String sobjectUrl, String accessToken) throws LoginException {		
-		ClientRequest request = new ClientRequest(sobjectUrl);
+    	
+    	ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Authorization", "OAuth " + accessToken);
+		request.header("Authorization", "OAuth " + token.getAccessToken());
 		
-		ClientResponse<String> response = null;
+		ClientResponse<UserInfo> response = null;
 		try {
-			response = request.get(String.class);
+			response = request.get(UserInfo.class);
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
 		} finally {
 			request.clear();
 		}
 		
-		System.out.println(response.getEntity());
+		return response.getEntity();
+    }
+    
+    @Override
+    public OrganizationInfo getOrganizationInfo(Token token, Identity identity) throws LoginException {
+    	
+    	String url = new StringBuilder().append(getSObjectUrl(identity))
+				.append("Organization/")
+				.append(identity.getOrganizationId())
+				.append("?fields=")
+				.append(ORGANIZATION_FIELDS)
+				.toString();
+    	
+    	ClientRequest request = new ClientRequest(url);
+		request.header("Content-type", "application/x-www-form-urlencoded");
+		request.header("Authorization", "OAuth " + token.getAccessToken());
+		
+		ClientResponse<OrganizationInfo> response = null;
+		try {
+			response = request.get(OrganizationInfo.class);
+		} catch (Exception e) {
+			throw new LoginException(e.getMessage());
+		} finally {
+			request.clear();
+		}
 		
 		return response.getEntity();
+    }
+    
+    private String getSObjectUrl(Identity identity) {
+    	return identity.getUrls().getSObjects().replace("{version}", API_VERSION);
     }
 }
 

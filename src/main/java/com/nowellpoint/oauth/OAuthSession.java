@@ -160,16 +160,12 @@ public class OAuthSession implements Serializable {
     	return organization;
     }
     
-    private UserInfo loadUserInfo() {
-    	String instanceUrl = getToken().getInstanceUrl();
-    	String accessToken = getToken().getAccessToken();
-    	String userId = getIdentity().getUserId();
-    	
+    private UserInfo loadUserInfo() {    	
     	OAuthService oauthService = new OAuthServiceImpl();
     	
     	UserInfo user = null;
 		try {
-			user = oauthService.getUserInfo(instanceUrl, accessToken, userId);
+			user = oauthService.getUserInfo(getToken(), getIdentity());
 		} catch (LoginException e) {
 			log.log(Level.SEVERE, e.getMessage());
 		}
@@ -178,15 +174,11 @@ public class OAuthSession implements Serializable {
     }
     
     private OrganizationInfo loadOrganizationInfo() {
-    	String instanceUrl = getToken().getInstanceUrl();
-    	String accessToken = getToken().getAccessToken();
-    	String organizationId = getIdentity().getOrganizationId();
-    	
     	OAuthService oauthService = new OAuthServiceImpl();
     	
     	OrganizationInfo organization = null;
 		try {
-			organization = oauthService.getOrganizationInfo(instanceUrl, accessToken, organizationId);
+			organization = oauthService.getOrganizationInfo(getToken(), getIdentity());
 		} catch (LoginException e) {
 			log.log(Level.SEVERE, e.getMessage());
 		}

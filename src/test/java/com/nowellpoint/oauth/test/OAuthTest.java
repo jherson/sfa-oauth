@@ -62,14 +62,15 @@ public class OAuthTest {
 		assertNotNull(token);
 		assertNotNull(identity);
 		
+		System.out.println(token.getId());
 		System.out.println(token.getAccessToken());
 		System.out.println(identity.getDisplayName());
+		System.out.println(identity.getUrls().getSObjects());
 	}
 	
 	@Test
 	public void testUserInfo() {
 		System.out.println("testUserInfo");
-		System.out.println(session.getUserInfo().getId());
 		UserInfo user = session.getUserInfo();
 		assertNotNull(session.getUserInfo());
 		System.out.println(user.getName());

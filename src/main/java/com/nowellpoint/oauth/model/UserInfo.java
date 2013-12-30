@@ -2,8 +2,10 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo implements Serializable {
 
 	/**
@@ -12,109 +14,109 @@ public class UserInfo implements Serializable {
 	
 	private static final long serialVersionUID = 5267942011876349443L;
 	
-	@SerializedName("Id")
+	@JsonProperty("Id")
 	private String id;
 	
-	@SerializedName("Username")
+	@JsonProperty("Username")
 	private String username;
 	
-	@SerializedName("LastName")
+	@JsonProperty("LastName")
 	private String lastName;
 	
-	@SerializedName("FirstName")
+	@JsonProperty("FirstName")
 	private String firstName;
 	
-	@SerializedName("Name")
+	@JsonProperty("Name")
 	private String name;
 	
-	@SerializedName("CompanyName")
+	@JsonProperty("CompanyName")
 	private String companyName;
 
-	@SerializedName("Division")
+	@JsonProperty("Division")
 	private String division;
 	
-	@SerializedName("Department")
+	@JsonProperty("Department")
 	private String department;
 	
-	@SerializedName("Title")
+	@JsonProperty("Title")
 	private String title;
 	
-	@SerializedName("Street")
+	@JsonProperty("Street")
 	private String street;
 	
-	@SerializedName("City")
+	@JsonProperty("City")
 	private String city;
 
-	@SerializedName("State")
+	@JsonProperty("State")
 	private String state;
 	
-	@SerializedName("PostalCode")
+	@JsonProperty("PostalCode")
 	private String postalCode;
 	
-	@SerializedName("Country")
+	@JsonProperty("Country")
 	private String country;
 	
-	@SerializedName("Latitude")
+	@JsonProperty("Latitude")
 	private String latitude;
 
-	@SerializedName("Longitude")
+	@JsonProperty("Longitude")
 	private String longitude;
 	
-	@SerializedName("Email")
+	@JsonProperty("Email")
 	private String email;
 	
-	@SerializedName("SenderEmail")
+	@JsonProperty("SenderEmail")
 	private String senderEmail;
 	
-	@SerializedName("SenderName")
+	@JsonProperty("SenderName")
 	private String senderName;
 	
-	@SerializedName("Signature")
+	@JsonProperty("Signature")
 	private String signature;
 	
-	@SerializedName("Phone")
+	@JsonProperty("Phone")
 	private String phone;
 	
-	@SerializedName("Fax")
+	@JsonProperty("Fax")
 	private String fax;
 	
-	@SerializedName("MobilePhone")
+	@JsonProperty("MobilePhone")
 	private String mobilePhone;
 	
-	@SerializedName("Alias")
+	@JsonProperty("Alias")
 	private String alias;
 	
-	@SerializedName("CommunityNickname")
+	@JsonProperty("CommunityNickname")
 	private String communityNickname;
 	
-	@SerializedName("IsActive")
+	@JsonProperty("IsActive")
 	private Boolean isActive;
 	
-	@SerializedName("TimeZoneSidKey")
+	@JsonProperty("TimeZoneSidKey")
 	private String timeZoneSidKey;
 	
-	@SerializedName("LocaleSidKey")
+	@JsonProperty("LocaleSidKey")
 	private String localeSidKey;
 	
-	@SerializedName("EmailEncodingKey")
+	@JsonProperty("EmailEncodingKey")
 	private String emailEncodingKey;
 	
-	@SerializedName("UserType")
+	@JsonProperty("UserType")
 	private String userType;
 	
-	@SerializedName("LanguageLocaleKey")
+	@JsonProperty("LanguageLocaleKey")
 	private String languageLocaleKey;
 	
-	@SerializedName("EmployeeNumber")
+	@JsonProperty("EmployeeNumber")
 	private String employeeNumber;
 	
-	@SerializedName("DelegatedApproverId")
+	@JsonProperty("DelegatedApproverId")
 	private String delegatedApproverId;
 	
-	@SerializedName("ManagerId")
+	@JsonProperty("ManagerId")
 	private String managerId;
 	
-	@SerializedName("AboutMe")
+	@JsonProperty("AboutMe")
 	private String aboutMe;
 	
 	private Attributes attributes;
