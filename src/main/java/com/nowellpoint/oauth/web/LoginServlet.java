@@ -1,7 +1,6 @@
 package com.nowellpoint.oauth.web;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
@@ -45,7 +44,7 @@ public class LoginServlet implements Servlet {
 		}  
 		
 		if (! cookieExists) {
-			Cookie cookie = new Cookie("OAuthSessionID", UUID.randomUUID().toString());
+			Cookie cookie = new Cookie("OAuthSessionID", oauthSession.getId());
 			cookie.setMaxAge(365 * 24 * 60 * 60);
 			response.addCookie(cookie);
 		}

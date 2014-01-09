@@ -3,6 +3,7 @@ package com.nowellpoint.oauth;
 import java.io.IOException;
 import java.io.Serializable;										
 import java.util.Iterator;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +38,7 @@ public class OAuthSession implements Serializable {
 	private static Logger log = Logger.getLogger(OAuthSession.class.getName());
 	
 	private OAuthServiceProvider oauthServiceProvider;
+	private String id;
 	private LoginContext loginContext;
 	private Subject subject;
 	private Token token;
@@ -45,8 +47,25 @@ public class OAuthSession implements Serializable {
 	private OrganizationInfo organization;
 	
 	public OAuthSession() {
-		
+		generateId();
 	}
+	
+	public OAuthSession(OAuthServiceProvider oauthServiceProvider) {
+		setOAuthServiceProvider(oauthServiceProvider);
+		generateId();
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	private void setId(String id) {
+		this.id = id;
+	}
+	
+    public OAuthServiceProvider getOAuthServiceProvider() {
+    	return oauthServiceProvider;
+    }
 	
 	public void setOAuthServiceProvider(OAuthServiceProvider oauthServiceProvider) {
 		this.oauthServiceProvider = oauthServiceProvider;
@@ -128,10 +147,6 @@ public class OAuthSession implements Serializable {
     	setIdentity(null);
     }
     
-    public OAuthServiceProvider getOAuthServiceProvider() {
-    	return oauthServiceProvider;
-    }
-    
     public Subject getSubject() {
     	return subject;
     }
@@ -159,6 +174,10 @@ public class OAuthSession implements Serializable {
     public OrganizationInfo getOrganizationInfo() {
     	return organization;
     }
+    
+	private void generateId() {
+		setId(UUID.randomUUID().toString().replace("-", ""));
+	}
     
     private UserInfo loadUserInfo() {    	
     	OAuthService oauthService = new OAuthServiceImpl();

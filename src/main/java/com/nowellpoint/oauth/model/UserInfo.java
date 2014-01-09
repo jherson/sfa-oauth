@@ -119,7 +119,14 @@ public class UserInfo implements Serializable {
 	@JsonProperty("AboutMe")
 	private String aboutMe;
 	
+	@JsonProperty("attributes")
 	private Attributes attributes;
+	
+	@JsonProperty("Profile")
+	private Profile profile;
+	
+	@JsonProperty("UserRole")
+	private UserRole userRole;
 	
 	public UserInfo() {
 		
@@ -411,5 +418,21 @@ public class UserInfo implements Serializable {
 
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
+	public UserRole getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
 	}
 }

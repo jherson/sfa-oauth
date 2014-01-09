@@ -30,8 +30,9 @@ public class OAuthTest {
 					.setUseSandbox(Boolean.FALSE)
 					.build();
 		
-		session = new OAuthSession();
-		session.setOAuthServiceProvider(provider);
+		session = new OAuthSession(provider);
+		
+		System.out.println("SessionId: " + session.getId());
 		
 		try {
 			session.login(System.getenv("SALESFORCE_USERNAME"), System.getenv("SALESFORCE_PASSWORD"), System.getenv("SALESFORCE_SECURITY_TOKEN"));
@@ -72,9 +73,11 @@ public class OAuthTest {
 	public void testUserInfo() {
 		System.out.println("testUserInfo");
 		UserInfo user = session.getUserInfo();
-		assertNotNull(session.getUserInfo());
+		assertNotNull(user);
+		assertNotNull(user.getProfile());
 		System.out.println(user.getName());
 		System.out.println(user.getEmail());
+		System.out.println(user.getProfile().getPermissionsCustomizeApplication());
 	}
 	
 	@Test
