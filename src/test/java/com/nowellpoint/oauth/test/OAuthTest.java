@@ -16,6 +16,7 @@ import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
 import com.nowellpoint.oauth.model.UserInfo;
+import com.nowellpoint.oauth.provider.Salesforce;
 
 public class OAuthTest {
 	
@@ -35,7 +36,10 @@ public class OAuthTest {
 		System.out.println("SessionId: " + session.getId());
 		
 		try {
-			session.login(System.getenv("SALESFORCE_USERNAME"), System.getenv("SALESFORCE_PASSWORD"), System.getenv("SALESFORCE_SECURITY_TOKEN"));
+			session.login(
+					System.getenv("SALESFORCE_USERNAME"), 
+					System.getenv("SALESFORCE_PASSWORD"), 
+					System.getenv("SALESFORCE_SECURITY_TOKEN"));
 		} catch (LoginException e) {
 			e.printStackTrace();
 		}
@@ -87,5 +91,14 @@ public class OAuthTest {
 		assertNotNull(organizationInfo);
 		System.out.println(organizationInfo.getName());
 		System.out.println(organizationInfo.getAttributes().getUrl());
+	}
+	
+	@Test
+	public void testServiceProvider() {
+		System.out.println("serviceProviderTest");
+		OAuthSession session = new OAuthSession();
+		session.setServiceProvider(Salesforce.class);
+		Salesforce provider = session.getServiceProvider();
+		System.out.println(session.getId());
 	}
 }

@@ -16,6 +16,7 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private static final String TEST_URL = "https://test.salesforce.com";
 	private static final Map<String, String> ENDPOINTS;
 	
+	private ServiceProvider serviceProvider;
 	private String authorizationUrl;
 	private String clientId;
 	private String clientSecret;
@@ -25,7 +26,6 @@ public class OAuthConfig extends Configuration implements Serializable {
 	private String display;	
 	private String state;
 	private Boolean useSandbox;
-	private String dataDirectory;
 	private String logoutRedirect;
 	
 	static {
@@ -115,15 +115,6 @@ public class OAuthConfig extends Configuration implements Serializable {
 	
 	public OAuthConfig setUseSandbox(Boolean useSandbox) {
 		this.useSandbox = useSandbox;
-		return this;
-	}
-	
-	public String getDataDirectory() {
-		return dataDirectory;
-	}
-	
-	public OAuthConfig setDataDirectory(String dataDirectory) {
-		this.dataDirectory = dataDirectory;
 		return this;
 	}
 	

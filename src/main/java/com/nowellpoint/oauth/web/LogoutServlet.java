@@ -1,6 +1,8 @@
 package com.nowellpoint.oauth.web;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
@@ -12,8 +14,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.jboss.logging.Logger;
 
 import com.nowellpoint.oauth.OAuthSession;
 
@@ -35,7 +35,7 @@ public class LogoutServlet implements Servlet {
         try {
 			oauthSession.logout();
 		} catch (LoginException e) {
-			log.error(e);
+			log.log(Level.WARNING, e.getMessage());
 		}
         
         request.getSession().invalidate();

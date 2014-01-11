@@ -45,6 +45,7 @@ public class OAuthSession implements Serializable {
 	private Identity identity;
 	private UserInfo user;
 	private OrganizationInfo organization;
+	private ServiceProvider serviceProvider;
 	
 	public OAuthSession() {
 		generateId();
@@ -55,6 +56,20 @@ public class OAuthSession implements Serializable {
 		generateId();
 	}
 	
+	public <T extends ServiceProvider> void setServiceProvider(Class<T> provider) {
+		try {
+			this.serviceProvider = (ServiceProvider) provider.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		generateId();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends ServiceProvider> T getServiceProvider() {
+		return (T) serviceProvider;
+	}
+	        
 	public String getId() {
 		return id;
 	}
