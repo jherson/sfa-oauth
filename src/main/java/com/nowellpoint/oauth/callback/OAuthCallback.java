@@ -13,7 +13,6 @@ public class OAuthCallback implements Callback, Serializable {
 	private String refreshToken;
 	private String username;
 	private String password;
-	private String securityToken;
 
 	public OAuthCallback() {
 		
@@ -58,13 +57,5 @@ public class OAuthCallback implements Callback, Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getSecurityToken() {
-		return securityToken;
-	}
-
-	public void setSecurityToken(String securityToken) {
-		this.securityToken = securityToken;
 	}
 }

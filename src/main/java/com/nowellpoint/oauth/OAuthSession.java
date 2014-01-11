@@ -26,6 +26,7 @@ import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.model.Verifier;
+import com.nowellpoint.oauth.request.OAuthClientRequest;
 import com.nowellpoint.oauth.service.OAuthService;
 import com.nowellpoint.oauth.service.impl.OAuthServiceImpl;
 import com.nowellpoint.principal.IdentityPrincipal;
@@ -38,6 +39,7 @@ public class OAuthSession implements Serializable {
 	private static Logger log = Logger.getLogger(OAuthSession.class.getName());
 	
 	private OAuthServiceProvider oauthServiceProvider;
+	private OAuthClient oauthClient;
 	private String id;
 	private LoginContext loginContext;
 	private Subject subject;
@@ -45,9 +47,13 @@ public class OAuthSession implements Serializable {
 	private Identity identity;
 	private UserInfo user;
 	private OrganizationInfo organization;
-	private ServiceProvider serviceProvider;
 	
 	public OAuthSession() {
+		generateId();
+	}
+	
+	public OAuthSession(OAuthClient oauthClient) {
+		setOAuthClient(oauthClient);
 		generateId();
 	}
 	
@@ -56,18 +62,12 @@ public class OAuthSession implements Serializable {
 		generateId();
 	}
 	
-	public <T extends ServiceProvider> void setServiceProvider(Class<T> provider) {
-		try {
-			this.serviceProvider = (ServiceProvider) provider.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		generateId();
+	public void setOAuthClient(OAuthClient oauthClient) {
+		this.oauthClient = oauthClient;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T extends ServiceProvider> T getServiceProvider() {
-		return (T) serviceProvider;
+	public <T extends ServiceProvider> ServiceProvider getServiceProvider() {
+		return oauthClient.getServiceProvider();
 	}
 	        
 	public String getId() {
@@ -138,10 +138,20 @@ public class OAuthSession implements Serializable {
 		}	
     }
     
-    public void login(String username, String password, String securityToken) throws LoginException {    	  
-    	Credentials credentials = new Credentials(username, password, securityToken);
+    public void login(String username, String password, String securityToken) throws LoginException {
+    	Credentials credentials = new Credentials(username, password);    	
     	OAuthCallbackHandler callbackHandler = oauthServiceProvider.getOAuthCallbackHandler(credentials);
     	login(callbackHandler);
+    }
+    
+    public void login(Credentials credentials) throws LoginException {
+    	OAuthClientRequest.BasicAuthorizationRequest authorizationRequest = new OAuthClientRequest.BasicAuthorizationRequest().setClientId(oauthClient.getClientId())
+    			.setClientSecret(oauthClient.getClientSecret())
+    			.setUsername(credentials.getUsername())
+    			.setPassword(credentials.getPassword());
+    	
+    	Token token = oauthClient.getServiceProvider().requestToken(authorizationRequest);
+    	System.out.println(token.getAccessToken());
     }
     
     public void requestToken(String code) throws LoginException {    	

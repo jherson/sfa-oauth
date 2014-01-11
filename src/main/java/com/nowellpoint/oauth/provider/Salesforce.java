@@ -183,6 +183,7 @@ import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.ServiceProvider;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.request.OAuthClientRequest;
 
 public class Salesforce extends ServiceProvider {
 
@@ -231,7 +232,7 @@ public class Salesforce extends ServiceProvider {
 	 */
 	
 	public Salesforce() {
-		authEndpoint = buildAuthEndpoint();
+		authEndpoint = MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.AUTHORIZE_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL);
 	}
 	
 	@Override
@@ -239,15 +240,14 @@ public class Salesforce extends ServiceProvider {
 		return authEndpoint;
 	}
 	
-	@Override
-    public Token login(String clientId, String clientSecret, String username, String password) throws LoginException {
-        ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), getConfiguration().getUseSandbox() ? TEST_URL : LOGIN_URL));
+	public Token requestToken(OAuthClientRequest.BasicAuthorizationRequest authorizationRequest) throws LoginException {
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");
         request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_GRANT_TYPE);                
-        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
-        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
-        request.queryParameter(OAuthConstants.USERNAME_PARAMETER, username);
-        request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, password);
+        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, authorizationRequest.getClientId());
+        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, authorizationRequest.getClientSecret());
+        request.queryParameter(OAuthConstants.USERNAME_PARAMETER, authorizationRequest.getUsername());
+        request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, authorizationRequest.getPassword());
             
         ClientResponse<Token> response = null;
         try {
@@ -259,16 +259,16 @@ public class Salesforce extends ServiceProvider {
         }
         
         return response.getEntity();
-    }
+	}
 
 	@Override
-	public Token requestToken(String clientId, String clientSecret, String redirectUri, String code) throws LoginException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), getConfiguration().getUseSandbox() ? TEST_URL : LOGIN_URL));
+	public Token requestToken(String code) throws LoginException {
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");        
         request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE);                
-        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
-        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
-        request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, redirectUri);
+        //request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, getConfiguration().getClientId());
+       // request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, getConfiguration().getClientSecret());
+       // request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, getConfiguration().getCallbackUrl());
         request.queryParameter(OAuthConstants.CODE_PARAMETER, code);
         
         ClientResponse<Token> response = null;
@@ -304,7 +304,7 @@ public class Salesforce extends ServiceProvider {
 
 	@Override
 	public void revokeToken(String accessToken) throws LoginException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.REVOKE_ENDPOINT), getConfiguration().getUseSandbox() ? TEST_URL : LOGIN_URL));
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.REVOKE_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");
         request.queryParameter(OAuthConstants.TOKEN_PARAMETER, accessToken);
 
@@ -318,12 +318,12 @@ public class Salesforce extends ServiceProvider {
 	}
 
 	@Override
-	public Token refreshToken(String clientId, String clientSecret, String accessToken) throws LoginException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), getConfiguration().getUseSandbox() ? TEST_URL : LOGIN_URL));
+	public Token refreshToken(String accessToken) throws LoginException {
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");
         request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE);                
-        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, clientId);
-        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, clientSecret);
+       // request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, getConfiguration().getClientId());
+       // request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, getConfiguration().getClientSecret());
         request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE, accessToken);
         
         ClientResponse<Token> response = null;
@@ -338,43 +338,4 @@ public class Salesforce extends ServiceProvider {
         return response.getEntity();
 		
 	}
-	
-	private String buildAuthEndpoint() {
-		StringBuilder endpoint = new StringBuilder()
-				.append(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.AUTHORIZE_ENDPOINT), getConfiguration().getUseSandbox() ? TEST_URL : LOGIN_URL))
-				.append("?")
-				.append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
-				.append("=")
-				.append(OAuthConstants.CODE_PARAMETER)
-				.append("&")
-				.append(OAuthConstants.CLIENT_ID_PARAMETER)
-				.append("=")
-				.append(getConfiguration().getClientId())
-				.append("&")
-				.append(OAuthConstants.REDIRECT_URI_PARAMETER)
-				.append("=")
-				.append(getConfiguration().getCallbackUrl());
-		
-		if (getConfiguration().getScope() != null) {
-			endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER)
-					.append("=").append(getConfiguration().getScope());
-		}
-    	
-    	if (getConfiguration().getPrompt() != null) {
-			endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER)
-					.append("=").append(getConfiguration().getPrompt());
-    	}
-    	
-    	if (getConfiguration().getDisplay() != null) {
-			endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER)
-					.append("=").append(getConfiguration().getDisplay());
-    	}
-    	
-    	if (getConfiguration().getState() != null) {
-			endpoint.append("&").append(OAuthConstants.STATE_PARAMETER)
-					.append("=").append(getConfiguration().getState());
-    	}
-    	
-    	return endpoint.toString();
-    }
 }

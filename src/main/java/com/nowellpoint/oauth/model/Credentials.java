@@ -11,23 +11,29 @@ public class Credentials implements Serializable {
 	private static final long serialVersionUID = -6706474981160907114L;
 	private String username;
 	private String password; 
-	private String securityToken;
 	
-	public Credentials(String username, String password, String securityToken) {
-		this.username = username;
-		this.password = password;
-		this.securityToken = securityToken;
+	public Credentials() {
+		
+	}
+	
+	public Credentials(String username, String password) {
+		setUsername(username);
+		setPassword(password);
 	}
 
 	public String getUsername() {
 		return username;
 	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 	public String getPassword() {
 		return password;
 	}
-
-	public String getSecurityToken() {
-		return securityToken;
+	
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

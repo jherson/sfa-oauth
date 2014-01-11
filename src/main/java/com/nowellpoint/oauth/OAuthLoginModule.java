@@ -104,7 +104,7 @@ public class OAuthLoginModule implements LoginModule, Serializable {
 		} else if (callback.getFlowType().equals(OAuthFlowType.REFRESH_TOKEN_FLOW)) {
 			token = oauthService.refreshToken(tokenUrl, clientId, clientSecret, callback.getRefreshToken());
 		} else if (callback.getFlowType().equals(OAuthFlowType.USERNAME_PASSWORD_FLOW)) {	
-			token = oauthService.authorize(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), callback.getSecurityToken());
+			token = oauthService.authorize(tokenUrl, clientId, clientSecret, callback.getUsername(), callback.getPassword(), null);
 		} else {
 			throw new LoginException("Unsupported authorization flow: " + callback.getFlowType());
 		}

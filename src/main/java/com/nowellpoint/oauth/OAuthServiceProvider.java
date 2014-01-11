@@ -28,7 +28,6 @@ public class OAuthServiceProvider implements Serializable {
     			verifier.getCode(), 
     			null, 
     			null, 
-    			null, 
     			null);
 	}
 	
@@ -38,8 +37,7 @@ public class OAuthServiceProvider implements Serializable {
     			null,
     			null, 
     			credentials.getUsername(), 
-    			credentials.getPassword(), 
-    			credentials.getSecurityToken());
+    			credentials.getPassword());
 	}
 	
 	public OAuthCallbackHandler getOAuthCallbackHandler(Token token) {
@@ -47,7 +45,6 @@ public class OAuthServiceProvider implements Serializable {
     			OAuthFlowType.REFRESH_TOKEN_FLOW,
     			null, 
     			token.getRefreshToken(),
-    			null, 
     			null, 
     			null);
 	}

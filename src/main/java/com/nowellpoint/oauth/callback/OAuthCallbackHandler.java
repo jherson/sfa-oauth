@@ -16,22 +16,19 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 	private String refreshToken;
 	private String username;
 	private String password;
-	private String securityToken;
 
 	public OAuthCallbackHandler(
 			OAuthFlowType flowType,			
 			String code, 
 			String refreshToken, 
 			String username, 
-			String password, 
-			String securityToken) {
+			String password) {
 		
 		this.flowType = flowType;
 		this.code = code;
 		this.refreshToken = refreshToken;
 		this.username = username;
 		this.password = password;
-		this.securityToken = securityToken;
 	}
 
 	@Override
@@ -45,7 +42,6 @@ public class OAuthCallbackHandler implements CallbackHandler, Serializable {
 				oauthCallback.setRefreshToken(this.refreshToken);
 				oauthCallback.setUsername(this.username);
 				oauthCallback.setPassword(this.password);
-				oauthCallback.setSecurityToken(this.securityToken);
 			} else {
 				throw new UnsupportedCallbackException(callback, "Unsupported callback type");
 			}
