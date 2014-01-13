@@ -25,50 +25,45 @@ public abstract class ServiceProvider implements Serializable {
 	
 	/**
 	 * requestToken
-	 * @param authorizationRequest
+	 * @param basicTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
 	
-	public abstract Token requestToken(OAuthClientRequest.BasicAuthorizationRequest authorizationRequest) throws LoginException;
+	public abstract Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws LoginException;
 	
 	/**
 	 * requestToken
-	 * @param clientId
-	 * @param clientSecret
-	 * @param redirectUri
-	 * @param code
+	 * @param verifyTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
 	
-	public abstract Token requestToken(String code) throws LoginException;
+	public abstract Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws LoginException;
 	
 	/**
 	 * getIdentity 
-	 * @param accessToken
+	 * @param identityRequest
 	 * @return Identity
 	 * @throws LoginException
 	 */
 	
-	public abstract Identity getIdentity(String identityUrl, String accessToken) throws LoginException;
+	public abstract Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws LoginException;
 	
 	/**
 	 * refreshToken
-	 * @param clientId
-	 * @param clientSecret
-	 * @param accessToken
+	 * @param refreshTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
 	
-	public abstract Token refreshToken(String accessToken) throws LoginException;
+	public abstract Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws LoginException;
 	
 	/**
 	 * revokeToken
-	 * @param accessToken
+	 * @param revokeTokenRequest
 	 * @throws LoginException
 	 */
 	
-	public abstract void revokeToken(String accessToken) throws LoginException;
+	public abstract void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws LoginException;
 }

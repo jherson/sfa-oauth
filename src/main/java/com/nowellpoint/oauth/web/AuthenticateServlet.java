@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.OAuthVerificationEvent;
+import com.nowellpoint.oauth.model.Verifier;
 
 @WebServlet(value="/authenticate")
 public class AuthenticateServlet implements Servlet {
@@ -45,8 +46,9 @@ public class AuthenticateServlet implements Servlet {
             return;
         }
         
+        Verifier verifier = new Verifier(code);
         try {
-			oauthSession.requestToken(code);
+			oauthSession.verifyToken(verifier);
 		} catch (LoginException e) {
 			throw new ServletException(e.getMessage());
 		}   
