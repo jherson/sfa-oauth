@@ -1,4 +1,4 @@
-package com.nowellpoint.oauth;
+package com.nowellpoint.oauth.session;
 
 import java.io.Serializable;
 

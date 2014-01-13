@@ -1,36 +1,27 @@
-package com.nowellpoint.oauth;
+package com.nowellpoint.oauth.session;
 
 import java.io.IOException;
-import java.io.Serializable;										
-import java.util.Iterator;
+import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.login.Configuration;
-import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.LazyLoader;
 
-import com.nowellpoint.oauth.callback.OAuthCallbackHandler;
+import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.client.OAuthClientRequest;
+import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.Identity;
-import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
-import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.model.Verifier;
-import com.nowellpoint.oauth.request.OAuthClientRequest;
-import com.nowellpoint.oauth.service.OAuthService;
-import com.nowellpoint.oauth.service.impl.OAuthServiceImpl;
-import com.nowellpoint.principal.IdentityPrincipal;
-import com.nowellpoint.principal.TokenPrincipal;
 
 @SessionScoped
 public class OAuthSession implements Serializable {
@@ -38,13 +29,10 @@ public class OAuthSession implements Serializable {
 	private static final long serialVersionUID = 8065223488307981986L;
 	private static Logger log = Logger.getLogger(OAuthSession.class.getName());
 	
-	private OAuthServiceProvider oauthServiceProvider;
 	private OAuthClient oauthClient;
 	private String id;
 	private Token token;
 	private Identity identity;
-	private UserInfo user;
-	private OrganizationInfo organization;
 	
 	public OAuthSession() {
 		generateId();
@@ -55,19 +43,6 @@ public class OAuthSession implements Serializable {
 		generateId();
 	}
 	
-	public OAuthSession(OAuthServiceProvider oauthServiceProvider) {
-		setOAuthServiceProvider(oauthServiceProvider);
-		generateId();
-	}
-	
-	public void setOAuthClient(OAuthClient oauthClient) {
-		this.oauthClient = oauthClient;
-	}
-	
-	public <T extends ServiceProvider> ServiceProvider getServiceProvider() {
-		return oauthClient.getServiceProvider();
-	}
-	        
 	public String getId() {
 		return id;
 	}
@@ -76,14 +51,22 @@ public class OAuthSession implements Serializable {
 		this.id = id;
 	}
 	
-    public OAuthServiceProvider getOAuthServiceProvider() {
-    	return oauthServiceProvider;
-    }
-	
-	public void setOAuthServiceProvider(OAuthServiceProvider oauthServiceProvider) {
-		this.oauthServiceProvider = oauthServiceProvider;
+	public void setOAuthClient(OAuthClient oauthClient) {
+		this.oauthClient = oauthClient;
 	}
-       
+	
+	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
+		return oauthClient.getServiceProvider();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass) {
+		if (oauthClient.getServiceProvider().getClass().isAssignableFrom(serviceProviderClass)) {
+			return (T) oauthClient.getServiceProvider();
+		}
+		return null;
+	}
+	        
     public void login(HttpServletResponse response) throws LoginException {
     	
     	/**
@@ -124,7 +107,7 @@ public class OAuthSession implements Serializable {
 		}	
     }
     
-    public void login(Credentials credentials) throws LoginException {
+    public void login(Credentials credentials) throws OAuthException {
     	OAuthClientRequest.BasicTokenRequest tokenRequest = OAuthClientRequest.basicTokenRequest()
     			.setClientId(oauthClient.getClientId())
     			.setClientSecret(oauthClient.getClientSecret())
@@ -134,10 +117,10 @@ public class OAuthSession implements Serializable {
     	
     	Token token = getServiceProvider().requestToken(tokenRequest);
     	
-    	initializeSession(token);
+    	initialize(token);
     }
     
-    public void verifyToken(Verifier verifier) throws LoginException {    	
+    public void verifyToken(Verifier verifier) throws OAuthException {    	
     	OAuthClientRequest.VerifyTokenRequest tokenRequest = OAuthClientRequest.verifyTokenRequest()
     			.setCode(verifier.getCode())
     			.setCallbackUrl(oauthClient.getCallbackUrl())
@@ -147,10 +130,14 @@ public class OAuthSession implements Serializable {
     	
     	Token token = getServiceProvider().requestToken(tokenRequest);
     	
-    	initializeSession(token);
+    	if (token.getError() != null) {
+		 	throw new OAuthException(token.getError() + ": " + token.getErrorDescription());		 
+		}
+    	
+    	initialize(token);
     }
     
-    public void refreshToken() throws LoginException {  			
+    public void refreshToken() throws OAuthException {  			
     	OAuthClientRequest.RefreshTokenRequest refreshTokenRequest = OAuthClientRequest.refreshTokenRequest()
     			.setRefreshToken(getToken().getRefreshToken())
     			.setClientId(oauthClient.getClientId())
@@ -159,10 +146,10 @@ public class OAuthSession implements Serializable {
     	
     	Token token = getServiceProvider().refreshToken(refreshTokenRequest);
     	
-    	initializeSession(token);
+    	initialize(token);
     }
     
-    public void logout() throws LoginException {
+    public void logout() throws OAuthException {
     	OAuthClientRequest.RevokeTokenRequest revokeTokenRequest = OAuthClientRequest.revokeTokenRequest()
     			.setAccessToken(getToken().getAccessToken())
     			.build();
@@ -181,14 +168,6 @@ public class OAuthSession implements Serializable {
     	return identity;
     }
     
-    public UserInfo getUserInfo() {
-    	return user;
-    }
-    
-    public OrganizationInfo getOrganizationInfo() {
-    	return organization;
-    }
-    
 	private void generateId() {
 		setId(UUID.randomUUID().toString().replace("-", ""));
 	}
@@ -202,56 +181,20 @@ public class OAuthSession implements Serializable {
 		Identity identity = null;
     	try {
     		identity = getServiceProvider().getIdentity(identityRequest);
-		} catch (LoginException e) {
+		} catch (OAuthException e) {
 			log.log(Level.SEVERE, e.getMessage());
 		}
     	
     	return identity;
 	}
     
-    private UserInfo loadUserInfo() {    	
-    	OAuthService oauthService = new OAuthServiceImpl();
-    	
-    	UserInfo user = null;
-		try {
-			user = oauthService.getUserInfo(getToken(), getIdentity());
-		} catch (LoginException e) {
-			log.log(Level.SEVERE, e.getMessage());
-		}
-
-    	return user;
-    }
-    
-    private OrganizationInfo loadOrganizationInfo() {
-    	OAuthService oauthService = new OAuthServiceImpl();
-    	
-    	OrganizationInfo organization = null;
-		try {
-			organization = oauthService.getOrganizationInfo(getToken(), getIdentity());
-		} catch (LoginException e) {
-			log.log(Level.SEVERE, e.getMessage());
-		}
-
-    	return organization;
-    }
-    
-    private void initializeSession(Token token) throws LoginException {    	
+    private void initialize(Token token) throws OAuthException {    	
     	setToken(token);
     	setIdentity((Identity) Enhancer.create(Identity.class, new LazyLoader() {
     		public Identity loadObject() {
     			return loadIdentity();
     		}
     	}));    	
-    	setUserInfo((UserInfo) Enhancer.create(UserInfo.class, new LazyLoader() {
-            public UserInfo loadObject() {
-            	return loadUserInfo();
-            }
-        }));
-    	setOrganizationInfo((OrganizationInfo) Enhancer.create(OrganizationInfo.class, new LazyLoader() {
-            public OrganizationInfo loadObject() {
-            	return loadOrganizationInfo();
-            }
-        }));
     }
     
     private void setToken(Token token) {
@@ -261,12 +204,4 @@ public class OAuthSession implements Serializable {
     private void setIdentity(Identity identity) {
     	this.identity = identity;
     }	
-    
-    private void setOrganizationInfo(OrganizationInfo organization) {
-    	this.organization = organization;
-    }
-    
-    private void setUserInfo(UserInfo user) {
-    	this.user = user;
-    }
 }

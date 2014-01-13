@@ -2,58 +2,69 @@ package com.nowellpoint.oauth;
 
 import java.io.Serializable;
 
-import javax.security.auth.login.Configuration;
+import javax.security.auth.login.LoginException;
 
-import com.nowellpoint.oauth.callback.OAuthCallbackHandler;
-import com.nowellpoint.oauth.callback.OAuthFlowType;
-import com.nowellpoint.oauth.model.Credentials;
+import com.nowellpoint.oauth.client.OAuthClientRequest;
+import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
-import com.nowellpoint.oauth.model.Verifier;
 
-public class OAuthServiceProvider implements Serializable {
+public abstract class OAuthServiceProvider implements Serializable {
 
-	private static final long serialVersionUID = 8065223488307981986L;
+	/**
+	 * 
+	 */
 	
-	public OAuthServiceProvider() {
-		
-	}
+	private static final long serialVersionUID = -5650578742390926431L;
 	
-    public OAuthServiceProvider(OAuthConfig oauthConfig) {
-    	setConfiguration(oauthConfig);
-    }
+	/**
+	 * getAuthorizeEndpoint
+	 * @return String
+	 */
 	
-	public OAuthCallbackHandler getOAuthCallbackHandler(Verifier verifier) {
-		return new OAuthCallbackHandler(
-    			OAuthFlowType.WEB_SERVER_FLOW,
-    			verifier.getCode(), 
-    			null, 
-    			null, 
-    			null);
-	}
+	public abstract String getAuthEndpoint();
 	
-	public OAuthCallbackHandler getOAuthCallbackHandler(Credentials credentials) {
-		return new OAuthCallbackHandler(
-    			OAuthFlowType.USERNAME_PASSWORD_FLOW,
-    			null,
-    			null, 
-    			credentials.getUsername(), 
-    			credentials.getPassword());
-	}
+	/**
+	 * requestToken
+	 * @param basicTokenRequest
+	 * @return Token
+	 * @throws LoginException
+	 */
 	
-	public OAuthCallbackHandler getOAuthCallbackHandler(Token token) {
-		return new OAuthCallbackHandler(
-    			OAuthFlowType.REFRESH_TOKEN_FLOW,
-    			null, 
-    			token.getRefreshToken(),
-    			null, 
-    			null);
-	}
-   
-    private void setConfiguration(OAuthConfig oauthConfig) {
-		Configuration.setConfiguration(oauthConfig);
-    }
-    
-    public OAuthConfig getConfiguration() {
-    	return (OAuthConfig) Configuration.getConfiguration();
-    }
+	public abstract Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException;
+	
+	/**
+	 * requestToken
+	 * @param verifyTokenRequest
+	 * @return Token
+	 * @throws LoginException
+	 */
+	
+	public abstract Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException;
+	
+	/**
+	 * getIdentity 
+	 * @param identityRequest
+	 * @return Identity
+	 * @throws LoginException
+	 */
+	
+	public abstract Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException;
+	
+	/**
+	 * refreshToken
+	 * @param refreshTokenRequest
+	 * @return Token
+	 * @throws LoginException
+	 */
+	
+	public abstract Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException;
+	
+	/**
+	 * revokeToken
+	 * @param revokeTokenRequest
+	 * @throws LoginException
+	 */
+	
+	public abstract void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException;
 }

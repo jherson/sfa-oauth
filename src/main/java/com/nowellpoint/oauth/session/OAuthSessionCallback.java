@@ -1,11 +1,11 @@
-package com.nowellpoint.oauth;
+package com.nowellpoint.oauth.session;
 
 import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public abstract class OAuthVerificationEvent implements Serializable {
+public abstract class OAuthSessionCallback implements Serializable {
 
 	/**
 	 * 

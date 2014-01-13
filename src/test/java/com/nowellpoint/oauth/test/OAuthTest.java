@@ -3,18 +3,17 @@ package com.nowellpoint.oauth.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import javax.security.auth.login.LoginException;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.nowellpoint.oauth.OAuthClient;
-import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.UserInfo;
-import com.nowellpoint.oauth.provider.Salesforce;
+import com.nowellpoint.oauth.provider.SalesforceProvider;
+import com.nowellpoint.oauth.session.OAuthSession;
 
 public class OAuthTest {
 	
@@ -23,10 +22,10 @@ public class OAuthTest {
 	@BeforeClass
 	public static void buildOAuthClient() {
 		OAuthClient client = new OAuthClient.ClientBuilder()
-			.clientId(System.getenv("CLIENT_ID"))
-			.clientSecret(System.getenv("CLIENT_SECRET"))
-			.serviceProvider(Salesforce.class)
-			.build();
+				.setClientId(System.getenv("CLIENT_ID"))
+				.setClientSecret(System.getenv("CLIENT_SECRET"))
+				.setServiceProvider(SalesforceProvider.class)
+				.build();
 		
 		session = new OAuthSession(client);
 		
@@ -36,7 +35,7 @@ public class OAuthTest {
 		
 		try {
 			session.login(credentials);
-		} catch (LoginException e) {
+		} catch (OAuthException e) {
 			e.printStackTrace();
 		}
 	}
@@ -57,35 +56,51 @@ public class OAuthTest {
 		System.out.println(session.getIdentity().getUrls().getSObjects());
 	}
 	
-	@AfterClass
-	public static void cleanup() {
-		try {
-			session.logout();
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
-		
-		assertNull(session.getToken());
-		assertNull(session.getIdentity());
-	}
-	
 	@Test
 	public void testUserInfo() {
 		System.out.println("testUserInfo");
-		UserInfo user = session.getUserInfo();
-		assertNotNull(user);
-		assertNotNull(user.getProfile());
-		System.out.println(user.getName());
-		System.out.println(user.getEmail());
-		System.out.println(user.getProfile().getPermissionsCustomizeApplication());
+		
+		UserInfo userInfo = null;
+		try {
+			userInfo = session.unwrap(SalesforceProvider.class).getUserInfo(session.getToken(), session.getIdentity());
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		}
+		
+		assertNotNull(userInfo);
+		assertNotNull(userInfo.getProfile());
+		
+		System.out.println(userInfo.getName());
+		System.out.println(userInfo.getEmail());
+		System.out.println(userInfo.getProfile().getPermissionsCustomizeApplication());
 	}
 	
 	@Test
 	public void testOrganizationInfo() {
 		System.out.println("testOrganizationInfo");
-		OrganizationInfo organizationInfo = session.getOrganizationInfo();
+		
+		OrganizationInfo organizationInfo = null;
+		try {
+			organizationInfo = session.unwrap(SalesforceProvider.class).getOrganizationInfo(session.getToken(), session.getIdentity());
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		}
+		
 		assertNotNull(organizationInfo);
+		
 		System.out.println(organizationInfo.getName());
 		System.out.println(organizationInfo.getAttributes().getUrl());
+	}
+	
+	@AfterClass
+	public static void cleanup() {
+		try {
+			session.logout();
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		}
+		
+		assertNull(session.getToken());
+		assertNull(session.getIdentity());
 	}
 }

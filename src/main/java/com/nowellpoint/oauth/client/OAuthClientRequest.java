@@ -1,4 +1,4 @@
-package com.nowellpoint.oauth.request;
+package com.nowellpoint.oauth.client;
 
 import java.util.Map;
 

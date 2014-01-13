@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.security.auth.login.LoginException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,13 +14,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.annotations.Salesforce;
+import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.session.OAuthSession;
 
 @WebServlet(value="/logout")
 public class LogoutServlet implements Servlet {
 	
 	@Inject
 	private Logger log;
+	
+	@Inject
+	@Salesforce
+	private OAuthClient oauthClient;
 	
 	@Inject
 	private OAuthSession oauthSession;
@@ -34,13 +40,13 @@ public class LogoutServlet implements Servlet {
         
         try {
 			oauthSession.logout();
-		} catch (LoginException e) {
+		} catch (OAuthException e) {
 			log.log(Level.WARNING, e.getMessage());
 		}
         
         request.getSession().invalidate();
 		
-		response.sendRedirect(request.getContextPath() + oauthSession.getOAuthServiceProvider().getConfiguration().getLogoutRedirect());
+		response.sendRedirect(request.getContextPath() + oauthClient.getLogoutRedirect());
 	}
 
 	@Override

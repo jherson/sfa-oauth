@@ -1,8 +1,12 @@
-package com.nowellpoint.oauth;
+package com.nowellpoint.oauth.client;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.nowellpoint.oauth.OAuthConstants;
+import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.session.OAuthSessionCallback;
 
 public class OAuthClient implements Serializable {
 
@@ -11,7 +15,8 @@ public class OAuthClient implements Serializable {
 	 */
 	
 	private static final long serialVersionUID = 2748321507418076091L;
-	private ServiceProvider serviceProvider;
+	private OAuthServiceProvider serviceProvider;
+	private OAuthSessionCallback sessionCallback;
 	private String authEndpoint;
 	private String clientId;
 	private String clientSecret;
@@ -20,6 +25,8 @@ public class OAuthClient implements Serializable {
 	private String prompt;
 	private String display;	
 	private String state;
+	private String logoutRedirect;
+	
 	private Map<String, Object> parameters;
 	
 	/**
@@ -30,67 +37,6 @@ public class OAuthClient implements Serializable {
 		
 	}
 	
-	public static class ClientBuilder {
-		private String serviceProvider;
-		private String clientId;
-		private String clientSecret;
-		private String callbackUrl;
-		private String scope;
-		private String prompt;
-		private String display;	
-		private String state;
-		private Map<String, Object> parameters = new HashMap<String, Object>();	
-		
-		public <T extends ServiceProvider> ClientBuilder serviceProvider(Class<T> serviceProvider) {
-			this.serviceProvider = serviceProvider.getName();
-			return this;
-		}
-		
-		public ClientBuilder clientId(String clientId) {
-			this.clientId = clientId;
-			return this;
-		}
-
-		public ClientBuilder clientSecret(String clientSecret) {
-			this.clientSecret = clientSecret;
-			return this;
-		}
-		
-		public ClientBuilder callbackUrl(String callbackUrl) {
-			this.callbackUrl = callbackUrl;
-			return this;
-		}
-
-		public ClientBuilder scope(String scope) {
-			this.scope = scope;
-			return this;
-		}
-
-		public ClientBuilder prompt(String prompt) {
-			this.prompt = prompt;
-			return this;
-		}
-
-		public ClientBuilder display(String display) {
-			this.display = display;
-			return this;
-		}
-		
-		public ClientBuilder state(String state) {
-			this.state = state;
-			return this;
-		}
-		
-		public ClientBuilder addParameter(String key, Object value) {
-			this.parameters.put(key, value);
-			return this;
-		}
-		
-		public OAuthClient build() {
-			return new OAuthClient(this);
-		}
-	}
-	
 	private OAuthClient(ClientBuilder builder) {
 		this.clientId = builder.clientId;
 		this.clientSecret = builder.clientSecret;
@@ -99,9 +45,11 @@ public class OAuthClient implements Serializable {
 		this.prompt = builder.prompt;
 		this.display = builder.display;
 		this.state = builder.state;
+		this.logoutRedirect = builder.logoutRedirect;
 		
 		try {
-			this.serviceProvider = (ServiceProvider) Class.forName(builder.serviceProvider).newInstance();
+			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.serviceProvider).newInstance();
+			this.sessionCallback = (OAuthSessionCallback) Class.forName(builder.sessionCallback).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -109,8 +57,12 @@ public class OAuthClient implements Serializable {
 		this.authEndpoint = buildAuthEndpoint(serviceProvider.getAuthEndpoint());
 	}
 	
-	public <T extends ServiceProvider> ServiceProvider getServiceProvider() {
+	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
 		return serviceProvider;
+	}
+	
+	public <T extends OAuthSessionCallback> OAuthSessionCallback getSessionCallback() {
+		return sessionCallback;
 	}
 	
 	public String getAuthEndpoint() {
@@ -156,6 +108,10 @@ public class OAuthClient implements Serializable {
 	public String getState() {
 		return state;
 	}
+	
+	public String getLogoutRedirect() {
+		return logoutRedirect;
+	}
 
 	public Map<String, Object> getParameters() {
 		return parameters;
@@ -199,4 +155,78 @@ public class OAuthClient implements Serializable {
     	
     	return endpoint.toString();
     }
+	
+	public static class ClientBuilder {
+		private String serviceProvider;
+		private String sessionCallback;
+		private String clientId;
+		private String clientSecret;
+		private String callbackUrl;
+		private String scope;
+		private String prompt;
+		private String display;	
+		private String state;
+		private String logoutRedirect;
+		
+		private Map<String, Object> parameters = new HashMap<String, Object>();	
+		
+		public <T extends OAuthServiceProvider> ClientBuilder setServiceProvider(Class<T> serviceProvider) {
+			this.serviceProvider = serviceProvider.getName();
+			return this;
+		}
+		
+		public <T extends OAuthSessionCallback> ClientBuilder setSessionCallback(Class<T> sessionCallback) {
+			this.sessionCallback = sessionCallback.getName();
+			return this;
+		}
+		
+		public ClientBuilder setClientId(String clientId) {
+			this.clientId = clientId;
+			return this;
+		}
+
+		public ClientBuilder setClientSecret(String clientSecret) {
+			this.clientSecret = clientSecret;
+			return this;
+		}
+		
+		public ClientBuilder setCallbackUrl(String callbackUrl) {
+			this.callbackUrl = callbackUrl;
+			return this;
+		}
+
+		public ClientBuilder setScope(String scope) {
+			this.scope = scope;
+			return this;
+		}
+
+		public ClientBuilder setPrompt(String prompt) {
+			this.prompt = prompt;
+			return this;
+		}
+
+		public ClientBuilder setDisplay(String display) {
+			this.display = display;
+			return this;
+		}
+		
+		public ClientBuilder setState(String state) {
+			this.state = state;
+			return this;
+		}
+		
+		public ClientBuilder setLogoutRedirect(String logoutRedirect) {
+			this.logoutRedirect = logoutRedirect;
+			return this;
+		}
+		
+		public ClientBuilder addParameter(String key, Object value) {
+			this.parameters.put(key, value);
+			return this;
+		}
+		
+		public OAuthClient build() {
+			return new OAuthClient(this);
+		}
+	}
 }

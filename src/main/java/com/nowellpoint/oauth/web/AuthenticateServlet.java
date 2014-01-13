@@ -3,7 +3,6 @@ package com.nowellpoint.oauth.web;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.security.auth.login.LoginException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,9 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.OAuthVerificationEvent;
+import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Verifier;
+import com.nowellpoint.oauth.session.OAuthSession;
+import com.nowellpoint.oauth.session.OAuthSessionCallback;
 
 @WebServlet(value="/authenticate")
 public class AuthenticateServlet implements Servlet {
@@ -24,7 +24,7 @@ public class AuthenticateServlet implements Servlet {
 	private OAuthSession oauthSession;
 	
 	@Inject
-	private OAuthVerificationEvent oauthVerificationEvent;
+	private OAuthSessionCallback oauthVerificationEvent;
 	
 	@Override
 	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
@@ -49,7 +49,7 @@ public class AuthenticateServlet implements Servlet {
         Verifier verifier = new Verifier(code);
         try {
 			oauthSession.verifyToken(verifier);
-		} catch (LoginException e) {
+		} catch (OAuthException e) {
 			throw new ServletException(e.getMessage());
 		}   
         
