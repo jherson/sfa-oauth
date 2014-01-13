@@ -49,9 +49,16 @@ public class OAuthClient implements Serializable {
 		
 		try {
 			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.serviceProvider).newInstance();
-			this.sessionCallback = (OAuthSessionCallback) Class.forName(builder.sessionCallback).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
+		}
+		
+		if (builder.sessionCallback != null) {
+			try {
+				this.sessionCallback = (OAuthSessionCallback) Class.forName(builder.sessionCallback).newInstance();
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		
 		this.authEndpoint = buildAuthEndpoint(serviceProvider.getAuthEndpoint());
