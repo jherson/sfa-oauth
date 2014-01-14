@@ -8,6 +8,7 @@ import com.nowellpoint.oauth.client.OAuthClientRequest;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.client.ServiceProviderOptions;
 
 public abstract class OAuthServiceProvider implements Serializable {
 
@@ -16,6 +17,30 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 */
 	
 	private static final long serialVersionUID = -5650578742390926431L;
+	
+	/**
+	 * 
+	 */
+	
+	private ServiceProviderOptions options;
+	
+	/**
+	 * setServiceProviderOptions
+	 * @param options
+	 */
+	
+	public void setServiceProviderOptions(ServiceProviderOptions options) {
+		this.options = options;
+	}
+	
+	/**
+	 * getServiceProviderOptions
+	 * @return
+	 */
+	
+	public ServiceProviderOptions getServiceProviderOptions() {
+		return options;
+	}
 	
 	/**
 	 * getAuthorizeEndpoint

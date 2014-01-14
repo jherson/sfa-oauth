@@ -1,8 +1,6 @@
 package com.nowellpoint.oauth.client;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
@@ -26,8 +24,7 @@ public class OAuthClient implements Serializable {
 	private String display;	
 	private String state;
 	private String logoutRedirect;
-	
-	private Map<String, Object> parameters;
+	private ServiceProviderOptions options;
 	
 	/**
 	 * no arg contructor used for injection 
@@ -46,6 +43,7 @@ public class OAuthClient implements Serializable {
 		this.display = builder.display;
 		this.state = builder.state;
 		this.logoutRedirect = builder.logoutRedirect;
+		this.options = builder.options;
 		
 		try {
 			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.serviceProvider).newInstance();
@@ -120,8 +118,8 @@ public class OAuthClient implements Serializable {
 		return logoutRedirect;
 	}
 
-	public Map<String, Object> getParameters() {
-		return parameters;
+	public ServiceProviderOptions getServiceProviderOptions() {
+		return options;
 	}
 	
 	private String buildAuthEndpoint(String authorizationResource) {
@@ -141,23 +139,19 @@ public class OAuthClient implements Serializable {
 				.append(getCallbackUrl());
 		
 		if (getScope() != null) {
-			endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER)
-					.append("=").append(getScope());
+			endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
 		}
     	
     	if (getPrompt() != null) {
-			endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER)
-					.append("=").append(getPrompt());
+			endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
     	}
     	
     	if (getDisplay() != null) {
-			endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER)
-					.append("=").append(getDisplay());
+			endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
     	}
     	
     	if (getState() != null) {
-			endpoint.append("&").append(OAuthConstants.STATE_PARAMETER)
-					.append("=").append(getState());
+			endpoint.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
     	}
     	
     	return endpoint.toString();
@@ -174,8 +168,11 @@ public class OAuthClient implements Serializable {
 		private String display;	
 		private String state;
 		private String logoutRedirect;
+		private ServiceProviderOptions options;
 		
-		private Map<String, Object> parameters = new HashMap<String, Object>();	
+		public ClientBuilder() {
+			
+		}
 		
 		public <T extends OAuthServiceProvider> ClientBuilder setServiceProvider(Class<T> serviceProvider) {
 			this.serviceProvider = serviceProvider.getName();
@@ -227,8 +224,8 @@ public class OAuthClient implements Serializable {
 			return this;
 		}
 		
-		public ClientBuilder addParameter(String key, Object value) {
-			this.parameters.put(key, value);
+		public ClientBuilder setServiceProviderOptions(ServiceProviderOptions options) {
+			this.options = options;
 			return this;
 		}
 		

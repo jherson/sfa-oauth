@@ -22,8 +22,7 @@ import com.nowellpoint.oauth.session.OAuthSession;
 @WebServlet(value="/logout")
 public class LogoutServlet implements Servlet {
 	
-	@Inject
-	private Logger log;
+	private Logger log =  Logger.getLogger(LogoutServlet.class.getName());
 	
 	@Inject
 	@Salesforce

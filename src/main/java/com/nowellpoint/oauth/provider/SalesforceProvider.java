@@ -257,7 +257,7 @@ public class SalesforceProvider extends OAuthServiceProvider {
 	 */
 	
 	public SalesforceProvider() {
-		authEndpoint = MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.AUTHORIZE_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL);
+		authEndpoint = MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.AUTHORIZE_ENDPOINT), getUseSandbox() ? TEST_URL : LOGIN_URL);
 	}
 	
 	@Override
@@ -267,7 +267,7 @@ public class SalesforceProvider extends OAuthServiceProvider {
 	
 	@Override
 	public Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), getUseSandbox() ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");
         request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_GRANT_TYPE);                
         request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, basicTokenRequest.getClientId());
@@ -289,7 +289,7 @@ public class SalesforceProvider extends OAuthServiceProvider {
 
 	@Override
 	public Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), getUseSandbox() ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");        
         request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE);                
         request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, verifyTokenRequest.getClientId());
@@ -330,7 +330,7 @@ public class SalesforceProvider extends OAuthServiceProvider {
 
 	@Override
 	public void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.REVOKE_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.REVOKE_ENDPOINT), getUseSandbox() ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");
         request.queryParameter(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken());
 
@@ -345,7 +345,7 @@ public class SalesforceProvider extends OAuthServiceProvider {
 
 	@Override
 	public Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException {
-		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), Boolean.FALSE ? TEST_URL : LOGIN_URL));
+		ClientRequest request = new ClientRequest(MessageFormat.format(OAUTH_RESOURCES.get(OAuthConstants.TOKEN_ENDPOINT), getUseSandbox() ? TEST_URL : LOGIN_URL));
         request.header("Content-Type", "application/x-www-form-urlencoded");
         request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE);                
         request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, refreshTokenRequest.getClientId());
@@ -410,6 +410,10 @@ public class SalesforceProvider extends OAuthServiceProvider {
 		}
 		
 		return response.getEntity();
+    }
+    
+    private Boolean getUseSandbox() {
+    	return getServiceProviderOptions().getUseSandbox();
     }
     
     private String getSObjectUrl(Identity identity) {

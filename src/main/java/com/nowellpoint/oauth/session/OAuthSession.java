@@ -73,7 +73,7 @@ public class OAuthSession implements Serializable {
 		 * get the OAuth from the serviceProvider
 		 */
 		
-		String authUrl = getServiceProvider().getAuthEndpoint();
+		String authUrl = oauthClient.getAuthEndpoint();
 		
 		/**
 		 * do the redirect
@@ -93,7 +93,7 @@ public class OAuthSession implements Serializable {
 		 * get the OAuth from the serviceProvider
 		 */
 		
-    	String authUrl = getServiceProvider().getAuthEndpoint();
+    	String authUrl = oauthClient.getAuthEndpoint();
 		
 		/**
 		 * do the redirect
