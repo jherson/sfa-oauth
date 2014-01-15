@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
-import com.nowellpoint.oauth.session.OAuthSessionCallback;
 
 public class OAuthClient implements Serializable {
 
@@ -14,8 +13,7 @@ public class OAuthClient implements Serializable {
 	
 	private static final long serialVersionUID = 2748321507418076091L;
 	private OAuthServiceProvider serviceProvider;
-	private OAuthSessionCallback sessionCallback;
-	private String authEndpoint;
+	private String loginUrl;
 	private String clientId;
 	private String clientSecret;
 	private String callbackUrl;
@@ -24,7 +22,6 @@ public class OAuthClient implements Serializable {
 	private String display;	
 	private String state;
 	private String logoutRedirect;
-	private ServiceProviderOptions options;
 	
 	/**
 	 * no arg contructor used for injection 
@@ -43,7 +40,6 @@ public class OAuthClient implements Serializable {
 		this.display = builder.display;
 		this.state = builder.state;
 		this.logoutRedirect = builder.logoutRedirect;
-		this.options = builder.options;
 		
 		try {
 			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.serviceProvider).newInstance();
@@ -51,27 +47,15 @@ public class OAuthClient implements Serializable {
 			throw new RuntimeException(e);
 		}
 		
-		if (builder.sessionCallback != null) {
-			try {
-				this.sessionCallback = (OAuthSessionCallback) Class.forName(builder.sessionCallback).newInstance();
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
-		this.authEndpoint = buildAuthEndpoint(serviceProvider.getAuthEndpoint());
+		this.loginUrl = buildloginRedirect(serviceProvider.getAuthEndpoint());
 	}
 	
 	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
 		return serviceProvider;
 	}
 	
-	public <T extends OAuthSessionCallback> OAuthSessionCallback getSessionCallback() {
-		return sessionCallback;
-	}
-	
-	public String getAuthEndpoint() {
-		return authEndpoint;
+	public String getLoginUrl() {
+		return loginUrl;
 	}
 
 	public String getClientId() {
@@ -117,14 +101,10 @@ public class OAuthClient implements Serializable {
 	public String getLogoutRedirect() {
 		return logoutRedirect;
 	}
-
-	public ServiceProviderOptions getServiceProviderOptions() {
-		return options;
-	}
 	
-	private String buildAuthEndpoint(String authorizationResource) {
+	private String buildloginRedirect(String authEndpoint) {
 		StringBuilder endpoint = new StringBuilder()
-				.append(authorizationResource)
+				.append(authEndpoint)
 				.append("?")
 				.append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
 				.append("=")
@@ -159,7 +139,6 @@ public class OAuthClient implements Serializable {
 	
 	public static class ClientBuilder {
 		private String serviceProvider;
-		private String sessionCallback;
 		private String clientId;
 		private String clientSecret;
 		private String callbackUrl;
@@ -168,7 +147,6 @@ public class OAuthClient implements Serializable {
 		private String display;	
 		private String state;
 		private String logoutRedirect;
-		private ServiceProviderOptions options;
 		
 		public ClientBuilder() {
 			
@@ -176,11 +154,6 @@ public class OAuthClient implements Serializable {
 		
 		public <T extends OAuthServiceProvider> ClientBuilder setServiceProvider(Class<T> serviceProvider) {
 			this.serviceProvider = serviceProvider.getName();
-			return this;
-		}
-		
-		public <T extends OAuthSessionCallback> ClientBuilder setSessionCallback(Class<T> sessionCallback) {
-			this.sessionCallback = sessionCallback.getName();
 			return this;
 		}
 		
@@ -221,11 +194,6 @@ public class OAuthClient implements Serializable {
 		
 		public ClientBuilder setLogoutRedirect(String logoutRedirect) {
 			this.logoutRedirect = logoutRedirect;
-			return this;
-		}
-		
-		public ClientBuilder setServiceProviderOptions(ServiceProviderOptions options) {
-			this.options = options;
 			return this;
 		}
 		

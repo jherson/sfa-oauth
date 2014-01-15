@@ -73,14 +73,14 @@ public class OAuthSession implements Serializable {
 		 * get the OAuth from the serviceProvider
 		 */
 		
-		String authUrl = oauthClient.getAuthEndpoint();
+		String loginUrl = oauthClient.getLoginUrl();
 		
 		/**
 		 * do the redirect
 		 */
 		
 		try {
-			response.sendRedirect(authUrl);
+			response.sendRedirect(loginUrl);
 			return;
 		} catch (IOException e) {
 			throw new LoginException("Unable to do the redirect: " + e);
@@ -93,14 +93,14 @@ public class OAuthSession implements Serializable {
 		 * get the OAuth from the serviceProvider
 		 */
 		
-    	String authUrl = oauthClient.getAuthEndpoint();
+    	String loginUrl = oauthClient.getLoginUrl();
 		
 		/**
 		 * do the redirect
 		 */
 		
 		try {
-			context.getExternalContext().redirect(authUrl);
+			context.getExternalContext().redirect(loginUrl);
 			return;
 		} catch (IOException e) {
 			throw new LoginException("Unable to do the redirect: " + e);

@@ -24,7 +24,7 @@ public class AuthenticateServlet implements Servlet {
 	private OAuthSession oauthSession;
 	
 	@Inject
-	private OAuthSessionCallback oauthVerificationEvent;
+	private OAuthSessionCallback sessionCallback;
 	
 	@Override
 	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
@@ -40,7 +40,7 @@ public class AuthenticateServlet implements Servlet {
         } 
         
         String code = request.getParameter("code");                
-            
+           
         if (code == null) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
@@ -53,7 +53,7 @@ public class AuthenticateServlet implements Servlet {
 			throw new ServletException(e.getMessage());
 		}   
         
-        oauthVerificationEvent.init(request, response, oauthSession);
+        sessionCallback.init(request, response, oauthSession);
 	}
 
 	@Override
