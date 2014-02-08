@@ -15,7 +15,7 @@ for more information on creating a connected app: http://help.salesforce.com/ape
 <dependency>
   <groupId>com.nowellpoint</groupId>
   <artifactId>nowellpoint-oauth-api</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 
 
@@ -29,14 +29,15 @@ public class Resources {
     @Produces
 	@Salesforce
 	@ApplicationScoped
-	public OAuthServiceProvider produceOAuthServiceProvider() {
-		return new OAuthConfig().setClientId(<client id>)
-		        .setClientSecret(<client secret>)
-		        .setCallbackUrl(<callback URL>)
+	public OAuthClient produceOAuthServiceProvider() {
+		return new OAuthClient.ClientBuilder()
+				.setClientId("3MVG99OxTyEMCQ3g4O4q6O_jbP1ai3d.qaC40M90IFKdb.d0q72XsNBwjxOr.kiHsRy_Cy6v_gglQnVRl6Xuo")
+		        .setClientSecret("313260469151264620")
+		        .setServiceProvider(SalesforceLoginProvider.class)
+		        .setCallbackUrl(System.getProperty("callback.url"))
 		        .setDisplay("popup")
 		        .setPrompt("login")
 		        .setScope("api refresh_token web")
-		        .setUseSandbox(Boolean.FALSE)
 		        .setLogoutRedirect("/")
 		        .build();
 	}
@@ -44,10 +45,10 @@ public class Resources {
 
 4) handle the authentication callback
 
-    public class MyOAuthVerificationEvent extends OAuthVerificationEvent {
+    public class OAuthSessionCallbackImpl extends OAuthSessionCallback {
 
         @Override
-	    public void onVerify(OAuthSessionContext context) {
+        public void onVerify(OAuthSessionContext context) {
 	    
 	        // do work with context if needed
 	        
