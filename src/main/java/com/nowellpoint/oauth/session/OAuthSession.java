@@ -33,6 +33,7 @@ public class OAuthSession implements Serializable {
 	private String id;
 	private Token token;
 	private Identity identity;
+	private String redirectUrl;
 	
 	public OAuthSession() {
 		generateId();
@@ -53,10 +54,6 @@ public class OAuthSession implements Serializable {
 	
 	public void setOAuthClient(OAuthClient oauthClient) {
 		this.oauthClient = oauthClient;
-	}
-	
-	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
-		return oauthClient.getServiceProvider();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -167,6 +164,18 @@ public class OAuthSession implements Serializable {
     public Identity getIdentity() {
     	return identity;
     }
+    
+    public void setRedirectUrl(String redirectUrl) {
+    	this.redirectUrl = redirectUrl;
+    }
+    
+    public String getRedirectUrl() {
+    	return redirectUrl;
+    }
+    
+	private <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
+		return oauthClient.getServiceProvider();
+	}
     
 	private void generateId() {
 		setId(UUID.randomUUID().toString().replace("-", ""));

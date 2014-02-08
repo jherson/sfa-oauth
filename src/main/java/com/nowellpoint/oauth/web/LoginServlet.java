@@ -34,6 +34,8 @@ public class LoginServlet implements Servlet {
 		HttpServletRequest request  = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		
+		request.getSession(true);
+		
 		boolean cookieExists = Boolean.FALSE;
 		
 		Cookie[] cookies = request.getCookies();                

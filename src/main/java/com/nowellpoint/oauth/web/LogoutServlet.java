@@ -13,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.client.OAuthClient;
@@ -37,13 +38,19 @@ public class LogoutServlet implements Servlet {
 		HttpServletRequest request  = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+        	response.sendError(HttpServletResponse.SC_REQUEST_TIMEOUT, request.getRequestURI());
+        	return;
+        }
+        
         try {
 			oauthSession.logout();
 		} catch (OAuthException e) {
 			log.log(Level.WARNING, e.getMessage());
 		}
-        
-        request.getSession().invalidate();
+
+        request.getSession(false).invalidate();
 		
 		response.sendRedirect(request.getContextPath() + oauthClient.getLogoutRedirect());
 	}

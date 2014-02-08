@@ -12,7 +12,7 @@ import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.UserInfo;
-import com.nowellpoint.oauth.provider.SalesforceProvider;
+import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
 import com.nowellpoint.oauth.session.OAuthSession;
 
 public class OAuthTest {
@@ -24,7 +24,7 @@ public class OAuthTest {
 		OAuthClient client = new OAuthClient.ClientBuilder()
 				.setClientId(System.getenv("CLIENT_ID"))
 				.setClientSecret(System.getenv("CLIENT_SECRET"))
-				.setServiceProvider(SalesforceProvider.class)
+				.setServiceProvider(SalesforceLoginProvider.class)
 				.build();
 		
 		session = new OAuthSession(client);
@@ -62,7 +62,7 @@ public class OAuthTest {
 		
 		UserInfo userInfo = null;
 		try {
-			userInfo = session.unwrap(SalesforceProvider.class).getUserInfo(session.getToken(), session.getIdentity());
+			userInfo = session.unwrap(SalesforceLoginProvider.class).getUserInfo(session.getToken(), session.getIdentity());
 		} catch (OAuthException e) {
 			e.printStackTrace();
 		}
@@ -81,7 +81,7 @@ public class OAuthTest {
 		
 		OrganizationInfo organizationInfo = null;
 		try {
-			organizationInfo = session.unwrap(SalesforceProvider.class).getOrganizationInfo(session.getToken(), session.getIdentity());
+			organizationInfo = session.unwrap(SalesforceLoginProvider.class).getOrganizationInfo(session.getToken(), session.getIdentity());
 		} catch (OAuthException e) {
 			e.printStackTrace();
 		}
