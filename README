@@ -31,10 +31,10 @@ public class Resources {
 	@ApplicationScoped
 	public OAuthClient produceOAuthServiceProvider() {
 		return new OAuthClient.ClientBuilder()
-				.setClientId("3MVG99OxTyEMCQ3g4O4q6O_jbP1ai3d.qaC40M90IFKdb.d0q72XsNBwjxOr.kiHsRy_Cy6v_gglQnVRl6Xuo")
-		        .setClientSecret("313260469151264620")
+				.setClientId(<client id>)
+		        .setClientSecret(<client secret>)
 		        .setServiceProvider(SalesforceLoginProvider.class)
-		        .setCallbackUrl(System.getProperty("callback.url"))
+		        .setCallbackUrl(<callback url>)
 		        .setDisplay("popup")
 		        .setPrompt("login")
 		        .setScope("api refresh_token web")
