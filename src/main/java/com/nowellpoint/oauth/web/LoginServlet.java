@@ -3,7 +3,6 @@ package com.nowellpoint.oauth.web;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.security.auth.login.LoginException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.session.OAuthSession;
 
 @WebServlet(value="/login")
@@ -54,7 +54,7 @@ public class LoginServlet implements Servlet {
 		oauthSession.setOAuthClient(oauthClient);
 		try {
 			oauthSession.login(response);
-		} catch (LoginException e) {
+		} catch (OAuthException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, request.getRequestURI());
 			return;
 		}		

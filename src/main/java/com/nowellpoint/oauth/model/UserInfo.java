@@ -77,6 +77,9 @@ public class UserInfo implements Serializable {
 	@JsonProperty("Phone")
 	private String phone;
 	
+	@JsonProperty("Extension")
+	private String extension;
+	
 	@JsonProperty("Fax")
 	private String fax;
 	
@@ -298,6 +301,14 @@ public class UserInfo implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
 	}
 
 	public String getFax() {

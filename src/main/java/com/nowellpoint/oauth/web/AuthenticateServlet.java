@@ -44,7 +44,7 @@ public class AuthenticateServlet implements Servlet {
         if (code == null) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
-        }
+        } 
         
         Verifier verifier = new Verifier(code);
         try {
