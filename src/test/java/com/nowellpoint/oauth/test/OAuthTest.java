@@ -22,9 +22,9 @@ public class OAuthTest {
 	@BeforeClass
 	public static void buildOAuthClient() {
 		OAuthClient client = new OAuthClient.ClientBuilder()
-				.setClientId(System.getenv("CLIENT_ID"))
-				.setClientSecret(System.getenv("CLIENT_SECRET"))
-				.setServiceProvider(SalesforceLoginProvider.class)
+				.clientId(System.getenv("CLIENT_ID"))
+				.clientSecret(System.getenv("CLIENT_SECRET"))
+				.serviceProvider(SalesforceLoginProvider.class)
 				.build();
 		
 		session = new OAuthSession(client);

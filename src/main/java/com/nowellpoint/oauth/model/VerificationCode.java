@@ -2,7 +2,7 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-public class Verifier implements Serializable {
+public class VerificationCode implements Serializable {
 
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class Verifier implements Serializable {
 	
 	private String code;
 	
-	public Verifier(String code) {
+	public VerificationCode(String code) {
 		this.code = code;
 	}
 	

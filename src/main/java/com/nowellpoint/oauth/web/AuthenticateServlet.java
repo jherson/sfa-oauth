@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.model.Verifier;
+import com.nowellpoint.oauth.model.VerificationCode;
 import com.nowellpoint.oauth.session.OAuthSession;
 import com.nowellpoint.oauth.session.OAuthSessionCallback;
 
@@ -46,9 +46,9 @@ public class AuthenticateServlet implements Servlet {
             return;
         } 
         
-        Verifier verifier = new Verifier(code);
+        VerificationCode verificationCode = new VerificationCode(code);
         try {
-			oauthSession.verifyToken(verifier);
+			oauthSession.verify(verificationCode);
 		} catch (OAuthException e) {
 			throw new ServletException(e.getMessage());
 		}   

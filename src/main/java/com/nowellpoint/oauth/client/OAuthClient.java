@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.session.OAuthSession;
 
 public class OAuthClient implements Serializable {
 
@@ -47,7 +49,7 @@ public class OAuthClient implements Serializable {
 			throw new RuntimeException(e);
 		}
 		
-		this.loginUrl = buildloginRedirect(serviceProvider.getAuthEndpoint());
+		this.loginUrl = buildLoginRedirect(serviceProvider.getAuthEndpoint());
 	}
 	
 	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
@@ -90,7 +92,15 @@ public class OAuthClient implements Serializable {
 		return logoutRedirect;
 	}
 	
-	private String buildloginRedirect(String authEndpoint) {
+	public OAuthSession createSession() {
+		return new OAuthSession(this);
+	}
+	
+	public OAuthSession createSession(Token token) {
+		return new OAuthSession(this, token);
+	}
+	
+	private String buildLoginRedirect(String authEndpoint) {
 		StringBuilder endpoint = new StringBuilder()
 				.append(authEndpoint)
 				.append("?")
@@ -140,47 +150,47 @@ public class OAuthClient implements Serializable {
 			
 		}
 		
-		public <T extends OAuthServiceProvider> ClientBuilder setServiceProvider(Class<T> serviceProvider) {
+		public <T extends OAuthServiceProvider> ClientBuilder serviceProvider(Class<T> serviceProvider) {
 			this.serviceProvider = serviceProvider.getName();
 			return this;
 		}
 		
-		public ClientBuilder setClientId(String clientId) {
+		public ClientBuilder clientId(String clientId) {
 			this.clientId = clientId;
 			return this;
 		}
 
-		public ClientBuilder setClientSecret(String clientSecret) {
+		public ClientBuilder clientSecret(String clientSecret) {
 			this.clientSecret = clientSecret;
 			return this;
 		}
 		
-		public ClientBuilder setCallbackUrl(String callbackUrl) {
+		public ClientBuilder callbackUrl(String callbackUrl) {
 			this.callbackUrl = callbackUrl;
 			return this;
 		}
 
-		public ClientBuilder setScope(String scope) {
+		public ClientBuilder scope(String scope) {
 			this.scope = scope;
 			return this;
 		}
 
-		public ClientBuilder setPrompt(String prompt) {
+		public ClientBuilder prompt(String prompt) {
 			this.prompt = prompt;
 			return this;
 		}
 
-		public ClientBuilder setDisplay(String display) {
+		public ClientBuilder display(String display) {
 			this.display = display;
 			return this;
 		}
 		
-		public ClientBuilder setState(String state) {
+		public ClientBuilder state(String state) {
 			this.state = state;
 			return this;
 		}
 		
-		public ClientBuilder setLogoutRedirect(String logoutRedirect) {
+		public ClientBuilder logoutRedirect(String logoutRedirect) {
 			this.logoutRedirect = logoutRedirect;
 			return this;
 		}

@@ -17,6 +17,7 @@ import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
+import com.nowellpoint.oauth.provider.SalesforceProvider;
 import com.nowellpoint.oauth.session.OAuthSession;
 
 @RequestScoped
@@ -28,7 +29,7 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 	private OAuthClient oauthClient;
 	
 	@Inject
-    private DefaultLoginCredentials credentials;
+    private DefaultLoginCredentials loginCredentials;
 	
 	@Inject
 	private Event<LoggedInEvent> loggedInEvent;
@@ -36,12 +37,20 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 	@Override
 	public void authenticate() {
 		
+		if (Credentials.class.equals(loginCredentials.getCredential().getClass())) {
+			System.out.println("Salesforce credentials");
+		}
+		
+		Credentials credentials = (Credentials) loginCredentials.getCredential();
+		
 		try {
-			OAuthSession oauthSession = login(credentials.getUserId(), credentials.getPassword());
+			
+			OAuthSession oauthSession = oauthClient.createSession();
+			oauthSession.login(credentials);
 			
 			loggedInEvent.fire(new LoggedInEvent(oauthSession));
 			
-			SalesforceLoginProvider provider = oauthSession.unwrap(SalesforceLoginProvider.class);
+			SalesforceProvider provider = oauthSession.unwrap(SalesforceLoginProvider.class);
 			
 			
 			UserInfo userInfo = provider.getUserInfo(oauthSession.getToken(), oauthSession.getIdentity());
@@ -62,17 +71,8 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 		}
 	}
 	
-	private OAuthSession login(String username, String password) throws OAuthException {
-		
-		Credentials credentials = new Credentials();
-		credentials.setUsername(username);
-		credentials.setPassword(password);
-		
-		OAuthSession oauthSession = new OAuthSession();
-		oauthSession.setOAuthClient(oauthClient);
-		oauthSession.login(credentials);
-		
-		return oauthSession;
+	@Override
+	public void postAuthenticate() {
 		
 	}
 }

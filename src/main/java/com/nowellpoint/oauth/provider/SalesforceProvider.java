@@ -194,7 +194,7 @@ public abstract class SalesforceProvider extends OAuthServiceProvider {
 	 * 
 	 */
 	
-	private static final String API_VERSION = "29.0";
+	private static final String API_VERSION = "31.0";
 	
 	/**
 	 * 
@@ -221,10 +221,6 @@ public abstract class SalesforceProvider extends OAuthServiceProvider {
 	public SalesforceProvider() {
 		
 	}
-	
-	abstract String getTokenEndpoint();
-	
-	abstract String getRevokeEndpoint();
 	
 	@Override
 	public Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException {
@@ -372,6 +368,10 @@ public abstract class SalesforceProvider extends OAuthServiceProvider {
 		
 		return response.getEntity();
     }
+    
+	public abstract String getTokenEndpoint();
+	
+	public abstract String getRevokeEndpoint();
     
     private String getSObjectUrl(Identity identity) {
     	return identity.getUrls().getSObjects().replace("{version}", API_VERSION);

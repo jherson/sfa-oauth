@@ -17,7 +17,7 @@ import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
-import com.nowellpoint.oauth.model.Verifier;
+import com.nowellpoint.oauth.model.VerificationCode;
 
 @SessionScoped
 public class OAuthSession implements Serializable {
@@ -37,6 +37,13 @@ public class OAuthSession implements Serializable {
 	
 	public OAuthSession(OAuthClient oauthClient) {
 		setOAuthClient(oauthClient);
+		generateId();
+	}
+	
+	public OAuthSession(OAuthClient oauthClient, Token token) {
+		setOAuthClient(oauthClient);
+		setToken(token);
+		setIdentity(getIdentityByToken(token));    
 		generateId();
 	}
 	
@@ -118,9 +125,9 @@ public class OAuthSession implements Serializable {
     	setIdentity(getIdentityByToken(token));    
     }
     
-    public void verifyToken(Verifier verifier) throws OAuthException {    	
+    public void verify(VerificationCode verificationCode) throws OAuthException {    	
     	OAuthClientRequest.VerifyTokenRequest tokenRequest = OAuthClientRequest.verifyTokenRequest()
-    			.setCode(verifier.getCode())
+    			.setCode(verificationCode.getCode())
     			.setCallbackUrl(oauthClient.getCallbackUrl())
     			.setClientId(oauthClient.getClientId())
     			.setClientSecret(oauthClient.getClientSecret())

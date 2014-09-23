@@ -1,8 +1,9 @@
 package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
+import org.picketlink.idm.credential.AbstractBaseCredentials;
 
-public class Credentials implements Serializable {
+public class Credentials extends AbstractBaseCredentials implements Serializable {
 
 	/**
 	 * 
@@ -35,5 +36,11 @@ public class Credentials implements Serializable {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public void invalidate() {
+		setUsername(null);
+		setPassword(null);
 	}
 }
