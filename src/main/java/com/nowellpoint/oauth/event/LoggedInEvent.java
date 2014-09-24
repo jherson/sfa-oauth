@@ -1,6 +1,6 @@
 package com.nowellpoint.oauth.event;
 
-import com.nowellpoint.oauth.session.OAuthSession;
+import com.nowellpoint.oauth.OAuthSession;
 
 public class LoggedInEvent {
 	

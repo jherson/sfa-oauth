@@ -170,45 +170,43 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth;
 
-public class OAuthConstants {
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 
-    public static final String AUTHORIZE_ENDPOINT = "authorizeUrl";
-    
-    public static final String TOKEN_ENDPOINT = "tokenUrl";
-    
-    public static final String REVOKE_ENDPOINT = "revokeUrl";
-    
-    public static final String GRANT_TYPE_PARAMETER = "grant_type";        
-    
-    public static final String TOKEN_PARAMETER = "token";
-    
-    public static final String CODE_PARAMETER = "code";
-    
-    public static final String USERNAME_PARAMETER = "username";
-    
-    public static final String PASSWORD_PARAMETER = "password";
-    
-    public static final String RESPONSE_TYPE_PARAMETER = "response_type";
+import org.picketlink.idm.credential.UsernamePasswordCredentials;
 
-    public static final String CLIENT_ID_PARAMETER = "client_id";
+import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.model.Identity;
+import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.model.VerificationCode;
 
-    public static final String CLIENT_SECRET_PARAMETER = "client_secret";
+public interface OAuthSession {
 
-    public static final String SCOPE_PARAMETER = "scope";
-    
-    public static final String DISPLAY_PARAMETER = "display";
+	public String getId();
+	
+	public void setOAuthClient(OAuthClient oauthClient);
+	
+	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass);
+	
+	public void login(HttpServletResponse response) throws OAuthException;
+	
+	public void login(FacesContext context) throws OAuthException;
+	
+	public void login(UsernamePasswordCredentials credentials) throws OAuthException;
+	
+	public void verify(VerificationCode verificationCode) throws OAuthException;
+	
+	public void refreshToken() throws OAuthException;
+	
+	public void logout() throws OAuthException;
+	
+	public Token getToken();
+	
+	public Identity getIdentity();
+	
+	public void setRedirectUrl(String redirectUrl);
+	
+	public String getRedirectUrl();
 
-    public static final String REDIRECT_URI_PARAMETER = "redirect_uri";
-    
-    public static final String PROMPT_PARAMETER = "prompt";
-    
-    public static final String STATE_PARAMETER = "state";
-    
-    public static final String OAUTH_TOKEN_PARAMETER = "oauth_token";
-    
-    public static final String REFRESH_GRANT_TYPE = "refresh_token";
-    
-    public static final String AUTHORIZATION_GRANT_TYPE = "authorization_code";
-    
-    public static final String PASSWORD_GRANT_TYPE = "password";       
 }

@@ -12,14 +12,14 @@ import org.picketlink.idm.credential.TokenCredential;
 import org.picketlink.idm.credential.UsernamePasswordCredentials;
 import org.picketlink.idm.model.basic.User;
 
+import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.event.LoggedInEvent;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
-import com.nowellpoint.oauth.provider.SalesforceProvider;
-import com.nowellpoint.oauth.session.OAuthSession;
+import com.nowellpoint.oauth.provider.AbstractSalesforceProvider;
 
 @RequestScoped
 @PicketLink
@@ -53,7 +53,7 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 			
 			loggedInEvent.fire(new LoggedInEvent(oauthSession));
 			
-			SalesforceProvider provider = oauthSession.unwrap(SalesforceLoginProvider.class);
+			AbstractSalesforceProvider provider = oauthSession.unwrap(SalesforceLoginProvider.class);
 			
 			
 			UserInfo userInfo = provider.getUserInfo(oauthSession.getToken(), oauthSession.getIdentity());

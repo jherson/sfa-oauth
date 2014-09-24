@@ -168,47 +168,231 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
 */
 
-package com.nowellpoint.oauth;
+package com.nowellpoint.oauth.session;
 
-public class OAuthConstants {
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    public static final String AUTHORIZE_ENDPOINT = "authorizeUrl";
-    
-    public static final String TOKEN_ENDPOINT = "tokenUrl";
-    
-    public static final String REVOKE_ENDPOINT = "revokeUrl";
-    
-    public static final String GRANT_TYPE_PARAMETER = "grant_type";        
-    
-    public static final String TOKEN_PARAMETER = "token";
-    
-    public static final String CODE_PARAMETER = "code";
-    
-    public static final String USERNAME_PARAMETER = "username";
-    
-    public static final String PASSWORD_PARAMETER = "password";
-    
-    public static final String RESPONSE_TYPE_PARAMETER = "response_type";
+import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 
-    public static final String CLIENT_ID_PARAMETER = "client_id";
+import org.picketlink.idm.credential.UsernamePasswordCredentials;
 
-    public static final String CLIENT_SECRET_PARAMETER = "client_secret";
+import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.client.OAuthClientRequest;
+import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.model.Identity;
+import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.model.VerificationCode;
 
-    public static final String SCOPE_PARAMETER = "scope";
-    
-    public static final String DISPLAY_PARAMETER = "display";
+@SessionScoped
+public class OAuthSessionImpl implements OAuthSession, Serializable {
 
-    public static final String REDIRECT_URI_PARAMETER = "redirect_uri";
+	private static final long serialVersionUID = 8065223488307981986L;
+	private static Logger log = Logger.getLogger(OAuthSessionImpl.class.getName());
+	
+	private OAuthClient oauthClient;
+	private String id;
+	private Token token;
+	private Identity identity;
+	private String redirectUrl;
+	
+	public OAuthSessionImpl() {
+		generateId();
+	}
+	
+	public OAuthSessionImpl(OAuthClient oauthClient) {
+		setOAuthClient(oauthClient);
+		generateId();
+	}
+	
+	public OAuthSessionImpl(OAuthClient oauthClient, Token token) {
+		setOAuthClient(oauthClient);
+		setToken(token);
+		setIdentity(getIdentityByToken(token));    
+		generateId();
+	}
+	
+	@Override
+	public String getId() {
+		return id;
+	}
+	
+	private void setId(String id) {
+		this.id = id;
+	}
+	
+	@Override
+	public void setOAuthClient(OAuthClient oauthClient) {
+		this.oauthClient = oauthClient;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass) {
+		if (oauthClient.getServiceProvider().getClass().isAssignableFrom(serviceProviderClass)) {
+			return (T) oauthClient.getServiceProvider();
+		}
+		return null;
+	}
+	
+	@Override
+    public void login(HttpServletResponse response) throws OAuthException {
+    	
+    	/**
+		 * get the OAuth from the serviceProvider
+		 */
+		
+		String loginUrl = oauthClient.getLoginUrl();
+		
+		/**
+		 * do the redirect
+		 */
+		
+		try {
+			response.sendRedirect(loginUrl);
+			return;
+		} catch (IOException e) {
+			throw new OAuthException("Unable to do the redirect: " + e);
+		}
+    }
     
-    public static final String PROMPT_PARAMETER = "prompt";
+	@Override
+    public void login(FacesContext context) throws OAuthException {
+    	
+    	/**
+		 * get the OAuth from the serviceProvider
+		 */
+		
+    	String loginUrl = oauthClient.getLoginUrl();
+		
+		/**
+		 * do the redirect
+		 */
+		
+		try {
+			context.getExternalContext().redirect(loginUrl);
+			return;
+		} catch (IOException e) {
+			throw new OAuthException("Unable to do the redirect: " + e);
+		}	
+    }
     
-    public static final String STATE_PARAMETER = "state";
+	@Override
+    public void login(UsernamePasswordCredentials credentials) throws OAuthException {
+    	OAuthClientRequest.BasicTokenRequest tokenRequest = OAuthClientRequest.basicTokenRequest()
+    			.clientId(oauthClient.getClientId())
+    			.clientSecret(oauthClient.getClientSecret())
+    			.username(credentials.getUsername())
+    			.password(String.valueOf(credentials.getPassword().getValue()))
+    			.build();
+    	
+    	Token token = oauthClient.getServiceProvider().requestToken(tokenRequest);
+    	
+    	if (token.getError() != null) {
+		 	throw new OAuthException(token.getErrorDescription());		 
+		}
+    	
+    	setToken(token);
+    	setIdentity(getIdentityByToken(token));    
+    }
     
-    public static final String OAUTH_TOKEN_PARAMETER = "oauth_token";
+	@Override
+    public void verify(VerificationCode verificationCode) throws OAuthException {    	
+    	OAuthClientRequest.VerifyTokenRequest tokenRequest = OAuthClientRequest.verifyTokenRequest()
+    			.code(verificationCode.getCode())
+    			.callbackUrl(oauthClient.getCallbackUrl())
+    			.clientId(oauthClient.getClientId())
+    			.clientSecret(oauthClient.getClientSecret())
+    			.build();
+    	
+    	Token token = oauthClient.getServiceProvider().requestToken(tokenRequest);
+    	
+    	if (token.getError() != null) {
+		 	throw new OAuthException(token.getErrorDescription());		 
+		}
+    	
+    	setToken(token);
+    	setIdentity(getIdentityByToken(token));    
+    }
     
-    public static final String REFRESH_GRANT_TYPE = "refresh_token";
+	@Override
+    public void refreshToken() throws OAuthException {  			
+    	OAuthClientRequest.RefreshTokenRequest refreshTokenRequest = OAuthClientRequest.refreshTokenRequest()
+    			.refreshToken(getToken().getRefreshToken())
+    			.clientId(oauthClient.getClientId())
+    			.clientSecret(oauthClient.getClientSecret())
+    			.build();
+    	
+    	Token token = oauthClient.getServiceProvider().refreshToken(refreshTokenRequest);
+    	
+    	setToken(token);
+    	setIdentity(getIdentityByToken(token));    
+    }
     
-    public static final String AUTHORIZATION_GRANT_TYPE = "authorization_code";
+	@Override
+    public void logout() throws OAuthException {
+    	OAuthClientRequest.RevokeTokenRequest revokeTokenRequest = OAuthClientRequest.revokeTokenRequest()
+    			.accessToken(getToken().getAccessToken())
+    			.build();
+    	
+    	oauthClient.getServiceProvider().revokeToken(revokeTokenRequest);
+    	
+    	setToken(null);
+    	setIdentity(null);
+    }
     
-    public static final String PASSWORD_GRANT_TYPE = "password";       
+	@Override
+    public Token getToken() {
+    	return token;
+    }
+    
+	@Override
+    public Identity getIdentity() {
+    	return identity;
+    }
+    
+	@Override
+    public void setRedirectUrl(String redirectUrl) {
+    	this.redirectUrl = redirectUrl;
+    }
+    
+	@Override
+    public String getRedirectUrl() {
+    	return redirectUrl;
+    }
+    
+	private void generateId() {
+		setId(UUID.randomUUID().toString().replace("-", ""));
+	}
+	
+	private Identity getIdentityByToken(Token token) {
+		OAuthClientRequest.IdentityRequest identityRequest = OAuthClientRequest.identityRequest()
+    			.identityUrl(token.getId())
+    			.accessToken(token.getAccessToken())
+    			.build();
+		
+		Identity identity = null;
+    	try {
+    		identity = oauthClient.getServiceProvider().getIdentity(identityRequest);
+		} catch (OAuthException e) {
+			log.log(Level.SEVERE, e.getMessage());
+		}
+    	
+    	return identity;
+	}
+    
+    private void setToken(Token token) {
+    	this.token = token;
+    }
+    
+    private void setIdentity(Identity identity) {
+    	this.identity = identity;
+    }	
 }

@@ -175,7 +175,7 @@ import java.io.Serializable;
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
 import com.nowellpoint.oauth.model.Token;
-import com.nowellpoint.oauth.session.OAuthSession;
+import com.nowellpoint.oauth.session.OAuthSessionImpl;
 
 public class OAuthClient implements Serializable {
 
@@ -193,7 +193,6 @@ public class OAuthClient implements Serializable {
 	private String prompt;
 	private String display;	
 	private String state;
-	private String logoutRedirect;
 	
 	/**
 	 * no arg contructor used for injection 
@@ -211,7 +210,6 @@ public class OAuthClient implements Serializable {
 		this.prompt = builder.prompt;
 		this.display = builder.display;
 		this.state = builder.state;
-		this.logoutRedirect = builder.logoutRedirect;
 		
 		try {
 			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.serviceProvider).newInstance();
@@ -258,16 +256,12 @@ public class OAuthClient implements Serializable {
 		return state;
 	}
 	
-	public String getLogoutRedirect() {
-		return logoutRedirect;
+	public OAuthSessionImpl createSession() {
+		return new OAuthSessionImpl(this);
 	}
 	
-	public OAuthSession createSession() {
-		return new OAuthSession(this);
-	}
-	
-	public OAuthSession createSession(Token token) {
-		return new OAuthSession(this, token);
+	public OAuthSessionImpl createSession(Token token) {
+		return new OAuthSessionImpl(this, token);
 	}
 	
 	private String buildLoginRedirect(String authEndpoint) {
@@ -314,7 +308,6 @@ public class OAuthClient implements Serializable {
 		private String prompt;
 		private String display;	
 		private String state;
-		private String logoutRedirect;
 		
 		public ClientBuilder() {
 			
@@ -357,11 +350,6 @@ public class OAuthClient implements Serializable {
 		
 		public ClientBuilder state(String state) {
 			this.state = state;
-			return this;
-		}
-		
-		public ClientBuilder logoutRedirect(String logoutRedirect) {
-			this.logoutRedirect = logoutRedirect;
 			return this;
 		}
 		

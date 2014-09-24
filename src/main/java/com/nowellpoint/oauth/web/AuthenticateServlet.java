@@ -12,10 +12,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.OAuthSessionCallback;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.VerificationCode;
-import com.nowellpoint.oauth.session.OAuthSession;
-import com.nowellpoint.oauth.session.OAuthSessionCallback;
+import com.nowellpoint.oauth.session.OAuthSessionContext;
 
 @WebServlet(value="/authenticate")
 public class AuthenticateServlet implements Servlet {
@@ -53,7 +54,8 @@ public class AuthenticateServlet implements Servlet {
 			throw new ServletException(e.getMessage());
 		}   
         
-        sessionCallback.init(request, response, oauthSession);
+        OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
+		sessionCallback.onLogout(context);
 	}
 
 	@Override

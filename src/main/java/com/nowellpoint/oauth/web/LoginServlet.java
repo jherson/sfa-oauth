@@ -13,19 +13,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.annotations.Salesforce;
-import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.session.OAuthSession;
 
 @WebServlet(value="/login")
 public class LoginServlet implements Servlet {
 	
 	@Inject
 	@Salesforce
-	private OAuthClient oauthClient;
-	
-	@Inject
 	private OAuthSession oauthSession;
 	
 	@Override
@@ -51,7 +47,6 @@ public class LoginServlet implements Servlet {
 			response.addCookie(cookie);
 		}
 		
-		oauthSession.setOAuthClient(oauthClient);
 		try {
 			oauthSession.login(response);
 		} catch (OAuthException e) {

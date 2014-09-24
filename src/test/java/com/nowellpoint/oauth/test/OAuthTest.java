@@ -9,12 +9,12 @@ import org.junit.Test;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.credential.UsernamePasswordCredentials;
 
+import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
-import com.nowellpoint.oauth.session.OAuthSession;
 
 public class OAuthTest {
 	
@@ -22,6 +22,7 @@ public class OAuthTest {
 	
 	@BeforeClass
 	public static void buildOAuthClient() {
+		
 		OAuthClient client = new OAuthClient.ClientBuilder()
 				.clientId(System.getenv("CLIENT_ID"))
 				.clientSecret(System.getenv("CLIENT_SECRET"))

@@ -44,18 +44,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	@Override
 	public Response authenticate(SalesforceCredentials credentials) {
-		
-		loginCredentials.setCredential(credentials);
-		
-		if (! identity.isLoggedIn()) {	
-			identity.login();
-		}
-		
-		Account account = identity.getAccount();
-
-		return Response.status(Status.OK)
-				.entity(account)
-				.type(MediaType.APPLICATION_JSON_TYPE)
-				.build();
+		return authenticate(credentials.getUsername(), credentials.getPassword(), credentials.getSecurityToken());
 	}
 }

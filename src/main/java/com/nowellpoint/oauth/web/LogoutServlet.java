@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.OAuthSessionCallback;
 import com.nowellpoint.oauth.annotations.Salesforce;
-import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.session.OAuthSession;
+import com.nowellpoint.oauth.session.OAuthSessionContext;
 
 @WebServlet(value="/logout")
 public class LogoutServlet implements Servlet {
@@ -27,10 +28,10 @@ public class LogoutServlet implements Servlet {
 	
 	@Inject
 	@Salesforce
-	private OAuthClient oauthClient;
+	private OAuthSession oauthSession;
 	
 	@Inject
-	private OAuthSession oauthSession;
+	private OAuthSessionCallback sessionCallback;
 	
 	@Override
 	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
@@ -52,7 +53,8 @@ public class LogoutServlet implements Servlet {
 
         request.getSession(false).invalidate();
 		
-		response.sendRedirect(request.getContextPath() + oauthClient.getLogoutRedirect());
+		OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
+		sessionCallback.onLogout(context);
 	}
 
 	@Override

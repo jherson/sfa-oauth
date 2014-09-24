@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nowellpoint.oauth.OAuthSession;
+
 public class OAuthSessionContext implements Serializable {
 
 	/**

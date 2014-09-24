@@ -170,7 +170,7 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth.provider;
 
-public class SalesforceLoginProvider extends SalesforceProvider {
+public class SalesforceLoginProvider extends AbstractSalesforceProvider {
 
 	/**
 	 * 
