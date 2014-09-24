@@ -7,9 +7,10 @@ import javax.ws.rs.core.Response.Status;
 
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.credential.UsernamePasswordCredentials;
 import org.picketlink.idm.model.Account;
 
-import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.SalesforceCredentials;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -23,8 +24,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Override
 	public Response authenticate(String username, String password, String securityToken) {
 		
-		Credentials credentials = new Credentials();
-		credentials.setPassword(password + (securityToken != null ? securityToken : ""));
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
+		credentials.setPassword(new Password(password + (securityToken != null ? securityToken : "")));
 		credentials.setUsername(username);
 		
         loginCredentials.setCredential(credentials);

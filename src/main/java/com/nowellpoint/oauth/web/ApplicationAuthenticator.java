@@ -8,13 +8,14 @@ import org.picketlink.annotations.PicketLink;
 import org.picketlink.authentication.AuthenticationException;
 import org.picketlink.authentication.BaseAuthenticator;
 import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.credential.TokenCredential;
+import org.picketlink.idm.credential.UsernamePasswordCredentials;
 import org.picketlink.idm.model.basic.User;
 
 import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.event.LoggedInEvent;
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
 import com.nowellpoint.oauth.provider.SalesforceProvider;
@@ -37,11 +38,13 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 	@Override
 	public void authenticate() {
 		
-		if (Credentials.class.equals(loginCredentials.getCredential().getClass())) {
-			System.out.println("Salesforce credentials");
+		if (UsernamePasswordCredentials.class.equals(loginCredentials.getCredential().getClass())) {
+			System.out.println("UsernamePasswordCredentials");
+		} else if (TokenCredential.class.equals(loginCredentials.getCredential().getClass())) {
+			System.out.println("TokenCredential");
 		}
 		
-		Credentials credentials = (Credentials) loginCredentials.getCredential();
+		UsernamePasswordCredentials credentials = (UsernamePasswordCredentials) loginCredentials.getCredential();
 		
 		try {
 			

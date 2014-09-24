@@ -6,10 +6,11 @@ import static org.junit.Assert.assertNull;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.credential.UsernamePasswordCredentials;
 
 import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.model.Credentials;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
@@ -27,11 +28,11 @@ public class OAuthTest {
 				.serviceProvider(SalesforceLoginProvider.class)
 				.build();
 		
-		session = new OAuthSession(client);
+		session = client.createSession();
 		
-		Credentials credentials = new Credentials();
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
 		credentials.setUsername(System.getenv("SALESFORCE_USERNAME"));
-		credentials.setPassword(System.getenv("SALESFORCE_PASSWORD").concat(System.getenv("SALESFORCE_SECURITY_TOKEN")));
+		credentials.setPassword(new Password(System.getenv("SALESFORCE_PASSWORD").concat(System.getenv("SALESFORCE_SECURITY_TOKEN"))));
 		
 		try {
 			session.login(credentials);
