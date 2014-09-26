@@ -44,6 +44,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	@Override
 	public Response authenticate(SalesforceCredentials credentials) {
-		return authenticate(credentials.getUsername(), credentials.getPassword(), credentials.getSecurityToken());
+		return authenticate(credentials.getUsername(), String.valueOf(credentials.getPassword()), credentials.getSecurityToken());
 	}
 }

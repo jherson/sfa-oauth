@@ -17,9 +17,6 @@ import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.event.LoggedInEvent;
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.model.UserInfo;
-import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
-import com.nowellpoint.oauth.provider.AbstractSalesforceProvider;
 
 @RequestScoped
 @PicketLink
@@ -34,39 +31,30 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 	
 	@Inject
 	private Event<LoggedInEvent> loggedInEvent;
+	
+	private OAuthSession oauthSession;
 
 	@Override
 	public void authenticate() {
-		
-		if (UsernamePasswordCredentials.class.equals(loginCredentials.getCredential().getClass())) {
-			System.out.println("UsernamePasswordCredentials");
-		} else if (TokenCredential.class.equals(loginCredentials.getCredential().getClass())) {
-			System.out.println("TokenCredential");
-		}
-		
-		UsernamePasswordCredentials credentials = (UsernamePasswordCredentials) loginCredentials.getCredential();
-		
-		try {
 			
-			OAuthSession oauthSession = oauthClient.createSession();
-			oauthSession.login(credentials);
+		oauthSession = oauthClient.createSession();
 			
-			loggedInEvent.fire(new LoggedInEvent(oauthSession));
+		try {	
 			
-			AbstractSalesforceProvider provider = oauthSession.unwrap(SalesforceLoginProvider.class);
-			
-			
-			UserInfo userInfo = provider.getUserInfo(oauthSession.getToken(), oauthSession.getIdentity());
+			if (UsernamePasswordCredentials.class.equals(loginCredentials.getCredential().getClass())) {
+				UsernamePasswordCredentials credentials = (UsernamePasswordCredentials) loginCredentials.getCredential();				
+				oauthSession.login(credentials);
+			} else if (TokenCredential.class.equals(loginCredentials.getCredential().getClass())) {
+				oauthSession.refreshToken();
+			}
 			
 			User user = new User();
-			user.setId(userInfo.getId());
-			user.setLoginName(userInfo.getUsername());
-			user.setFirstName(userInfo.getFirstName());
-			user.setLastName(userInfo.getLastName());
-			user.setEmail(userInfo.getEmail());
+			user.setId(oauthSession.getIdentity().getId());
+			user.setEmail(oauthSession.getIdentity().getEmail());
+			user.setLoginName(oauthSession.getIdentity().getUsername());
 			
-			setStatus(AuthenticationStatus.SUCCESS);
 			setAccount(user);
+			setStatus(AuthenticationStatus.SUCCESS);
 			
 		} catch (OAuthException e) {
 			setStatus(AuthenticationStatus.FAILURE);
@@ -76,6 +64,6 @@ public class ApplicationAuthenticator extends BaseAuthenticator {
 	
 	@Override
 	public void postAuthenticate() {
-		
+		loggedInEvent.fire(new LoggedInEvent(oauthSession));
 	}
 }

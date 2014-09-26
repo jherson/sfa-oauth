@@ -174,6 +174,7 @@ import java.io.Serializable;
 
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.model.Token;
 import com.nowellpoint.oauth.session.OAuthSessionImpl;
 
@@ -256,11 +257,11 @@ public class OAuthClient implements Serializable {
 		return state;
 	}
 	
-	public OAuthSessionImpl createSession() {
+	public OAuthSession createSession() {
 		return new OAuthSessionImpl(this);
 	}
 	
-	public OAuthSessionImpl createSession(Token token) {
+	public OAuthSession createSession(Token token) {
 		return new OAuthSessionImpl(this, token);
 	}
 	

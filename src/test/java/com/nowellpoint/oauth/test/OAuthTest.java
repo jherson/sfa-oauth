@@ -23,13 +23,11 @@ public class OAuthTest {
 	@BeforeClass
 	public static void buildOAuthClient() {
 		
-		OAuthClient client = new OAuthClient.ClientBuilder()
+		session = new OAuthClient.ClientBuilder()
 				.clientId(System.getenv("CLIENT_ID"))
 				.clientSecret(System.getenv("CLIENT_SECRET"))
 				.serviceProvider(SalesforceLoginProvider.class)
-				.build();
-		
-		session = client.createSession();
+				.build().createSession();
 		
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
 		credentials.setUsername(System.getenv("SALESFORCE_USERNAME"));
