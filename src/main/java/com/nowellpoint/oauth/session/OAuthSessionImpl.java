@@ -194,8 +194,7 @@ import com.nowellpoint.oauth.model.VerificationCode;
 public class OAuthSessionImpl implements OAuthSession, Serializable {
 
 	private static final long serialVersionUID = 8065223488307981986L;
-	private static Logger log = Logger.getLogger(OAuthSessionImpl.class
-			.getName());
+	private static Logger log = Logger.getLogger(OAuthSessionImpl.class.getName());
 
 	private OAuthClient oauthClient;
 	private String id;
@@ -286,13 +285,15 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 
 	@Override
 	public void login(UsernamePasswordCredentials credentials) throws OAuthException {
-		OAuthClientRequest.BasicTokenRequest tokenRequest = OAuthClientRequest
-				.basicTokenRequest().clientId(oauthClient.getClientId())
+		OAuthClientRequest.BasicTokenRequest tokenRequest = OAuthClientRequest.basicTokenRequest()
+				.clientId(oauthClient.getClientId())
 				.clientSecret(oauthClient.getClientSecret())
 				.username(credentials.getUsername())
 				.password(String.valueOf(credentials.getPassword()))
 				.build();
-
+		
+		credentials.setPassword(null);
+		
 		Token token = oauthClient.getServiceProvider().requestToken(
 				tokenRequest);
 
@@ -309,19 +310,19 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
 		credentials.setUsername(username);
 		credentials.setPassword(password);
+		password = null;
 		login(credentials);
 	}
 
 	@Override
 	public void verify(VerificationCode verificationCode) throws OAuthException {
-		OAuthClientRequest.VerifyTokenRequest tokenRequest = OAuthClientRequest
-				.verifyTokenRequest().code(verificationCode.getCode())
+		OAuthClientRequest.VerifyTokenRequest tokenRequest = OAuthClientRequest.verifyTokenRequest()
+				.code(verificationCode.getCode())
 				.callbackUrl(oauthClient.getCallbackUrl())
 				.clientId(oauthClient.getClientId())
 				.clientSecret(oauthClient.getClientSecret()).build();
 
-		Token token = oauthClient.getServiceProvider().requestToken(
-				tokenRequest);
+		Token token = oauthClient.getServiceProvider().requestToken(tokenRequest);
 
 		if (token.getError() != null) {
 			throw new OAuthException(token.getErrorDescription());
@@ -333,14 +334,12 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 
 	@Override
 	public void refreshToken() throws OAuthException {
-		OAuthClientRequest.RefreshTokenRequest refreshTokenRequest = OAuthClientRequest
-				.refreshTokenRequest()
+		OAuthClientRequest.RefreshTokenRequest refreshTokenRequest = OAuthClientRequest.refreshTokenRequest()
 				.refreshToken(getToken().getRefreshToken())
 				.clientId(oauthClient.getClientId())
 				.clientSecret(oauthClient.getClientSecret()).build();
 
-		Token token = oauthClient.getServiceProvider().refreshToken(
-				refreshTokenRequest);
+		Token token = oauthClient.getServiceProvider().refreshToken(refreshTokenRequest);
 
 		setToken(token);
 		setIdentity(getIdentityByToken(token));
@@ -383,14 +382,14 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 	}
 
 	private Identity getIdentityByToken(Token token) {
-		OAuthClientRequest.IdentityRequest identityRequest = OAuthClientRequest
-				.identityRequest().identityUrl(token.getId())
-				.accessToken(token.getAccessToken()).build();
+		OAuthClientRequest.IdentityRequest identityRequest = OAuthClientRequest.identityRequest()
+				.identityUrl(token.getId())
+				.accessToken(token.getAccessToken())
+				.build();
 
 		Identity identity = null;
 		try {
-			identity = oauthClient.getServiceProvider().getIdentity(
-					identityRequest);
+			identity = oauthClient.getServiceProvider().getIdentity(identityRequest);
 		} catch (OAuthException e) {
 			log.log(Level.SEVERE, e.getMessage());
 		}
