@@ -285,8 +285,7 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 	}
 
 	@Override
-	public void login(UsernamePasswordCredentials credentials)
-			throws OAuthException {
+	public void login(UsernamePasswordCredentials credentials) throws OAuthException {
 		OAuthClientRequest.BasicTokenRequest tokenRequest = OAuthClientRequest
 				.basicTokenRequest().clientId(oauthClient.getClientId())
 				.clientSecret(oauthClient.getClientSecret())
@@ -303,6 +302,14 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 
 		setToken(token);
 		setIdentity(getIdentityByToken(token));
+	}
+	
+	@Override
+	public void login(String username, char[] password) throws OAuthException {
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
+		credentials.setUsername(username);
+		credentials.setPassword(password);
+		login(credentials);
 	}
 
 	@Override

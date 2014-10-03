@@ -193,6 +193,8 @@ public interface OAuthSession {
 	public void login(FacesContext context) throws OAuthException;
 
 	public void login(UsernamePasswordCredentials credentials) throws OAuthException;
+	
+	public void login(String username, char[] password) throws OAuthException;
 
 	public void verify(VerificationCode verificationCode) throws OAuthException;
 
