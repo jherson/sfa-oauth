@@ -11,32 +11,32 @@ public class UserRole implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = 4712349588886164059L;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("Id")
 	public String id;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("Name")
 	public String name;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("attributes")
 	private Attributes attributes;
-	
+
 	public UserRole() {
-		
+
 	}
 
 	public String getId() {

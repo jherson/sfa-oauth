@@ -7,13 +7,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Photos implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@JsonProperty("picture")
 	private String picture;
-	
+
 	@JsonProperty("thumbnail")
 	private String thumbnail;
-	
 
 	public String getPicture() {
 		return picture;

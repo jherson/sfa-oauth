@@ -21,45 +21,49 @@ import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.session.OAuthSessionContext;
 
-@WebServlet(value="/logout")
+@WebServlet(value = "/logout")
 public class LogoutServlet implements Servlet {
-	
-	private Logger log =  Logger.getLogger(LogoutServlet.class.getName());
-	
+
+	private Logger log = Logger.getLogger(LogoutServlet.class.getName());
+
 	@Inject
 	@Salesforce
 	private OAuthSession oauthSession;
-	
+
 	@Inject
 	private OAuthSessionCallback sessionCallback;
-	
+
 	@Override
-	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-		
-		HttpServletRequest request  = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-        	response.sendError(HttpServletResponse.SC_REQUEST_TIMEOUT, request.getRequestURI());
-        	return;
-        }
-        
-        try {
+	public void service(ServletRequest servletRequest,
+			ServletResponse servletResponse) throws ServletException,
+			IOException {
+
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.sendError(HttpServletResponse.SC_REQUEST_TIMEOUT,
+					request.getRequestURI());
+			return;
+		}
+
+		try {
 			oauthSession.logout();
 		} catch (OAuthException e) {
 			log.log(Level.WARNING, e.getMessage());
 		}
 
-        request.getSession(false).invalidate();
-		
-		OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
+		request.getSession(false).invalidate();
+
+		OAuthSessionContext context = sessionCallback.initContext(request,
+				response, oauthSession);
 		sessionCallback.onLogout(context);
 	}
 
 	@Override
 	public void destroy() {
-		
+
 	}
 
 	@Override
@@ -74,6 +78,6 @@ public class LogoutServlet implements Servlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		
+
 	}
 }

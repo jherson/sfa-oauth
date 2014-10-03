@@ -9,130 +9,133 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class UserInfo implements Serializable {
 
 	/**
-	 * "UserRole":null,"Profile":{"attributes":{"type":"Profile","url":"/services/data/v29.0/sobjects/Profile/00e30000000fJ0uAAE"},"Id":"00e30000000fJ0uAAE","Name":"System Administrator","PermissionsCustomizeApplication":true},
+	 * "UserRole":null,"Profile":{"attributes":{"type":"Profile","url":
+	 * "/services/data/v29.0/sobjects/Profile/00e30000000fJ0uAAE"
+	 * },"Id":"00e30000000fJ0uAAE"
+	 * ,"Name":"System Administrator","PermissionsCustomizeApplication":true},
 	 */
-	
+
 	private static final long serialVersionUID = 5267942011876349443L;
-	
+
 	@JsonProperty("Id")
 	private String id;
-	
+
 	@JsonProperty("Username")
 	private String username;
-	
+
 	@JsonProperty("LastName")
 	private String lastName;
-	
+
 	@JsonProperty("FirstName")
 	private String firstName;
-	
+
 	@JsonProperty("Name")
 	private String name;
-	
+
 	@JsonProperty("CompanyName")
 	private String companyName;
 
 	@JsonProperty("Division")
 	private String division;
-	
+
 	@JsonProperty("Department")
 	private String department;
-	
+
 	@JsonProperty("Title")
 	private String title;
-	
+
 	@JsonProperty("Street")
 	private String street;
-	
+
 	@JsonProperty("City")
 	private String city;
 
 	@JsonProperty("State")
 	private String state;
-	
+
 	@JsonProperty("PostalCode")
 	private String postalCode;
-	
+
 	@JsonProperty("Country")
 	private String country;
-	
+
 	@JsonProperty("Latitude")
 	private String latitude;
 
 	@JsonProperty("Longitude")
 	private String longitude;
-	
+
 	@JsonProperty("Email")
 	private String email;
-	
+
 	@JsonProperty("SenderEmail")
 	private String senderEmail;
-	
+
 	@JsonProperty("SenderName")
 	private String senderName;
-	
+
 	@JsonProperty("Signature")
 	private String signature;
-	
+
 	@JsonProperty("Phone")
 	private String phone;
-	
+
 	@JsonProperty("Extension")
 	private String extension;
-	
+
 	@JsonProperty("Fax")
 	private String fax;
-	
+
 	@JsonProperty("MobilePhone")
 	private String mobilePhone;
-	
+
 	@JsonProperty("Alias")
 	private String alias;
-	
+
 	@JsonProperty("CommunityNickname")
 	private String communityNickname;
-	
+
 	@JsonProperty("IsActive")
 	private Boolean isActive;
-	
+
 	@JsonProperty("TimeZoneSidKey")
 	private String timeZoneSidKey;
-	
+
 	@JsonProperty("LocaleSidKey")
 	private String localeSidKey;
-	
+
 	@JsonProperty("EmailEncodingKey")
 	private String emailEncodingKey;
-	
+
 	@JsonProperty("UserType")
 	private String userType;
-	
+
 	@JsonProperty("LanguageLocaleKey")
 	private String languageLocaleKey;
-	
+
 	@JsonProperty("EmployeeNumber")
 	private String employeeNumber;
-	
+
 	@JsonProperty("DelegatedApproverId")
 	private String delegatedApproverId;
-	
+
 	@JsonProperty("ManagerId")
 	private String managerId;
-	
+
 	@JsonProperty("AboutMe")
 	private String aboutMe;
-	
+
 	@JsonProperty("attributes")
 	private Attributes attributes;
-	
+
 	@JsonProperty("Profile")
 	private Profile profile;
-	
+
 	@JsonProperty("UserRole")
 	private UserRole userRole;
-	
+
 	public UserInfo() {
-		
+
 	}
 
 	public String getId() {

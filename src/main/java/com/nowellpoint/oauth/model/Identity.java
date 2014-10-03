@@ -13,61 +13,61 @@ public class Identity implements Serializable {
 
 	@JsonProperty("id")
 	private String id;
-	
+
 	@JsonProperty("asserted_user")
 	private Boolean assertedUser;
-	
+
 	@JsonProperty("user_id")
 	private String userId;
-	
+
 	@JsonProperty("organization_id")
 	private String organizationId;
-	
+
 	@JsonProperty("username")
 	private String username;
-	
+
 	@JsonProperty("nick_name")
 	private String nickName;
-	
+
 	@JsonProperty("display_name")
 	private String displayName;
-	
+
 	@JsonProperty("email")
 	private String email;
-	
+
 	@JsonProperty("active")
 	private Boolean active;
-	
+
 	@JsonProperty("user_type")
 	private String userType;
-	
+
 	@JsonProperty("language")
 	private String language;
-	
+
 	@JsonProperty("locale")
 	private Locale locale;
-	
+
 	@JsonProperty("utcOffset")
-	private String utcOffset; 
-	
+	private String utcOffset;
+
 	@JsonProperty("photos")
 	private Photos photos;
-	
+
 	@JsonProperty("urls")
 	private Urls urls;
-	
+
 	public Identity() {
-		
+
 	}
-	
+
 	public String getId() {
 		return id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public Boolean getAssertedUser() {
 		return assertedUser;
 	}
@@ -123,7 +123,7 @@ public class Identity implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public Urls getUrls() {
 		return urls;
 	}
@@ -131,7 +131,7 @@ public class Identity implements Serializable {
 	public void setUrls(Urls urls) {
 		this.urls = urls;
 	}
-	
+
 	public Boolean getActive() {
 		return active;
 	}

@@ -2,38 +2,18 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-public class SalesforceCredentials implements Serializable {
-	
+public class SalesforceCredentials extends UsernamePasswordCredentials implements Serializable {
+
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = 5719472610392020765L;
 
-	private String username;
-	
-	private char[] password;
-	
 	private String securityToken;
 
 	public SalesforceCredentials() {
-		
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public char[] getPassword() {
-		return password;
-	}
-
-	public void setPassword(char[] password) {
-		this.password = password;
+		super();
 	}
 
 	public String getSecurityToken() {

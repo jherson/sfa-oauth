@@ -12,49 +12,49 @@ public class OrganizationInfo implements Serializable {
 	 * 
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = -7062846116139974541L;
-	
+
 	@JsonProperty("Id")
 	private String id;
-	
+
 	@JsonProperty("Name")
 	private String name;
-	
+
 	@JsonProperty("Division")
 	private String division;
-	
+
 	@JsonProperty("Street")
 	private String street;
-	
+
 	@JsonProperty("City")
 	private String city;
-	
+
 	@JsonProperty("State")
 	private String state;
-	
+
 	@JsonProperty("PostalCode")
 	private String postalCode;
-	
+
 	@JsonProperty("Country")
 	private String country;
-	
+
 	@JsonProperty("PrimaryContact")
 	private String primaryContact;
-	
+
 	@JsonProperty("DefaultLocaleSidKey")
 	private String defaultLocaleSidKey;
-	
+
 	@JsonProperty("LanguageLocaleKey")
 	private String languageLocaleKey;
-	
+
 	@JsonProperty("FiscalYearStartMonth")
 	private Integer fiscalYearStartMonth;
-	
+
 	private Attributes attributes;
-	
+
 	public OrganizationInfo() {
-		
+
 	}
 
 	public String getId() {

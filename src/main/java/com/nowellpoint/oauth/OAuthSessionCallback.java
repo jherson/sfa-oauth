@@ -166,7 +166,7 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth;
 
@@ -182,18 +182,19 @@ public abstract class OAuthSessionCallback implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = 678969510395689676L;
 
 	public abstract void onVerify(OAuthSessionContext context);
-	
+
 	public abstract void onLogout(OAuthSessionContext context);
 
-	public OAuthSessionContext initContext(HttpServletRequest request, HttpServletResponse response, OAuthSession oauthSession) {
+	public OAuthSessionContext initContext(HttpServletRequest request,
+			HttpServletResponse response, OAuthSession oauthSession) {
 		OAuthSessionContext context = new OAuthSessionContext();
-	    context.setRequest(request);
-	    context.setResponse(response);
-	    context.setOauthSession(oauthSession);
-	    return context;
+		context.setRequest(request);
+		context.setResponse(response);
+		context.setOauthSession(oauthSession);
+		return context;
 	}
 }

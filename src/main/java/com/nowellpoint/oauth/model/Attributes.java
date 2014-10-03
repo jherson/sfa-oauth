@@ -7,14 +7,14 @@ public class Attributes implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = 7355398852417140468L;
-	
+
 	private String type;
 	private String url;
 
 	public Attributes() {
-		
+
 	}
 
 	public String getType() {

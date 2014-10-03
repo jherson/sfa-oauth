@@ -166,7 +166,7 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth.provider;
 
@@ -187,152 +187,177 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = -6252791802295055242L;
-		
+
 	/**
 	 * 
 	 */
-	
+
 	private static final String API_VERSION = "31.0";
-	
+
 	/**
 	 * 
 	 */
-	
-	private static final String USER_FIELDS = "Id,Username,LastName,FirstName,Name,CompanyName,Division,Department," +
-			"Title,Street,City,State,PostalCode,Country,Latitude,Longitude," +
-			"Email,SenderEmail,SenderName,Signature,Phone,Fax,MobilePhone,Alias," +
-			"CommunityNickname,IsActive,TimeZoneSidKey,UserRole.Id,UserRole.Name,LocaleSidKey," +
-			"EmailEncodingKey,Profile.Id,Profile.Name,Profile.PermissionsCustomizeApplication," +
-			"UserType,LanguageLocaleKey,EmployeeNumber,DelegatedApproverId,ManagerId,AboutMe";
-	
+
+	private static final String USER_FIELDS = "Id,Username,LastName,FirstName,Name,CompanyName,Division,Department,"
+			+ "Title,Street,City,State,PostalCode,Country,Latitude,Longitude,"
+			+ "Email,SenderEmail,SenderName,Signature,Phone,Fax,MobilePhone,Alias,"
+			+ "CommunityNickname,IsActive,TimeZoneSidKey,UserRole.Id,UserRole.Name,LocaleSidKey,"
+			+ "EmailEncodingKey,Profile.Id,Profile.Name,Profile.PermissionsCustomizeApplication,"
+			+ "UserType,LanguageLocaleKey,EmployeeNumber,DelegatedApproverId,ManagerId,AboutMe";
+
 	/**
 	 * 
 	 */
-	
-	private static final String ORGANIZATION_FIELDS = "Id,Name,Division,Street,City,State,PostalCode,Country," +
-			"PrimaryContact,DefaultLocaleSidKey,LanguageLocaleKey,FiscalYearStartMonth";
-	
+
+	private static final String ORGANIZATION_FIELDS = "Id,Name,Division,Street,City,State,PostalCode,Country,"
+			+ "PrimaryContact,DefaultLocaleSidKey,LanguageLocaleKey,FiscalYearStartMonth";
+
 	/**
 	 * 
 	 */
-	
+
 	public AbstractSalesforceProvider() {
-		
-	}
-	
-	@Override
-	public Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException {
-		ClientRequest request = new ClientRequest(getTokenEndpoint());
-        request.header("Content-Type", "application/x-www-form-urlencoded");
-        request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_GRANT_TYPE);                
-        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, basicTokenRequest.getClientId());
-        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, basicTokenRequest.getClientSecret());
-        request.queryParameter(OAuthConstants.USERNAME_PARAMETER, basicTokenRequest.getUsername());
-        request.queryParameter(OAuthConstants.PASSWORD_PARAMETER, basicTokenRequest.getPassword());
-            
-        ClientResponse<Token> response = null;
-        try {
-        	response = request.post(Token.class);
-        } catch (Exception e) {
-            throw new OAuthException(e);
-        } finally {
-            request.clear();
-        }
-        
-        return response.getEntity();
+
 	}
 
 	@Override
-	public Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException {
+	public Token requestToken(
+			OAuthClientRequest.BasicTokenRequest basicTokenRequest)
+			throws OAuthException {
 		ClientRequest request = new ClientRequest(getTokenEndpoint());
-        request.header("Content-Type", "application/x-www-form-urlencoded");        
-        request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE);                
-        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, verifyTokenRequest.getClientId());
-        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, verifyTokenRequest.getClientSecret());
-        request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, verifyTokenRequest.getCallbackUrl());
-        request.queryParameter(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode());
-        
-        ClientResponse<Token> response = null;
-        try {
-        	response = request.post(Token.class);
-        } catch (Exception e) {
-            throw new OAuthException(e);
-        } finally {
-            request.clear();
-        }
-        
-        return response.getEntity();
-	}
-	
-	@Override
-	public Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException {
-		ClientRequest request = new ClientRequest(identityRequest.getIdentityUrl());
-        request.header("Content-Type", "application/x-www-form-urlencoded");
-        request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken());
-        request.followRedirects(Boolean.TRUE);
-        
-        ClientResponse<Identity> response = null;
-        try {
-            response = request.get(Identity.class);
-        } catch (Exception e) {
-            throw new OAuthException(e);
-        } finally {
-            request.clear();
-        }
-            
-        return response.getEntity();        
+		request.header("Content-Type", "application/x-www-form-urlencoded");
+		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
+				OAuthConstants.PASSWORD_GRANT_TYPE);
+		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
+				basicTokenRequest.getClientId());
+		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
+				basicTokenRequest.getClientSecret());
+		request.queryParameter(OAuthConstants.USERNAME_PARAMETER,
+				basicTokenRequest.getUsername());
+		request.queryParameter(OAuthConstants.PASSWORD_PARAMETER,
+				basicTokenRequest.getPassword());
+
+		ClientResponse<Token> response = null;
+		try {
+			response = request.post(Token.class);
+		} catch (Exception e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+
+		return response.getEntity();
 	}
 
 	@Override
-	public void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException {
+	public Token requestToken(
+			OAuthClientRequest.VerifyTokenRequest verifyTokenRequest)
+			throws OAuthException {
+		ClientRequest request = new ClientRequest(getTokenEndpoint());
+		request.header("Content-Type", "application/x-www-form-urlencoded");
+		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
+				OAuthConstants.AUTHORIZATION_GRANT_TYPE);
+		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
+				verifyTokenRequest.getClientId());
+		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
+				verifyTokenRequest.getClientSecret());
+		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER,
+				verifyTokenRequest.getCallbackUrl());
+		request.queryParameter(OAuthConstants.CODE_PARAMETER,
+				verifyTokenRequest.getCode());
+
+		ClientResponse<Token> response = null;
+		try {
+			response = request.post(Token.class);
+		} catch (Exception e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+
+		return response.getEntity();
+	}
+
+	@Override
+	public Identity getIdentity(
+			OAuthClientRequest.IdentityRequest identityRequest)
+			throws OAuthException {
+		ClientRequest request = new ClientRequest(
+				identityRequest.getIdentityUrl());
+		request.header("Content-Type", "application/x-www-form-urlencoded");
+		request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER,
+				identityRequest.getAccessToken());
+		request.followRedirects(Boolean.TRUE);
+
+		ClientResponse<Identity> response = null;
+		try {
+			response = request.get(Identity.class);
+		} catch (Exception e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+
+		return response.getEntity();
+	}
+
+	@Override
+	public void revokeToken(
+			OAuthClientRequest.RevokeTokenRequest revokeTokenRequest)
+			throws OAuthException {
 		ClientRequest request = new ClientRequest(getRevokeEndpoint());
-        request.header("Content-Type", "application/x-www-form-urlencoded");
-        request.queryParameter(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken());
+		request.header("Content-Type", "application/x-www-form-urlencoded");
+		request.queryParameter(OAuthConstants.TOKEN_PARAMETER,
+				revokeTokenRequest.getAccessToken());
 
-        try {
-        	request.post();
-        } catch (Exception e) {
-        	throw new OAuthException(e);
-        } finally {
-        	request.clear();
-        }
+		try {
+			request.post();
+		} catch (Exception e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
 	}
 
 	@Override
-	public Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException {
+	public Token refreshToken(
+			OAuthClientRequest.RefreshTokenRequest refreshTokenRequest)
+			throws OAuthException {
 		ClientRequest request = new ClientRequest(getTokenEndpoint());
-        request.header("Content-Type", "application/x-www-form-urlencoded");
-        request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE);                
-        request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, refreshTokenRequest.getClientId());
-        request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, refreshTokenRequest.getClientSecret());
-        request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken());
-        
-        ClientResponse<Token> response = null;
-        try {
-        	response = request.post(Token.class);
-        } catch (Exception e) {
-            throw new OAuthException(e);
-        } finally {
-            request.clear();
-        }
-        
-        return response.getEntity();
+		request.header("Content-Type", "application/x-www-form-urlencoded");
+		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
+				OAuthConstants.REFRESH_GRANT_TYPE);
+		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
+				refreshTokenRequest.getClientId());
+		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
+				refreshTokenRequest.getClientSecret());
+		request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE,
+				refreshTokenRequest.getRefreshToken());
+
+		ClientResponse<Token> response = null;
+		try {
+			response = request.post(Token.class);
+		} catch (Exception e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+
+		return response.getEntity();
 	}
-	
-    public UserInfo getUserInfo(Token token, Identity identity) throws OAuthException {
-    	String url = new StringBuilder().append(getSObjectUrl(identity))
-				.append("User/")
-				.append(identity.getUserId())
-				.append("?fields=")
-				.append(USER_FIELDS)
-				.toString();
-    	
-    	ClientRequest request = new ClientRequest(url);
+
+	public UserInfo getUserInfo(Token token, Identity identity)
+			throws OAuthException {
+		String url = new StringBuilder().append(getSObjectUrl(identity))
+				.append("User/").append(identity.getUserId())
+				.append("?fields=").append(USER_FIELDS).toString();
+
+		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Authorization", "OAuth " + token.getAccessToken());
-		
+
 		ClientResponse<UserInfo> response = null;
 		try {
 			response = request.get(UserInfo.class);
@@ -341,22 +366,20 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		} finally {
 			request.clear();
 		}
-		
+
 		return response.getEntity();
-    }
-    
-    public OrganizationInfo getOrganizationInfo(Token token, Identity identity) throws OAuthException {
-    	String url = new StringBuilder().append(getSObjectUrl(identity))
-				.append("Organization/")
-				.append(identity.getOrganizationId())
-				.append("?fields=")
-				.append(ORGANIZATION_FIELDS)
-				.toString();
-    	
-    	ClientRequest request = new ClientRequest(url);
+	}
+
+	public OrganizationInfo getOrganizationInfo(Token token, Identity identity)
+			throws OAuthException {
+		String url = new StringBuilder().append(getSObjectUrl(identity))
+				.append("Organization/").append(identity.getOrganizationId())
+				.append("?fields=").append(ORGANIZATION_FIELDS).toString();
+
+		ClientRequest request = new ClientRequest(url);
 		request.header("Content-type", "application/x-www-form-urlencoded");
 		request.header("Authorization", "OAuth " + token.getAccessToken());
-		
+
 		ClientResponse<OrganizationInfo> response = null;
 		try {
 			response = request.get(OrganizationInfo.class);
@@ -365,15 +388,16 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		} finally {
 			request.clear();
 		}
-		
+
 		return response.getEntity();
-    }
-    
+	}
+
 	public abstract String getTokenEndpoint();
-	
+
 	public abstract String getRevokeEndpoint();
-    
-    private String getSObjectUrl(Identity identity) {
-    	return identity.getUrls().getSObjects().replace("{version}", API_VERSION);
-    }
+
+	private String getSObjectUrl(Identity identity) {
+		return identity.getUrls().getSObjects()
+				.replace("{version}", API_VERSION);
+	}
 }

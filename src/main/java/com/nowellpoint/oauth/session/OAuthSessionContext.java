@@ -12,29 +12,29 @@ public class OAuthSessionContext implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = -8030968908682514184L;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private HttpServletResponse response;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private HttpServletRequest request;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private OAuthSession oauthSession;
-	
+
 	public OAuthSessionContext() {
-		
+
 	}
 
 	public HttpServletResponse getResponse() {

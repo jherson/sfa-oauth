@@ -6,45 +6,45 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Urls implements Serializable  {
-	
+public class Urls implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@JsonProperty("enterprise")
 	private String enterprise;
-	
+
 	@JsonProperty("metadata")
 	private String metadata;
-	
+
 	@JsonProperty("partner")
 	private String partner;
-	
+
 	@JsonProperty("rest")
 	private String rest;
-	
+
 	@JsonProperty("sobjects")
 	private String sobjects;
-	
+
 	@JsonProperty("search")
 	private String search;
-	
+
 	@JsonProperty("query")
 	private String query;
-	
+
 	@JsonProperty("recent")
 	private String recent;
-	
+
 	@JsonProperty("profile")
 	private String profile;
-	
+
 	@JsonProperty("feeds")
 	private String feeds;
-	
+
 	@JsonProperty("feed_items")
 	private String feedItems;
 
 	@JsonProperty("groups")
-	private String groups; 
+	private String groups;
 
 	@JsonProperty("users")
 	private String users;

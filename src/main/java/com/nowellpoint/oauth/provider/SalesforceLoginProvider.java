@@ -166,7 +166,7 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth.provider;
 
@@ -175,45 +175,45 @@ public class SalesforceLoginProvider extends AbstractSalesforceProvider {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = -6252791802295055242L;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private static final String AUTHORIZE_ENDPOINT = "https://login.salesforce.com/services/oauth2/authorize";
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private static final String TOKEN_ENDPOINT = "https://login.salesforce.com/services/oauth2/token";
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private static final String REVOKE_ENDPOINT = "https://login.salesforce.com/services/oauth2/revoke";
-	
+
 	/**
 	 * 
 	 */
-	
+
 	public SalesforceLoginProvider() {
-		
+
 	}
-	
+
 	@Override
 	public String getAuthEndpoint() {
 		return AUTHORIZE_ENDPOINT;
 	}
-	
+
 	@Override
 	public String getTokenEndpoint() {
 		return TOKEN_ENDPOINT;
 	}
-	
+
 	@Override
 	public String getRevokeEndpoint() {
 		return REVOKE_ENDPOINT;

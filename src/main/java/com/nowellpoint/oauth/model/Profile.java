@@ -11,40 +11,39 @@ public class Profile implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = -8058869170954792895L;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("Id")
 	public String id;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("Name")
 	public String name;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("PermissionsCustomizeApplication")
 	public Boolean permissionsCustomizeApplication;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	@JsonProperty("attributes")
 	private Attributes attributes;
-	
 
 	public Profile() {
-		
+
 	}
 
 	public String getId() {
@@ -67,7 +66,8 @@ public class Profile implements Serializable {
 		return permissionsCustomizeApplication;
 	}
 
-	public void setPermissionsCustomizeApplication(Boolean permissionsCustomizeApplication) {
+	public void setPermissionsCustomizeApplication(
+			Boolean permissionsCustomizeApplication) {
 		this.permissionsCustomizeApplication = permissionsCustomizeApplication;
 	}
 

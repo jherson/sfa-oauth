@@ -13,7 +13,7 @@ import javax.inject.Qualifier;
 @Qualifier
 @Retention(RUNTIME)
 @Documented
-@Target({FIELD, METHOD})
+@Target({ FIELD, METHOD })
 public @interface Salesforce {
 
 }

@@ -17,47 +17,49 @@ import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 
-@WebServlet(value="/login")
+@WebServlet(value = "/login")
 public class LoginServlet implements Servlet {
-	
+
 	@Inject
 	@Salesforce
 	private OAuthSession oauthSession;
-	
+
 	@Override
-	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-		
-		HttpServletRequest request  = (HttpServletRequest) servletRequest;
+	public void service(ServletRequest servletRequest,
+			ServletResponse servletResponse) throws ServletException,
+			IOException {
+
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		
+
 		request.getSession(true);
-		
+
 		boolean cookieExists = Boolean.FALSE;
-		
-		Cookie[] cookies = request.getCookies();                
+
+		Cookie[] cookies = request.getCookies();
 		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals("OAuthSessionID")) {           
+			if (cookie.getName().equals("OAuthSessionID")) {
 				cookieExists = Boolean.TRUE;
 			}
-		}  
-		
-		if (! cookieExists) {
+		}
+
+		if (!cookieExists) {
 			Cookie cookie = new Cookie("OAuthSessionID", oauthSession.getId());
 			cookie.setMaxAge(365 * 24 * 60 * 60);
 			response.addCookie(cookie);
 		}
-		
+
 		try {
 			oauthSession.login(response);
 		} catch (OAuthException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, request.getRequestURI());
 			return;
-		}		
+		}
 	}
 
 	@Override
 	public void destroy() {
-		
+
 	}
 
 	@Override
@@ -72,6 +74,6 @@ public class LoginServlet implements Servlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		
+
 	}
 }

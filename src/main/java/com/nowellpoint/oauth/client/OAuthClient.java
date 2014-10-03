@@ -166,7 +166,7 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth.client;
 
@@ -183,7 +183,7 @@ public class OAuthClient implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = 2748321507418076091L;
 	private OAuthServiceProvider serviceProvider;
 	private String loginUrl;
@@ -192,17 +192,17 @@ public class OAuthClient implements Serializable {
 	private String callbackUrl;
 	private String scope;
 	private String prompt;
-	private String display;	
+	private String display;
 	private String state;
-	
+
 	/**
-	 * no arg contructor used for injection 
+	 * no arg contructor used for injection
 	 */
-	
+
 	public OAuthClient() {
-		
+
 	}
-	
+
 	private OAuthClient(ClientBuilder builder) {
 		this.clientId = builder.clientId;
 		this.clientSecret = builder.clientSecret;
@@ -211,20 +211,22 @@ public class OAuthClient implements Serializable {
 		this.prompt = builder.prompt;
 		this.display = builder.display;
 		this.state = builder.state;
-		
+
 		try {
-			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.serviceProvider).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			this.serviceProvider = (OAuthServiceProvider) Class.forName(
+					builder.serviceProvider).newInstance();
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		this.loginUrl = buildLoginRedirect(serviceProvider.getAuthEndpoint());
 	}
-	
+
 	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
 		return serviceProvider;
 	}
-	
+
 	public String getLoginUrl() {
 		return loginUrl;
 	}
@@ -256,50 +258,47 @@ public class OAuthClient implements Serializable {
 	public String getState() {
 		return state;
 	}
-	
+
 	public OAuthSession createSession() {
 		return new OAuthSessionImpl(this);
 	}
-	
+
 	public OAuthSession createSession(Token token) {
 		return new OAuthSessionImpl(this, token);
 	}
-	
+
 	private String buildLoginRedirect(String authEndpoint) {
-		StringBuilder endpoint = new StringBuilder()
-				.append(authEndpoint)
-				.append("?")
-				.append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
-				.append("=")
-				.append(OAuthConstants.CODE_PARAMETER)
-				.append("&")
-				.append(OAuthConstants.CLIENT_ID_PARAMETER)
-				.append("=")
-				.append(getClientId())
-				.append("&")
-				.append(OAuthConstants.REDIRECT_URI_PARAMETER)
-				.append("=")
+		StringBuilder endpoint = new StringBuilder().append(authEndpoint)
+				.append("?").append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
+				.append("=").append(OAuthConstants.CODE_PARAMETER).append("&")
+				.append(OAuthConstants.CLIENT_ID_PARAMETER).append("=")
+				.append(getClientId()).append("&")
+				.append(OAuthConstants.REDIRECT_URI_PARAMETER).append("=")
 				.append(getCallbackUrl());
-		
+
 		if (getScope() != null) {
-			endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
+			endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER)
+					.append("=").append(getScope());
 		}
-    	
-    	if (getPrompt() != null) {
-			endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
-    	}
-    	
-    	if (getDisplay() != null) {
-			endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
-    	}
-    	
-    	if (getState() != null) {
-			endpoint.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
-    	}
-    	
-    	return endpoint.toString();
-    }
-	
+
+		if (getPrompt() != null) {
+			endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER)
+					.append("=").append(getPrompt());
+		}
+
+		if (getDisplay() != null) {
+			endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER)
+					.append("=").append(getDisplay());
+		}
+
+		if (getState() != null) {
+			endpoint.append("&").append(OAuthConstants.STATE_PARAMETER)
+					.append("=").append(getState());
+		}
+
+		return endpoint.toString();
+	}
+
 	public static class ClientBuilder {
 		private String serviceProvider;
 		private String clientId;
@@ -307,18 +306,19 @@ public class OAuthClient implements Serializable {
 		private String callbackUrl;
 		private String scope;
 		private String prompt;
-		private String display;	
+		private String display;
 		private String state;
-		
+
 		public ClientBuilder() {
-			
+
 		}
-		
-		public <T extends OAuthServiceProvider> ClientBuilder serviceProvider(Class<T> serviceProvider) {
+
+		public <T extends OAuthServiceProvider> ClientBuilder serviceProvider(
+				Class<T> serviceProvider) {
 			this.serviceProvider = serviceProvider.getName();
 			return this;
 		}
-		
+
 		public ClientBuilder clientId(String clientId) {
 			this.clientId = clientId;
 			return this;
@@ -328,7 +328,7 @@ public class OAuthClient implements Serializable {
 			this.clientSecret = clientSecret;
 			return this;
 		}
-		
+
 		public ClientBuilder callbackUrl(String callbackUrl) {
 			this.callbackUrl = callbackUrl;
 			return this;
@@ -348,12 +348,12 @@ public class OAuthClient implements Serializable {
 			this.display = display;
 			return this;
 		}
-		
+
 		public ClientBuilder state(String state) {
 			this.state = state;
 			return this;
 		}
-		
+
 		public OAuthClient build() {
 			return new OAuthClient(this);
 		}

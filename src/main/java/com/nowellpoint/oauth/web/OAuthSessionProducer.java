@@ -166,7 +166,7 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth.web;
 
@@ -179,10 +179,10 @@ import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.client.OAuthClient;
 
 public class OAuthSessionProducer {
-	
+
 	@Inject
 	private OAuthClient oauthClient;
-	
+
 	@Produces
 	@Salesforce
 	@SessionScoped

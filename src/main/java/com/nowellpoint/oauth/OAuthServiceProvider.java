@@ -166,7 +166,7 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth;
 
@@ -184,57 +184,73 @@ public abstract class OAuthServiceProvider implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	private static final long serialVersionUID = -5650578742390926431L;
-	
+
 	/**
 	 * getAuthorizeEndpoint
+	 * 
 	 * @return String
 	 */
-	
+
 	public abstract String getAuthEndpoint();
-	
+
 	/**
 	 * requestToken
+	 * 
 	 * @param basicTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
-	
-	public abstract Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException;
-	
+
+	public abstract Token requestToken(
+			OAuthClientRequest.BasicTokenRequest basicTokenRequest)
+			throws OAuthException;
+
 	/**
 	 * requestToken
+	 * 
 	 * @param verifyTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
-	
-	public abstract Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException;
-	
+
+	public abstract Token requestToken(
+			OAuthClientRequest.VerifyTokenRequest verifyTokenRequest)
+			throws OAuthException;
+
 	/**
-	 * getIdentity 
+	 * getIdentity
+	 * 
 	 * @param identityRequest
 	 * @return Identity
 	 * @throws LoginException
 	 */
-	
-	public abstract Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException;
-	
+
+	public abstract Identity getIdentity(
+			OAuthClientRequest.IdentityRequest identityRequest)
+			throws OAuthException;
+
 	/**
 	 * refreshToken
+	 * 
 	 * @param refreshTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
-	
-	public abstract Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException;
-	
+
+	public abstract Token refreshToken(
+			OAuthClientRequest.RefreshTokenRequest refreshTokenRequest)
+			throws OAuthException;
+
 	/**
 	 * revokeToken
+	 * 
 	 * @param revokeTokenRequest
 	 * @throws LoginException
 	 */
-	
-	public abstract void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException;
+
+	public abstract void revokeToken(
+			OAuthClientRequest.RevokeTokenRequest revokeTokenRequest)
+			throws OAuthException;
 }

@@ -166,47 +166,46 @@ incurred by, or claims asserted against, such Contributor by reason of your
 accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-*/
+ */
 
 package com.nowellpoint.oauth;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.picketlink.idm.credential.UsernamePasswordCredentials;
-
 import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.model.UsernamePasswordCredentials;
 import com.nowellpoint.oauth.model.VerificationCode;
 
 public interface OAuthSession {
 
 	public String getId();
-	
+
 	public void setOAuthClient(OAuthClient oauthClient);
-	
+
 	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass);
-	
+
 	public void login(HttpServletResponse response) throws OAuthException;
-	
+
 	public void login(FacesContext context) throws OAuthException;
-	
+
 	public void login(UsernamePasswordCredentials credentials) throws OAuthException;
-	
+
 	public void verify(VerificationCode verificationCode) throws OAuthException;
-	
+
 	public void refreshToken() throws OAuthException;
-	
+
 	public void logout() throws OAuthException;
-	
+
 	public Token getToken();
-	
+
 	public Identity getIdentity();
-	
+
 	public void setRedirectUrl(String redirectUrl);
-	
+
 	public String getRedirectUrl();
 
 }
