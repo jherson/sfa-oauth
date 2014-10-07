@@ -50,10 +50,8 @@ public class OAuthTest {
 		assertNotNull(session.getIdentity().getDisplayName());
 
 		System.out.println("SessionId: " + session.getId());
-		System.out.println("AccessToken: "
-				+ session.getToken().getAccessToken());
-		System.out.println("DisplayName: "
-				+ session.getIdentity().getDisplayName());
+		System.out.println("AccessToken: " + session.getToken().getAccessToken());
+		System.out.println("DisplayName: " + session.getIdentity().getDisplayName());
 		System.out.println(session.getIdentity().getUrls().getSObjects());
 	}
 
@@ -74,8 +72,7 @@ public class OAuthTest {
 
 		System.out.println(userInfo.getName());
 		System.out.println(userInfo.getEmail());
-		System.out.println(userInfo.getProfile()
-				.getPermissionsCustomizeApplication());
+		System.out.println(userInfo.getProfile().getPermissionsCustomizeApplication());
 	}
 
 	@Test
@@ -85,8 +82,7 @@ public class OAuthTest {
 		OrganizationInfo organizationInfo = null;
 		try {
 			organizationInfo = session.unwrap(SalesforceLoginProvider.class)
-					.getOrganizationInfo(session.getToken(),
-							session.getIdentity());
+					.getOrganizationInfo(session.getToken(),session.getIdentity());
 		} catch (OAuthException e) {
 			e.printStackTrace();
 		}

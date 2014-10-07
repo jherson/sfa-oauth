@@ -170,13 +170,26 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth.provider;
 
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
 import com.nowellpoint.oauth.client.OAuthClientRequest;
 import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.http.NameValuePair;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
@@ -223,173 +236,190 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	}
 
 	@Override
-	public Token requestToken(
-			OAuthClientRequest.BasicTokenRequest basicTokenRequest)
-			throws OAuthException {
-		ClientRequest request = new ClientRequest(getTokenEndpoint());
-		request.header("Content-Type", "application/x-www-form-urlencoded");
-		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
-				OAuthConstants.PASSWORD_GRANT_TYPE);
-		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
-				basicTokenRequest.getClientId());
-		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
-				basicTokenRequest.getClientSecret());
-		request.queryParameter(OAuthConstants.USERNAME_PARAMETER,
-				basicTokenRequest.getUsername());
-		request.queryParameter(OAuthConstants.PASSWORD_PARAMETER,
-				basicTokenRequest.getPassword());
-
-		ClientResponse<Token> response = null;
+	public Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException {
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new NameValuePair(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.PASSWORD_GRANT_TYPE));
+		params.add(new NameValuePair(OAuthConstants.CLIENT_ID_PARAMETER, basicTokenRequest.getClientId()));
+		params.add(new NameValuePair(OAuthConstants.CLIENT_SECRET_PARAMETER, basicTokenRequest.getClientSecret()));
+		params.add(new NameValuePair(OAuthConstants.USERNAME_PARAMETER, basicTokenRequest.getUsername()));
 		try {
-			response = request.post(Token.class);
-		} catch (Exception e) {
+			params.add(new NameValuePair(OAuthConstants.PASSWORD_PARAMETER, URLEncoder.encode(basicTokenRequest.getPassword(), "UTF-8")));
+		} catch (UnsupportedEncodingException e) {
 			throw new OAuthException(e);
-		} finally {
-			request.clear();
 		}
-
-		return response.getEntity();
+		
+		String response = executePost(getTokenEndpoint(), params);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Token token = null;
+		try {
+			token = mapper.readValue(response.toString(), Token.class);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} 
+		
+		return token;
 	}
 
 	@Override
-	public Token requestToken(
-			OAuthClientRequest.VerifyTokenRequest verifyTokenRequest)
-			throws OAuthException {
-		ClientRequest request = new ClientRequest(getTokenEndpoint());
-		request.header("Content-Type", "application/x-www-form-urlencoded");
-		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
-				OAuthConstants.AUTHORIZATION_GRANT_TYPE);
-		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
-				verifyTokenRequest.getClientId());
-		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
-				verifyTokenRequest.getClientSecret());
-		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER,
-				verifyTokenRequest.getCallbackUrl());
-		request.queryParameter(OAuthConstants.CODE_PARAMETER,
-				verifyTokenRequest.getCode());
+	public Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException {
+//		ClientRequest request = new ClientRequest(getTokenEndpoint());
+//		request.header("Content-Type", "application/x-www-form-urlencoded");
+//		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
+//				OAuthConstants.AUTHORIZATION_GRANT_TYPE);
+//		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
+//				verifyTokenRequest.getClientId());
+//		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
+//				verifyTokenRequest.getClientSecret());
+//		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER,
+//				verifyTokenRequest.getCallbackUrl());
+//		request.queryParameter(OAuthConstants.CODE_PARAMETER,
+//				verifyTokenRequest.getCode());
 
-		ClientResponse<Token> response = null;
+//		ClientResponse<Token> response = null;
+//		try {
+//			response = request.post(Token.class);
+//		} catch (Exception e) {
+//			throw new OAuthException(e);
+//		} finally {
+//			request.clear();
+//		}
+//
+//		return response.getEntity();
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new NameValuePair(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE));
+		params.add(new NameValuePair(OAuthConstants.CLIENT_ID_PARAMETER, verifyTokenRequest.getClientId()));
+		params.add(new NameValuePair(OAuthConstants.CLIENT_SECRET_PARAMETER, verifyTokenRequest.getClientSecret()));
+		params.add(new NameValuePair(OAuthConstants.REDIRECT_URI_PARAMETER, verifyTokenRequest.getCallbackUrl()));
+		params.add(new NameValuePair(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode()));
+		
+		String response = executePost(getTokenEndpoint(), params);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Token token = null;
 		try {
-			response = request.post(Token.class);
-		} catch (Exception e) {
+			token = mapper.readValue(response.toString(), Token.class);
+		} catch (IOException e) {
 			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-
-		return response.getEntity();
+		} 
+		
+		return token;
 	}
 
 	@Override
-	public Identity getIdentity(
-			OAuthClientRequest.IdentityRequest identityRequest)
-			throws OAuthException {
-		ClientRequest request = new ClientRequest(
-				identityRequest.getIdentityUrl());
-		request.header("Content-Type", "application/x-www-form-urlencoded");
-		request.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER,
-				identityRequest.getAccessToken());
-		request.followRedirects(Boolean.TRUE);
-
-		ClientResponse<Identity> response = null;
+	public Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException {
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new NameValuePair(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken()));
+		
+		String response = executePost(identityRequest.getIdentityUrl(), params);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Identity identity = null;
 		try {
-			response = request.get(Identity.class);
-		} catch (Exception e) {
+			identity = mapper.readValue(response.toString(), Identity.class);
+		} catch (IOException e) {
 			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-
-		return response.getEntity();
+		} 
+		
+		return identity;
 	}
 
 	@Override
-	public void revokeToken(
-			OAuthClientRequest.RevokeTokenRequest revokeTokenRequest)
-			throws OAuthException {
-		ClientRequest request = new ClientRequest(getRevokeEndpoint());
-		request.header("Content-Type", "application/x-www-form-urlencoded");
-		request.queryParameter(OAuthConstants.TOKEN_PARAMETER,
-				revokeTokenRequest.getAccessToken());
-
-		try {
-			request.post();
-		} catch (Exception e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
+	public void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new NameValuePair(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken()));
+		executePost(getRevokeEndpoint(), params);		
 	}
 
 	@Override
-	public Token refreshToken(
-			OAuthClientRequest.RefreshTokenRequest refreshTokenRequest)
-			throws OAuthException {
-		ClientRequest request = new ClientRequest(getTokenEndpoint());
-		request.header("Content-Type", "application/x-www-form-urlencoded");
-		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
-				OAuthConstants.REFRESH_GRANT_TYPE);
-		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
-				refreshTokenRequest.getClientId());
-		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
-				refreshTokenRequest.getClientSecret());
-		request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE,
-				refreshTokenRequest.getRefreshToken());
-
-		ClientResponse<Token> response = null;
+	public Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException {
+//		ClientRequest request = new ClientRequest(getTokenEndpoint());
+//		request.header("Content-Type", "application/x-www-form-urlencoded");
+//		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
+//				OAuthConstants.REFRESH_GRANT_TYPE);
+//		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
+//				refreshTokenRequest.getClientId());
+//		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
+//				refreshTokenRequest.getClientSecret());
+//		request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE,
+//				refreshTokenRequest.getRefreshToken());
+//
+//		ClientResponse<Token> response = null;
+//		try {
+//			response = request.post(Token.class);
+//		} catch (Exception e) {
+//			throw new OAuthException(e);
+//		} finally {
+//			request.clear();
+//		}
+//
+//		return response.getEntity();
+		
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new NameValuePair(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE));
+		params.add(new NameValuePair(OAuthConstants.CLIENT_ID_PARAMETER, refreshTokenRequest.getClientId()));
+		params.add(new NameValuePair(OAuthConstants.CLIENT_SECRET_PARAMETER, refreshTokenRequest.getClientSecret()));
+		params.add(new NameValuePair(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken()));
+		
+		String response = executePost(getTokenEndpoint(), params);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Token token = null;
 		try {
-			response = request.post(Token.class);
-		} catch (Exception e) {
+			token = mapper.readValue(response.toString(), Token.class);
+		} catch (IOException e) {
 			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-
-		return response.getEntity();
+		} 
+		
+		return token;
 	}
 
-	public UserInfo getUserInfo(Token token, Identity identity)
-			throws OAuthException {
+	public UserInfo getUserInfo(Token token, Identity identity) throws OAuthException {
+		
 		String url = new StringBuilder().append(getSObjectUrl(identity))
-				.append("User/").append(identity.getUserId())
-				.append("?fields=").append(USER_FIELDS).toString();
-
-		ClientRequest request = new ClientRequest(url);
-		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Authorization", "OAuth " + token.getAccessToken());
-
-		ClientResponse<UserInfo> response = null;
+				.append("User/")
+				.append(identity.getUserId())
+				.append("?fields=")
+				.append(USER_FIELDS)
+				.toString();
+		
+		String response = executeGet(url, token.getAccessToken());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		UserInfo userInfo = null;
 		try {
-			response = request.get(UserInfo.class);
-		} catch (Exception e) {
+			userInfo = mapper.readValue(response.toString(), UserInfo.class);
+		} catch (IOException e) {
 			throw new OAuthException(e);
-		} finally {
-			request.clear();
 		}
-
-		return response.getEntity();
+		
+		return userInfo;
 	}
 
-	public OrganizationInfo getOrganizationInfo(Token token, Identity identity)
-			throws OAuthException {
+	public OrganizationInfo getOrganizationInfo(Token token, Identity identity) throws OAuthException {
+		
 		String url = new StringBuilder().append(getSObjectUrl(identity))
-				.append("Organization/").append(identity.getOrganizationId())
-				.append("?fields=").append(ORGANIZATION_FIELDS).toString();
-
-		ClientRequest request = new ClientRequest(url);
-		request.header("Content-type", "application/x-www-form-urlencoded");
-		request.header("Authorization", "OAuth " + token.getAccessToken());
-
-		ClientResponse<OrganizationInfo> response = null;
+				.append("Organization/")
+				.append(identity.getOrganizationId())
+				.append("?fields=")
+				.append(ORGANIZATION_FIELDS)
+				.toString();
+		
+		String response = executeGet(url, token.getAccessToken());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		OrganizationInfo organizationInfo = null;
 		try {
-			response = request.get(OrganizationInfo.class);
-		} catch (Exception e) {
+			organizationInfo = mapper.readValue(response.toString(), OrganizationInfo.class);	
+		} catch (IOException e) {
 			throw new OAuthException(e);
-		} finally {
-			request.clear();
 		}
-
-		return response.getEntity();
+		
+		return organizationInfo;
 	}
 
 	public abstract String getTokenEndpoint();
@@ -397,7 +427,87 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	public abstract String getRevokeEndpoint();
 
 	private String getSObjectUrl(Identity identity) {
-		return identity.getUrls().getSObjects()
-				.replace("{version}", API_VERSION);
+		return identity.getUrls().getSObjects().replace("{version}", API_VERSION);
+	}
+	
+	private String executeGet(String url, String accessToken) throws OAuthException {		
+		StringBuilder response = new StringBuilder();
+		HttpsURLConnection connection = null;
+		try {
+		
+			connection = (HttpsURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Authorization", "OAuth " + accessToken);
+			connection.setRequestProperty("Accept", "application/json");
+	 
+			if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
+				throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode());
+			}
+	 
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+			String nextLine = null;
+			while ((nextLine = br.readLine()) != null) {
+				response.append(nextLine); 
+			}
+			
+		} catch (MalformedURLException e) {
+			throw new OAuthException(e);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} finally {
+			connection.disconnect();
+		}	
+		
+		return response.toString();
+	}
+	
+	private String executePost(String url, List<NameValuePair> params) throws OAuthException {
+		StringBuilder response = new StringBuilder();
+		HttpsURLConnection connection = null;
+		try {
+			
+			String urlParameters = parseParams(params);
+			
+			connection = (HttpsURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Accept", "application/json");
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+			connection.setDoOutput(true);
+			
+			DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+			os.writeBytes(urlParameters);
+			os.flush();
+			os.close();
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+			String nextLine = null;
+			while ((nextLine = br.readLine()) != null) {
+				response.append(nextLine); 
+			}
+			
+		} catch (MalformedURLException e) {
+			throw new OAuthException(e);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} finally {
+			connection.disconnect();
+		}	
+		
+		return response.toString();
+	}
+	
+	private String parseParams(List<NameValuePair> params) {
+		StringBuilder sb = new StringBuilder();
+		for (NameValuePair nameValuePair : params) {
+			if (sb.length() > 0) {
+				sb.append("&");
+			}
+			sb.append(nameValuePair.getName()).append("=").append(nameValuePair.getValue());
+		}
+		return sb.toString();
 	}
 }
