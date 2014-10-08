@@ -189,6 +189,9 @@ import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
 import com.nowellpoint.oauth.client.OAuthClientRequest;
 import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.http.HttpRequest;
+import com.nowellpoint.oauth.http.HttpRequestBuilder;
+import com.nowellpoint.oauth.http.HttpResponse;
 import com.nowellpoint.oauth.http.NameValuePair;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
@@ -216,8 +219,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	private static final String USER_FIELDS = "Id,Username,LastName,FirstName,Name,CompanyName,Division,Department,"
 			+ "Title,Street,City,State,PostalCode,Country,Latitude,Longitude,"
 			+ "Email,SenderEmail,SenderName,Signature,Phone,Fax,MobilePhone,Alias,"
-			+ "CommunityNickname,IsActive,TimeZoneSidKey,UserRole.Id,UserRole.Name,LocaleSidKey,"
-			+ "EmailEncodingKey,Profile.Id,Profile.Name,Profile.PermissionsCustomizeApplication,"
+			+ "CommunityNickname,IsActive,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,"
 			+ "UserType,LanguageLocaleKey,EmployeeNumber,DelegatedApproverId,ManagerId,AboutMe";
 
 	/**
@@ -249,7 +251,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 			throw new OAuthException(e);
 		}
 		
-		String response = executePost(getTokenEndpoint(), params);
+		String response = executePost(getTokenEndpoint(), params).getEntity();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		Token token = null;
@@ -295,7 +297,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		params.add(new NameValuePair(OAuthConstants.REDIRECT_URI_PARAMETER, verifyTokenRequest.getCallbackUrl()));
 		params.add(new NameValuePair(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode()));
 		
-		String response = executePost(getTokenEndpoint(), params);
+		String response = executePost(getTokenEndpoint(), params).getEntity();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		Token token = null;
@@ -314,7 +316,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new NameValuePair(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken()));
 		
-		String response = executePost(identityRequest.getIdentityUrl(), params);
+		String response = executePost(identityRequest.getIdentityUrl(), params).getEntity();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		Identity identity = null;
@@ -365,7 +367,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		params.add(new NameValuePair(OAuthConstants.CLIENT_SECRET_PARAMETER, refreshTokenRequest.getClientSecret()));
 		params.add(new NameValuePair(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken()));
 		
-		String response = executePost(getTokenEndpoint(), params);
+		String response = executePost(getTokenEndpoint(), params).getEntity();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		Token token = null;
@@ -380,19 +382,19 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 
 	public UserInfo getUserInfo(Token token, Identity identity) throws OAuthException {
 		
-		String url = new StringBuilder().append(getSObjectUrl(identity))
-				.append("User/")
-				.append(identity.getUserId())
-				.append("?fields=")
-				.append(USER_FIELDS)
-				.toString();
+		String url = getUserInfoUrl(identity);
 		
-		String response = executeGet(url, token.getAccessToken());
+		HttpRequest request = new HttpRequestBuilder().target(url)
+				.queryParameter("fields", USER_FIELDS)
+				.bearerToken(token.getAccessToken())
+				.build();
+		
+		HttpResponse response = request.get();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		UserInfo userInfo = null;
 		try {
-			userInfo = mapper.readValue(response.toString(), UserInfo.class);
+			userInfo = mapper.readValue(response.getEntity(), UserInfo.class);
 		} catch (IOException e) {
 			throw new OAuthException(e);
 		}
@@ -402,19 +404,19 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 
 	public OrganizationInfo getOrganizationInfo(Token token, Identity identity) throws OAuthException {
 		
-		String url = new StringBuilder().append(getSObjectUrl(identity))
-				.append("Organization/")
-				.append(identity.getOrganizationId())
-				.append("?fields=")
-				.append(ORGANIZATION_FIELDS)
-				.toString();
+		String url = getOrganizationInfoUrl(identity);
 		
-		String response = executeGet(url, token.getAccessToken());
+		HttpRequest request = new HttpRequestBuilder().target(url)
+				.queryParameter("fields", ORGANIZATION_FIELDS)
+				.bearerToken(token.getAccessToken())
+				.build();
+		
+		HttpResponse response = request.get();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		OrganizationInfo organizationInfo = null;
 		try {
-			organizationInfo = mapper.readValue(response.toString(), OrganizationInfo.class);	
+			organizationInfo = mapper.readValue(response.getEntity(), OrganizationInfo.class);	
 		} catch (IOException e) {
 			throw new OAuthException(e);
 		}
@@ -425,46 +427,45 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	public abstract String getTokenEndpoint();
 
 	public abstract String getRevokeEndpoint();
+	
+	/**
+	 * getUserInfoUrl
+	 * @param identity
+	 * @return URL to obtain UserInfo
+	 */
+	
+	private String getUserInfoUrl(Identity identity) {
+		return new StringBuilder().append(getSObjectUrl(identity))
+				.append("User/")
+				.append(identity.getUserId())
+				.toString();
+	}
+	
+	/**
+	 * getOrganizationInfoUrl
+	 * @param identity
+	 * @return URL to obtain OrganizationInfo
+	 */
+	
+	private String getOrganizationInfoUrl(Identity identity) {
+		return new StringBuilder().append(getSObjectUrl(identity))
+				.append("Organization/")
+				.append(identity.getOrganizationId())
+				.toString();
+	}
 
+	/**
+	 * getSObjectUrl
+	 * @param identity
+	 * @return the SObject URL
+	 */
+	
 	private String getSObjectUrl(Identity identity) {
 		return identity.getUrls().getSObjects().replace("{version}", API_VERSION);
 	}
-	
-	private String executeGet(String url, String accessToken) throws OAuthException {		
-		StringBuilder response = new StringBuilder();
-		HttpsURLConnection connection = null;
-		try {
 		
-			connection = (HttpsURLConnection) new URL(url).openConnection();
-			connection.setRequestMethod("GET");
-			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-			connection.setRequestProperty("Authorization", "OAuth " + accessToken);
-			connection.setRequestProperty("Accept", "application/json");
-	 
-			if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
-				throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode());
-			}
-	 
-			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-			String nextLine = null;
-			while ((nextLine = br.readLine()) != null) {
-				response.append(nextLine); 
-			}
-			
-		} catch (MalformedURLException e) {
-			throw new OAuthException(e);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			connection.disconnect();
-		}	
-		
-		return response.toString();
-	}
-	
-	private String executePost(String url, List<NameValuePair> params) throws OAuthException {
-		StringBuilder response = new StringBuilder();
+	private HttpResponse executePost(String url, List<NameValuePair> params) throws OAuthException {
+		HttpResponse response = null;
 		HttpsURLConnection connection = null;
 		try {
 			
@@ -474,6 +475,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 			connection.setRequestProperty("Accept", "application/json");
+			connection.setRequestProperty("Accept-Charset", "UTF-8");
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
 			connection.setDoOutput(true);
 			
@@ -482,12 +484,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 			os.flush();
 			os.close();
 			
-			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-			String nextLine = null;
-			while ((nextLine = br.readLine()) != null) {
-				response.append(nextLine); 
-			}
+			response = parseResponse(connection);
 			
 		} catch (MalformedURLException e) {
 			throw new OAuthException(e);
@@ -497,7 +494,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 			connection.disconnect();
 		}	
 		
-		return response.toString();
+		return response;
 	}
 	
 	private String parseParams(List<NameValuePair> params) {
@@ -509,5 +506,18 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 			sb.append(nameValuePair.getName()).append("=").append(nameValuePair.getValue());
 		}
 		return sb.toString();
+	}
+	
+	private HttpResponse parseResponse(HttpsURLConnection connection) throws IOException {
+
+		StringBuilder entity = new StringBuilder();
+
+		String nextLine = null;
+		BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		while ((nextLine = br.readLine()) != null) {
+			entity.append(nextLine); 
+		}
+		
+		return new HttpResponse(connection.getResponseCode(), entity.toString());
 	}
 }

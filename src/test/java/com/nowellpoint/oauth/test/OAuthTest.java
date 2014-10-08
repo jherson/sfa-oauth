@@ -68,11 +68,9 @@ public class OAuthTest {
 		}
 
 		assertNotNull(userInfo);
-		assertNotNull(userInfo.getProfile());
 
 		System.out.println(userInfo.getName());
 		System.out.println(userInfo.getEmail());
-		System.out.println(userInfo.getProfile().getPermissionsCustomizeApplication());
 	}
 
 	@Test
