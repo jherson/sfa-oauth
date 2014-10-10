@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class HttpRequestBuilder {
 
@@ -21,12 +21,12 @@ public class HttpRequestBuilder {
 	
 	private String bearerToken;
 	
-	private List<NameValuePair> requestProperties;
+	private List<NameValuePair> header;
 	
 	private List<NameValuePair> queryParemeters;
 	
 	public HttpRequestBuilder() {
-		requestProperties = new ArrayList<NameValuePair>();
+		header = new ArrayList<NameValuePair>();
 		queryParemeters = new ArrayList<NameValuePair>();
 	}
 	
@@ -45,8 +45,8 @@ public class HttpRequestBuilder {
 		return this;
 	}
 	
-	public HttpRequestBuilder requestProperty(String name, String value) {
-		requestProperties.add(new NameValuePair(name, value));
+	public HttpRequestBuilder header(String name, String value) {
+		header.add(new NameValuePair(name, value));
 		return this;
 	}
 	
@@ -64,42 +64,95 @@ public class HttpRequestBuilder {
 		private String target;
 		private String path;
 		private String bearerToken;
+		private List<NameValuePair> header = new ArrayList<NameValuePair>();
 		private List<NameValuePair> queryParemeters = new ArrayList<NameValuePair>();
+		private HttpsURLConnection connection = null;
 		
 		private HttpRequestImpl(HttpRequestBuilder builder) {
-			this.target = builder.target;
+	        this.target = builder.target;
 			this.path = builder.path;
 			this.bearerToken = builder.bearerToken;
+			this.header = builder.header;
 			this.queryParemeters = builder.queryParemeters;
 		}
 
 		@Override
-		public HttpResponse get() {
-			HttpResponse response = null;
-			HttpsURLConnection connection = null;
-			try {
-				
-				connection = (HttpsURLConnection) getURL().openConnection();
+		public <T> HttpResponse<T> get(Class<T> type) throws IOException {
+			HttpResponse<T> response = null;
+			try {	
+				connection = openConnection();
 				connection.setRequestMethod("GET");
 				connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 				connection.setRequestProperty("Accept-Charset", "UTF-8");
 				connection.setRequestProperty("Authorization", "Bearer " + bearerToken);
 				connection.setRequestProperty("Accept", "application/json");
-		 
-				response = new HttpResponse(connection.getResponseCode(), readResponse(connection.getInputStream()));
 				
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+				response = new HttpResponseImpl<T>(type, connection);
+			
 			} finally {
 				connection.disconnect();
-			}	
+			}
+				
+			return response;
+		}
+		
+		@Override
+		public <T> HttpResponse<T> post() throws IOException {
+			HttpResponse<T> response = null;
+			try {
+				connection = openConnection();
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+				connection.setRequestProperty("Accept", "application/json");
+				connection.setRequestProperty("Accept-Charset", "UTF-8");
+				connection.setDoOutput(true);
+				for (NameValuePair nameValuePair : header) {
+					connection.setRequestProperty(nameValuePair.getName(), nameValuePair.getValue());
+				}
+				
+				response = new HttpResponseImpl<T>(connection);
+			
+			} finally {
+				connection.disconnect();
+			}
+				
+			return response;
+		}
+		
+		@Override
+		public <T> HttpResponse<T> post(Class<T> type) throws IOException {			
+			HttpResponse<T> response = null;
+			try {
+				connection = openConnection();
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+				connection.setRequestProperty("Accept", "application/json");
+				connection.setRequestProperty("Accept-Charset", "UTF-8");
+				connection.setDoOutput(true);
+				for (NameValuePair nameValuePair : header) {
+					connection.setRequestProperty(nameValuePair.getName(), nameValuePair.getValue());
+				}
+				
+				response = new HttpResponseImpl<T>(type, connection);
+				
+			} finally {
+				connection.disconnect();
+			}
 			
 			return response;
 		}
 		
-		private URL getURL() throws MalformedURLException, UnsupportedEncodingException {
+		@Override
+		public void clear() {
+			target = null;
+			path = null;
+			bearerToken = null;
+			header = new ArrayList<NameValuePair>();
+			queryParemeters = new ArrayList<NameValuePair>();
+			connection = null;
+		}
+		
+		private HttpsURLConnection openConnection() throws IOException {
 			StringBuilder sb = new StringBuilder().append(target);
 			if (path != null) {
 				sb.append("/");
@@ -109,7 +162,8 @@ public class HttpRequestBuilder {
 				sb.append("?");
 				sb.append(getQueryParameters());
 			}
-			return new URL(sb.toString());
+			URL url = new URL(sb.toString());
+			return (HttpsURLConnection) url.openConnection();
 		}
 		
 		private String getQueryParameters() throws UnsupportedEncodingException {
@@ -120,17 +174,53 @@ public class HttpRequestBuilder {
 				}
 				sb.append(nameValuePair.getName()).append("=").append(nameValuePair.getValue());
 			}
-			return URLEncoder.encode(sb.toString(), "UTF-8");
+			return sb.toString();
+		}
+	}
+	
+	private class HttpResponseImpl<T> implements HttpResponse<T> {
+		
+		private Class<T> type;
+		private int responseCode;
+		private String responseMessage;
+		private T entity;
+		
+		private HttpResponseImpl(HttpsURLConnection connection) throws IOException {
+			this.responseCode = connection.getResponseCode();
+			this.responseMessage = connection.getResponseMessage();
 		}
 		
-		private String readResponse(InputStream inputStream) throws IOException {
-			StringBuilder entity = new StringBuilder();
+		private HttpResponseImpl(Class<T> type, HttpsURLConnection connection) throws IOException {
+			this.type = type;
+			this.responseCode = connection.getResponseCode();
+			this.responseMessage = connection.getResponseMessage();
+			this.entity = readResponse(connection.getInputStream());
+		}
+
+		@Override
+		public int getResponseCode() {
+			return responseCode;
+		}
+
+		@Override
+		public String getResponseMessage() {
+			return responseMessage;
+		}
+
+		@Override
+		public T getEntity() {
+			return entity;
+		}
+		
+		private T readResponse(InputStream inputStream) throws IOException {
+			StringBuilder sb = new StringBuilder();
 			String nextLine = null;
 			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 			while ((nextLine = br.readLine()) != null) {
-				entity.append(nextLine); 
+				sb.append(nextLine); 
 			}
-			return entity.toString();
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(sb.toString(), type);
 		}
 	}
 }

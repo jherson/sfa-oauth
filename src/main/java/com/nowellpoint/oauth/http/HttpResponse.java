@@ -1,30 +1,10 @@
 package com.nowellpoint.oauth.http;
 
-import java.io.Serializable;
-
-public class HttpResponse implements Serializable {
-
-	/**
-	 * 
-	 */
+public interface HttpResponse<T> {
 	
-	private static final long serialVersionUID = 5837099327881770370L;
+	public int getResponseCode();
 	
-
-	private int statusCode;
+	public String getResponseMessage();
 	
-	private String entity;
-	
-	public HttpResponse(int statusCode, String entity) {
-		this.statusCode = statusCode;
-		this.entity = entity;
-	}
-	
-	public int getStatusCode() {
-		return statusCode;
-	}
-	
-	public String getEntity() {
-		return entity;
-	}
+	public T getEntity();
 }
