@@ -8,7 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.client.OAuthClient;
+import com.nowellpoint.oauth.client.OAuthClientBuilder;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.UserInfo;
@@ -22,7 +22,7 @@ public class OAuthTest {
 	@BeforeClass
 	public static void buildOAuthClient() {
 
-		session = new OAuthClient.ClientBuilder()
+		session = new OAuthClientBuilder()
 				.clientId(System.getenv("CLIENT_ID"))
 				.clientSecret(System.getenv("CLIENT_SECRET"))
 				.serviceProvider(SalesforceLoginProvider.class).build()

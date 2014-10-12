@@ -170,31 +170,193 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth.client;
 
+import java.io.Serializable;
+
+import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
 import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.session.OAuthSessionImpl;
 
-public interface OAuthClient {
+public class OAuthClientBuilder implements Serializable {
 
-	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider();
+	/**
+	 * 
+	 */
 	
-	public String getLoginUrl();
+	private static final long serialVersionUID = -1856856962946721313L;
 	
-	public String getClientId();
+	private String serviceProvider;
+	private String clientId;
+	private String clientSecret;
+	private String callbackUrl;
+	private String scope;
+	private String prompt;
+	private String display;
+	private String state;
+
+	public OAuthClientBuilder() {
+
+	}
+
+	public <T extends OAuthServiceProvider> OAuthClientBuilder serviceProvider(
+			Class<T> serviceProvider) {
+		this.serviceProvider = serviceProvider.getName();
+		return this;
+	}
+
+	public OAuthClientBuilder clientId(String clientId) {
+		this.clientId = clientId;
+		return this;
+	}
+
+	public OAuthClientBuilder clientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+		return this;
+	}
+
+	public OAuthClientBuilder callbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+		return this;
+	}
+
+	public OAuthClientBuilder scope(String scope) {
+		this.scope = scope;
+		return this;
+	}
+
+	public OAuthClientBuilder prompt(String prompt) {
+		this.prompt = prompt;
+		return this;
+	}
+
+	public OAuthClientBuilder display(String display) {
+		this.display = display;
+		return this;
+	}
+
+	public OAuthClientBuilder state(String state) {
+		this.state = state;
+		return this;
+	}
+
+	public OAuthClient build() {
+		return new OAuthClientImpl(this);
+	}
 	
-	public String getClientSecret();
-	
-	public String getCallbackUrl();
-	
-	public String getScope();
-	
-	public String getPrompt();
-	
-	public String getDisplay();
-	
-	public String getState();
-	
-	public OAuthSession createSession();
-	
-	public OAuthSession createSession(Token token);
+	private class OAuthClientImpl implements OAuthClient {
+		
+		private OAuthServiceProvider serviceProvider;
+		private String loginUrl;
+		private String clientId;
+		private String clientSecret;
+		private String callbackUrl;
+		private String scope;
+		private String prompt;
+		private String display;
+		private String state;
+		
+		private OAuthClientImpl(OAuthClientBuilder builder) {
+			this.clientId = builder.clientId;
+			this.clientSecret = builder.clientSecret;
+			this.callbackUrl = builder.callbackUrl;
+			this.scope = builder.scope;
+			this.prompt = builder.prompt;
+			this.display = builder.display;
+			this.state = builder.state;
+			
+			try {
+				this.serviceProvider = (OAuthServiceProvider) Class.forName(
+						builder.serviceProvider).newInstance();
+			} catch (InstantiationException | IllegalAccessException
+					| ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+
+			this.loginUrl = buildLoginRedirect(serviceProvider.getAuthEndpoint());
+		}
+		
+		@Override
+		public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
+			return serviceProvider;
+		}
+		
+		@Override
+		public String getLoginUrl() {
+			return loginUrl;
+		}
+		
+		@Override
+		public String getClientId() {
+			return clientId;
+		}
+		
+		@Override
+		public String getClientSecret() {
+			return clientSecret;
+		}
+		
+		@Override
+		public String getCallbackUrl() {
+			return callbackUrl;
+		}
+		
+		@Override
+		public String getScope() {
+			return scope;
+		}
+		
+		@Override
+		public String getPrompt() {
+			return prompt;
+		}
+		
+		@Override
+		public String getDisplay() {
+			return display;
+		}
+		
+		@Override
+		public String getState() {
+			return state;
+		}
+		
+		@Override
+		public OAuthSession createSession() {
+			return new OAuthSessionImpl(this);
+		}
+		
+		@Override
+		public OAuthSession createSession(Token token) {
+			return new OAuthSessionImpl(this, token);
+		}
+		
+		private String buildLoginRedirect(String authEndpoint) {
+			StringBuilder endpoint = new StringBuilder().append(authEndpoint)
+				.append("?").append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
+				.append("=").append(OAuthConstants.CODE_PARAMETER).append("&")
+				.append(OAuthConstants.CLIENT_ID_PARAMETER).append("=")
+				.append(getClientId()).append("&")
+				.append(OAuthConstants.REDIRECT_URI_PARAMETER).append("=")
+				.append(getCallbackUrl());
+			
+			if (getScope() != null) {
+				endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
+			}
+			
+			if (getPrompt() != null) {
+				endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
+			}
+			
+			if (getDisplay() != null) {
+				endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
+			}
+			
+			if (getState() != null) {
+				endpoint.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
+			}
+			
+			return endpoint.toString();
+		}
+	}
 }
