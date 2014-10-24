@@ -203,9 +203,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * @throws LoginException
 	 */
 
-	public abstract Token requestToken(
-			OAuthClientRequest.BasicTokenRequest basicTokenRequest)
-			throws OAuthException;
+	public abstract Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException;
 
 	/**
 	 * requestToken
@@ -215,9 +213,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * @throws LoginException
 	 */
 
-	public abstract Token requestToken(
-			OAuthClientRequest.VerifyTokenRequest verifyTokenRequest)
-			throws OAuthException;
+	public abstract Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException;
 
 	/**
 	 * getIdentity
@@ -227,9 +223,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * @throws LoginException
 	 */
 
-	public abstract Identity getIdentity(
-			OAuthClientRequest.IdentityRequest identityRequest)
-			throws OAuthException;
+	public abstract Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException;
 
 	/**
 	 * refreshToken
@@ -239,9 +233,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * @throws LoginException
 	 */
 
-	public abstract Token refreshToken(
-			OAuthClientRequest.RefreshTokenRequest refreshTokenRequest)
-			throws OAuthException;
+	public abstract Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException;
 
 	/**
 	 * revokeToken
@@ -250,7 +242,5 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * @throws LoginException
 	 */
 
-	public abstract void revokeToken(
-			OAuthClientRequest.RevokeTokenRequest revokeTokenRequest)
-			throws OAuthException;
+	public abstract void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException;
 }

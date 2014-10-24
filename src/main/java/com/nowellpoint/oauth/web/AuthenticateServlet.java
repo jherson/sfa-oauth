@@ -28,9 +28,7 @@ public class AuthenticateServlet implements Servlet {
 	private OAuthSessionCallback sessionCallback;
 
 	@Override
-	public void service(ServletRequest servletRequest,
-			ServletResponse servletResponse) throws ServletException,
-			IOException {
+	public void service(ServletRequest servletRequest,ServletResponse servletResponse) throws ServletException, IOException {
 
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;

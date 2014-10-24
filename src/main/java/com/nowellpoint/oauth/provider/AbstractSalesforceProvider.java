@@ -245,16 +245,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 			throw new OAuthException(e);
 		}
 		
-		HttpResponse<Token> response = null;
-		try {
-			response = request.post(Token.class);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-		
-		return response.getEntity();
+		return requestToken(request);
 	}
 
 	@Override
@@ -291,16 +282,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 				.queryParameter(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode())
 				.build();
 		
-		HttpResponse<Token> response = null;
-		try {
-			response = request.post(Token.class);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-		
-		return response.getEntity();
+		return requestToken(request);
 	}
 
 	@Override
@@ -310,16 +292,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 				.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken())
 				.build();
 		
-		HttpResponse<Identity> response = null;
-		try {
-			response = request.post(Identity.class);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-		
-		return response.getEntity();
+		return requestIdentity(request);
 	}
 
 	@Override
@@ -368,16 +341,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 				.header(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken())
 				.build();
 		
-		HttpResponse<Token> response = null;
-		try {
-			response = request.post(Token.class);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-		
-		return response.getEntity();
+		return requestToken(request);
 	}
 
 	public UserInfo getUserInfo(Token token, Identity identity) throws OAuthException {
@@ -389,16 +353,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 				.bearerToken(token.getAccessToken())
 				.build();
 		
-		HttpResponse<UserInfo> response = null;
-		try {
-			response = request.get(UserInfo.class);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-		
-		return response.getEntity();
+		return requestUserInfo(request);
 	}
 
 	public OrganizationInfo getOrganizationInfo(Token token, Identity identity) throws OAuthException {
@@ -410,16 +365,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 				.bearerToken(token.getAccessToken())
 				.build();
 		
-		HttpResponse<OrganizationInfo> response = null;
-		try {
-			response = request.get(OrganizationInfo.class);
-		} catch (IOException e) {
-			throw new OAuthException(e);
-		} finally {
-			request.clear();
-		}
-		
-		return response.getEntity();
+		return requestOrganizationInfo(request);
 	}
 
 	public abstract String getTokenEndpoint();
@@ -460,5 +406,91 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	
 	private String getSObjectUrl(Identity identity) {
 		return identity.getUrls().getSObjects().replace("{version}", API_VERSION);
+	}
+	
+	/**
+	 * requestToken
+	 * @param request
+	 * @return the requested Token
+	 * @throws OAuthException
+	 */
+	
+	private Token requestToken(HttpRequest request) throws OAuthException {
+		HttpResponse<Token> response = null;
+		try {
+			response = request.post(Token.class);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+		
+		Token token = response.getEntity();
+		
+		if (token.getError() != null) {
+			throw new OAuthException(token.getErrorDescription());
+		}
+		
+		return token;
+	}
+	
+	/**
+	 * requestIdentity
+	 * @param request
+	 * @return Identity details for the current user session
+	 * @throws OAuthException
+	 */
+	
+	private Identity requestIdentity(HttpRequest request) throws OAuthException {
+		HttpResponse<Identity> response = null;
+		try {
+			response = request.post(Identity.class);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+		
+		return response.getEntity();
+	}
+	
+	/**
+	 * requestOrganizationInfo
+	 * @param request
+	 * @return Organization Information for the current user session
+	 * @throws OAuthException
+	 */
+	
+	private OrganizationInfo requestOrganizationInfo(HttpRequest request) throws OAuthException {
+		HttpResponse<OrganizationInfo> response = null;
+		try {
+			response = request.get(OrganizationInfo.class);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+		
+		return response.getEntity();
+	}
+	
+	/**
+	 * requestUserInfo
+	 * @param request
+	 * @return User Information for the current user session
+	 * @throws OAuthException
+	 */
+	
+	private UserInfo requestUserInfo(HttpRequest request) throws OAuthException {
+		HttpResponse<UserInfo> response = null;
+		try {
+			response = request.get(UserInfo.class);
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} finally {
+			request.clear();
+		}
+		
+		return response.getEntity();
 	}
 }

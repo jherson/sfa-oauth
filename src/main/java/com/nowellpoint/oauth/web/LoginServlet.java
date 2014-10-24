@@ -25,9 +25,7 @@ public class LoginServlet implements Servlet {
 	private OAuthSession oauthSession;
 
 	@Override
-	public void service(ServletRequest servletRequest,
-			ServletResponse servletResponse) throws ServletException,
-			IOException {
+	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
 
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;

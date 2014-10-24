@@ -173,7 +173,6 @@ package com.nowellpoint.oauth;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nowellpoint.oauth.client.OAuthClient;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
@@ -184,21 +183,19 @@ public interface OAuthSession {
 
 	public String getId();
 
-	public void setOAuthClient(OAuthClient oauthClient);
-
 	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass);
 
 	public void login(HttpServletResponse response) throws OAuthException;
 
 	public void login(FacesContext context) throws OAuthException;
 
-	public void login(UsernamePasswordCredentials credentials) throws OAuthException;
+	public Token login(UsernamePasswordCredentials credentials) throws OAuthException;
 	
-	public void login(String username, char[] password) throws OAuthException;
+	public Token login(String username, char[] password) throws OAuthException;
 
-	public void verify(VerificationCode verificationCode) throws OAuthException;
+	public Token verify(VerificationCode verificationCode) throws OAuthException;
 
-	public void refreshToken() throws OAuthException;
+	public Token refreshToken() throws OAuthException;
 
 	public void logout() throws OAuthException;
 

@@ -48,11 +48,16 @@ public class OAuthTest {
 		assertNotNull(session.getId());
 		assertNotNull(session.getToken().getAccessToken());
 		assertNotNull(session.getIdentity().getDisplayName());
+		assertNotNull(session.getIdentity().getFirstName());
+		assertNotNull(session.getIdentity().getLastName());
 
 		System.out.println("SessionId: " + session.getId());
 		System.out.println("AccessToken: " + session.getToken().getAccessToken());
 		System.out.println("DisplayName: " + session.getIdentity().getDisplayName());
-		System.out.println(session.getIdentity().getUrls().getSObjects());
+		System.out.println("SObject URL: " + session.getIdentity().getUrls().getSObjects());
+		System.out.println("First Name: " + session.getIdentity().getFirstName());
+		System.out.println("Last Name: " + session.getIdentity().getLastName());
+		//System.out.println(session.getIdentity().getStatus());
 	}
 
 	@Test

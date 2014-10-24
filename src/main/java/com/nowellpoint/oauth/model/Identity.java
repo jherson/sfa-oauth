@@ -34,6 +34,39 @@ public class Identity implements Serializable {
 
 	@JsonProperty("email")
 	private String email;
+	
+	@JsonProperty("email_verified")
+	private Boolean emailVerified;
+	
+	@JsonProperty("first_name")
+	private String firstName;
+	
+	@JsonProperty("last_name")
+	private String lastName;
+	
+	@JsonProperty("status")
+	private Status status;
+	
+	@JsonProperty("addr_street")
+	private String addrStreet;
+	
+	@JsonProperty("addr_city")
+	private String addrCity;
+	
+	@JsonProperty("addr_country")
+	private String addrCountry;
+	
+	@JsonProperty("addr_state")
+	private String addrState;
+	
+	@JsonProperty("addr_zip")
+	private String addrZip;
+	
+	@JsonProperty("mobile_phone")
+	private String mobilePhone;
+	
+	@JsonProperty("mobile_phone_verified")
+	private Boolean mobilePhoneVerified;
 
 	@JsonProperty("active")
 	private Boolean active;
@@ -122,6 +155,94 @@ public class Identity implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Boolean getEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(Boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public String getAddrStreet() {
+		return addrStreet;
+	}
+
+	public void setAddrStreet(String addrStreet) {
+		this.addrStreet = addrStreet;
+	}
+
+	public String getAddrCity() {
+		return addrCity;
+	}
+
+	public void setAddrCity(String addrCity) {
+		this.addrCity = addrCity;
+	}
+
+	public String getAddrCountry() {
+		return addrCountry;
+	}
+
+	public void setAddrCountry(String addrCountry) {
+		this.addrCountry = addrCountry;
+	}
+
+	public String getAddrState() {
+		return addrState;
+	}
+
+	public void setAddrState(String addrState) {
+		this.addrState = addrState;
+	}
+
+	public String getAddrZip() {
+		return addrZip;
+	}
+
+	public void setAddrZip(String addrZip) {
+		this.addrZip = addrZip;
+	}
+
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public Boolean getMobilePhoneVerified() {
+		return mobilePhoneVerified;
+	}
+
+	public void setMobilePhoneVerified(Boolean mobilePhoneVerified) {
+		this.mobilePhoneVerified = mobilePhoneVerified;
 	}
 
 	public Urls getUrls() {
