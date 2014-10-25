@@ -168,46 +168,27 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.model;
+package com.nowellpoint.oauth.test;
 
-import java.io.Serializable;
-import java.util.Date;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.nowellpoint.oauth.OAuthClient;
+import com.nowellpoint.oauth.OAuthClientBuilder;
+import com.nowellpoint.oauth.annotations.Salesforce;
+import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
+public class OAuthClientProducer {
 
-	/**
-	 * 
-	 */
-	
-	private static final long serialVersionUID = 7322572957863846555L;
-	
-	@JsonProperty("created_date")
-	private Date createdDate;
-	
-	@JsonProperty("body")
-	private String body;
-	
-	public Status() {
+	@Produces
+	@Salesforce
+	@ApplicationScoped
+	public OAuthClient produceOAuthClient() {
+		OAuthClient client = new OAuthClientBuilder().serviceProvider(SalesforceLoginProvider.class)
+				.clientId(System.getenv("CLIENT_ID"))
+				.clientSecret(System.getenv("CLIENT_SECRET"))
+				.build();
 		
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
+		return client;
 	}
 }

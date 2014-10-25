@@ -168,46 +168,30 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.model;
+package com.nowellpoint.oauth.event;
 
-import java.io.Serializable;
-import java.util.Date;
+import javax.enterprise.util.AnnotationLiteral;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.nowellpoint.oauth.OAuthEvent;
+import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.annotations.LoginRedirect;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
+public class LoginRedirectEvent extends AnnotationLiteral<LoginRedirect> implements OAuthEvent {
 
 	/**
 	 * 
 	 */
 	
-	private static final long serialVersionUID = 7322572957863846555L;
+	private static final long serialVersionUID = -4605593010923779781L;
 	
-	@JsonProperty("created_date")
-	private Date createdDate;
+	private OAuthSession oauthSession;
 	
-	@JsonProperty("body")
-	private String body;
+	public LoginRedirectEvent(OAuthSession oauthSession) {
+		this.oauthSession = oauthSession;
+	}
 	
-	public Status() {
-		
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
+	@Override
+	public OAuthSession getOAuthSession() {
+		return oauthSession;
 	}
 }

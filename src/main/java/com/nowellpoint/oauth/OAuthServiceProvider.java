@@ -174,10 +174,14 @@ import java.io.Serializable;
 
 import javax.security.auth.login.LoginException;
 
-import com.nowellpoint.oauth.client.OAuthClientRequest;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
+import com.nowellpoint.oauth.request.BasicTokenRequest;
+import com.nowellpoint.oauth.request.IdentityRequest;
+import com.nowellpoint.oauth.request.RefreshTokenRequest;
+import com.nowellpoint.oauth.request.RevokeTokenRequest;
+import com.nowellpoint.oauth.request.VerifyTokenRequest;
 
 public abstract class OAuthServiceProvider implements Serializable {
 
@@ -188,8 +192,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	private static final long serialVersionUID = -5650578742390926431L;
 
 	/**
-	 * getAuthorizeEndpoint
-	 * 
+	 * getAuthEndpoint
 	 * @return String
 	 */
 
@@ -203,44 +206,40 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * @throws LoginException
 	 */
 
-	public abstract Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException;
+	public abstract Token requestToken(BasicTokenRequest basicTokenRequest) throws OAuthException;
 
 	/**
 	 * requestToken
-	 * 
 	 * @param verifyTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
 
-	public abstract Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException;
+	public abstract Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException;
 
 	/**
 	 * getIdentity
-	 * 
 	 * @param identityRequest
 	 * @return Identity
 	 * @throws LoginException
 	 */
 
-	public abstract Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException;
+	public abstract Identity getIdentity(IdentityRequest identityRequest) throws OAuthException;
 
 	/**
 	 * refreshToken
-	 * 
 	 * @param refreshTokenRequest
 	 * @return Token
 	 * @throws LoginException
 	 */
 
-	public abstract Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException;
+	public abstract Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws OAuthException;
 
 	/**
 	 * revokeToken
-	 * 
 	 * @param revokeTokenRequest
 	 * @throws LoginException
 	 */
 
-	public abstract void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException;
+	public abstract void revokeToken(RevokeTokenRequest revokeTokenRequest) throws OAuthException;
 }

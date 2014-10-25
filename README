@@ -15,7 +15,7 @@ for more information on creating a connected app: http://help.salesforce.com/ape
 <dependency>
   <groupId>com.nowellpoint</groupId>
   <artifactId>nowellpoint-oauth-api</artifactId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
 </dependency>
 
 
@@ -30,17 +30,16 @@ public class Resources {
 	@Salesforce
 	@ApplicationScoped
 	public OAuthClient produceOAuthServiceProvider() {
-		return new OAuthClient.ClientBuilder()
-				.setClientId(<client id>)
-		        .setClientSecret(<client secret>)
-		        .setServiceProvider(SalesforceLoginProvider.class)
-		        .setCallbackUrl(<callback url>)
-		        .setDisplay("popup")
-		        .setPrompt("login")
-		        .setScope("api refresh_token web")
-		        .setLogoutRedirect("/")
+		return new OAuthClientBuilder()
+				.clientId(<client id>)
+		        .clientSecret(<client secret>)
+		        .serviceProvider(SalesforceLoginProvider.class)
+		        .callbackUrl(<callback url>)
+		        .display(<display>)
+		        .prompt(<prompt>)
+		        .scope(<scope>)
 		        .build();
-	}
+	}	
 }
 
 4) handle the authentication callback
@@ -71,7 +70,17 @@ public class Resources {
 			    e.printStackTrace();
 		    }   
         }
+        
+        @Override
+        public void onLogout(OAuthSessionContext context) {
+            try {
+			    context.getResponse().sendRedirect(context.getRequest().getContextPath() + "/");
+		    } catch (IOException e) {
+			    throw new FacesException(e);
+		    }
+	    }
     }
+
 
 5) add page with a login and logout link or button
 
@@ -108,4 +117,19 @@ or include in a jsf action:
         }
     
     }
-    
+ 
+ 
+6. Optional - observe OAuthEvents:
+
+public class OAuthEventObserver {
+
+	public void onLoggedIn(@Observes final LoggedInEvent event) {
+	    // handle event 
+	    // event.getOAuthSession();
+	}
+	
+	public void onLoggedOut(@Observes final LoggedOutEvent event) {
+		// handle event 
+	    // event.getOAuthSession();
+	}
+} 

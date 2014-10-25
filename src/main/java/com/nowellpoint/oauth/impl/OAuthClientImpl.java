@@ -168,46 +168,146 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.model;
+package com.nowellpoint.oauth.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.nowellpoint.oauth.OAuthClient;
+import com.nowellpoint.oauth.OAuthClientBuilder;
+import com.nowellpoint.oauth.OAuthEventListener;
+import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.model.Token;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
-
+public class OAuthClientImpl implements OAuthClient, Serializable {
+	
 	/**
 	 * 
 	 */
 	
-	private static final long serialVersionUID = 7322572957863846555L;
+	private static final long serialVersionUID = -4972528949996825798L;
 	
-	@JsonProperty("created_date")
-	private Date createdDate;
+	private OAuthServiceProvider serviceProvider;
+	private OAuthEventListener eventListener;
+	private String loginUrl;
+	private String clientId;
+	private String clientSecret;
+	private String callbackUrl;
+	private String scope;
+	private String prompt;
+	private String display;
+	private String state;
 	
-	@JsonProperty("body")
-	private String body;
-	
-	public Status() {
+	public OAuthClientImpl() {
 		
 	}
+	
+	public OAuthClientImpl(OAuthClientBuilder builder) {
+		this.clientId = builder.getClientId();
+		this.clientSecret = builder.getClientSecret();
+		this.callbackUrl = builder.getCallbackUrl();
+		this.scope = builder.getScope();
+		this.prompt = builder.getPrompt();
+		this.display = builder.getDisplay();
+		this.state = builder.getState();
+		
+		try {
+			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.getServiceProvider()).newInstance();
+			if (builder.getEventListener() != null) {
+				this.eventListener = (OAuthEventListener) Class.forName(builder.getEventListener()).newInstance();
+			}
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 
-	public Date getCreatedDate() {
-		return createdDate;
+		this.loginUrl = buildLoginRedirect(serviceProvider.getAuthEndpoint());
 	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	
+	@Override
+	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider() {
+		return serviceProvider;
 	}
-
-	public String getBody() {
-		return body;
+	
+	@Override
+	public <T extends OAuthEventListener> OAuthEventListener getEventListener() {
+		return eventListener;
 	}
-
-	public void setBody(String body) {
-		this.body = body;
+	
+	@Override
+	public String getLoginUrl() {
+		return loginUrl;
+	}
+	
+	@Override
+	public String getClientId() {
+		return clientId;
+	}
+	
+	@Override
+	public String getClientSecret() {
+		return clientSecret;
+	}
+	
+	@Override
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+	
+	@Override
+	public String getScope() {
+		return scope;
+	}
+	
+	@Override
+	public String getPrompt() {
+		return prompt;
+	}
+	
+	@Override
+	public String getDisplay() {
+		return display;
+	}
+	
+	@Override
+	public String getState() {
+		return state;
+	}
+	
+	@Override
+	public OAuthSession createSession() {
+		return new OAuthSessionImpl(this);
+	}
+	
+	@Override
+	public OAuthSession createSession(Token token) {
+		return new OAuthSessionImpl(this, token);
+	}
+	
+	private String buildLoginRedirect(String authEndpoint) {
+		StringBuilder endpoint = new StringBuilder().append(authEndpoint)
+			.append("?").append(OAuthConstants.RESPONSE_TYPE_PARAMETER)
+			.append("=").append(OAuthConstants.CODE_PARAMETER).append("&")
+			.append(OAuthConstants.CLIENT_ID_PARAMETER).append("=")
+			.append(getClientId()).append("&")
+			.append(OAuthConstants.REDIRECT_URI_PARAMETER).append("=")
+			.append(getCallbackUrl());
+		
+		if (getScope() != null) {
+			endpoint.append("&").append(OAuthConstants.SCOPE_PARAMETER).append("=").append(getScope());
+		}
+		
+		if (getPrompt() != null) {
+			endpoint.append("&").append(OAuthConstants.PROMPT_PARAMETER).append("=").append(getPrompt());
+		}
+		
+		if (getDisplay() != null) {
+			endpoint.append("&").append(OAuthConstants.DISPLAY_PARAMETER).append("=").append(getDisplay());
+		}
+		
+		if (getState() != null) {
+			endpoint.append("&").append(OAuthConstants.STATE_PARAMETER).append("=").append(getState());
+		}
+		
+		return endpoint.toString();
 	}
 }

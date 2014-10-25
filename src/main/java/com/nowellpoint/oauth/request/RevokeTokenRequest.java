@@ -1,3 +1,4 @@
+
 /*
 Apache License
 Version 2.0, January 2004
@@ -167,47 +168,9 @@ accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
  */
+package com.nowellpoint.oauth.request;
 
-package com.nowellpoint.oauth.model;
-
-import java.io.Serializable;
-import java.util.Date;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
-
-	/**
-	 * 
-	 */
+public interface RevokeTokenRequest {
 	
-	private static final long serialVersionUID = 7322572957863846555L;
-	
-	@JsonProperty("created_date")
-	private Date createdDate;
-	
-	@JsonProperty("body")
-	private String body;
-	
-	public Status() {
-		
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
+	public String getAccessToken();
 }

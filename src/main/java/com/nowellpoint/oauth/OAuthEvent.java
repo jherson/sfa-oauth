@@ -168,33 +168,9 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.client;
+package com.nowellpoint.oauth;
 
-import com.nowellpoint.oauth.OAuthServiceProvider;
-import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.model.Token;
-
-public interface OAuthClient {
-
-	public <T extends OAuthServiceProvider> OAuthServiceProvider getServiceProvider();
+public interface OAuthEvent {
 	
-	public String getLoginUrl();
-	
-	public String getClientId();
-	
-	public String getClientSecret();
-	
-	public String getCallbackUrl();
-	
-	public String getScope();
-	
-	public String getPrompt();
-	
-	public String getDisplay();
-	
-	public String getState();
-	
-	public OAuthSession createSession();
-	
-	public OAuthSession createSession(Token token);
+	public OAuthSession getOAuthSession();
 }

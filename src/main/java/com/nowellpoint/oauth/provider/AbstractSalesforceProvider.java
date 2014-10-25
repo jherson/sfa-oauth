@@ -174,17 +174,21 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import com.nowellpoint.oauth.OAuthConstants;
 import com.nowellpoint.oauth.OAuthServiceProvider;
-import com.nowellpoint.oauth.client.OAuthClientRequest;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.http.HttpRequest;
 import com.nowellpoint.oauth.http.HttpRequestBuilder;
 import com.nowellpoint.oauth.http.HttpResponse;
+import com.nowellpoint.oauth.impl.OAuthConstants;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.Token;
 import com.nowellpoint.oauth.model.UserInfo;
+import com.nowellpoint.oauth.request.BasicTokenRequest;
+import com.nowellpoint.oauth.request.IdentityRequest;
+import com.nowellpoint.oauth.request.RefreshTokenRequest;
+import com.nowellpoint.oauth.request.RevokeTokenRequest;
+import com.nowellpoint.oauth.request.VerifyTokenRequest;
 
 public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 
@@ -230,7 +234,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	 */
 
 	@Override
-	public Token requestToken(OAuthClientRequest.BasicTokenRequest basicTokenRequest) throws OAuthException {
+	public Token requestToken(BasicTokenRequest basicTokenRequest) throws OAuthException {
 		
 		HttpRequest request = null;
 		try {
@@ -249,7 +253,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	}
 
 	@Override
-	public Token requestToken(OAuthClientRequest.VerifyTokenRequest verifyTokenRequest) throws OAuthException {
+	public Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException {
 //		ClientRequest request = new ClientRequest(getTokenEndpoint());
 //		request.header("Content-Type", "application/x-www-form-urlencoded");
 //		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
@@ -286,7 +290,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	}
 
 	@Override
-	public Identity getIdentity(OAuthClientRequest.IdentityRequest identityRequest) throws OAuthException {
+	public Identity getIdentity(IdentityRequest identityRequest) throws OAuthException {
 		
 		HttpRequest request = new HttpRequestBuilder().target(identityRequest.getIdentityUrl())
 				.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken())
@@ -296,7 +300,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	}
 
 	@Override
-	public void revokeToken(OAuthClientRequest.RevokeTokenRequest revokeTokenRequest) throws OAuthException {
+	public void revokeToken(RevokeTokenRequest revokeTokenRequest) throws OAuthException {
 		HttpRequest request = new HttpRequestBuilder().target(getRevokeEndpoint())
 				.queryParameter(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken())
 				.build();
@@ -311,7 +315,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	}
 
 	@Override
-	public Token refreshToken(OAuthClientRequest.RefreshTokenRequest refreshTokenRequest) throws OAuthException {
+	public Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws OAuthException {
 //		ClientRequest request = new ClientRequest(getTokenEndpoint());
 //		request.header("Content-Type", "application/x-www-form-urlencoded");
 //		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,

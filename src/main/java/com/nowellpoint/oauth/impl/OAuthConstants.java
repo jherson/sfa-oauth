@@ -168,46 +168,47 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.model;
+package com.nowellpoint.oauth.impl;
 
-import java.io.Serializable;
-import java.util.Date;
+public class OAuthConstants {
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+	public static final String AUTHORIZE_ENDPOINT = "authorizeUrl";
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
+	public static final String TOKEN_ENDPOINT = "tokenUrl";
 
-	/**
-	 * 
-	 */
-	
-	private static final long serialVersionUID = 7322572957863846555L;
-	
-	@JsonProperty("created_date")
-	private Date createdDate;
-	
-	@JsonProperty("body")
-	private String body;
-	
-	public Status() {
-		
-	}
+	public static final String REVOKE_ENDPOINT = "revokeUrl";
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+	public static final String GRANT_TYPE_PARAMETER = "grant_type";
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+	public static final String TOKEN_PARAMETER = "token";
 
-	public String getBody() {
-		return body;
-	}
+	public static final String CODE_PARAMETER = "code";
 
-	public void setBody(String body) {
-		this.body = body;
-	}
+	public static final String USERNAME_PARAMETER = "username";
+
+	public static final String PASSWORD_PARAMETER = "password";
+
+	public static final String RESPONSE_TYPE_PARAMETER = "response_type";
+
+	public static final String CLIENT_ID_PARAMETER = "client_id";
+
+	public static final String CLIENT_SECRET_PARAMETER = "client_secret";
+
+	public static final String SCOPE_PARAMETER = "scope";
+
+	public static final String DISPLAY_PARAMETER = "display";
+
+	public static final String REDIRECT_URI_PARAMETER = "redirect_uri";
+
+	public static final String PROMPT_PARAMETER = "prompt";
+
+	public static final String STATE_PARAMETER = "state";
+
+	public static final String OAUTH_TOKEN_PARAMETER = "oauth_token";
+
+	public static final String REFRESH_GRANT_TYPE = "refresh_token";
+
+	public static final String AUTHORIZATION_GRANT_TYPE = "authorization_code";
+
+	public static final String PASSWORD_GRANT_TYPE = "password";
 }

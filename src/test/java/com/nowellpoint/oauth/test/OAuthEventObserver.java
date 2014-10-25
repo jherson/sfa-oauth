@@ -168,46 +168,27 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.model;
+package com.nowellpoint.oauth.test;
 
-import java.io.Serializable;
-import java.util.Date;
+import static org.junit.Assert.assertNotNull;
+import javax.enterprise.event.Observes;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.logging.Logger;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
+import com.nowellpoint.oauth.event.LoggedInEvent;
+import com.nowellpoint.oauth.event.LoggedOutEvent;
 
-	/**
-	 * 
-	 */
+public class OAuthEventObserver {
 	
-	private static final long serialVersionUID = 7322572957863846555L;
+	private static Logger log = Logger.getLogger(OAuthEventObserver.class.getName());
+
+	public void onLoggedIn(@Observes final LoggedInEvent event) {
+		assertNotNull(event.getOAuthSession());
+		log.info("Logged In Event: " + event.getOAuthSession().getId());
+	}
 	
-	@JsonProperty("created_date")
-	private Date createdDate;
-	
-	@JsonProperty("body")
-	private String body;
-	
-	public Status() {
-		
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
+	public void onLoggedOut(@Observes final LoggedOutEvent event) {
+		assertNotNull(event.getOAuthSession());
+		log.info("Logged Out Event: " + event.getOAuthSession().getId());
 	}
 }

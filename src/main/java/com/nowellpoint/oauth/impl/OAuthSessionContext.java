@@ -168,46 +168,66 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.model;
+package com.nowellpoint.oauth.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Status implements Serializable {
+import com.nowellpoint.oauth.OAuthSession;
+
+public class OAuthSessionContext implements Serializable {
 
 	/**
 	 * 
 	 */
-	
-	private static final long serialVersionUID = 7322572957863846555L;
-	
-	@JsonProperty("created_date")
-	private Date createdDate;
-	
-	@JsonProperty("body")
-	private String body;
-	
-	public Status() {
-		
+
+	private static final long serialVersionUID = -8030968908682514184L;
+
+	/**
+	 * 
+	 */
+
+	private HttpServletResponse response;
+
+	/**
+	 * 
+	 */
+
+	private HttpServletRequest request;
+
+	/**
+	 * 
+	 */
+
+	private OAuthSession oauthSession;
+
+	public OAuthSessionContext() {
+
 	}
 
-	public Date getCreatedDate() {
-		return createdDate;
+	public HttpServletResponse getResponse() {
+		return response;
 	}
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	public void setResponse(HttpServletResponse response) {
+		this.response = response;
 	}
 
-	public String getBody() {
-		return body;
+	public HttpServletRequest getRequest() {
+		return request;
 	}
 
-	public void setBody(String body) {
-		this.body = body;
+	public void setRequest(HttpServletRequest request) {
+		this.request = request;
+	}
+
+	public OAuthSession getOauthSession() {
+		return oauthSession;
+	}
+
+	public void setOauthSession(OAuthSession oauthSession) {
+		this.oauthSession = oauthSession;
 	}
 }

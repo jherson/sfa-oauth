@@ -185,9 +185,9 @@ public interface OAuthSession {
 
 	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass);
 
-	public void login(HttpServletResponse response) throws OAuthException;
+	public void loginRedirect(HttpServletResponse response) throws OAuthException;
 
-	public void login(FacesContext context) throws OAuthException;
+	public void loginRedirect(FacesContext context) throws OAuthException;
 
 	public Token login(UsernamePasswordCredentials credentials) throws OAuthException;
 	
@@ -202,9 +202,5 @@ public interface OAuthSession {
 	public Token getToken();
 
 	public Identity getIdentity();
-
-	public void setRedirectUrl(String redirectUrl);
-
-	public String getRedirectUrl();
 
 }

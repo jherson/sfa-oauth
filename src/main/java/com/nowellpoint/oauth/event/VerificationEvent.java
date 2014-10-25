@@ -168,224 +168,30 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.session;
+package com.nowellpoint.oauth.event;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.enterprise.util.AnnotationLiteral;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
-
-import com.nowellpoint.oauth.OAuthServiceProvider;
+import com.nowellpoint.oauth.OAuthEvent;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.client.OAuthClient;
-import com.nowellpoint.oauth.client.OAuthClientRequest;
-import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.model.Identity;
-import com.nowellpoint.oauth.model.Token;
-import com.nowellpoint.oauth.model.UsernamePasswordCredentials;
-import com.nowellpoint.oauth.model.VerificationCode;
+import com.nowellpoint.oauth.annotations.Verified;
 
-@SessionScoped
-public class OAuthSessionImpl implements OAuthSession, Serializable {
+public class VerificationEvent extends AnnotationLiteral<Verified> implements OAuthEvent {
 
-	private static final long serialVersionUID = 8065223488307981986L;
-	private static Logger log = Logger.getLogger(OAuthSessionImpl.class.getName());
-
-	private OAuthClient oauthClient;
-	private String id;
-	private Token token;
-	private Identity identity;
-	private String redirectUrl;
-
-	public OAuthSessionImpl() {
-		generateId();
-	}
-
-	public OAuthSessionImpl(OAuthClient oauthClient) {
-		this.oauthClient = oauthClient;
-		generateId();
-	}
-
-	public OAuthSessionImpl(OAuthClient oauthClient, Token token) {
-		this.oauthClient = oauthClient;
-		this.token = token;
-		generateId();
-	}
-
-	@Override
-	public String getId() {
-		return id;
-	}
-
-	private void setId(String id) {
-		this.id = id;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass) {
-		if (oauthClient.getServiceProvider().getClass().isAssignableFrom(serviceProviderClass)) {
-			return (T) oauthClient.getServiceProvider();
-		}
-		return null;
-	}
-
-	@Override
-	public void login(HttpServletResponse response) throws OAuthException {
-
-		/**
-		 * get the OAuth from the serviceProvider
-		 */
-
-		String loginUrl = oauthClient.getLoginUrl();
-
-		/**
-		 * do the redirect
-		 */
-
-		try {
-			response.sendRedirect(loginUrl);
-			return;
-		} catch (IOException e) {
-			throw new OAuthException("Unable to do the redirect: " + e);
-		}
-	}
-
-	@Override
-	public void login(FacesContext context) throws OAuthException {
-
-		/**
-		 * get the OAuth from the serviceProvider
-		 */
-
-		String loginUrl = oauthClient.getLoginUrl();
-
-		/**
-		 * do the redirect
-		 */
-
-		try {
-			context.getExternalContext().redirect(loginUrl);
-			return;
-		} catch (IOException e) {
-			throw new OAuthException("Unable to do the redirect: " + e);
-		}
-	}
-
-	@Override
-	public Token login(UsernamePasswordCredentials credentials) throws OAuthException {
-		OAuthClientRequest.BasicTokenRequest tokenRequest = OAuthClientRequest.basicTokenRequest()
-				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret())
-				.username(credentials.getUsername())
-				.password(String.valueOf(credentials.getPassword()))
-				.build();
-		
-		credentials.setPassword(null);
-		
-		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
-
-		if (token.getError() != null) {
-			throw new OAuthException(token.getErrorDescription());
-		}
-		
-		return token;
+	/**
+	 * 
+	 */
+	
+	private static final long serialVersionUID = -4605593010923779781L;
+	
+	private OAuthSession oauthSession;
+	
+	public VerificationEvent(OAuthSession oauthSession) {
+		this.oauthSession = oauthSession;
 	}
 	
 	@Override
-	public Token login(String username, char[] password) throws OAuthException {
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
-		credentials.setUsername(username);
-		credentials.setPassword(password);
-		password = null;
-		return login(credentials);
-	}
-
-	@Override
-	public Token verify(VerificationCode verificationCode) throws OAuthException {
-		OAuthClientRequest.VerifyTokenRequest tokenRequest = OAuthClientRequest.verifyTokenRequest()
-				.code(verificationCode.getCode())
-				.callbackUrl(oauthClient.getCallbackUrl())
-				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret()).build();
-
-		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
-
-		if (token.getError() != null) {
-			throw new OAuthException(token.getErrorDescription());
-		}
-		
-		return token;
-	}
-
-	@Override
-	public Token refreshToken() throws OAuthException {
-		OAuthClientRequest.RefreshTokenRequest refreshTokenRequest = OAuthClientRequest.refreshTokenRequest()
-				.refreshToken(getToken().getRefreshToken())
-				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret()).build();
-
-		token = oauthClient.getServiceProvider().refreshToken(refreshTokenRequest);
-		
-		return token;
-	}
-
-	@Override
-	public void logout() throws OAuthException {
-		OAuthClientRequest.RevokeTokenRequest revokeTokenRequest = OAuthClientRequest
-				.revokeTokenRequest().accessToken(getToken().getAccessToken())
-				.build();
-
-		oauthClient.getServiceProvider().revokeToken(revokeTokenRequest);
-		
-		clear();
-	}
-
-	@Override
-	public Token getToken() {
-		return token;
-	}
-
-	@Override
-	public Identity getIdentity() {
-		if (token != null && identity == null) {
-			
-			OAuthClientRequest.IdentityRequest identityRequest = OAuthClientRequest.identityRequest()
-					.identityUrl(getToken().getId())
-					.accessToken(getToken().getAccessToken())
-					.build();
-
-			try {
-				identity = oauthClient.getServiceProvider().getIdentity(identityRequest);
-			} catch (OAuthException e) {
-				log.log(Level.SEVERE, e.getMessage());
-			}
-		}
-		
-		return identity;
-	}
-
-	@Override
-	public void setRedirectUrl(String redirectUrl) {
-		this.redirectUrl = redirectUrl;
-	}
-
-	@Override
-	public String getRedirectUrl() {
-		return redirectUrl;
-	}
-
-	private void generateId() {
-		setId(UUID.randomUUID().toString().replace("-", ""));
-	}
-	
-	private void clear() {
-		token = null;
-		identity = null;
+	public OAuthSession getOAuthSession() {
+		return oauthSession;
 	}
 }

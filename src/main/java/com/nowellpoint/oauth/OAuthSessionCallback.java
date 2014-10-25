@@ -175,7 +175,7 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nowellpoint.oauth.session.OAuthSessionContext;
+import com.nowellpoint.oauth.impl.OAuthSessionContext;
 
 public abstract class OAuthSessionCallback implements Serializable {
 
@@ -189,8 +189,7 @@ public abstract class OAuthSessionCallback implements Serializable {
 
 	public abstract void onLogout(OAuthSessionContext context);
 
-	public OAuthSessionContext initContext(HttpServletRequest request,
-			HttpServletResponse response, OAuthSession oauthSession) {
+	public OAuthSessionContext initContext(HttpServletRequest request, HttpServletResponse response, OAuthSession oauthSession) {
 		OAuthSessionContext context = new OAuthSessionContext();
 		context.setRequest(request);
 		context.setResponse(response);

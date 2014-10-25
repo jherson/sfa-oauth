@@ -168,139 +168,121 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.client;
+package com.nowellpoint.oauth.test;
 
-import java.io.Serializable;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import com.nowellpoint.oauth.OAuthServiceProvider;
-import com.nowellpoint.oauth.client.impl.OAuthClientImpl;
+import javax.inject.Inject;
 
-public class OAuthClientBuilder implements Serializable {
+import org.jboss.logging.Logger;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.CdiRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-	/**
-	 * 
-	 */
+import com.nowellpoint.oauth.OAuthClient;
+import com.nowellpoint.oauth.OAuthSession;
+import com.nowellpoint.oauth.annotations.Salesforce;
+import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.model.OrganizationInfo;
+import com.nowellpoint.oauth.model.UserInfo;
+import com.nowellpoint.oauth.model.UsernamePasswordCredentials;
+import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
+
+@RunWith(CdiRunner.class)
+@AdditionalClasses({OAuthClientProducer.class, OAuthEventObserver.class})
+public class OAuthClientTest {
 	
-	private static final long serialVersionUID = -1856856962946721313L;
+	private static Logger log = Logger.getLogger(OAuthClientTest.class.getName());
+
+	@Inject
+	@Salesforce
+	private OAuthClient client;
+
+	private OAuthSession session;
 	
-	private String serviceProvider;
-	private String clientId;
-	private String clientSecret;
-	private String callbackUrl;
-	private String scope;
-	private String prompt;
-	private String display;
-	private String state;
-
-	public OAuthClientBuilder() {
-
+	@Before
+	public void beforeClass() {
+		session = client.createSession();
+		
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
+		credentials.setUsername(System.getenv("SALESFORCE_USERNAME"));
+		credentials.setPassword(System.getenv("SALESFORCE_PASSWORD").concat(System.getenv("SALESFORCE_SECURITY_TOKEN")).toCharArray());
+		
+		try {
+			session.login(credentials);
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		} 
 	}
 
-	public <T extends OAuthServiceProvider> OAuthClientBuilder serviceProvider(Class<T> serviceProvider) {
-		this.serviceProvider = serviceProvider.getName();
-		return this;
+	@Test
+	public void oauthClientLoginTest() {
+		log.info("oauthClientLoginTest");
+
+		assertNotNull(session.getToken());
+		assertNotNull(session.getIdentity());
+		assertNotNull(session.getId());
+		assertNotNull(session.getToken().getAccessToken());
+		assertNotNull(session.getIdentity().getDisplayName());
+		assertNotNull(session.getIdentity().getFirstName());
+		assertNotNull(session.getIdentity().getLastName());
+
+		log.info("SessionId: " + session.getId());
+		log.info("AccessToken: " + session.getToken().getAccessToken());
+		log.info("DisplayName: " + session.getIdentity().getDisplayName());
+		log.info("SObject URL: " + session.getIdentity().getUrls().getSObjects());
+		log.info("First Name: " + session.getIdentity().getFirstName());
+		log.info("Last Name: " + session.getIdentity().getLastName());
 	}
 
-	public OAuthClientBuilder clientId(String clientId) {
-		this.clientId = clientId;
-		return this;
+	@Test
+	public void testUserInfo() {
+		log.info("testUserInfo");
+
+		UserInfo userInfo = null;
+		try {
+			userInfo = session.unwrap(SalesforceLoginProvider.class)
+					.getUserInfo(session.getToken(), session.getIdentity());
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		}
+
+		assertNotNull(userInfo);
+
+		log.info(userInfo.getName());
+		log.info(userInfo.getEmail());
 	}
 
-	public OAuthClientBuilder clientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-		return this;
+	@Test
+	public void testOrganizationInfo() {
+		log.info("testOrganizationInfo");
+
+		OrganizationInfo organizationInfo = null;
+		try {
+			organizationInfo = session.unwrap(SalesforceLoginProvider.class)
+					.getOrganizationInfo(session.getToken(), session.getIdentity());
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		}
+
+		assertNotNull(organizationInfo);
+
+		log.info(organizationInfo.getName());
+		log.info(organizationInfo.getAttributes().getUrl());
 	}
 
-	public OAuthClientBuilder callbackUrl(String callbackUrl) {
-		this.callbackUrl = callbackUrl;
-		return this;
-	}
+	@After
+	public void cleanup() {
+		try {
+			session.logout();
+		} catch (OAuthException e) {
+			e.printStackTrace();
+		}
 
-	public OAuthClientBuilder scope(String scope) {
-		this.scope = scope;
-		return this;
-	}
-
-	public OAuthClientBuilder prompt(String prompt) {
-		this.prompt = prompt;
-		return this;
-	}
-
-	public OAuthClientBuilder display(String display) {
-		this.display = display;
-		return this;
-	}
-
-	public OAuthClientBuilder state(String state) {
-		this.state = state;
-		return this;
-	}
-
-	public OAuthClient build() {
-		return new OAuthClientImpl(this);
-	}
-
-	public String getServiceProvider() {
-		return serviceProvider;
-	}
-
-	public void setServiceProvider(String serviceProvider) {
-		this.serviceProvider = serviceProvider;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	public String getClientSecret() {
-		return clientSecret;
-	}
-
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-
-	public String getCallbackUrl() {
-		return callbackUrl;
-	}
-
-	public void setCallbackUrl(String callbackUrl) {
-		this.callbackUrl = callbackUrl;
-	}
-
-	public String getScope() {
-		return scope;
-	}
-
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
-
-	public String getPrompt() {
-		return prompt;
-	}
-
-	public void setPrompt(String prompt) {
-		this.prompt = prompt;
-	}
-
-	public String getDisplay() {
-		return display;
-	}
-
-	public void setDisplay(String display) {
-		this.display = display;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
+		assertNull(session.getToken());
 	}
 }
