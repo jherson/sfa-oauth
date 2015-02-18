@@ -11,6 +11,9 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class HttpRequestBuilder {
@@ -77,7 +80,7 @@ public class HttpRequestBuilder {
 		}
 
 		@Override
-		public <T> HttpResponse<T> get(Class<T> type) throws IOException {
+		public <T> HttpResponse<T> get(Class<T> type) throws HttpException {
 			HttpResponse<T> response = null;
 			try {	
 				connection = openConnection();
@@ -89,6 +92,8 @@ public class HttpRequestBuilder {
 				
 				response = new HttpResponseImpl<T>(type, connection);
 			
+			} catch (IOException e) {
+				throw new HttpException(e.getMessage());
 			} finally {
 				connection.disconnect();
 			}
@@ -97,7 +102,7 @@ public class HttpRequestBuilder {
 		}
 		
 		@Override
-		public <T> HttpResponse<T> post() throws IOException {
+		public <T> HttpResponse<T> post() throws HttpException {
 			HttpResponse<T> response = null;
 			try {
 				connection = openConnection();
@@ -111,7 +116,9 @@ public class HttpRequestBuilder {
 				}
 				
 				response = new HttpResponseImpl<T>(connection);
-			
+				
+			} catch (IOException e) {
+				throw new HttpException(e.getMessage());
 			} finally {
 				connection.disconnect();
 			}
@@ -120,7 +127,7 @@ public class HttpRequestBuilder {
 		}
 		
 		@Override
-		public <T> HttpResponse<T> post(Class<T> type) throws IOException {			
+		public <T> HttpResponse<T> post(Class<T> type) throws HttpException {			
 			HttpResponse<T> response = null;
 			try {
 				connection = openConnection();
@@ -135,6 +142,8 @@ public class HttpRequestBuilder {
 				
 				response = new HttpResponseImpl<T>(type, connection);
 				
+			} catch (IOException e) {
+				throw new HttpException(e.getMessage());	
 			} finally {
 				connection.disconnect();
 			}
@@ -180,7 +189,6 @@ public class HttpRequestBuilder {
 	
 	private class HttpResponseImpl<T> implements HttpResponse<T> {
 		
-		private Class<T> type;
 		private int responseCode;
 		private String responseMessage;
 		private T entity;
@@ -190,11 +198,29 @@ public class HttpRequestBuilder {
 			this.responseMessage = connection.getResponseMessage();
 		}
 		
-		private HttpResponseImpl(Class<T> type, HttpsURLConnection connection) throws IOException {
-			this.type = type;
-			this.responseCode = connection.getResponseCode();
-			this.responseMessage = connection.getResponseMessage();
-			this.entity = readResponse(connection.getInputStream());
+		private HttpResponseImpl(Class<T> type, HttpsURLConnection connection) throws IOException, HttpException {
+			
+			responseCode = connection.getResponseCode();
+			responseMessage = connection.getResponseMessage();
+			
+			if (responseCode < 400) {
+				entity = new ObjectMapper().readValue(readResponse(connection.getInputStream()), type);
+			} else {
+				JsonToken error = null;
+				JsonToken errorDescription = null;
+				JsonFactory factory = new JsonFactory();
+				JsonParser parser = factory.createJsonParser(readResponse(connection.getErrorStream()));
+				while (parser.nextToken() != JsonToken.END_OBJECT) {	 
+					String property = parser.getCurrentName();
+					if ("error".equals(property)) {
+						error = parser.nextToken();
+					} else if ("error_description".equals(property)) {
+						errorDescription = parser.nextToken();
+					}
+				}
+				
+				throw new HttpException(String.format("%s: %s", error.asString(), errorDescription.asString()));
+			}
 		}
 
 		@Override
@@ -212,15 +238,14 @@ public class HttpRequestBuilder {
 			return entity;
 		}
 		
-		private T readResponse(InputStream inputStream) throws IOException {
+		private String readResponse(InputStream inputStream) throws IOException {
 			StringBuilder sb = new StringBuilder();
 			String nextLine = null;
 			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 			while ((nextLine = br.readLine()) != null) {
 				sb.append(nextLine); 
 			}
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(sb.toString(), type);
+			return sb.toString();
 		}
 	}
 }

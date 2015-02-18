@@ -198,12 +198,6 @@ public class Token implements Serializable {
 	@JsonProperty("access_token")
 	private String accessToken;
 
-	@JsonProperty("error")
-	private String error;
-
-	@JsonProperty("error_description")
-	private String errorDescription;
-
 	public Token() {
 
 	}
@@ -254,21 +248,5 @@ public class Token implements Serializable {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
-	}
-
-	public String getError() {
-		return error;
-	}
-
-	public void setError(String error) {
-		this.error = error;
-	}
-
-	public String getErrorDescription() {
-		return errorDescription;
-	}
-
-	public void setErrorDescription(String errorDescription) {
-		this.errorDescription = errorDescription;
 	}
 }

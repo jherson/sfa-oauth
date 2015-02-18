@@ -168,278 +168,44 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.impl;
+package com.nowellpoint.oauth.test;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.inject.Inject;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
-import javax.faces.context.FacesContext;
-import javax.naming.InitialContext;
-import javax.servlet.http.HttpServletResponse;
+import org.jboss.logging.Logger;
+import org.jglue.cdiunit.AdditionalClasses;
+import org.jglue.cdiunit.CdiRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import com.nowellpoint.oauth.OAuthClient;
-import com.nowellpoint.oauth.OAuthEvent;
-import com.nowellpoint.oauth.OAuthServiceProvider;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.event.LoggedInEvent;
-import com.nowellpoint.oauth.event.LoggedOutEvent;
-import com.nowellpoint.oauth.event.LoginRedirectEvent;
-import com.nowellpoint.oauth.event.TokenRefreshedEvent;
-import com.nowellpoint.oauth.event.VerificationEvent;
+import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
-import com.nowellpoint.oauth.model.Identity;
-import com.nowellpoint.oauth.model.Token;
 import com.nowellpoint.oauth.model.UsernamePasswordCredentials;
-import com.nowellpoint.oauth.model.VerificationCode;
-import com.nowellpoint.oauth.request.BasicTokenRequest;
-import com.nowellpoint.oauth.request.IdentityRequest;
-import com.nowellpoint.oauth.request.RefreshTokenRequest;
-import com.nowellpoint.oauth.request.RevokeTokenRequest;
-import com.nowellpoint.oauth.request.VerifyTokenRequest;
 
-@SessionScoped
-public class OAuthSessionImpl implements OAuthSession, Serializable {
-
-	private static final long serialVersionUID = 8065223488307981986L;
-	private static Logger log = Logger.getLogger(OAuthSessionImpl.class.getName());
-
-	private OAuthClient oauthClient;
-	private String id;
-	private Token token;
-	private Identity identity;
-
-	public OAuthSessionImpl() {
-		generateId();
-	}
-
-	public OAuthSessionImpl(OAuthClient oauthClient) {
-		this.oauthClient = oauthClient;
-		generateId();
-	}
-
-	public OAuthSessionImpl(OAuthClient oauthClient, Token token) {
-		this.oauthClient = oauthClient;
-		this.token = token;
-		generateId();
-	}
-
-	@Override
-	public String getId() {
-		return id;
-	}
-
-	private void setId(String id) {
-		this.id = id;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass) {
-		if (oauthClient.getServiceProvider().getClass().isAssignableFrom(serviceProviderClass)) {
-			return (T) oauthClient.getServiceProvider();
-		}
-		return null;
-	}
-
-	@Override
-	public void loginRedirect(HttpServletResponse response) throws OAuthException {
-
-		/**
-		 * get the OAuth from the serviceProvider
-		 */
-
-		String loginUrl = oauthClient.getLoginUrl();
-
-		/**
-		 * do the redirect
-		 */
-
-		try {
-			response.sendRedirect(loginUrl);
-		} catch (IOException e) {
-			throw new OAuthException("Unable to do the redirect: " + e);
-		}
-		
-		fireEvent(new LoginRedirectEvent(this));
-		return;
-	}
-
-	@Override
-	public void loginRedirect(FacesContext context) throws OAuthException {
-
-		/**
-		 * get the OAuth from the serviceProvider
-		 */
-
-		String loginUrl = oauthClient.getLoginUrl();
-
-		/**
-		 * do the redirect
-		 */
-
-		try {
-			context.getExternalContext().redirect(loginUrl);
-		} catch (IOException e) {
-			throw new OAuthException("Unable to do the redirect: " + e);
-		}
-		
-		fireEvent(new LoginRedirectEvent(this));
-		return;
-	}
-
-	@Override
-	public Token login(UsernamePasswordCredentials credentials) throws OAuthException {
-		BasicTokenRequest tokenRequest = OAuthClientRequest.basicTokenRequest()
-				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret())
-				.username(credentials.getUsername())
-				.password(String.valueOf(credentials.getPassword()))
-				.build();
-		
-		credentials.setPassword(null);
-		
-		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
-		
-		fireEvent(new LoggedInEvent(this));
-		return token;
-	}
+@RunWith(CdiRunner.class)
+@AdditionalClasses({OAuthClientProducer.class, OAuthEventObserver.class})
+public class OAuthClientExceptionTest {
 	
-	@Override
-	public Token login(String username, char[] password) throws OAuthException {
+	private static Logger log = Logger.getLogger(OAuthClientExceptionTest.class.getName());
+
+	@Inject
+	@Salesforce
+	private OAuthClient client;
+
+	private OAuthSession session;
+	
+	@Test(expected=OAuthException.class)
+	public void testAuthenticationFailure() throws OAuthException {
+		log.info("testAuthenticationFailure()");
+		
+		session = client.createSession();
+		
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
-		credentials.setUsername(username);
-		credentials.setPassword(password);
-		password = null;
-		return login(credentials);
-	}
-
-	@Override
-	public Token verify(VerificationCode verificationCode) throws OAuthException {
-		VerifyTokenRequest tokenRequest = OAuthClientRequest.verifyTokenRequest()
-				.code(verificationCode.getCode())
-				.callbackUrl(oauthClient.getCallbackUrl())
-				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret()).build();
-
-		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
+		credentials.setUsername(System.getenv("SALESFORCE_USERNAME"));
+		credentials.setPassword("password".toCharArray());
 		
-		fireEvent(new VerificationEvent(this));
-		return token;
-	}
-
-	@Override
-	public Token refreshToken() throws OAuthException {
-		RefreshTokenRequest refreshTokenRequest = OAuthClientRequest.refreshTokenRequest()
-				.refreshToken(getToken().getRefreshToken())
-				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret()).build();
-
-		token = oauthClient.getServiceProvider().refreshToken(refreshTokenRequest);
-		
-		fireEvent(new TokenRefreshedEvent(this));
-		return token;
-	}
-
-	@Override
-	public void logout() throws OAuthException {
-		RevokeTokenRequest revokeTokenRequest = OAuthClientRequest
-				.revokeTokenRequest().accessToken(getToken().getAccessToken())
-				.build();
-
-		oauthClient.getServiceProvider().revokeToken(revokeTokenRequest);
-		
-		token = null;
-		
-		fireEvent(new LoggedOutEvent(this));
-	}
-
-	@Override
-	public Token getToken() {
-		return token;
-	}
-
-	@Override
-	public Identity getIdentity() {
-		if (token != null && identity == null) {
-			
-			IdentityRequest identityRequest = OAuthClientRequest.identityRequest()
-					.identityUrl(getToken().getId())
-					.accessToken(getToken().getAccessToken())
-					.build();
-
-			try {
-				identity = oauthClient.getServiceProvider().getIdentity(identityRequest);
-			} catch (OAuthException e) {
-				log.log(Level.SEVERE, e.getMessage());
-			}
-		}
-		
-		return identity;
-	}
-
-	private void generateId() {
-		setId(UUID.randomUUID().toString().replace("-", ""));
-	}
-	
-	private void fireEvent(OAuthEvent event) {
-		
-		/**
-		 * fire CDI events to notify observers
-		 */
-		
-		BeanManager beanManager = lookupBeanManager();
-		if (beanManager != null) {
-			beanManager.fireEvent(event, new Annotation[] {});
-		} else {
-			log.log(Level.WARNING, "BeanManager is not available");
-		}
-		
-		/**
-		 * call registered event listeners 
-		 */
-		
-		if (oauthClient.getEventListener() != null) {
-			if (event instanceof LoggedInEvent) {
-				oauthClient.getEventListener().onLogin(event);
-			} else if (event instanceof LoggedOutEvent) {
-				oauthClient.getEventListener().onLogout(event);
-			} else if (event instanceof LoginRedirectEvent) {
-				oauthClient.getEventListener().onLoginRedirect(event);
-			} else if (event instanceof TokenRefreshedEvent) {
-				oauthClient.getEventListener().onRefreshToken(event);
-			} else if (event instanceof VerificationEvent) {
-				oauthClient.getEventListener().onVerify(event);
-			}
-		}
-	}
-	
-	private BeanManager lookupBeanManager() {
-		
-		try {
-			return CDI.current().getBeanManager();
-		} catch (Exception ignore) {
-			
-		}
-		
-		try {
-			return (BeanManager) InitialContext.doLookup("java:comp/BeanManager");
-		} catch (Exception ignore) {
-			
-		}
-		
-		try {
-			return (BeanManager) InitialContext.doLookup("java:comp/env/BeanManager");
-		} catch (Exception ignore) {
-			
-		}
-		
-		return null;
+		session.login(credentials);
 	}
 }

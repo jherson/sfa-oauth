@@ -170,12 +170,12 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth.provider;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.nowellpoint.oauth.OAuthServiceProvider;
 import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.http.HttpException;
 import com.nowellpoint.oauth.http.HttpRequest;
 import com.nowellpoint.oauth.http.HttpRequestBuilder;
 import com.nowellpoint.oauth.http.HttpResponse;
@@ -307,7 +307,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		
 		try {
 			request.post();
-		} catch (IOException e) {
+		} catch (HttpException e) {
 			throw new OAuthException(e);
 		} finally {
 			request.clear();
@@ -423,19 +423,13 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		HttpResponse<Token> response = null;
 		try {
 			response = request.post(Token.class);
-		} catch (IOException e) {
+		} catch (HttpException e) {
 			throw new OAuthException(e);
 		} finally {
 			request.clear();
 		}
 		
-		Token token = response.getEntity();
-		
-		if (token.getError() != null) {
-			throw new OAuthException(token.getErrorDescription());
-		}
-		
-		return token;
+		return response.getEntity();
 	}
 	
 	/**
@@ -449,7 +443,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		HttpResponse<Identity> response = null;
 		try {
 			response = request.post(Identity.class);
-		} catch (IOException e) {
+		} catch (HttpException e) {
 			throw new OAuthException(e);
 		} finally {
 			request.clear();
@@ -469,7 +463,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		HttpResponse<OrganizationInfo> response = null;
 		try {
 			response = request.get(OrganizationInfo.class);
-		} catch (IOException e) {
+		} catch (HttpException e) {
 			throw new OAuthException(e);
 		} finally {
 			request.clear();
@@ -489,7 +483,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		HttpResponse<UserInfo> response = null;
 		try {
 			response = request.get(UserInfo.class);
-		} catch (IOException e) {
+		} catch (HttpException e) {
 			throw new OAuthException(e);
 		} finally {
 			request.clear();
