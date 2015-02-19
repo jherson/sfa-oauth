@@ -5,7 +5,7 @@
 	<groupId>com.nowellpoint</groupId>
 	<artifactId>nowellpoint-oauth-api</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<name>Salesforce OAuth Client API</name>
 
 	<parent>
