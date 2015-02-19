@@ -206,20 +206,23 @@ public class HttpRequestBuilder {
 			if (responseCode < 400) {
 				entity = new ObjectMapper().readValue(readResponse(connection.getInputStream()), type);
 			} else {
-				JsonToken error = null;
-				JsonToken errorDescription = null;
+				String response = readResponse(connection.getErrorStream());
+				String error = null;
+				String errorDescription = null;
 				JsonFactory factory = new JsonFactory();
-				JsonParser parser = factory.createJsonParser(readResponse(connection.getErrorStream()));
+				JsonParser parser = factory.createJsonParser(response);
 				while (parser.nextToken() != JsonToken.END_OBJECT) {	 
 					String property = parser.getCurrentName();
 					if ("error".equals(property)) {
-						error = parser.nextToken();
+						parser.nextToken();
+						error = parser.getText();
 					} else if ("error_description".equals(property)) {
-						errorDescription = parser.nextToken();
-					}
+						parser.nextToken();
+						errorDescription = parser.getText();
+					} 
 				}
 				
-				throw new HttpException(String.format("%s: %s", error.asString(), errorDescription.asString()));
+				throw new HttpException(String.format("%s: %s", error, errorDescription));
 			}
 		}
 

@@ -424,7 +424,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		try {
 			response = request.post(Token.class);
 		} catch (HttpException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		} finally {
 			request.clear();
 		}
