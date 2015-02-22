@@ -181,6 +181,7 @@ import com.nowellpoint.oauth.annotations.Salesforce;
 public class OAuthSessionProducer {
 
 	@Inject
+	@Salesforce
 	private OAuthClient oauthClient;
 
 	@Produces

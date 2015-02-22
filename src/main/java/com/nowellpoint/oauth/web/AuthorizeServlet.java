@@ -184,14 +184,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.OAuthSessionCallback;
+import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.impl.OAuthSessionContext;
 import com.nowellpoint.oauth.model.VerificationCode;
 
-@WebServlet(value = "/authenticate")
-public class AuthenticateServlet implements Servlet {
+@WebServlet(value = "/authorize")
+public class AuthorizeServlet implements Servlet {
 
 	@Inject
+	@Salesforce
 	private OAuthSession oauthSession;
 
 	@Inject
@@ -225,7 +227,7 @@ public class AuthenticateServlet implements Servlet {
 		}
 
 		OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
-		sessionCallback.onLogout(context);
+		sessionCallback.onVerify(context);
 	}
 
 	@Override

@@ -206,6 +206,8 @@ public class OAuthClientTest {
 	
 	@Before
 	public void beforeClass() {
+		assertNotNull(client.getLoginUrl());
+		
 		session = client.createSession();
 		
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
@@ -215,13 +217,15 @@ public class OAuthClientTest {
 		try {
 			session.login(credentials);
 		} catch (OAuthException e) {
-			e.printStackTrace();
+			log.error(e);
 		} 
+		
+		assertNotNull(session);
 	}
 
 	@Test
 	public void oauthClientLoginTest() {
-		log.info("oauthClientLoginTest");
+		log.info("oauthClientLoginTest()");
 
 		assertNotNull(session.getToken());
 		assertNotNull(session.getIdentity());

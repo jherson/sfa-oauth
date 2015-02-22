@@ -213,14 +213,14 @@ public class OAuthClientImpl implements OAuthClient, Serializable {
 		
 		try {
 			this.serviceProvider = (OAuthServiceProvider) Class.forName(builder.getServiceProvider()).newInstance();
+			this.loginUrl = buildLoginRedirect(serviceProvider.getAuthEndpoint());
 			if (builder.getEventListener() != null) {
 				this.eventListener = (OAuthEventListener) Class.forName(builder.getEventListener()).newInstance();
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-
-		this.loginUrl = buildLoginRedirect(serviceProvider.getAuthEndpoint());
 	}
 	
 	@Override

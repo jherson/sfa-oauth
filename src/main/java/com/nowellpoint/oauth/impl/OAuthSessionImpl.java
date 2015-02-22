@@ -179,9 +179,7 @@ import java.util.logging.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
 import javax.faces.context.FacesContext;
-import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.OAuthClient;
@@ -306,7 +304,6 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		credentials.setPassword(null);
 		
 		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
-		
 		fireEvent(new LoggedInEvent(this));
 		return token;
 	}
@@ -326,7 +323,8 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 				.code(verificationCode.getCode())
 				.callbackUrl(oauthClient.getCallbackUrl())
 				.clientId(oauthClient.getClientId())
-				.clientSecret(oauthClient.getClientSecret()).build();
+				.clientSecret(oauthClient.getClientSecret())
+				.build();
 
 		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
 		
@@ -344,6 +342,7 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		token = oauthClient.getServiceProvider().refreshToken(refreshTokenRequest);
 		
 		fireEvent(new TokenRefreshedEvent(this));
+		
 		return token;
 	}
 
@@ -394,13 +393,13 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		 * fire CDI events to notify observers
 		 */
 		
-		BeanManager beanManager = lookupBeanManager();
+		BeanManager beanManager = BeanManagerLookup.getBeanManager();
 		if (beanManager != null) {
 			beanManager.fireEvent(event, new Annotation[] {});
 		} else {
 			log.log(Level.WARNING, "BeanManager is not available");
 		}
-		
+
 		/**
 		 * call registered event listeners 
 		 */
@@ -420,26 +419,5 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		}
 	}
 	
-	private BeanManager lookupBeanManager() {
-		
-		try {
-			return CDI.current().getBeanManager();
-		} catch (Exception ignore) {
-			
-		}
-		
-		try {
-			return (BeanManager) InitialContext.doLookup("java:comp/BeanManager");
-		} catch (Exception ignore) {
-			
-		}
-		
-		try {
-			return (BeanManager) InitialContext.doLookup("java:comp/env/BeanManager");
-		} catch (Exception ignore) {
-			
-		}
-		
-		return null;
-	}
+	
 }
