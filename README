@@ -15,7 +15,7 @@ for more information on creating a connected app: http://help.salesforce.com/ape
 <dependency>
   <groupId>com.nowellpoint</groupId>
   <artifactId>nowellpoint-oauth-api</artifactId>
-  <version>1.2.RC1</version>
+  <version>1.4</version>
 </dependency>
 
 
@@ -133,3 +133,9 @@ public class OAuthEventObserver {
 	    // event.getOAuthSession();
 	}
 } 
+
+7. Optional - Inject Session into beans
+
+	@Inject
+	@Salesforce
+	private OAuthClient oauthClient;
