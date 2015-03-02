@@ -200,7 +200,7 @@ public class HttpRequestBuilder {
 			responseCode = connection.getResponseCode();
 			responseMessage = connection.getResponseMessage();
 			
-			if (responseCode < 400) {
+			if (getResponseCode() < 400) {
 				entity = new ObjectMapper().readValue(readResponse(connection.getInputStream()), type);
 			} else {
 				throw new HttpException(readResponse(connection.getErrorStream()));
