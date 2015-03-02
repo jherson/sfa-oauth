@@ -227,7 +227,7 @@ public class AuthorizeServlet implements Servlet {
 		}
 
 		OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
-		sessionCallback.onVerify(context);
+		sessionCallback.onLogin(context);
 	}
 
 	@Override

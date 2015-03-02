@@ -206,6 +206,11 @@ public class OAuthClientExceptionTest {
 		credentials.setUsername(System.getenv("SALESFORCE_USERNAME"));
 		credentials.setPassword("password".toCharArray());
 		
-		session.login(credentials);
+		try {
+			session.login(credentials);
+		} catch (OAuthException e) {
+			log.error(e.getMessage());
+			throw e;
+		}
 	}
 }

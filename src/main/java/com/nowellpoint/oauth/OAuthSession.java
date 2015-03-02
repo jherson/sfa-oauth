@@ -171,6 +171,7 @@ END OF TERMS AND CONDITIONS
 package com.nowellpoint.oauth;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.exception.OAuthException;
@@ -182,10 +183,16 @@ import com.nowellpoint.oauth.model.VerificationCode;
 public interface OAuthSession {
 
 	public String getId();
+	
+	public String getSessionId();
+	
+	public AuthenticationFlow getAuthenticationFlow();
+	
+	public Boolean isLoggedIn();
 
 	public <T extends OAuthServiceProvider> T unwrap(Class<T> serviceProviderClass);
 
-	public void loginRedirect(HttpServletResponse response) throws OAuthException;
+	public void loginRedirect(HttpServletRequest request, HttpServletResponse response) throws OAuthException;
 
 	public void loginRedirect(FacesContext context) throws OAuthException;
 

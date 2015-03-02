@@ -1,0 +1,11 @@
+package com.nowellpoint.oauth;
+
+public enum AuthenticationFlow {
+	WEB_SERVER,
+	USER_AGENT,
+	JWT_BEARER_TOKEN,
+	SAML_BEARER_ASSERTION,
+	SAML_ASSERTION,
+	USERNAME_AND_PASSWORD,
+	REFRESH_TOKEN
+}

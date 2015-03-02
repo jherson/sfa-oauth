@@ -11,9 +11,6 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class HttpRequestBuilder {
@@ -206,23 +203,7 @@ public class HttpRequestBuilder {
 			if (responseCode < 400) {
 				entity = new ObjectMapper().readValue(readResponse(connection.getInputStream()), type);
 			} else {
-				String response = readResponse(connection.getErrorStream());
-				String error = null;
-				String errorDescription = null;
-				JsonFactory factory = new JsonFactory();
-				JsonParser parser = factory.createJsonParser(response);
-				while (parser.nextToken() != JsonToken.END_OBJECT) {	 
-					String property = parser.getCurrentName();
-					if ("error".equals(property)) {
-						parser.nextToken();
-						error = parser.getText();
-					} else if ("error_description".equals(property)) {
-						parser.nextToken();
-						errorDescription = parser.getText();
-					} 
-				}
-				
-				throw new HttpException(String.format("%s: %s", error, errorDescription));
+				throw new HttpException(readResponse(connection.getErrorStream()));
 			}
 		}
 

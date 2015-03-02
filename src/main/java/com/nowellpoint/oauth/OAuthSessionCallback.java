@@ -185,7 +185,7 @@ public abstract class OAuthSessionCallback implements Serializable {
 
 	private static final long serialVersionUID = 678969510395689676L;
 
-	public abstract void onVerify(OAuthSessionContext context);
+	public abstract void onLogin(OAuthSessionContext context);
 
 	public abstract void onLogout(OAuthSessionContext context);
 

@@ -172,6 +172,7 @@ package com.nowellpoint.oauth.test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.inject.Inject;
 
@@ -183,6 +184,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.nowellpoint.oauth.AuthenticationFlow;
 import com.nowellpoint.oauth.OAuthClient;
 import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.annotations.Salesforce;
@@ -221,6 +223,7 @@ public class OAuthClientTest {
 		} 
 		
 		assertNotNull(session);
+		assertTrue(session.getAuthenticationFlow().equals(AuthenticationFlow.USERNAME_AND_PASSWORD));
 	}
 
 	@Test

@@ -180,8 +180,10 @@ import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nowellpoint.oauth.AuthenticationFlow;
 import com.nowellpoint.oauth.OAuthClient;
 import com.nowellpoint.oauth.OAuthEvent;
 import com.nowellpoint.oauth.OAuthServiceProvider;
@@ -190,7 +192,6 @@ import com.nowellpoint.oauth.event.LoggedInEvent;
 import com.nowellpoint.oauth.event.LoggedOutEvent;
 import com.nowellpoint.oauth.event.LoginRedirectEvent;
 import com.nowellpoint.oauth.event.TokenRefreshedEvent;
-import com.nowellpoint.oauth.event.VerificationEvent;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
@@ -210,8 +211,10 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 
 	private OAuthClient oauthClient;
 	private String id;
+	private AuthenticationFlow authenticationFlow;
 	private Token token;
 	private Identity identity;
+	private String sessionId;
 
 	public OAuthSessionImpl() {
 		generateId();
@@ -236,6 +239,29 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 	private void setId(String id) {
 		this.id = id;
 	}
+	
+	@Override
+	public String getSessionId() {
+		return sessionId;
+	}
+	
+	private void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+	
+	@Override
+	public AuthenticationFlow getAuthenticationFlow() {
+		return authenticationFlow;
+	}
+	
+	private void setAuthenticationFlow(AuthenticationFlow authenticationFlow) {
+		this.authenticationFlow = authenticationFlow;
+	}
+	
+	@Override
+	public Boolean isLoggedIn() {
+		return (getToken() != null);
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -247,7 +273,19 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 	}
 
 	@Override
-	public void loginRedirect(HttpServletResponse response) throws OAuthException {
+	public void loginRedirect(HttpServletRequest request, HttpServletResponse response) throws OAuthException {
+		
+		/**
+		 * bind the OAuthSession to a HttpSession Id
+		 */
+		
+		setSessionId(request.getSession(true).getId());
+		
+		/**
+		 * set the authentication flow
+		 */
+		
+		setAuthenticationFlow(AuthenticationFlow.WEB_SERVER);
 
 		/**
 		 * get the OAuth from the serviceProvider
@@ -266,11 +304,24 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		}
 		
 		fireEvent(new LoginRedirectEvent(this));
+		
 		return;
 	}
 
 	@Override
 	public void loginRedirect(FacesContext context) throws OAuthException {
+		
+		/**
+		 * bind the OAuthSession to a HttpSession Id
+		 */
+		
+		setSessionId(context.getExternalContext().getSessionId(true));
+		
+		/**
+		 * set the authentication flow
+		 */
+		
+		setAuthenticationFlow(AuthenticationFlow.WEB_SERVER);
 
 		/**
 		 * get the OAuth from the serviceProvider
@@ -289,11 +340,23 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		}
 		
 		fireEvent(new LoginRedirectEvent(this));
+		
 		return;
 	}
 
 	@Override
 	public Token login(UsernamePasswordCredentials credentials) throws OAuthException {
+		
+		/**
+		 * set the authentication flow
+		 */
+		
+		setAuthenticationFlow(AuthenticationFlow.USERNAME_AND_PASSWORD);
+		
+		/**
+		 * build the tokenRequest
+		 */
+
 		BasicTokenRequest tokenRequest = OAuthClientRequest.basicTokenRequest()
 				.clientId(oauthClient.getClientId())
 				.clientSecret(oauthClient.getClientSecret())
@@ -304,16 +367,31 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 		credentials.setPassword(null);
 		
 		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
+		
 		fireEvent(new LoggedInEvent(this));
+		
 		return token;
 	}
 	
 	@Override
 	public Token login(String username, char[] password) throws OAuthException {
+		
+		/**
+		 * set the authentication flow
+		 */
+		
+		setAuthenticationFlow(AuthenticationFlow.USERNAME_AND_PASSWORD);
+		
+		/**
+		 * build credentials object
+		 */
+		
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
 		credentials.setUsername(username);
 		credentials.setPassword(password);
+		
 		password = null;
+		
 		return login(credentials);
 	}
 
@@ -328,12 +406,24 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 
 		token = oauthClient.getServiceProvider().requestToken(tokenRequest);
 		
-		fireEvent(new VerificationEvent(this));
+		fireEvent(new LoggedInEvent(this));
+		
 		return token;
 	}
 
 	@Override
 	public Token refreshToken() throws OAuthException {
+		
+		/**
+		 * set the authentication flow
+		 */
+		
+		setAuthenticationFlow(AuthenticationFlow.REFRESH_TOKEN);
+		
+		/**
+		 * build the refreshTokenRequest
+		 */
+		
 		RefreshTokenRequest refreshTokenRequest = OAuthClientRequest.refreshTokenRequest()
 				.refreshToken(getToken().getRefreshToken())
 				.clientId(oauthClient.getClientId())
@@ -413,11 +503,7 @@ public class OAuthSessionImpl implements OAuthSession, Serializable {
 				oauthClient.getEventListener().onLoginRedirect(event);
 			} else if (event instanceof TokenRefreshedEvent) {
 				oauthClient.getEventListener().onRefreshToken(event);
-			} else if (event instanceof VerificationEvent) {
-				oauthClient.getEventListener().onVerify(event);
-			}
+			} 
 		}
 	}
-	
-	
 }

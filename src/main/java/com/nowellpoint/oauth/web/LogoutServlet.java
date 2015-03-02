@@ -221,7 +221,7 @@ public class LogoutServlet implements Servlet {
 			log.log(Level.WARNING, e.getMessage());
 		}
 
-		request.getSession(false).invalidate();
+		session.invalidate();
 
 		OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
 		sessionCallback.onLogout(context);
