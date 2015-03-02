@@ -25,6 +25,8 @@ for more information on creating a connected app: http://help.salesforce.com/ape
 public class Resources {
 
     ** Note: client id, client secret and callback url values are populated from step 1
+    
+    ** Note: for sandbox access use SalesforceTestProvider.class instead of SalesforceLoginProvider.class
 
     @Produces
 	@Salesforce
