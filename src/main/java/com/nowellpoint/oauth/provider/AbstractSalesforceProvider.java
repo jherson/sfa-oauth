@@ -170,7 +170,7 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth.provider;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URLEncoder;
 
 import com.nowellpoint.oauth.OAuthServiceProvider;
@@ -245,7 +245,26 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.queryParameter(OAuthConstants.USERNAME_PARAMETER, basicTokenRequest.getUsername())
 					.queryParameter(OAuthConstants.PASSWORD_PARAMETER, URLEncoder.encode(basicTokenRequest.getPassword(), "UTF-8"))
 					.build();
-		} catch (UnsupportedEncodingException e) {
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		} 
+		
+		return requestToken(request);
+	}
+
+	@Override
+	public Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException {
+		
+		HttpRequest request;
+		try {
+			request = new HttpRequestBuilder().target(getTokenEndpoint())
+					.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE)
+					.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, verifyTokenRequest.getClientId())
+					.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, verifyTokenRequest.getClientSecret())
+					.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, verifyTokenRequest.getCallbackUrl())
+					.queryParameter(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode())
+					.build();
+		} catch (IOException e) {
 			throw new OAuthException(e);
 		}
 		
@@ -253,57 +272,31 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	}
 
 	@Override
-	public Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException {
-//		ClientRequest request = new ClientRequest(getTokenEndpoint());
-//		request.header("Content-Type", "application/x-www-form-urlencoded");
-//		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
-//				OAuthConstants.AUTHORIZATION_GRANT_TYPE);
-//		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
-//				verifyTokenRequest.getClientId());
-//		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
-//				verifyTokenRequest.getClientSecret());
-//		request.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER,
-//				verifyTokenRequest.getCallbackUrl());
-//		request.queryParameter(OAuthConstants.CODE_PARAMETER,
-//				verifyTokenRequest.getCode());
-
-//		ClientResponse<Token> response = null;
-//		try {
-//			response = request.post(Token.class);
-//		} catch (Exception e) {
-//			throw new OAuthException(e);
-//		} finally {
-//			request.clear();
-//		}
-//
-//		return response.getEntity();
-		
-		HttpRequest request = new HttpRequestBuilder().target(getTokenEndpoint())
-				.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.AUTHORIZATION_GRANT_TYPE)
-				.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER, verifyTokenRequest.getClientId())
-				.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER, verifyTokenRequest.getClientSecret())
-				.queryParameter(OAuthConstants.REDIRECT_URI_PARAMETER, verifyTokenRequest.getCallbackUrl())
-				.queryParameter(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode())
-				.build();
-		
-		return requestToken(request);
-	}
-
-	@Override
 	public Identity getIdentity(IdentityRequest identityRequest) throws OAuthException {
 		
-		HttpRequest request = new HttpRequestBuilder().target(identityRequest.getIdentityUrl())
-				.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken())
-				.build();
+		HttpRequest request;
+		try {
+			request = new HttpRequestBuilder().target(identityRequest.getIdentityUrl())
+					.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken())
+					.build();
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		}
 		
 		return requestIdentity(request);
 	}
 
 	@Override
 	public void revokeToken(RevokeTokenRequest revokeTokenRequest) throws OAuthException {
-		HttpRequest request = new HttpRequestBuilder().target(getRevokeEndpoint())
-				.queryParameter(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken())
-				.build();
+		
+		HttpRequest request;
+		try {
+			request = new HttpRequestBuilder().target(getRevokeEndpoint())
+					.queryParameter(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken())
+					.build();
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		}
 		
 		try {
 			request.post();
@@ -316,34 +309,18 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 
 	@Override
 	public Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws OAuthException {
-//		ClientRequest request = new ClientRequest(getTokenEndpoint());
-//		request.header("Content-Type", "application/x-www-form-urlencoded");
-//		request.queryParameter(OAuthConstants.GRANT_TYPE_PARAMETER,
-//				OAuthConstants.REFRESH_GRANT_TYPE);
-//		request.queryParameter(OAuthConstants.CLIENT_ID_PARAMETER,
-//				refreshTokenRequest.getClientId());
-//		request.queryParameter(OAuthConstants.CLIENT_SECRET_PARAMETER,
-//				refreshTokenRequest.getClientSecret());
-//		request.queryParameter(OAuthConstants.REFRESH_GRANT_TYPE,
-//				refreshTokenRequest.getRefreshToken());
-//
-//		ClientResponse<Token> response = null;
-//		try {
-//			response = request.post(Token.class);
-//		} catch (Exception e) {
-//			throw new OAuthException(e);
-//		} finally {
-//			request.clear();
-//		}
-//
-//		return response.getEntity();
 		
-		HttpRequest request = new HttpRequestBuilder().target(getTokenEndpoint())
-				.header(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE)
-				.header(OAuthConstants.CLIENT_ID_PARAMETER, refreshTokenRequest.getClientId())
-				.header(OAuthConstants.CLIENT_SECRET_PARAMETER, refreshTokenRequest.getClientSecret())
-				.header(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken())
-				.build();
+		HttpRequest request;
+		try {
+			request = new HttpRequestBuilder().target(getTokenEndpoint())
+					.header(OAuthConstants.GRANT_TYPE_PARAMETER, OAuthConstants.REFRESH_GRANT_TYPE)
+					.header(OAuthConstants.CLIENT_ID_PARAMETER, refreshTokenRequest.getClientId())
+					.header(OAuthConstants.CLIENT_SECRET_PARAMETER, refreshTokenRequest.getClientSecret())
+					.header(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken())
+					.build();
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		}
 		
 		return requestToken(request);
 	}
@@ -352,10 +329,15 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		
 		String url = getUserInfoUrl(identity);
 		
-		HttpRequest request = new HttpRequestBuilder().target(url)
-				.queryParameter("fields", USER_FIELDS)
-				.bearerToken(token.getAccessToken())
-				.build();
+		HttpRequest request;
+		try {
+			request = new HttpRequestBuilder().target(url)
+					.queryParameter("fields", USER_FIELDS)
+					.bearerToken(token.getAccessToken())
+					.build();
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		}
 		
 		return requestUserInfo(request);
 	}
@@ -364,10 +346,15 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		
 		String url = getOrganizationInfoUrl(identity);
 		
-		HttpRequest request = new HttpRequestBuilder().target(url)
-				.queryParameter("fields", ORGANIZATION_FIELDS)
-				.bearerToken(token.getAccessToken())
-				.build();
+		HttpRequest request;
+		try {
+			request = new HttpRequestBuilder().target(url)
+					.queryParameter("fields", ORGANIZATION_FIELDS)
+					.bearerToken(token.getAccessToken())
+					.build();
+		} catch (IOException e) {
+			throw new OAuthException(e);
+		}
 		
 		return requestOrganizationInfo(request);
 	}

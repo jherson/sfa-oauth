@@ -23,11 +23,11 @@ public class HttpRequestBuilder {
 	
 	private List<NameValuePair> header;
 	
-	private List<NameValuePair> queryParemeters;
+	private List<NameValuePair> queryParameters;
 	
 	public HttpRequestBuilder() {
 		header = new ArrayList<NameValuePair>();
-		queryParemeters = new ArrayList<NameValuePair>();
+		queryParameters = new ArrayList<NameValuePair>();
 	}
 	
 	public HttpRequestBuilder target(String target) {
@@ -51,11 +51,11 @@ public class HttpRequestBuilder {
 	}
 	
 	public HttpRequestBuilder queryParameter(String name, String value) {
-		queryParemeters.add(new NameValuePair(name, value));
+		queryParameters.add(new NameValuePair(name, value));
 		return this;
 	}
 	
-	public HttpRequest build() {
+	public HttpRequest build() throws IOException {
 		return new HttpRequestImpl(this);
 	}
 	
@@ -65,22 +65,22 @@ public class HttpRequestBuilder {
 		private String path;
 		private String bearerToken;
 		private List<NameValuePair> header = new ArrayList<NameValuePair>();
-		private List<NameValuePair> queryParemeters = new ArrayList<NameValuePair>();
+		private List<NameValuePair> queryParameters = new ArrayList<NameValuePair>();
 		private HttpsURLConnection connection = null;
 		
-		private HttpRequestImpl(HttpRequestBuilder builder) {
+		private HttpRequestImpl(HttpRequestBuilder builder) throws IOException {
 	        this.target = builder.target;
 			this.path = builder.path;
 			this.bearerToken = builder.bearerToken;
 			this.header = builder.header;
-			this.queryParemeters = builder.queryParemeters;
+			this.queryParameters = builder.queryParameters;
+			this.connection = openConnection();
 		}
 
 		@Override
 		public <T> HttpResponse<T> get(Class<T> type) throws HttpException {
 			HttpResponse<T> response = null;
 			try {	
-				connection = openConnection();
 				connection.setRequestMethod("GET");
 				connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 				connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -102,7 +102,6 @@ public class HttpRequestBuilder {
 		public <T> HttpResponse<T> post() throws HttpException {
 			HttpResponse<T> response = null;
 			try {
-				connection = openConnection();
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 				connection.setRequestProperty("Accept", "application/json");
@@ -127,7 +126,6 @@ public class HttpRequestBuilder {
 		public <T> HttpResponse<T> post(Class<T> type) throws HttpException {			
 			HttpResponse<T> response = null;
 			try {
-				connection = openConnection();
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 				connection.setRequestProperty("Accept", "application/json");
@@ -154,8 +152,13 @@ public class HttpRequestBuilder {
 			path = null;
 			bearerToken = null;
 			header = new ArrayList<NameValuePair>();
-			queryParemeters = new ArrayList<NameValuePair>();
+			queryParameters = new ArrayList<NameValuePair>();
 			connection = null;
+		}
+		
+		@Override
+		public URL getUrl() {
+			return connection.getURL();
 		}
 		
 		private HttpsURLConnection openConnection() throws IOException {
@@ -164,17 +167,19 @@ public class HttpRequestBuilder {
 				sb.append("/");
 				sb.append(path);
 			}
-			if (! queryParemeters.isEmpty()) {
+			if (! queryParameters.isEmpty()) {
 				sb.append("?");
 				sb.append(getQueryParameters());
 			}
+			
 			URL url = new URL(sb.toString());
+			
 			return (HttpsURLConnection) url.openConnection();
 		}
 		
 		private String getQueryParameters() throws UnsupportedEncodingException {
 			StringBuilder sb = new StringBuilder();
-			for (NameValuePair nameValuePair : queryParemeters) {
+			for (NameValuePair nameValuePair : queryParameters) {
 				if (sb.length() > 0) {
 					sb.append("&");
 				}

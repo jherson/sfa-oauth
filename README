@@ -6,7 +6,7 @@ usage:
 
 fill out required information and 
 1a. generate consumer key and consumer secret
-1b. set the Callback URL to https://<your hostname>:<your port>/authenticate
+1b. set the Callback URL to https://<your hostname>:<your port>/oauth/authorize
 
 for more information on creating a connected app: http://help.salesforce.com/apex/HTViewHelpDoc?id=connected_app_create.htm&language=en_US
 

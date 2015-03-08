@@ -187,7 +187,7 @@ import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 
-@WebServlet(value = "/login")
+@WebServlet(value = "/oauth/login")
 public class LoginServlet implements Servlet {
 
 	@Inject
@@ -214,6 +214,8 @@ public class LoginServlet implements Servlet {
 			cookie.setMaxAge(365 * 24 * 60 * 60);
 			response.addCookie(cookie);
 		}
+		
+		request.getSession(true);
 
 		try {
 			oauthSession.loginRedirect(request, response);

@@ -191,7 +191,7 @@ import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.impl.OAuthSessionContext;
 
-@WebServlet(value = "/logout")
+@WebServlet(value = "/oauth/logout")
 public class LogoutServlet implements Servlet {
 
 	private Logger log = Logger.getLogger(LogoutServlet.class.getName());
@@ -220,8 +220,8 @@ public class LogoutServlet implements Servlet {
 		} catch (OAuthException e) {
 			log.log(Level.WARNING, e.getMessage());
 		}
-
-		session.invalidate();
+		
+		//session.invalidate();
 
 		OAuthSessionContext context = sessionCallback.initContext(request, response, oauthSession);
 		sessionCallback.onLogout(context);

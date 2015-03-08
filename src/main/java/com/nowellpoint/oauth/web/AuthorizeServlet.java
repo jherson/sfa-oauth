@@ -189,7 +189,7 @@ import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.impl.OAuthSessionContext;
 import com.nowellpoint.oauth.model.VerificationCode;
 
-@WebServlet(value = "/authorize")
+@WebServlet(value = "/oauth/authorize")
 public class AuthorizeServlet implements Servlet {
 
 	@Inject
