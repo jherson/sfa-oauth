@@ -15,7 +15,7 @@ for more information on creating a connected app: http://help.salesforce.com/ape
 <dependency>
   <groupId>com.nowellpoint</groupId>
   <artifactId>nowellpoint-oauth-api</artifactId>
-  <version>1.4</version>
+  <version>1.5.Final</version>
 </dependency>
 
 
