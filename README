@@ -86,9 +86,9 @@ public class Resources {
 
 5) add page with a login and logout link or button
 
-    <h:commandLink value="#{msgs.login}" onclick="window.location.href='login';return false;" />
+    <h:commandLink value="#{msgs.login}" onclick="window.location.href='/oauth/login';return false;" />
 							
-    <h:commandLink value="#{msgs.logout}" onclick="window.location.href='/logout';return false;" />
+    <h:commandLink value="#{msgs.logout}" onclick="window.location.href='/oauth/logout';return false;" />
     
 or include in a jsf action:
 
@@ -104,7 +104,7 @@ or include in a jsf action:
         
         public void login() {
             try {
-		        FacesContext.getCurrentInstance().getExternalContext().redirect("/login");
+		        FacesContext.getCurrentInstance().getExternalContext().redirect("/oauth/login");
 	        } catch (IOException e) {
 		        throw new FacesException("Cannot redirect to " + path + " due to IOException.", e);
 	        } 
@@ -112,7 +112,7 @@ or include in a jsf action:
         
         public void logout() {
             try {
-		        FacesContext.getCurrentInstance().getExternalContext().redirect("/logout");
+		        FacesContext.getCurrentInstance().getExternalContext().redirect("/oauth/logout");
 	        } catch (IOException e) {
 		        throw new FacesException("Cannot redirect to " + path + " due to IOException.", e);
 	        } 
