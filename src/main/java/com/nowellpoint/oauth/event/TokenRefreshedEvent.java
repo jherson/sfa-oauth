@@ -174,7 +174,7 @@ import javax.enterprise.util.AnnotationLiteral;
 
 import com.nowellpoint.oauth.OAuthEvent;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.TokenRefreshed;
+import com.nowellpoint.oauth.qualifier.TokenRefreshed;
 
 public class TokenRefreshedEvent extends AnnotationLiteral<TokenRefreshed> implements OAuthEvent {
 

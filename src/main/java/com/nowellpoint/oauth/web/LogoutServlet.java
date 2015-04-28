@@ -187,9 +187,9 @@ import javax.servlet.http.HttpSession;
 
 import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.OAuthSessionCallback;
-import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.impl.OAuthSessionContext;
+import com.nowellpoint.oauth.qualifier.Salesforce;
 
 @WebServlet(value = "/oauth/logout")
 public class LogoutServlet implements Servlet {

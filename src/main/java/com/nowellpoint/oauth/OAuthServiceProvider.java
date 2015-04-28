@@ -192,14 +192,27 @@ public abstract class OAuthServiceProvider implements Serializable {
 	private static final long serialVersionUID = -5650578742390926431L;
 
 	/**
-	 * getAuthEndpoint
-	 * @return String
+	 * 
+	 * @return Auth Endpoint
 	 */
 
 	public abstract String getAuthEndpoint();
+	
+	/**
+	 * 
+	 * @return Token Endpoint
+	 */
+	
+	public abstract String getTokenEndpoint();
+	
+	/**
+	 * 
+	 * @return Revoke Endpoint
+	 */
+	
+	public abstract String getRevokeEndpoint();
 
 	/**
-	 * requestToken
 	 * 
 	 * @param basicTokenRequest
 	 * @return Token
@@ -209,7 +222,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	public abstract Token requestToken(BasicTokenRequest basicTokenRequest) throws OAuthException;
 
 	/**
-	 * requestToken
+	 * 
 	 * @param verifyTokenRequest
 	 * @return Token
 	 * @throws LoginException
@@ -218,7 +231,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	public abstract Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException;
 
 	/**
-	 * getIdentity
+	 * 
 	 * @param identityRequest
 	 * @return Identity
 	 * @throws LoginException
@@ -227,7 +240,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	public abstract Identity getIdentity(IdentityRequest identityRequest) throws OAuthException;
 
 	/**
-	 * refreshToken
+	 * 
 	 * @param refreshTokenRequest
 	 * @return Token
 	 * @throws LoginException
@@ -236,7 +249,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	public abstract Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws OAuthException;
 
 	/**
-	 * revokeToken
+	 * 
 	 * @param revokeTokenRequest
 	 * @throws LoginException
 	 */

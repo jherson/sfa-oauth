@@ -174,7 +174,7 @@ import javax.enterprise.util.AnnotationLiteral;
 
 import com.nowellpoint.oauth.OAuthEvent;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.LoggedOut;
+import com.nowellpoint.oauth.qualifier.LoggedOut;
 
 public class LoggedOutEvent extends AnnotationLiteral<LoggedOut> implements OAuthEvent {
 

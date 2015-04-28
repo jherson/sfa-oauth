@@ -170,15 +170,21 @@ END OF TERMS AND CONDITIONS
 
 package com.nowellpoint.oauth.cdi;
 
+import java.util.logging.Logger;
+
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import com.nowellpoint.oauth.OAuthClient;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.Salesforce;
+import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.qualifier.Salesforce;
 
 public class OAuthSessionProducer {
+	
+	private static Logger log = Logger.getLogger(OAuthSessionProducer.class.getName());
 
 	@Inject
 	@Salesforce
@@ -189,5 +195,15 @@ public class OAuthSessionProducer {
 	@SessionScoped
 	public OAuthSession produceSession() {
 		return oauthClient.createSession();
+	}
+	
+	public void closeSession(@Disposes @Salesforce OAuthSession oauthSession) {
+		if (oauthSession.getToken() != null) {
+			try {
+				oauthSession.logout();
+			} catch (OAuthException e) {
+				log.warning("Unabled to close Salesforce connection: " + e.getMessage());
+			}
+		}
 	}
 }

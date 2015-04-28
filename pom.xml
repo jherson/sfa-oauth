@@ -6,7 +6,7 @@
 	<artifactId>nowellpoint-oauth-api</artifactId>
 	<packaging>jar</packaging>
 	<version>1.6-SNAPSHOT</version>
-	<name>Salesforce OAuth Client API</name>
+	<name>Nowellpoint Salesforce OAuth Client API</name>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>

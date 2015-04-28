@@ -175,8 +175,8 @@ import javax.enterprise.inject.Produces;
 
 import com.nowellpoint.oauth.OAuthClient;
 import com.nowellpoint.oauth.OAuthClientBuilder;
-import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
+import com.nowellpoint.oauth.qualifier.Salesforce;
 
 public class OAuthClientProducer {
 

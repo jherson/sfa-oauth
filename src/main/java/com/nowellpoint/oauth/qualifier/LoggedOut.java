@@ -168,7 +168,7 @@ accepting any such warranty or additional liability.
 END OF TERMS AND CONDITIONS
  */
 
-package com.nowellpoint.oauth.annotations;
+package com.nowellpoint.oauth.qualifier;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -186,6 +186,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Documented
-public @interface TokenRefreshed {
+public @interface LoggedOut {
 
 }

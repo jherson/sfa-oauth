@@ -174,7 +174,7 @@ import javax.enterprise.util.AnnotationLiteral;
 
 import com.nowellpoint.oauth.OAuthEvent;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.LoggedIn;
+import com.nowellpoint.oauth.qualifier.LoggedIn;
 
 public class LoggedInEvent extends AnnotationLiteral<LoggedIn> implements OAuthEvent {
 

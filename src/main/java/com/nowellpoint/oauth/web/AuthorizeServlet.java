@@ -184,10 +184,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.OAuthSession;
 import com.nowellpoint.oauth.OAuthSessionCallback;
-import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.impl.OAuthSessionContext;
 import com.nowellpoint.oauth.model.VerificationCode;
+import com.nowellpoint.oauth.qualifier.Salesforce;
 
 @WebServlet(value = "/oauth/authorize")
 public class AuthorizeServlet implements Servlet {

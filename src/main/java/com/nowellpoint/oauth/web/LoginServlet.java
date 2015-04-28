@@ -184,8 +184,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
+import com.nowellpoint.oauth.qualifier.Salesforce;
 
 @WebServlet(value = "/oauth/login")
 public class LoginServlet implements Servlet {

@@ -187,12 +187,12 @@ import org.junit.runner.RunWith;
 import com.nowellpoint.oauth.AuthenticationFlow;
 import com.nowellpoint.oauth.OAuthClient;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.Salesforce;
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.OrganizationInfo;
 import com.nowellpoint.oauth.model.UserInfo;
 import com.nowellpoint.oauth.model.UsernamePasswordCredentials;
 import com.nowellpoint.oauth.provider.SalesforceLoginProvider;
+import com.nowellpoint.oauth.qualifier.Salesforce;
 
 @RunWith(CdiRunner.class)
 @AdditionalClasses({OAuthClientProducer.class, OAuthEventObserver.class})

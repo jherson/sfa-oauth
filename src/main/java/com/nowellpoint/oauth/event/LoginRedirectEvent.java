@@ -174,7 +174,7 @@ import javax.enterprise.util.AnnotationLiteral;
 
 import com.nowellpoint.oauth.OAuthEvent;
 import com.nowellpoint.oauth.OAuthSession;
-import com.nowellpoint.oauth.annotations.LoginRedirect;
+import com.nowellpoint.oauth.qualifier.LoginRedirect;
 
 public class LoginRedirectEvent extends AnnotationLiteral<LoginRedirect> implements OAuthEvent {
 
