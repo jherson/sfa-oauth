@@ -190,6 +190,9 @@ public class OrganizationInfo implements Serializable {
 
 	@JsonProperty("Name")
 	private String name;
+	
+	@JsonProperty("InstanceName")
+	private String instanceName;
 
 	@JsonProperty("Division")
 	private String division;
@@ -241,6 +244,14 @@ public class OrganizationInfo implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getInstanceName() {
+		return instanceName;
+	}
+
+	public void setInstanceName(String instanceName) {
+		this.instanceName = instanceName;
 	}
 
 	public String getDivision() {

@@ -218,7 +218,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	 * 
 	 */
 
-	private static final String ORGANIZATION_FIELDS = "Id,Name,Division,Street,City,State,PostalCode,Country,"
+	private static final String ORGANIZATION_FIELDS = "Id,Name,InstanceName,Division,Street,City,State,PostalCode,Country,"
 			+ "PrimaryContact,DefaultLocaleSidKey,LanguageLocaleKey,FiscalYearStartMonth";
 
 	/**
