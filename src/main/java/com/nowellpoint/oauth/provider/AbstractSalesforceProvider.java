@@ -246,7 +246,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.queryParameter(OAuthConstants.PASSWORD_PARAMETER, URLEncoder.encode(basicTokenRequest.getPassword(), "UTF-8"))
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		} 
 		
 		return requestToken(request);
@@ -265,7 +265,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.queryParameter(OAuthConstants.CODE_PARAMETER, verifyTokenRequest.getCode())
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		}
 		
 		return requestToken(request);
@@ -280,7 +280,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.queryParameter(OAuthConstants.OAUTH_TOKEN_PARAMETER, identityRequest.getAccessToken())
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		}
 		
 		return requestIdentity(request);
@@ -295,13 +295,13 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.queryParameter(OAuthConstants.TOKEN_PARAMETER, revokeTokenRequest.getAccessToken())
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		}
 		
 		try {
 			request.post();
 		} catch (HttpException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		} finally {
 			request.clear();
 		}
@@ -319,7 +319,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.header(OAuthConstants.REFRESH_GRANT_TYPE, refreshTokenRequest.getRefreshToken())
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		}
 		
 		return requestToken(request);
@@ -336,7 +336,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.bearerToken(token.getAccessToken())
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		}
 		
 		return requestUserInfo(request);
@@ -353,7 +353,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 					.bearerToken(token.getAccessToken())
 					.build();
 		} catch (IOException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		}
 		
 		return requestOrganizationInfo(request);
@@ -431,7 +431,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		try {
 			response = request.post(Identity.class);
 		} catch (HttpException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		} finally {
 			request.clear();
 		}
@@ -451,7 +451,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		try {
 			response = request.get(OrganizationInfo.class);
 		} catch (HttpException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		} finally {
 			request.clear();
 		}
@@ -471,7 +471,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 		try {
 			response = request.get(UserInfo.class);
 		} catch (HttpException e) {
-			throw new OAuthException(e);
+			throw new OAuthException(e.getMessage());
 		} finally {
 			request.clear();
 		}

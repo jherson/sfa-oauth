@@ -177,12 +177,36 @@ public class OAuthException extends Exception {
 	 */
 
 	private static final long serialVersionUID = -2369287148480580693L;
+	
+	private String error;
+	
+	private String errorDescription;
 
-	public OAuthException(Exception exception) {
-		super(exception);
+	public OAuthException(String errorMessage) {
+		super(errorMessage);
+		
+		/**
+		 * check to see if the error is a JSON string and if so parse error and error_description 
+		 */
+
+		if (errorMessage.startsWith("{") && errorMessage.endsWith("}")) {
+			String[] values = errorMessage.replace("{",  "").replace("}", "").replace("\"", "").split(",");
+			for (int i = 0; i < values.length; i++) {
+				String[] property = values[i].split(":");
+				if ("error".equals(property[0])) {
+					error = property[1];
+				} else if ("error_description".equals(property[0])){
+					errorDescription = property[1];
+				}
+			}
+		}
 	}
-
-	public OAuthException(String error) {
-		super(error);
+	
+	public String getError() {
+		return error;
+	}
+	
+	public String getErrorDescription() {
+		return errorDescription;
 	}
 }
