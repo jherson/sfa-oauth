@@ -1,4 +1,4 @@
-Salesforce OAuth2 client for Openshift but can also be used for any JBoss EAP 6.x deployment.
+Salesforce OAuth2 client for Openshift and Wildfly ut can also be used for any JBoss EAP 6.x deployment.
 
 usage:
 
@@ -14,8 +14,8 @@ for more information on creating a connected app: http://help.salesforce.com/ape
 
 <dependency>
   <groupId>com.nowellpoint</groupId>
-  <artifactId>nowellpoint-oauth-api</artifactId>
-  <version>1.5.Final</version>
+  <artifactId>nowellpoint-sdk-oauth</artifactId>
+  <version>1.6.0-SNAPSHOT</version>
 </dependency>
 
 

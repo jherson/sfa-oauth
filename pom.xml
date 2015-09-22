@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.nowellpoint</groupId>
-	<artifactId>nowellpoint-oauth-api</artifactId>
+	<artifactId>nowellpoint-sdk-oauth</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6-SNAPSHOT</version>
-	<name>Nowellpoint Salesforce OAuth Client API</name>
+	<version>1.6.0-SNAPSHOT</version>
+	<name>Nowellpoint SDK for OAuth</name>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -17,7 +18,7 @@
 	<url>http://www.nowellpoint.com</url>
 
 	<issueManagement>
-		<url>https://github.com/nowellpoint/nowellpoint-oauth-api</url>
+		<url>https://github.com/nowellpoint/nowellpoint-sdk-oauth.git</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 
@@ -30,9 +31,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git@github.com:nowellpoint/nowellpoint-oauth-api</connection>
-		<developerConnection>scm:git:git@github.com:nowellpoint/nowellpoint-oauth-api</developerConnection>
-		<url>https://github.com/nowellpoint/nowellpoint-oauth-api</url>
+		<connection>scm:git:git@github.com:nowellpoint/nowellpoint-sdk-oauth</connection>
+		<developerConnection>scm:git:git@github.com:nowellpoint/nowellpoint-sdk-oauth</developerConnection>
+		<url>https://github.com/nowellpoint/nowellpoint-sdk-oauth</url>
 	</scm>
 	<developers>
 		<developer>
@@ -46,7 +47,15 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-parent</artifactId>
+				<version>2.6.2</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -74,9 +83,14 @@
 			<version>1.1.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

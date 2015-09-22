@@ -172,7 +172,7 @@ package com.nowellpoint.oauth.model;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Photos implements Serializable {
 

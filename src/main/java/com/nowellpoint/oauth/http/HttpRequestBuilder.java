@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HttpRequestBuilder {
 
