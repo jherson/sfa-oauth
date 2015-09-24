@@ -5,5 +5,3 @@ deployments/
 target/
 test-output/
 src/main/scripts/openshift_deploy.sh
-
-.classpath
