@@ -202,7 +202,7 @@ public abstract class AbstractSalesforceProvider extends OAuthServiceProvider {
 	 * 
 	 */
 
-	private static final String API_VERSION = "31.0";
+	private static final String API_VERSION = "35.0";
 
 	/**
 	 * 
