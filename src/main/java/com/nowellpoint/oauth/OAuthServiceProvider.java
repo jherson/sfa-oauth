@@ -172,8 +172,6 @@ package com.nowellpoint.oauth;
 
 import java.io.Serializable;
 
-import javax.security.auth.login.LoginException;
-
 import com.nowellpoint.oauth.exception.OAuthException;
 import com.nowellpoint.oauth.model.Identity;
 import com.nowellpoint.oauth.model.Token;
@@ -214,44 +212,44 @@ public abstract class OAuthServiceProvider implements Serializable {
 
 	/**
 	 * 
-	 * @param basicTokenRequest
+	 * @param basicTokenRequest get a new Token using BasicTokenRequest
 	 * @return Token
-	 * @throws OAuthException
+	 * @throws OAuthException exception from requestToken 
 	 */
 
 	public abstract Token requestToken(BasicTokenRequest basicTokenRequest) throws OAuthException;
 
 	/**
 	 * 
-	 * @param verifyTokenRequest
+	 * @param verifyTokenRequest verify the Token using the VerifyTokenRequest
 	 * @return Token
-	 * @throws OAuthException
+	 * @throws OAuthException exception from requestToken 
 	 */
 
 	public abstract Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException;
 
 	/**
 	 * 
-	 * @param identityRequest
+	 * @param identityRequest get the identity of the IdentityRequest
 	 * @return Identity
-	 * @throws OAuthException
+	 * @throws OAuthException exception from requestToken
 	 */
 
 	public abstract Identity getIdentity(IdentityRequest identityRequest) throws OAuthException;
 
 	/**
 	 * 
-	 * @param refreshTokenRequest
+	 * @param refreshTokenRequest refresh the Token
 	 * @return Token
-	 * @throws OAuthException
+	 * @throws OAuthException exception from requestToken
 	 */
 
 	public abstract Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws OAuthException;
 
 	/**
 	 * 
-	 * @param revokeTokenRequest
-	 * @throws LoginException
+	 * @param revokeTokenRequest revoke the Token 
+	 * @throws OAuthException exception from requestToken
 	 */
 
 	public abstract void revokeToken(RevokeTokenRequest revokeTokenRequest) throws OAuthException;
