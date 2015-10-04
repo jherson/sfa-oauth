@@ -216,7 +216,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * 
 	 * @param basicTokenRequest
 	 * @return Token
-	 * @throws LoginException
+	 * @throws OAuthException
 	 */
 
 	public abstract Token requestToken(BasicTokenRequest basicTokenRequest) throws OAuthException;
@@ -225,7 +225,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * 
 	 * @param verifyTokenRequest
 	 * @return Token
-	 * @throws LoginException
+	 * @throws OAuthException
 	 */
 
 	public abstract Token requestToken(VerifyTokenRequest verifyTokenRequest) throws OAuthException;
@@ -234,7 +234,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * 
 	 * @param identityRequest
 	 * @return Identity
-	 * @throws LoginException
+	 * @throws OAuthException
 	 */
 
 	public abstract Identity getIdentity(IdentityRequest identityRequest) throws OAuthException;
@@ -243,7 +243,7 @@ public abstract class OAuthServiceProvider implements Serializable {
 	 * 
 	 * @param refreshTokenRequest
 	 * @return Token
-	 * @throws LoginException
+	 * @throws OAuthException
 	 */
 
 	public abstract Token refreshToken(RefreshTokenRequest refreshTokenRequest) throws OAuthException;
